@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using labyItems.Services;
+using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Storage;
 
 namespace labyItems.Pages.NonStandard;
@@ -52,6 +53,7 @@ public partial class NonStandardDocumentLinksPage : ContentPage
         => Documents.Count == 0
             ? "No files linked yet."
             : $"{Documents.Count} linked file{(Documents.Count == 1 ? string.Empty : "s")}";
+    public bool ShowEmptyUploadButton => Documents.Count == 0;
 
     public NonStandardDocumentLinksPage(NonStandardWalletEntry entry)
     {
@@ -76,6 +78,7 @@ public partial class NonStandardDocumentLinksPage : ContentPage
                 Documents.Add(new NonStandardDocumentLinkVm(document));
 
             OnPropertyChanged(nameof(SummaryText));
+            OnPropertyChanged(nameof(ShowEmptyUploadButton));
         }
         catch (Exception ex)
         {
@@ -87,11 +90,7 @@ public partial class NonStandardDocumentLinksPage : ContentPage
     {
         try
         {
-            var file = await FilePicker.Default.PickAsync(new PickOptions
-            {
-                PickerTitle = "Select an image or PDF",
-                FileTypes = AllowedDocumentTypes
-            });
+            var file = await PickDocumentAsync();
 
             if (file == null)
                 return;
@@ -120,6 +119,61 @@ public partial class NonStandardDocumentLinksPage : ContentPage
         catch (Exception ex)
         {
             await DisplayAlert("Upload failed", ex.Message, "OK");
+        }
+    }
+
+    private async Task<FileResult?> PickDocumentAsync()
+    {
+        var action = await DisplayActionSheet(
+            "Add a linked file",
+            "Cancel",
+            null,
+            "Take photo",
+            "Choose file");
+
+        return action switch
+        {
+            "Take photo" => await CapturePhotoAsync(),
+            "Choose file" => await FilePicker.Default.PickAsync(new PickOptions
+            {
+                PickerTitle = "Select an image or PDF",
+                FileTypes = AllowedDocumentTypes
+            }),
+            _ => null
+        };
+    }
+
+    private async Task<FileResult?> CapturePhotoAsync()
+    {
+        if (!MediaPicker.Default.IsCaptureSupported)
+        {
+            await DisplayAlert("Camera unavailable", "This device does not support taking photos from the app.", "OK");
+            return null;
+        }
+
+        var permission = await Permissions.RequestAsync<Permissions.Camera>();
+        if (permission != PermissionStatus.Granted)
+        {
+            await DisplayAlert("Camera permission needed", "Allow camera access to attach a photo to this creation.", "OK");
+            return null;
+        }
+
+        try
+        {
+            return await MediaPicker.Default.CapturePhotoAsync(new MediaPickerOptions
+            {
+                Title = $"Creation photo {DateTime.Now:yyyyMMdd_HHmmss}"
+            });
+        }
+        catch (FeatureNotSupportedException)
+        {
+            await DisplayAlert("Camera unavailable", "This device does not support taking photos from the app.", "OK");
+            return null;
+        }
+        catch (PermissionException)
+        {
+            await DisplayAlert("Camera permission needed", "Allow camera access to attach a photo to this creation.", "OK");
+            return null;
         }
     }
 

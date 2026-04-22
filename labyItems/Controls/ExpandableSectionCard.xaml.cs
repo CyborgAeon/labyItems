@@ -43,7 +43,7 @@ public partial class ExpandableSectionCard : ContentView
         set => SetValue(BodyContentProperty, value);
     }
 
-    public string ChevronText => IsExpanded ? "^" : "v";
+    public string ChevronText => IsExpanded ? "\uF077" : "\uF078";
 
     private static void OnIsExpandedChanged(BindableObject bindable, object oldValue, object newValue)
     {

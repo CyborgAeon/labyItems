@@ -12,6 +12,12 @@ using labyItems.Controls.Pickers;
 
 namespace labyItems.Controls;
 
+public interface ILoadableSearchBar
+{
+    void Warmup();
+    void SetLoadingState(bool isLoading);
+}
+
 /// <summary>
 /// SearchBar wrapper that displays dictionary-backed results in an overlay above the page content.
 /// Works inside grids/inline layouts without affecting surrounding layout.
@@ -19,7 +25,7 @@ namespace labyItems.Controls;
 /// ItemsSource="{controls:EnumDictionary x:TypeArguments='enums:MagicColours' Exclude='Grey'}"
 /// SelectedValue="{Binding MagicColour}"/>
 /// </summary>
-public partial class DictionarySearchBar<TValue> : ContentView
+public partial class DictionarySearchBar<TValue> : ContentView, ILoadableSearchBar
 {
     private readonly Action _selfDismisser;
     private const double DefaultDropdownMaxHeight = 320;
@@ -38,6 +44,8 @@ public partial class DictionarySearchBar<TValue> : ContentView
     private bool _overlayHostInitialized;
     private int _remoteRequestId;
     private bool _isUserEditing;
+    private bool _isLoadingOptions;
+    private readonly ActivityIndicator _loadingIndicator;
 
     public DictionarySearchBar()
     {
@@ -55,6 +63,19 @@ public partial class DictionarySearchBar<TValue> : ContentView
             IsSpellCheckEnabled = false,
             IsEnabled = IsEnabled,
             InputTransparent = !IsEnabled
+        };
+
+        _loadingIndicator = new ActivityIndicator
+        {
+            IsVisible = false,
+            IsRunning = false,
+            WidthRequest = 18,
+            HeightRequest = 18,
+            HorizontalOptions = LayoutOptions.End,
+            VerticalOptions = LayoutOptions.Center,
+            Margin = new Thickness(0, 0, 12, 0),
+            InputTransparent = true,
+            Color = Color.FromArgb("#6B7280")
         };
 
         _searchBar.Focused += OnSearchFocused;
@@ -80,6 +101,8 @@ public partial class DictionarySearchBar<TValue> : ContentView
 
             AbsoluteLayout.SetLayoutBounds(_searchBar, new Rect(0, 0, 1, measuredEntryHeight));
             AbsoluteLayout.SetLayoutFlags(_searchBar, AbsoluteLayoutFlags.WidthProportional);
+            AbsoluteLayout.SetLayoutBounds(_loadingIndicator, new Rect(1, 0.5, AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
+            AbsoluteLayout.SetLayoutFlags(_loadingIndicator, AbsoluteLayoutFlags.PositionProportional);
 
             AbsoluteLayout.SetLayoutBounds(_inlineResultsContainer, new Rect(0, measuredEntryHeight, 1, 0));
             AbsoluteLayout.SetLayoutFlags(_inlineResultsContainer, AbsoluteLayoutFlags.WidthProportional);
@@ -88,6 +111,7 @@ public partial class DictionarySearchBar<TValue> : ContentView
 
         // Add the entry and results view to the overlay container. Results will be shown translated below the entry.
         container.Add(_searchBar);
+        container.Add(_loadingIndicator);
         container.Add(_inlineResultsContainer);
         AbsoluteLayout.SetLayoutBounds(_searchBar, new Rect(0, 0, 1, AbsoluteLayout.AutoSize));
         AbsoluteLayout.SetLayoutFlags(_searchBar, AbsoluteLayoutFlags.WidthProportional);
@@ -98,6 +122,24 @@ public partial class DictionarySearchBar<TValue> : ContentView
         Content = container;
         UpdatePlaceholder();
         SyncTextToSelection();
+    }
+
+    public void Warmup()
+        => InitializeOverlayHostIfNeeded();
+
+    public void SetLoadingState(bool isLoading)
+    {
+        _isLoadingOptions = isLoading;
+        _loadingIndicator.IsVisible = isLoading;
+        _loadingIndicator.IsRunning = isLoading;
+        _searchBar.IsEnabled = IsEnabled && !isLoading;
+        _searchBar.InputTransparent = !IsEnabled || isLoading;
+
+        if (isLoading)
+        {
+            DismissLocalOverlay();
+            _inlineResultsContainer.IsVisible = false;
+        }
     }
 
     protected override void OnParentSet()
@@ -397,6 +439,9 @@ public partial class DictionarySearchBar<TValue> : ContentView
         if (!IsEnabled)
             return;
 
+        if (_isLoadingOptions)
+            return;
+
         if (RemoteSearchProvider != null)
             await RefreshFromRemoteAsync(string.Empty);
         else
@@ -426,6 +471,9 @@ public partial class DictionarySearchBar<TValue> : ContentView
     private void OnSearchUnfocused(object? sender, FocusEventArgs e)
     {
         if (!IsEnabled)
+            return;
+
+        if (_isLoadingOptions)
             return;
 
         // Give result taps a moment to complete before dismissing the overlay.
@@ -462,6 +510,9 @@ public partial class DictionarySearchBar<TValue> : ContentView
         if (!IsEnabled)
             return;
 
+        if (_isLoadingOptions)
+            return;
+
         if (_suppressTextChanged)
             return;
 
@@ -496,6 +547,9 @@ public partial class DictionarySearchBar<TValue> : ContentView
     private void OnSearchCompleted(object? sender, EventArgs e)
     {
         if (!IsEnabled)
+            return;
+
+        if (_isLoadingOptions)
             return;
 
         if (_filteredResults == null || _filteredResults.Count == 0)

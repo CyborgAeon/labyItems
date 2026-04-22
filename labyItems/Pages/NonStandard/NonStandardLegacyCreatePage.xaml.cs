@@ -22,6 +22,7 @@ public partial class NonStandardLegacyCreatePage : ContentPage
         InitializeComponent();
         BindingContext = _vm;
         StepClickCommand = new Command<int>(SetStep);
+        OnPropertyChanged(nameof(StepClickCommand));
         _vm.PropertyChanged += OnVmPropertyChanged;
         RebuildStepFlow(resetToStart: true);
     }
@@ -57,6 +58,7 @@ public partial class NonStandardLegacyCreatePage : ContentPage
     private bool HasLifeScaleFlow => _vm.RequiresLifeScale;
 
     public bool ShowBackButton => StepItems.Count > 0;
+    public int MaxAccessibleStep => Math.Max(0, CurrentStepIndex);
     public bool CanAdvance => !(_vm.IsBusy);
     public string NextButtonText => IsReviewStep ? "Save" : (CurrentStepIndex == StepItems.Count - 2 ? "Review" : "Next");
     public string StepCounterText => StepItems.Count == 0 ? string.Empty : $"Step {CurrentStepIndex + 1}/{StepItems.Count}";
@@ -447,6 +449,7 @@ public partial class NonStandardLegacyCreatePage : ContentPage
     {
         OnPropertyChanged(nameof(CurrentStepIndex));
         OnPropertyChanged(nameof(ShowBackButton));
+        OnPropertyChanged(nameof(MaxAccessibleStep));
         OnPropertyChanged(nameof(CanAdvance));
         OnPropertyChanged(nameof(NextButtonText));
         OnPropertyChanged(nameof(StepCounterText));

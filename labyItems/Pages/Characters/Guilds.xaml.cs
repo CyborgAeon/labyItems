@@ -1,4 +1,5 @@
 using System.Windows.Input;
+using labyItems.Controls;
 using labyItems.Pages.Characters.ViewModels;
 using labyItems.Helpers;
 
@@ -10,13 +11,23 @@ public partial class Guilds : ContentView
         nameof(ShowBackButton),
         typeof(bool),
         typeof(Guilds),
-        false);
+        false,
+        propertyChanged: static (bindable, _, _) =>
+        {
+            if (bindable is Guilds guilds && guilds.HeaderLeadingView == null)
+                guilds.UpdateHeaderLeadingView(null);
+        });
 
     public static readonly BindableProperty BackCommandProperty = BindableProperty.Create(
         nameof(BackCommand),
         typeof(ICommand),
         typeof(Guilds),
-        null);
+        null,
+        propertyChanged: static (bindable, _, _) =>
+        {
+            if (bindable is Guilds guilds && guilds.HeaderLeadingView == null)
+                guilds.UpdateHeaderLeadingView(null);
+        });
 
     public static readonly BindableProperty UseTypePillsProperty = BindableProperty.Create(
         nameof(UseTypePills),
@@ -73,6 +84,14 @@ public partial class Guilds : ContentView
     {
         if (HeaderLeadingHost == null)
             return;
+
+        if (view == null && ShowBackButton)
+        {
+            view = new BackNavigationButton
+            {
+                Command = BackCommand
+            };
+        }
 
         HeaderLeadingHost.Content = view;
         HeaderLeadingHost.IsVisible = view != null;

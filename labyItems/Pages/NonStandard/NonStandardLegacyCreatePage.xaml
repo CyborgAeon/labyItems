@@ -11,30 +11,22 @@
        xmlns:pickers="clr-namespace:labyItems.Controls.Pickers"
        xmlns:spellCard="clr-namespace:labyItems.Pages.SpellCard"
        Shell.NavBarIsVisible="False"
+       NavigationPage.HasNavigationBar="False"
        Title="">
 
        <Grid RowDefinitions="Auto,*,Auto"
              RowSpacing="0">
                     <Grid Grid.Row="0"
                          Padding="14,10,14,8"
-                         ColumnDefinitions="Auto,*"
+                         ColumnDefinitions="*"
                          ColumnSpacing="8"
                          BackgroundColor="{StaticResource White}">
-                          <Button Grid.Column="0"
-                                 Text="&#xF053;"
-                                 FontFamily="FASolid"
-                                 WidthRequest="40"
-                                 HeightRequest="40"
-                                 Padding="0"
-                                 BackgroundColor="Transparent"
-                                 TextColor="{StaticResource AccentMaroonColor}"
-                                 Clicked="OnPreviousStepClicked"
-                                 IsVisible="{Binding Source={x:Reference Root}, Path=ShowBackButton}"/>
                           <controls:StepIndicator x:Name="WizardStepIndicator"
-                                               Grid.Column="1"
+                                               Grid.Column="0"
                                                Steps="{Binding Source={x:Reference Root}, Path=StepItems}"
                                                CurrentStep="{Binding Source={x:Reference Root}, Path=CurrentStepIndex}"
-                                               StepClickCommand="{Binding Source={x:Reference Root}, Path=StepClickCommand}"/>
+                                               StepClickCommand="{Binding Source={x:Reference Root}, Path=StepClickCommand}"
+                                               MaxAccessibleStep="{Binding Source={x:Reference Root}, Path=MaxAccessibleStep}"/>
                     </Grid>
 
               <ScrollView Grid.Row="1">
@@ -757,6 +749,9 @@
                     ColumnDefinitions="Auto,*,Auto"
                     ColumnSpacing="8"
                     BackgroundColor="{StaticResource White}">
+                     <Button Grid.Column="0"
+                             Text="Back"
+                             Clicked="OnPreviousStepClicked"/>
                      <Label Grid.Column="1"
                             Text="{Binding Source={x:Reference Root}, Path=StepCounterText}"
                             HorizontalTextAlignment="Center"

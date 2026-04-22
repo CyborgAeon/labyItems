@@ -5,7 +5,12 @@
   xmlns:controls="clr-namespace:labyItems.Controls"
   xmlns:enums="clr-namespace:labyItems.Models.Enums"
   xmlns:toolset="clr-namespace:labyItems.Controls"
-  xmlns:local="clr-namespace:labyItems.Pages.Calculator" x:Name="RootPage" Title="Themeday">
+  xmlns:local="clr-namespace:labyItems.Pages.Calculator"
+  x:Name="RootPage"
+  Title="Themeday"
+  NavigationPage.HasNavigationBar="False"
+  NavigationPage.HasBackButton="False"
+  Shell.NavBarIsVisible="False">
 
   <Grid>
     <Grid RowDefinitions="*,Auto">
@@ -19,7 +24,7 @@
                                VerticalOptions="Center">
             <Label FontAttributes="Bold"
                    FontSize="28"
-                   Text="Themeday MP item" />
+                   Text="Themeday" />
             <Label Text="Available on any day you've crewed a themeday."
                    TextColor="{StaticResource Gray500}" />
           </VerticalStackLayout>

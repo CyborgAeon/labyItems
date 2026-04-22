@@ -7,7 +7,10 @@
                             xmlns:local="clr-namespace:labyItems.Pages.Calculator"
                             xmlns:toolset="clr-namespace:labyItems.Controls"
     x:Name="RootPage"
-    Title="Basic">
+    Title="Basic"
+    NavigationPage.HasNavigationBar="False"
+    NavigationPage.HasBackButton="False"
+    Shell.NavBarIsVisible="False">
 
   <Grid>
     <Grid RowDefinitions="*,Auto">
@@ -22,7 +25,7 @@
                                VerticalOptions="Center">
             <Label FontAttributes="Bold"
                    FontSize="28"
-                   Text="Standard MP item" />
+                   Text="Standard" />
             <Label Text="Available on any day."
                    TextColor="{StaticResource Gray500}" />
           </VerticalStackLayout>

@@ -328,4 +328,9 @@ AfterWeapon:
     protected override DictionarySearchBar<EvocationOption> EvocationSearchControl => EvocationSearch;
     protected override DictionarySlider LifeSliderControl => LifeSlider;
     protected override DictionarySearchBar<WeaponType> WeaponSearchControl => CrewWeaponSearch;
+    protected override IEnumerable<ILoadableSearchBar> AdditionalSearchBars => new ILoadableSearchBar[]
+    {
+        CrewWeaponColourSearch,
+        CrewWeaponAlignmentSearch
+    };
 }

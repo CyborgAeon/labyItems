@@ -25,11 +25,12 @@
               ColumnSpacing="8"
               BackgroundColor="Transparent">
           <Label Grid.Column="0"
-                 FontSize="30"
+                 FontFamily="FASolid"
+                 FontSize="18"
                  HorizontalTextAlignment="End"
                  InputTransparent="True"
                  Rotation="{Binding Source={x:Reference Root}, Path=IsExpanded, Converter={StaticResource BoolToRotationConverter}}"
-                 Text="›"
+                 Text="&#xF078;"
                  VerticalTextAlignment="Center"/>
           <Label Grid.Column="1"
                  VerticalOptions="Center"

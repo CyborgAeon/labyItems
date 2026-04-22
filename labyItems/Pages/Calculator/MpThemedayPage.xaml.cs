@@ -84,6 +84,18 @@ public partial class MpThemedayPage : MpCalculatorPageBase
         InitializeCalculatorPage();
     }
 
+    protected override IEnumerable<ILoadableSearchBar> AdditionalSearchBars => new ILoadableSearchBar[]
+    {
+        WeaponColourSearch,
+        WeaponAlignmentSearch,
+        ShieldColourSearch,
+        ShieldAlignmentSearch,
+        SpiritSphereSearch,
+        MagicStoreColourSearch,
+        EarthpowerFieldSearch,
+        CpLocationSearch
+    };
+
     public IEnumerable<string> WeaponTypeOptions => WeaponKindChipOptions;
     public IEnumerable<string> ShieldTypeOptions => ShieldChipOptions;
     public IEnumerable<string> StatusBagOptions => BagChipOptions;

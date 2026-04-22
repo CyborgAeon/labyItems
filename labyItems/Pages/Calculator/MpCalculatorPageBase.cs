@@ -211,11 +211,16 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     protected abstract DictionarySearchBar<EvocationOption> EvocationSearchControl { get; }
     protected abstract DictionarySlider LifeSliderControl { get; }
     protected abstract DictionarySearchBar<WeaponType> WeaponSearchControl { get; }
+    protected virtual IEnumerable<ILoadableSearchBar> AdditionalSearchBars => Array.Empty<ILoadableSearchBar>();
 
     public bool DbEnabled => true;
 
     protected MpCalculatorPageBase()
     {
+        Shell.SetNavBarIsVisible(this, false);
+        NavigationPage.SetHasNavigationBar(this, false);
+        NavigationPage.SetHasBackButton(this, false);
+
         AddSelectedSpellCommand = new Command<object?>(OnSpellResultSelected);
         AddSelectedMiracleCommand = new Command<object?>(OnMiracleResultSelected);
         AddSelectedEvocationCommand = new Command<object?>(OnEvocationResultSelected);
@@ -314,18 +319,47 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        Shell.SetNavBarIsVisible(this, false);
+        NavigationPage.SetHasNavigationBar(this, false);
+        NavigationPage.SetHasBackButton(this, false);
+
         if (_dataLoaded)
             return;
 
         _dataLoaded = true;
         await Task.Yield();
 
+        foreach (var searchBar in EnumerateSearchBars())
+        {
+            searchBar.Warmup();
+            searchBar.SetLoadingState(true);
+        }
+
         if (ShouldWarnWhenDbMissing && !await HasEvocationDataAsync())
         {
             await DisplayAlert("Data missing", "Evocation data not found. Please ensure packaged data or laby.db is available.", "OK");
         }
 
-        await LoadLookupDataAsync();
+        try
+        {
+            await LoadLookupDataAsync();
+        }
+        finally
+        {
+            foreach (var searchBar in EnumerateSearchBars())
+                searchBar.SetLoadingState(false);
+        }
+    }
+
+    private IEnumerable<ILoadableSearchBar> EnumerateSearchBars()
+    {
+        yield return SpellSearchControl;
+        yield return MiracleSearchControl;
+        yield return EvocationSearchControl;
+        yield return WeaponSearchControl;
+
+        foreach (var searchBar in AdditionalSearchBars)
+            yield return searchBar;
     }
 
     private static async Task<bool> HasEvocationDataAsync()

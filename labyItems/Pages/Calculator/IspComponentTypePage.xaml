@@ -27,8 +27,8 @@
                 </Grid>
 
                 <Grid x:Name="ComponentList"
-                      ColumnDefinitions="*,*"
-                      ColumnSpacing="12"
+                      ColumnDefinitions="*"
+                      ColumnSpacing="0"
                       RowSpacing="12" />
 
                 <Border Padding="14,10"

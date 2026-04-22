@@ -26,11 +26,13 @@
                                Opacity="0.68" />
                     </VerticalStackLayout>
                     <Button Grid.Column="2"
-                            Text="Upload Doc"
+                            Text="+"
                             BackgroundColor="{StaticResource AccentMaroonColor}"
                             TextColor="{StaticResource White}"
                             CornerRadius="10"
-                            Padding="14,10"
+                            HeightRequest="36"
+                            WidthRequest="36"
+                            Padding="0"
                             Clicked="OnUploadClicked" />
                 </Grid>
 
@@ -50,6 +52,21 @@
 
                 <CollectionView ItemsSource="{Binding Documents}"
                                 SelectionMode="None">
+                    <CollectionView.EmptyView>
+                        <Border Stroke="{StaticResource SurfaceBorderColor}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 16"
+                                BackgroundColor="{StaticResource White}"
+                                Padding="16"
+                                IsVisible="{Binding ShowEmptyUploadButton}">
+                            <VerticalStackLayout Spacing="10">
+                                <Label Text="No files linked yet."
+                                       FontAttributes="Bold" />
+                                <Button Text="Upload a pdf / image"
+                                        Clicked="OnUploadClicked" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </CollectionView.EmptyView>
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Frame Style="{StaticResource SectionCardFrameStyle}"
@@ -67,14 +84,26 @@
 
                                     <Button Grid.Column="1"
                                             Text="&#xF08E;"
-                                            Style="{StaticResource ListRowGlyphIconButtonStyle}"
-                                            TextColor="{StaticResource AccentMaroonColor}"
+                                            FontFamily="FASolid"
+                                            FontSize="13"
+                                            Padding="0"
+                                            HeightRequest="22"
+                                            WidthRequest="22"
+                                            MinimumHeightRequest="0"
+                                            MinimumWidthRequest="0"
+                                            BackgroundColor="Transparent"
                                             Clicked="OnOpenDocumentClicked"
                                             CommandParameter="{Binding .}" />
                                     <Button Grid.Column="2"
                                             Text="&#xF1F8;"
-                                            Style="{StaticResource ListRowGlyphIconButtonStyle}"
-                                            TextColor="{StaticResource AccentMaroonColor}"
+                                            FontFamily="FASolid"
+                                            FontSize="13"
+                                            Padding="0"
+                                            HeightRequest="22"
+                                            WidthRequest="22"
+                                            MinimumHeightRequest="0"
+                                            MinimumWidthRequest="0"
+                                            BackgroundColor="Transparent"
                                             Clicked="OnDeleteDocumentClicked"
                                             CommandParameter="{Binding .}" />
                                 </Grid>

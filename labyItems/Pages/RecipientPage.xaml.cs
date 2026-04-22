@@ -9,6 +9,7 @@ using labyItems.Models;
 using labyItems.Pages.Calculator;
 using labyItems.Services;
 using Microsoft.Maui.ApplicationModel;
+using System.Text;
 
 namespace labyItems.Pages;
 
@@ -77,6 +78,29 @@ public partial class RecipientPage : ContentPage
         await Navigation.PopAsync();
     }
 
+    private async void OnSaveClicked(object sender, EventArgs e)
+    {
+        if (_submission == null)
+        {
+            await Navigation.PopAsync();
+            return;
+        }
+
+        try
+        {
+            var item = BuildWalletItem(_submission);
+            if (!LiteDbService.UpdateItem(item))
+                LiteDbService.InsertItem(item);
+
+            await DisplayAlert("Saved", "MP item saved to wallet.", "OK");
+            await Navigation.PopToRootAsync();
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Save failed", ex.Message, "OK");
+        }
+    }
+
     private async Task SendSubmissionEmailAsync(RecipientInfo recipient, MpSubmissionPayload payload)
     {
         var emailDraft = ItemEmailService.BuildMpSubmissionEmailDraft(recipient, payload);
@@ -89,6 +113,47 @@ public partial class RecipientPage : ContentPage
         {
             await DisplayAlert("Error", $"Could not open mail client: {ex.Message}", "OK");
         }
+    }
+
+    private static Item BuildWalletItem(MpSubmissionPayload payload)
+    {
+        var description = new StringBuilder()
+            .AppendLine($"Source: Monster point item")
+            .AppendLine($"MP cost: {payload.TotalMp}")
+            .AppendLine($"ISP total: {payload.TotalIsp}")
+            .AppendLine()
+            .AppendLine("MP breakdown:")
+            .AppendLine(string.Join(Environment.NewLine, payload.Breakdown.Select(row => row.Text)))
+            .ToString()
+            .Trim();
+
+        var item = new Item
+        {
+            ItemType = ItemTypeEnum.Other,
+            Description = description,
+            Isp = Math.Max(0, payload.TotalIsp),
+            CreatedDate = DateTime.Now,
+            PayloadJson = ItemEmailService.SerializeItemPayload(new ItemJsonPayload
+            {
+                Description = description,
+                Isp = Math.Max(0, payload.TotalIsp),
+                CreatedDate = DateTime.Now,
+                WitnessName = string.Empty,
+                Item = new ItemJsonDetail
+                {
+                    DisplayName = $"MP Item ({payload.TotalMp} MP)",
+                    SourceFlow = "monster-point",
+                    MonsterPointCost = Math.Max(0, payload.TotalMp),
+                    PhysicalRepresentation = string.Empty,
+                    Types = new List<ItemTypeEnum> { ItemTypeEnum.Other },
+                    Abilities = new List<CalcResult>(),
+                    Status = "saved",
+                    Modifiers = new List<object>()
+                }
+            })
+        };
+
+        return item;
     }
 
     private void BuildSummaryRows(MpSubmissionPayload? payload)

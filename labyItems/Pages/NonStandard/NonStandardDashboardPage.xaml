@@ -27,12 +27,7 @@
                     </VerticalStackLayout>
                 </Grid>
 
-                <Border Stroke="{StaticResource SurfaceBorderColor}"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 18"
-                        BackgroundColor="{StaticResource White}"
-                        Padding="10,12">
-                    <VerticalStackLayout Spacing="8">
+                <VerticalStackLayout Spacing="8">
                         <Border Stroke="{StaticResource SurfaceBorderColor}"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 14"
@@ -182,8 +177,7 @@
                                 <TapGestureRecognizer Tapped="OnOpenEvocationTapped" />
                             </Border.GestureRecognizers>
                         </Border>
-                    </VerticalStackLayout>
-                </Border>
+                </VerticalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
 

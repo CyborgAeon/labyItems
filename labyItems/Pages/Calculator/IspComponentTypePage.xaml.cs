@@ -5,13 +5,14 @@ namespace labyItems.Pages.Calculator;
 public partial class IspComponentTypePage : ContentPage
 {
     private readonly IspCalculator _calculator;
+
     private static readonly ComponentOptionDefinition[] ComponentOptions =
     {
         new(IspComponentKind.Shield, "Shield", "Add defensive shield effects", "🛡", Color.FromArgb("#D7EEF8")),
-        new(IspComponentKind.Armour, "Armour", "Add armour or worn protection", "🪖", Color.FromArgb("#E8F1F8")),
+        new(IspComponentKind.Armour, "Armour", "Add armour or worn protection", "🦺", Color.FromArgb("#E8F1F8")),
         new(IspComponentKind.Weapon, "Weapon", "Add weapon abilities and enhancements", "⚔", Color.FromArgb("#F6EEE0")),
         new(IspComponentKind.Miracle, "Miracle", "Add miracles and spiritual effects", "✦", Color.FromArgb("#F3E8FF")),
-        new(IspComponentKind.Spell, "Spell", "Add spells and magical utility", "🪄", Color.FromArgb("#EDE9FE")),
+        new(IspComponentKind.Spell, "Spell", "Add spells and magical utility", "✧", Color.FromArgb("#EDE9FE")),
         new(IspComponentKind.Evocation, "Evocation", "Add evocations and field effects", "🔥", Color.FromArgb("#FFE8E0")),
         new(IspComponentKind.Neuronic, "Neuronic", "Add neuronic or standard abilities", "🧠", Color.FromArgb("#E7F0FF")),
         new(IspComponentKind.Life, "Life", "Add life to the item", "❤", Color.FromArgb("#FFE4EC")),
@@ -105,8 +106,9 @@ public partial class IspComponentTypePage : ContentPage
 
             var chevron = new Label
             {
-                Text = "›",
-                FontSize = 24,
+                Text = "\uF054",
+                FontFamily = "FASolid",
+                FontSize = 16,
                 TextColor = Application.Current?.Resources.TryGetValue("Gray500", out var chevronText) == true
                     ? (Color)chevronText
                     : Color.FromArgb("#6B7280"),
@@ -118,8 +120,7 @@ public partial class IspComponentTypePage : ContentPage
             content.Add(chevron, 2, 0);
 
             border.Content = content;
-
-            ComponentList.Add(border, index % 2, index / 2);
+            ComponentList.Add(border, 0, index);
         }
     }
 

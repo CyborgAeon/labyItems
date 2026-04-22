@@ -23,8 +23,8 @@
                        VerticalTextAlignment="Center" />
 
                 <Label Grid.Column="1"
-                       FontAttributes="Bold"
-                       FontSize="18"
+                       FontFamily="FASolid"
+                       FontSize="16"
                        HorizontalTextAlignment="End"
                        InputTransparent="True"
                        Text="{Binding Source={x:Reference Root}, Path=ChevronText}"

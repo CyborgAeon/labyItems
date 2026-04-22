@@ -3,25 +3,22 @@
     x:Class="labyItems.Pages.RecipientPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False"
     Title="Add Recipient">
 
   <ScrollView>
-    <VerticalStackLayout Padding="20" Spacing="10">
-      <Label Text="Recipient Player Name" FontAttributes="Bold" />
-      <Entry x:Name="RecipientPlayerNameEntry" Placeholder="Player name" />
+    <VerticalStackLayout Padding="20" Spacing="16">
+      <Label Text="MP Item Breakdown"
+             FontAttributes="Bold"
+             FontSize="24" />
 
-      <Label Text="Recipient Character Name" FontAttributes="Bold" />
-      <Entry x:Name="RecipientCharacterNameEntry" Placeholder="Character name" />
-
-      <Label Text="Recipient Character Class" FontAttributes="Bold" />
-      <Entry x:Name="RecipientCharacterClassEntry" Placeholder="Character class" />
-
-      <Label Text="Item Summary" FontAttributes="Bold" IsVisible="{Binding HasSubmissionSummary}" />
       <Border IsVisible="{Binding HasSubmissionSummary}"
-              Padding="8"
+              Padding="14"
               BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}"
               Stroke="{StaticResource DividerShadowColor}"
-              StrokeThickness="1">
+              StrokeThickness="1"
+              StrokeShape="RoundRectangle 16">
         <Grid HeightRequest="220">
           <CollectionView IsVisible="{Binding HasSubmissionSummaryRows}"
                           ItemsSource="{Binding SubmissionSummaryRows}"
@@ -52,7 +49,24 @@
         </Grid>
       </Border>
 
-      <Button Text="Submit" Clicked="OnSubmit" />
+      <Border Padding="14"
+              BackgroundColor="{StaticResource White}"
+              Stroke="{StaticResource DividerShadowColor}"
+              StrokeThickness="1"
+              StrokeShape="RoundRectangle 16">
+        <VerticalStackLayout Spacing="10">
+          <Label Text="Email to desk"
+                 FontAttributes="Bold"
+                 FontSize="18" />
+          <Entry x:Name="RecipientPlayerNameEntry" Placeholder="Recipient player name" />
+          <Entry x:Name="RecipientCharacterNameEntry" Placeholder="Recipient character name" />
+          <Entry x:Name="RecipientCharacterClassEntry" Placeholder="Recipient character class" />
+          <Button Text="Email to desk" Clicked="OnSubmit" />
+        </VerticalStackLayout>
+      </Border>
+
+      <Button Text="Save"
+              Clicked="OnSaveClicked" />
     </VerticalStackLayout>
   </ScrollView>
 </ContentPage>

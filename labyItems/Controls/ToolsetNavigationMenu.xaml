@@ -103,7 +103,8 @@
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 18">
                         <VerticalStackLayout Spacing="8">
-                            <Grid ColumnDefinitions="28,*,Auto">
+                            <Grid ColumnDefinitions="28,*,24"
+                                  ColumnSpacing="8">
                                 <Label FontFamily="FASolid"
                                        FontSize="18"
                                        Text="&#xF468;"
