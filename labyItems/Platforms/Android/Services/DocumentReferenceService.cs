@@ -32,6 +32,10 @@ public sealed partial class DocumentReferenceService
     private partial Task<DocumentReferenceCapture?> CapturePhotoPlatformAsync()
         => MainThread.InvokeOnMainThreadAsync(async () =>
         {
+            var permission = await Permissions.RequestAsync<Permissions.Camera>();
+            if (permission != PermissionStatus.Granted)
+                throw new InvalidOperationException("Allow camera access to attach a photo to this creation.");
+
             var activity = Platform.CurrentActivity ?? throw new InvalidOperationException("Android activity is unavailable.");
             var resolver = activity.ContentResolver ?? throw new InvalidOperationException("Android content resolver is unavailable.");
 
