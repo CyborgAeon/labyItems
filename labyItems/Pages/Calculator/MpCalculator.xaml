@@ -1,15 +1,76 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<TabbedPage
+<ContentPage
   x:Class="labyItems.Pages.Calculator.MpCalculator"
   x:Name="Root"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:controls="clr-namespace:labyItems.Controls"
   NavigationPage.HasNavigationBar="False"
-  NavigationPage.HasBackButton="False"
   Shell.NavBarIsVisible="False"
-  Title="">
-  <ContentPage x:Name="BackTab"
-               Title="Back">
-    <Grid />
-  </ContentPage>
-</TabbedPage>
+  Title="Create MP Item">
+  <Grid>
+    <ScrollView>
+      <VerticalStackLayout Padding="20,20,20,32"
+                           Spacing="18">
+        <Grid ColumnDefinitions="Auto,*"
+              ColumnSpacing="12">
+          <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
+          <VerticalStackLayout Grid.Column="1"
+                               Spacing="2"
+                               VerticalOptions="Center">
+            <Label FontAttributes="Bold"
+                   FontSize="28"
+                   Text="Create MP item" />
+            <Label Text="Choose which monster point route applies, then complete that form."
+                   TextColor="{StaticResource Gray500}" />
+          </VerticalStackLayout>
+        </Grid>
+
+        <Border Padding="20"
+                Stroke="{StaticResource SurfaceBorderColor}"
+                StrokeShape="RoundRectangle 22">
+          <Border.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnBasicTapped" />
+          </Border.GestureRecognizers>
+          <VerticalStackLayout Spacing="6">
+            <Label FontAttributes="Bold"
+                   FontSize="22"
+                   Text="Standard" />
+            <Label Text="Available on any day." />
+          </VerticalStackLayout>
+        </Border>
+
+        <Border Padding="20"
+                Stroke="{StaticResource SurfaceBorderColor}"
+                StrokeShape="RoundRectangle 22">
+          <Border.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnCrewTapped" />
+          </Border.GestureRecognizers>
+          <VerticalStackLayout Spacing="6">
+            <Label FontAttributes="Bold"
+                   FontSize="22"
+                   Text="Crew" />
+            <Label Text="Available on any day crewing." />
+          </VerticalStackLayout>
+        </Border>
+
+        <Border Padding="20"
+                Stroke="{StaticResource SurfaceBorderColor}"
+                StrokeShape="RoundRectangle 22">
+          <Border.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnThemeDayTapped" />
+          </Border.GestureRecognizers>
+          <VerticalStackLayout Spacing="6">
+            <Label FontAttributes="Bold"
+                   FontSize="22"
+                   Text="Themeday" />
+            <Label Text="Available on any day you've crewed a themeday." />
+          </VerticalStackLayout>
+        </Border>
+      </VerticalStackLayout>
+    </ScrollView>
+
+    <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
+                                    SelectedRoute="{x:Static controls:ToolsetRouteKeys.ItemsMp}" />
+  </Grid>
+</ContentPage>

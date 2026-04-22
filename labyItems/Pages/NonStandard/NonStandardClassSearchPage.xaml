@@ -5,6 +5,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:characters="clr-namespace:labyItems.Pages.Characters"
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False"
     Title="Select Class"
     BackgroundColor="{StaticResource White}">
 
@@ -19,15 +21,30 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid Padding="16"
-          RowDefinitions="Auto,Auto,*"
-          RowSpacing="8">
-        <Entry Grid.Row="0"
-               Placeholder="Search classes..."
-               ClearButtonVisibility="WhileEditing"
-               Text="{Binding SearchText, Mode=TwoWay}"/>
+        <Grid RowDefinitions="Auto,Auto,*,Auto"
+                    RowSpacing="8"
+                    BackgroundColor="{StaticResource White}">
+                <Grid Grid.Row="0"
+                            Padding="12,8"
+                            ColumnDefinitions="Auto,*"
+                            ColumnSpacing="8">
+                        <Button Grid.Column="0"
+                                        Text="&#xF060;"
+                                        FontFamily="FASolid"
+                                        WidthRequest="38"
+                                        HeightRequest="38"
+                                        Padding="0"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource Gray300}"
+                                        Clicked="OnBackClicked"/>
+                        <SearchBar Grid.Column="1"
+                                             Placeholder="Search classes..."
+                                             BackgroundColor="{StaticResource White}"
+                                             Text="{Binding SearchText, Mode=TwoWay}"/>
+                </Grid>
 
-        <CollectionView Grid.Row="1"
+                <CollectionView Grid.Row="1"
+                                                Margin="16,0,16,0"
                         ItemsSource="{Binding FilterChips}"
                         SelectionMode="None"
                         ItemsLayout="HorizontalList"
@@ -47,9 +64,24 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <CollectionView Grid.Row="2"
+                <CollectionView Grid.Row="2"
+                                                Margin="16,0,16,0"
                         ItemsSource="{Binding FilteredClasses}"
                         ItemTemplate="{StaticResource ClassCardTemplate}"
                         SelectionMode="None"/>
+
+                <Grid Grid.Row="3"
+                            RowDefinitions="1,Auto">
+                        <BoxView Grid.Row="0"
+                                         HeightRequest="1"
+                                         BackgroundColor="{StaticResource SurfaceBorderColor}"/>
+                        <Grid Grid.Row="1"
+                                    Padding="16,10,16,16">
+                                <Button Text="Confirm class"
+                                                IsEnabled="{Binding HasSelection}"
+                                                Style="{StaticResource ExpandedActionButtonStyle}"
+                                                Clicked="OnConfirmSelectionClicked"/>
+                        </Grid>
+                </Grid>
     </Grid>
 </ContentPage>

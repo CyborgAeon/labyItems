@@ -29,6 +29,16 @@ export PATH="$HOME/.dotnet:$PATH"
 $HOME/.dotnet/dotnet --info
 ```
 
+Example bootstrap for Windows (PowerShell):
+
+```powershell
+Invoke-WebRequest -Uri https://dot.net/v1/dotnet-install.ps1 -OutFile dotnet-install.ps1
+.\dotnet-install.ps1 -Channel 10.0 -Version 10.0.101
+dotnet nuget add source https://api.nuget.org/v3/index.json -n nuget.org
+dotnet nuget add source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet10/nuget/v3/index.json -n dotnet10
+dotnet workload install maui maui-android ios
+```
+
 ## task board
 
 https://trello.com/b/UmbW9Vwl/laby-automation
@@ -57,7 +67,11 @@ If you want the PATH change to persist, add `export PATH="$HOME/.dotnet:$PATH"` 
 
 ## hot reload (android)
 
-Make sure an emulator or device is running, then:
+Make sure an Android emulator or device is already running.
+
+### macOS / Linux
+
+Use this when you are running the repo from a bash/zsh shell:
 
 ```bash
 PKG=bard.uk.labyitems
@@ -67,7 +81,7 @@ adb push "$DB" /data/local/tmp/laby.db
 adb shell run-as "$PKG" sh -c 'cd /data/user/0/'"$PKG"' && mkdir -p files && cp /data/local/tmp/laby.db files/laby.db'
 ```
 
-then run
+Then start MAUI watch:
 
 ```bash
 DOTNET_USE_POLLING_FILE_WATCHER=1 \
@@ -81,6 +95,45 @@ If you just ran an iOS-only build and `dotnet watch` reports `NETSDK1005` for `n
 
 ```bash
 $HOME/.dotnet/dotnet restore labyItems/labyItems.csproj -p:TargetFramework=net10.0-android
+```r
+
+### Windows (PowerShell)
+
+Use this from PowerShell. The bash helper script does not run natively on Windows, so generate and migrate the DB with `dotnet run` directly:
+
+```powershell
+$pkg = "bard.uk.labyitems"
+$db = "output/laby.db"
+$seed = "labyItems/Resources/Raw/druids_way/evocs.json"
+
+New-Item -ItemType Directory -Force -Path output | Out-Null
+
+if (-not (Test-Path $db)) {
+  dotnet run --project tools/evocdbgen/evocdbgen.csproj -c Release -- $seed $db
+}
+
+dotnet run --project tools/migrator/migrator.csproj -c Release -- $db
+adb push $db /data/local/tmp/laby.db
+adb shell run-as $pkg sh -c "cd /data/user/0/$pkg && mkdir -p files && cp /data/local/tmp/laby.db files/laby.db"
+```
+
+Then start MAUI watch:
+
+```powershell
+$env:DOTNET_USE_POLLING_FILE_WATCHER = "1"
+dotnet watch --project labyItems/labyItems.csproj --framework net10.0-android run --configuration Debug
+```
+
+If `adb` is not found, add your Android SDK `platform-tools` directory to `PATH` first. On a typical Windows install that is:
+
+```powershell
+$env:PATH += ";$env:LOCALAPPDATA\Android\Sdk\platform-tools"
+```
+
+If `dotnet watch` reports `NETSDK1005` for `net10.0-android`, refresh restore assets with:
+
+```powershell
+dotnet restore labyItems/labyItems.csproj -p:TargetFramework=net10.0-android
 ```
 
 ## unit tests (logic-only)
@@ -92,6 +145,8 @@ $HOME/.dotnet/dotnet test tests/labyItems.Tests/labyItems.Tests.csproj
 ```
 
 ## iOS (build latest + push to simulator, keep app data)
+
+**Xcode Version:** This project targets .NET 10 with iOS SDK 26.2.10233, which requires Xcode 26.3 or later. If building with an older version of Xcode, you may need to update your Xcode installation. For CI/CD pipelines, ensure the runner has Xcode 26.3+.
 
 Make sure a simulator is booted, then:
 

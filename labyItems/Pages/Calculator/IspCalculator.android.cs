@@ -30,14 +30,6 @@ public partial class IspCalculator
                 if (tabStrip.GetChildAt(i) is ViewGroup tabView)
                 {
                     tabView.SetMinimumWidth(0);
-                    tabView.LayoutParameters = i == 0
-                        ? new LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.WrapContent,
-                            ViewGroup.LayoutParams.MatchParent)
-                        : new LinearLayout.LayoutParams(
-                            0,
-                            ViewGroup.LayoutParams.MatchParent,
-                            1f);
 
                     var horizontalPaddingDp = i == 0 ? 1 : 0;
                     var horizontalPaddingPx = (int)(horizontalPaddingDp * density);

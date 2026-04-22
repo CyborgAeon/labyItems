@@ -4,56 +4,88 @@
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="Wallet">
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False"
+    Title="Creations Hub">
 
     <Grid RowDefinitions="Auto,*">
-        <VerticalStackLayout Padding="16,12,16,8"
-                             Spacing="8">
-            <Label Text="Non-standards Wallet"
-                   FontAttributes="Bold"
-                   FontSize="20"/>
+        <ScrollView>
+            <VerticalStackLayout Padding="16,12,16,24"
+                                 Spacing="16">
+                <Grid ColumnDefinitions="Auto,*,Auto"
+                      ColumnSpacing="10">
+                    <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
+                    <Label Grid.Column="1"
+                           Text="Creations"
+                           FontAttributes="Bold"
+                           FontSize="24"
+                           VerticalTextAlignment="Center" />
+                    <Button Grid.Column="2"
+                            Text="Create New  +"
+                            BackgroundColor="{StaticResource AccentMaroonColor}"
+                            TextColor="{StaticResource White}"
+                            CornerRadius="10"
+                            Padding="14,10"
+                            Clicked="OnCreateNewClicked" />
+                </Grid>
 
-            <Grid ColumnDefinitions="*,Auto"
-                  ColumnSpacing="8">
-                <Entry Grid.Column="0"
-                       Placeholder="Search non-standards..."
-                       TextChanged="OnSearchTextChanged"/>
-                <Button Grid.Column="1"
-                        Text="Refresh"
-                        Clicked="OnRefreshClicked"/>
-            </Grid>
+                <controls:MultiChipGroup Items="{Binding AvailableFilters}"
+                                         SelectedItems="{Binding SelectedFilters}" />
 
-            <Label Text="{Binding SummaryText}"
-                   FontSize="12"
-                   Opacity="0.75"/>
-        </VerticalStackLayout>
+                <Label Text="{Binding SummaryText}"
+                       FontSize="12"
+                       Opacity="0.7" />
 
-        <CollectionView Grid.Row="1"
-                        ItemsSource="{Binding FilteredEntries}"
-                        SelectionMode="None">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame Style="{StaticResource SectionCardFrameStyle}"
-                           Margin="16,0,16,10">
-                        <Grid ColumnDefinitions="*,Auto"
-                              ColumnSpacing="8">
-                            <VerticalStackLayout Spacing="4">
-                                <Label Text="{Binding Name}"
-                                       FontAttributes="Bold"
-                                       FontSize="16"/>
-                                <Label Text="{Binding Subtitle}"
-                                       FontSize="12"
-                                       Opacity="0.75"/>
-                            </VerticalStackLayout>
-                            <Button Grid.Column="1"
-                                    Text="Edit"
-                                    HeightRequest="36"
-                                    Clicked="OnEditClicked"
-                                    CommandParameter="{Binding .}"/>
-                        </Grid>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                <CollectionView ItemsSource="{Binding FilteredEntries}"
+                                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Style="{StaticResource SectionCardFrameStyle}"
+                                   Margin="0,0,0,10">
+                                <Grid ColumnDefinitions="*,Auto"
+                                      ColumnSpacing="10">
+                                    <VerticalStackLayout Spacing="6">
+                                        <Label Text="{Binding Name}"
+                                               FontAttributes="Bold"
+                                               FontSize="17" />
+                                        <Label Text="{Binding Subtitle}"
+                                               FontSize="13"
+                                               Opacity="0.78" />
+                                        <Label Text="{Binding UpdatedText}"
+                                               FontSize="12"
+                                               Opacity="0.58" />
+                                    </VerticalStackLayout>
+
+                                    <HorizontalStackLayout Grid.Column="1"
+                                                           Spacing="12"
+                                                           VerticalOptions="Center">
+                                        <Button Text="&#xF054;"
+                                                Style="{StaticResource ListRowGlyphIconButtonStyle}"
+                                                TextColor="{StaticResource AccentMaroonColor}"
+                                                Clicked="OnReviewClicked"
+                                                CommandParameter="{Binding .}" />
+                                        <Button Text="&#xF093;"
+                                                Style="{StaticResource ListRowGlyphIconButtonStyle}"
+                                                TextColor="{StaticResource AccentMaroonColor}"
+                                                Clicked="OnFilesClicked"
+                                                CommandParameter="{Binding .}" />
+                                        <Button Text="&#xF1FC;"
+                                                Style="{StaticResource ListRowGlyphIconButtonStyle}"
+                                                TextColor="{StaticResource AccentMaroonColor}"
+                                                Clicked="OnEditClicked"
+                                                CommandParameter="{Binding .}" />
+                                    </HorizontalStackLayout>
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
+                                        Grid.RowSpan="2"
+                                        SelectedRoute="{x:Static controls:ToolsetRouteKeys.NonStandard}" />
     </Grid>
 </ContentPage>

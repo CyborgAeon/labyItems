@@ -5,15 +5,26 @@
   xmlns:cfg="clr-namespace:labyItems.Pages.Configs"
   xmlns:controls="clr-namespace:labyItems.Controls"
   xmlns:conv="clr-namespace:labyItems.Converters"
-  xmlns:enums="clr-namespace:labyItems.Models.Enums" x:Name="RootPage" Title="Configure Weapon" x:TypeArguments="cfg:WeaponConfig">
+  xmlns:enums="clr-namespace:labyItems.Models.Enums"
+  xmlns:toolset="clr-namespace:labyItems.Controls" x:Name="RootPage" Title="Configure Weapon" x:TypeArguments="cfg:WeaponConfig">
   <cfg:ConfigPageBase.Resources>
     <ResourceDictionary>
       <conv:EnumEqualsConverter x:Key="EnumEqualsConverter" />
     </ResourceDictionary>
   </cfg:ConfigPageBase.Resources>
-  <Grid RowDefinitions="*,Auto">
+  <Grid>
+    <Grid RowDefinitions="*,Auto">
     <ScrollView Grid.Row="0">
       <VerticalStackLayout Padding="20" Spacing="14">
+        <Grid ColumnDefinitions="Auto,*"
+              ColumnSpacing="12">
+          <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
+          <Label Grid.Column="1"
+                 FontAttributes="Bold"
+                 FontSize="28"
+                 Text="Weapon"
+                 VerticalTextAlignment="Center" />
+        </Grid>
         <controls:ChipGroup Items="{Binding BaseTypes}" SelectedItem="{Binding SelectedBaseType, Mode=TwoWay}" VerticalOptions="Center"/>
 
         <VerticalStackLayout IsVisible="{Binding ShowMagicBaseOptions}" Spacing="6">
@@ -77,6 +88,9 @@
 
       </VerticalStackLayout>
     </ScrollView>
-    <controls:StickyFooterControl Grid.Row="1" BreakdownItems="{Binding Source={x:Reference RootPage}, Path=FooterBreakdownItems}" ButtonText="Save" RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.RemoveContributionCommand}" ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}" ReturnCommandParameter="{x:Reference RootPage}" Total="{Binding Source={x:Reference RootPage}, Path=FooterRunningTotal}" IsReturnEnabled="{Binding CanSubmit}"/>
+    <controls:StickyFooterControl Grid.Row="1" BreakdownItems="{Binding Source={x:Reference RootPage}, Path=FooterBreakdownItems}" ButtonText="Add to item" RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.RemoveContributionCommand}" ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}" ReturnCommandParameter="{x:Reference RootPage}" Total="{Binding Source={x:Reference RootPage}, Path=FooterRunningTotal}" IsReturnEnabled="{Binding CanSubmit}"/>
+    </Grid>
+    <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
+                                    SelectedRoute="{x:Static toolset:ToolsetRouteKeys.ItemsIsp}" />
   </Grid>
 </cfg:ConfigPageBase>

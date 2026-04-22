@@ -6,6 +6,7 @@
   xmlns:controls="clr-namespace:labyItems.Controls"
   xmlns:conv="clr-namespace:labyItems.Converters"
   xmlns:enums="clr-namespace:labyItems.Models.Enums"
+  xmlns:toolset="clr-namespace:labyItems.Controls"
   x:Name="RootPage"
   Title="Configure General Charm"
   NavigationPage.HasNavigationBar="False"
@@ -23,22 +24,18 @@
     <conv:BoolIsFalseConverter x:Key="BoolIsFalseConverter"/>
     <conv:TogglePlaceholderConverter x:Key="TogglePlaceholderConverter"/>
   </ContentPage.Resources>
-  <Grid RowDefinitions="*,Auto">
+  <Grid>
+    <Grid RowDefinitions="*,Auto">
     <ScrollView Grid.Row="0">
       <VerticalStackLayout Padding="20" Spacing="10">
-        <Grid ColumnDefinitions="Auto,*,Auto"
+        <Grid ColumnDefinitions="Auto,*"
               ColumnSpacing="8">
-          <controls:BackNavigationButton Command="{Binding Source={x:Reference RootPage}, Path=BackNavigationCommand}" />
+          <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
           <Label Grid.Column="1"
                  FontAttributes="Bold"
                  FontSize="28"
-                 HorizontalTextAlignment="Center"
                  Text="General"
                  VerticalTextAlignment="Center" />
-          <BoxView Grid.Column="2"
-                   WidthRequest="48"
-                   BackgroundColor="Transparent"
-                   InputTransparent="True" />
         </Grid>
         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
           <Label FontAttributes="Bold" FontSize="20" Text="Add Tables Ability"/>
@@ -136,6 +133,9 @@
       </VerticalStackLayout>
     </ScrollView>
 
-    <controls:StickyFooterControl Grid.Row="1" ButtonText="Return to Calculator" ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}" ReturnCommandParameter="{x:Reference RootPage}" Total="{Binding Source={x:Reference RootPage}, Path=FooterRunningTotal}" BreakdownItems="{Binding Source={x:Reference RootPage}, Path=FooterBreakdownItems}" RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.RemoveContributionCommand}"/>
+    <controls:StickyFooterControl Grid.Row="1" ButtonText="Add to item" ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}" ReturnCommandParameter="{x:Reference RootPage}" Total="{Binding Source={x:Reference RootPage}, Path=FooterRunningTotal}" BreakdownItems="{Binding Source={x:Reference RootPage}, Path=FooterBreakdownItems}" RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.RemoveContributionCommand}"/>
+    </Grid>
+    <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
+                                    SelectedRoute="{x:Static toolset:ToolsetRouteKeys.ItemsIsp}" />
   </Grid>
 </cfg:ConfigPageBase>

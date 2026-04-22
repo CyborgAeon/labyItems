@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.NonStandard.NonStandardTagSearchPage"
+    x:Name="Root"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    NavigationPage.HasNavigationBar="False"
+    NavigationPage.HasBackButton="False"
+    Shell.NavBarIsVisible="False"
+    BackgroundColor="{StaticResource White}">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto"
+          RowSpacing="0"
+          BackgroundColor="{StaticResource White}">
+        <Grid Grid.Row="0"
+              Padding="12,8"
+              ColumnDefinitions="Auto,*"
+              ColumnSpacing="8">
+            <Button Grid.Column="0"
+                    Text="&#xF060;"
+                    FontFamily="FASolid"
+                    WidthRequest="38"
+                    HeightRequest="38"
+                    Padding="0"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource Gray300}"
+                    Clicked="OnBackClicked"/>
+            <SearchBar Grid.Column="1"
+                       Placeholder="Search tags"
+                       BackgroundColor="{StaticResource White}"
+                       TextChanged="OnSearchTextChanged"/>
+        </Grid>
+
+        <VerticalStackLayout Grid.Row="1"
+                             Padding="16,0,16,8"
+                             Spacing="8">
+            <Label Text="Current selection"
+                   FontSize="12"
+                   Opacity="0.7"/>
+            <CollectionView ItemsSource="{Binding SelectedTags}"
+                            SelectionMode="None"
+                            ItemsLayout="HorizontalList"
+                            HeightRequest="42">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Stroke="{StaticResource SurfaceBorderColor}"
+                                BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}"
+                                StrokeShape="RoundRectangle 999"
+                                Margin="0,0,8,0"
+                                Padding="10,6">
+                            <Grid ColumnDefinitions="Auto,Auto"
+                                  ColumnSpacing="8">
+                                <Label Text="{Binding Title}"
+                                       VerticalTextAlignment="Center"/>
+                                <Button Grid.Column="1"
+                                        Text="&#xF00D;"
+                                        FontFamily="FASolid"
+                                        WidthRequest="20"
+                                        HeightRequest="20"
+                                        Padding="0"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource AccentMaroonColor}"
+                                        Clicked="OnRemoveSelectedTagClicked"
+                                        CommandParameter="{Binding .}"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Label Text="{Binding SelectionHint}"
+                   FontSize="12"
+                   Opacity="0.75"/>
+        </VerticalStackLayout>
+
+        <CollectionView Grid.Row="2"
+                        Margin="16,8,16,8"
+                        ItemsSource="{Binding FilteredOptions}"
+                        SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,0,0,8"
+                           Padding="10"
+                           BorderColor="{StaticResource SurfaceBorderColor}"
+                           BackgroundColor="{StaticResource White}"
+                           HasShadow="False">
+                        <Grid ColumnDefinitions="Auto,*"
+                              ColumnSpacing="8">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnOptionTapped"
+                                                      CommandParameter="{Binding .}"/>
+                            </Grid.GestureRecognizers>
+                            <Label Grid.Column="0"
+                                   Text="{Binding SelectionGlyph}"
+                                   FontFamily="FASolid"
+                                   VerticalTextAlignment="Center"
+                                   TextColor="{StaticResource AccentMaroonColor}"/>
+                            <VerticalStackLayout Grid.Column="1"
+                                                 Spacing="6">
+                                <Label Text="{Binding Title}"
+                                       FontAttributes="Bold"/>
+                                <controls:ChipGroup Items="{Binding DisplayChips}"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Grid Grid.Row="3"
+              RowDefinitions="1,Auto">
+            <BoxView Grid.Row="0"
+                     HeightRequest="1"
+                     BackgroundColor="{StaticResource SurfaceBorderColor}"/>
+            <Grid Grid.Row="1"
+                  Padding="16,10,16,16">
+                <Button Text="Confirm tags"
+                        IsEnabled="{Binding HasSelection}"
+                        Style="{StaticResource ExpandedActionButtonStyle}"
+                        Clicked="OnConfirmClicked"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentPage>

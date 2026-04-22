@@ -1,7 +1,8 @@
 using System.Collections.Specialized;
-using Microsoft.Maui.ApplicationModel;
+using System.Windows.Input;
 using labyItems.Helpers;
 using labyItems.Infrastructure;
+using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls.Shapes;
 
 namespace labyItems.Controls;
@@ -32,14 +33,6 @@ public partial class StepIndicator : ContentView
             propertyChanged: (b, o, n) =>
                 ((StepIndicator)b).OnStepsChanged(o as IList<StepItem>, n as IList<StepItem>));
 
-    private INotifyCollectionChanged? _stepsNotify;
-
-    public IList<StepItem> Steps
-    {
-        get => (GetValue(StepsProperty) as IList<StepItem>) ?? Array.Empty<StepItem>();
-        set => SetValue(StepsProperty, value);
-    }
-
     public static readonly BindableProperty CurrentStepProperty =
         BindableProperty.Create(
             nameof(CurrentStep),
@@ -49,24 +42,23 @@ public partial class StepIndicator : ContentView
             propertyChanged: (b, o, n) =>
                 ((StepIndicator)b).UpdateVisualStates());
 
-    public int CurrentStep
-    {
-        get => (int)GetValue(CurrentStepProperty);
-        set => SetValue(CurrentStepProperty, value);
-    }
-
     public static readonly BindableProperty StepClickCommandProperty =
         BindableProperty.Create(
             nameof(StepClickCommand),
-            typeof(Command<int>),
+            typeof(ICommand),
             typeof(StepIndicator),
-            defaultValue: null);
+            defaultValue: null,
+            propertyChanged: (b, o, n) =>
+                ((StepIndicator)b).UpdateVisualStates());
 
-    public Command<int>? StepClickCommand
-    {
-        get => (Command<int>?)GetValue(StepClickCommandProperty);
-        set => SetValue(StepClickCommandProperty, value);
-    }
+    public static readonly BindableProperty MaxAccessibleStepProperty =
+        BindableProperty.Create(
+            nameof(MaxAccessibleStep),
+            typeof(int),
+            typeof(StepIndicator),
+            int.MaxValue,
+            propertyChanged: (b, o, n) =>
+                ((StepIndicator)b).UpdateVisualStates());
 
     public static readonly BindableProperty BubbleSizeProperty =
         BindableProperty.Create(
@@ -77,20 +69,51 @@ public partial class StepIndicator : ContentView
             propertyChanged: (b, o, n) =>
                 ((StepIndicator)b).Rebuild());
 
-    public double BubbleSize
-    {
-        get => (double)GetValue(BubbleSizeProperty);
-        set => SetValue(BubbleSizeProperty, value);
-    }
-
     public static readonly BindableProperty StepSpacingProperty =
         BindableProperty.Create(
             nameof(StepSpacing),
             typeof(double),
             typeof(StepIndicator),
-            22d, // adjust to taste
+            22d,
             propertyChanged: (b, o, n) =>
                 ((StepIndicator)b).Rebuild());
+
+    private INotifyCollectionChanged? _stepsNotify;
+    private readonly List<StepVisual> _items = new();
+    private int _lastProgressStep = -1;
+    private int _pendingProgressStep = -1;
+    private const uint ProgressAnimationLength = 400;
+    private const uint ProgressAnimationDelay = 120;
+
+    public IList<StepItem> Steps
+    {
+        get => (GetValue(StepsProperty) as IList<StepItem>) ?? Array.Empty<StepItem>();
+        set => SetValue(StepsProperty, value);
+    }
+
+    public int CurrentStep
+    {
+        get => (int)GetValue(CurrentStepProperty);
+        set => SetValue(CurrentStepProperty, value);
+    }
+
+    public ICommand? StepClickCommand
+    {
+        get => (ICommand?)GetValue(StepClickCommandProperty);
+        set => SetValue(StepClickCommandProperty, value);
+    }
+
+    public int MaxAccessibleStep
+    {
+        get => (int)GetValue(MaxAccessibleStepProperty);
+        set => SetValue(MaxAccessibleStepProperty, value);
+    }
+
+    public double BubbleSize
+    {
+        get => (double)GetValue(BubbleSizeProperty);
+        set => SetValue(BubbleSizeProperty, value);
+    }
 
     public double StepSpacing
     {
@@ -109,12 +132,6 @@ public partial class StepIndicator : ContentView
         public required Label Caption;
         public required int Index;
     }
-
-    private readonly List<StepVisual> _items = new();
-    private int _lastProgressStep = -1;
-    private int _pendingProgressStep = -1;
-    private const uint ProgressAnimationLength = 400;
-    private const uint ProgressAnimationDelay = 120;
 
     private void OnStepsChanged(IList<StepItem>? oldSteps, IList<StepItem>? newSteps)
     {
@@ -238,7 +255,6 @@ public partial class StepIndicator : ContentView
                 VerticalOptions = LayoutOptions.Center
             };
 
-            // Order matters: halo behind, bubble middle, text on top
             overlay.Children.Add(halo);
             overlay.Children.Add(bubble);
             overlay.Children.Add(bubbleText);
@@ -250,12 +266,16 @@ public partial class StepIndicator : ContentView
                 LineBreakMode = LineBreakMode.NoWrap,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Start,
-                Margin = new Thickness(0, 5, 0, 0)
+                Margin = new Thickness(0, 5, 0, 0),
+                MaximumWidthRequest = BubbleSize + 48
             };
 
             var stepIndex = i;
             bubble.Clicked += async (_, __) =>
             {
+                if (!bubble.IsEnabled)
+                    return;
+
                 await overlay.ScaleTo(0.97, 70, Easing.CubicInOut);
                 await overlay.ScaleTo(1.00, 70, Easing.CubicInOut);
 
@@ -279,7 +299,6 @@ public partial class StepIndicator : ContentView
 
         UpdateVisualStates();
 
-        // Ensure line updates after layout positions settle
         UiDispatchHelper.RunFireAndForget(async () =>
         {
             await Task.Delay(1).ConfigureAwait(false);
@@ -296,7 +315,6 @@ public partial class StepIndicator : ContentView
             return;
         }
 
-        // Clamp to valid range
         var current = Math.Max(0, Math.Min(CurrentStep, count - 1));
         if (current != CurrentStep)
             CurrentStep = current;
@@ -305,53 +323,57 @@ public partial class StepIndicator : ContentView
 
         var primary = TryGetColor("PrimaryColor", ColourScheme.Primary);
         var primaryText = TryGetColor("PrimaryForegroundColor", Colors.White);
-
         var secondary = TryGetColor("SecondaryColor", Colors.Gainsboro);
         var mutedText = TryGetColor("MutedForegroundColor", Colors.Gray);
-        var isClickable = StepClickCommand != null || StepClicked != null;
+        var hasClickHandler = StepClickCommand != null || StepClicked != null;
+        var maxAccessibleStep = Math.Max(0, Math.Min(MaxAccessibleStep, count - 1));
 
         for (int i = 0; i < _items.Count; i++)
         {
-            var v = _items[i];
+            var item = _items[i];
 
-            // Stop any previous halo animation when state changes
-            v.Halo.AbortAnimation("halo");
-            v.Halo.Opacity = 0;
-            v.Halo.Scale = 1;
+            item.Halo.AbortAnimation("halo");
+            item.Halo.Opacity = 0;
+            item.Halo.Scale = 1;
 
-            var isCompleted = v.Index < CurrentStep;
-            var isCurrent = v.Index == CurrentStep;
+            var isCompleted = item.Index < CurrentStep;
+            var isCurrent = item.Index == CurrentStep;
+            var canNavigateToStep = item.Index <= maxAccessibleStep || item.Index <= CurrentStep;
+            var isClickable = hasClickHandler && canNavigateToStep;
 
             if (isCompleted || isCurrent)
             {
-                v.Bubble.BackgroundColor = primary;
-                v.BubbleText.TextColor = primaryText;
+                item.Bubble.BackgroundColor = primary;
+                item.BubbleText.TextColor = primaryText;
             }
             else
             {
-                v.Bubble.BackgroundColor = secondary;
-                v.BubbleText.TextColor = mutedText;
+                item.Bubble.BackgroundColor = secondary;
+                item.BubbleText.TextColor = mutedText;
             }
 
             if (isCompleted)
             {
-                v.BubbleText.Text = "✓";
-                v.BubbleText.FontSize = 18;
+                item.BubbleText.Text = "\u2713";
+                item.BubbleText.FontSize = 18;
             }
             else
             {
-                v.BubbleText.Text = (v.Index + 1).ToString();
-                v.BubbleText.FontSize = 14;
+                item.BubbleText.Text = (item.Index + 1).ToString();
+                item.BubbleText.FontSize = 14;
             }
 
-            v.Caption.TextColor = isCurrent ? primary : mutedText;
-            v.Caption.FontAttributes = isCurrent ? FontAttributes.Bold : FontAttributes.None;
+            item.Caption.TextColor = isCurrent ? primary : mutedText;
+            item.Caption.FontAttributes = isCurrent ? FontAttributes.Bold : FontAttributes.None;
+            item.Caption.Opacity = canNavigateToStep ? 1.0 : 0.65;
 
-            v.Bubble.IsEnabled = isClickable;
-            v.Bubble.Opacity = isClickable ? 1.0 : 0.6;
+            item.Bubble.IsEnabled = isClickable;
+            item.Bubble.Opacity = isCompleted || isCurrent
+                ? 1.0
+                : isClickable ? 1.0 : 0.5;
 
             if (isCurrent)
-                StartHaloPulse(v.Halo, primary);
+                StartHaloPulse(item.Halo, primary);
         }
 
         UpdateProgressLine();
@@ -359,10 +381,11 @@ public partial class StepIndicator : ContentView
 
     private void StartHaloPulse(VisualElement halo, Color primary)
     {
-        if (halo.AnimationIsRunning("halo")) return;
+        if (halo.AnimationIsRunning("halo"))
+            return;
 
-        if (halo is Border b)
-            b.Stroke = new SolidColorBrush(primary);
+        if (halo is Border border)
+            border.Stroke = new SolidColorBrush(primary);
 
         var animation = new Animation();
         animation.Add(0.00, 0.50, new Animation(v => halo.Opacity = v, 0.00, 0.35, Easing.CubicInOut));
@@ -385,19 +408,22 @@ public partial class StepIndicator : ContentView
             return;
         }
 
-        if (StepsGrid.Width <= 0) return;
+        if (StepsGrid.Width <= 0)
+            return;
 
         var first = _items[0].Overlay;
         var last = _items[count - 1].Overlay;
-        if (first.Width <= 0 || last.Width <= 0) return;
+        if (first.Width <= 0 || last.Width <= 0)
+            return;
 
         var firstCenter = first.X + (first.Width / 2);
         var lastCenter = last.X + (last.Width / 2);
         var currentIndex = Math.Max(0, Math.Min(CurrentStep, count - 1));
         var current = _items[currentIndex].Overlay;
-        if (current.Width <= 0) return;
-        var currentCenter = current.X + (current.Width / 2);
+        if (current.Width <= 0)
+            return;
 
+        var currentCenter = current.X + (current.Width / 2);
         var leftMargin = Math.Max(0, firstCenter);
         var rightMargin = Math.Max(0, StepsGrid.Width - lastCenter);
         LineBg.Margin = new Thickness(leftMargin, 0, rightMargin, 0);

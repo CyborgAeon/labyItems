@@ -3,10 +3,21 @@
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:cfg="clr-namespace:labyItems.Pages.Configs"
-  xmlns:controls="clr-namespace:labyItems.Controls" x:Name="RootPage" Title="Armour Config" x:TypeArguments="cfg:ArmourConfig">
-  <Grid RowDefinitions="*,Auto">
+  xmlns:controls="clr-namespace:labyItems.Controls"
+  xmlns:toolset="clr-namespace:labyItems.Controls" x:Name="RootPage" Title="Armour Config" x:TypeArguments="cfg:ArmourConfig">
+  <Grid>
+    <Grid RowDefinitions="*,Auto">
     <ScrollView Grid.Row="0">
       <VerticalStackLayout Padding="20" Spacing="14">
+        <Grid ColumnDefinitions="Auto,*"
+              ColumnSpacing="12">
+          <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
+          <Label Grid.Column="1"
+                 FontAttributes="Bold"
+                 FontSize="28"
+                 Text="Armour"
+                 VerticalTextAlignment="Center" />
+        </Grid>
         <controls:ChipGroup Grid.Column="0" Items="{Binding ArmourTypes}" SelectedItem="{Binding SelectedArmour, Mode=TwoWay}" VerticalOptions="Center"/>
         <controls:ArmourLayerControl Layers="{Binding ArmourLayers}" TotalPac="{Binding ACBase, Mode=OneWayToSource}" SummaryText="{Binding LayeredSummary, Mode=OneWayToSource}" BreakdownText="{Binding LayeredBreakdown, Mode=OneWayToSource}" />
         <Label FontAttributes="Bold" Text="Enhancement bonus (max 6 each)" />
@@ -26,6 +37,9 @@
 
       </VerticalStackLayout>
     </ScrollView>
-    <controls:StickyFooterControl Grid.Row="1" BreakdownItems="{Binding Source={x:Reference RootPage}, Path=FooterBreakdownItems}" ButtonText="Return to Calculator" RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.RemoveContributionCommand}" ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}" ReturnCommandParameter="{x:Reference RootPage}" Total="{Binding Source={x:Reference RootPage}, Path=FooterRunningTotal}" />
+    <controls:StickyFooterControl Grid.Row="1" BreakdownItems="{Binding Source={x:Reference RootPage}, Path=FooterBreakdownItems}" ButtonText="Add to item" RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.RemoveContributionCommand}" ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}" ReturnCommandParameter="{x:Reference RootPage}" Total="{Binding Source={x:Reference RootPage}, Path=FooterRunningTotal}" />
+    </Grid>
+    <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
+                                    SelectedRoute="{x:Static toolset:ToolsetRouteKeys.ItemsIsp}" />
   </Grid>
 </cfg:ConfigPageBase>

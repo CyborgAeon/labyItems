@@ -5,12 +5,23 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:labyItems.Controls"
+    xmlns:toolset="clr-namespace:labyItems.Controls"
     Title="More">
 
-    <Grid RowDefinitions="*,Auto">
+    <Grid>
+        <Grid RowDefinitions="*,Auto">
         <ScrollView Grid.Row="0">
             <VerticalStackLayout Padding="16"
                                  Spacing="12">
+                <Grid ColumnDefinitions="Auto,*"
+                      ColumnSpacing="12">
+                    <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
+                    <Label Grid.Column="1"
+                           FontAttributes="Bold"
+                           FontSize="28"
+                           Text="Utility"
+                           VerticalTextAlignment="Center" />
+                </Grid>
                 <Label Text="Status"
                        FontAttributes="Bold"/>
                 <controls:ChipGroup Items="{Binding StatusOptions}"
@@ -120,11 +131,14 @@
         </ScrollView>
 
         <controls:StickyFooterControl Grid.Row="1"
-                                      ButtonText="Save"
+                                      ButtonText="Add to item"
                                       ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnToFormCommand}"
                                       ReturnCommandParameter="{x:Reference RootPage}"
                                       Total="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.Total}"
                                       BreakdownItems="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.BreakdownItems}"
                                       RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.RemoveContributionCommand}" />
+        </Grid>
+        <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
+                                        SelectedRoute="{x:Static toolset:ToolsetRouteKeys.ItemsIsp}" />
     </Grid>
 </ContentPage>

@@ -28,12 +28,31 @@ public sealed record NonStandardWalletEntry(
     NonStandardEntityType EntityType,
     string Name,
     string DataJson,
-    string Subtitle);
+    string Subtitle)
+{
+    public DateTimeOffset UpdatedAtUtc { get; init; } = DateTimeOffset.UtcNow;
+}
+
+public sealed record NonStandardDocumentLink(
+    string Id,
+    NonStandardEntityType EntityType,
+    string EntityName,
+    string DisplayName,
+    string FilePath,
+    string FileKind,
+    string? ContentType,
+    DateTimeOffset UpdatedAtUtc);
 
 public sealed class NonStandardLifeScaleAssignment
 {
     public string RaceName { get; set; } = string.Empty;
     public string? ClassName { get; set; }
+    public IReadOnlyList<LifeScalePoint>? Points { get; set; }
+}
+
+public sealed class RaceLifeScaleClassEntry
+{
+    public string ClassName { get; set; } = string.Empty;
     public IReadOnlyList<LifeScalePoint>? Points { get; set; }
 }
 
@@ -46,6 +65,10 @@ public sealed class NonStandardSaveRequest
     public string? LifeScaleClassName { get; set; }
     public IReadOnlyList<LifeScalePoint>? LifeScalePoints { get; set; }
     public IReadOnlyList<NonStandardLifeScaleAssignment>? LifeScaleAssignments { get; set; }
+    public IReadOnlyList<RaceLifeScaleClassEntry>? RaceLifeScaleEntries { get; set; }
+    public string? AssignedCharacterId { get; set; }
+    public string? AssignedCharacterName { get; set; }
+    public string? AssignedCharacterPlayerName { get; set; }
 }
 
 public static class NonStandardContentService
@@ -171,6 +194,7 @@ public static class NonStandardContentService
 
         request.Name = saveName;
         var payload = BuildPayload(request.EntityType, saveName, request.DataJson);
+        AppendAssignmentMetadata(payload, request);
 
         switch (request.EntityType)
         {
@@ -232,6 +256,117 @@ public static class NonStandardContentService
             .ToList();
 
         return Task.FromResult<IReadOnlyList<NonStandardWalletEntry>>(ordered);
+    }
+
+    public static Task<IReadOnlyList<NonStandardDocumentLink>> GetDocumentLinksAsync(
+        NonStandardEntityType entityType,
+        string entityName)
+    {
+        var normalizedEntityName = (entityName ?? string.Empty).Trim();
+        if (normalizedEntityName.Length == 0)
+            return Task.FromResult<IReadOnlyList<NonStandardDocumentLink>>(Array.Empty<NonStandardDocumentLink>());
+
+        var dbPath = ServiceHelper.EnsureDbPath();
+        if (string.IsNullOrWhiteSpace(dbPath))
+            return Task.FromResult<IReadOnlyList<NonStandardDocumentLink>>(Array.Empty<NonStandardDocumentLink>());
+
+        using var conn = new SqliteConnection($"Data Source={dbPath}");
+        conn.Open();
+        EnsureTables(conn);
+
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText =
+            @"SELECT id, entity_name, display_name, file_path, file_kind, content_type, updated_at
+FROM non_standard_documents
+WHERE entity_type=$entityType AND lower(entity_name)=lower($entityName)
+ORDER BY lower(display_name), updated_at DESC;";
+        cmd.Parameters.AddWithValue("$entityType", entityType.ToString());
+        cmd.Parameters.AddWithValue("$entityName", normalizedEntityName);
+
+        var links = new List<NonStandardDocumentLink>();
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            var id = reader.IsDBNull(0) ? Guid.NewGuid().ToString("N") : reader.GetString(0);
+            var storedEntityName = reader.IsDBNull(1) ? normalizedEntityName : reader.GetString(1);
+            var displayName = reader.IsDBNull(2) ? string.Empty : reader.GetString(2);
+            var filePath = reader.IsDBNull(3) ? string.Empty : reader.GetString(3);
+            var fileKind = reader.IsDBNull(4) ? "Document" : reader.GetString(4);
+            var contentType = reader.IsDBNull(5) ? null : reader.GetString(5);
+            var updatedAtRaw = reader.IsDBNull(6) ? string.Empty : reader.GetString(6);
+
+            links.Add(new NonStandardDocumentLink(
+                Id: id,
+                EntityType: entityType,
+                EntityName: storedEntityName,
+                DisplayName: displayName,
+                FilePath: filePath,
+                FileKind: fileKind,
+                ContentType: contentType,
+                UpdatedAtUtc: ParseTimestamp(updatedAtRaw)));
+        }
+
+        return Task.FromResult<IReadOnlyList<NonStandardDocumentLink>>(links);
+    }
+
+    public static Task SaveDocumentLinkAsync(
+        NonStandardEntityType entityType,
+        string entityName,
+        string displayName,
+        string filePath,
+        string? contentType)
+    {
+        var normalizedEntityName = (entityName ?? string.Empty).Trim();
+        var normalizedDisplayName = (displayName ?? string.Empty).Trim();
+        var normalizedFilePath = (filePath ?? string.Empty).Trim();
+        if (normalizedEntityName.Length == 0)
+            throw new InvalidOperationException("A creation must have a name before documents can be attached.");
+        if (normalizedDisplayName.Length == 0)
+            throw new InvalidOperationException("Document name is required.");
+        if (normalizedFilePath.Length == 0)
+            throw new InvalidOperationException("Document path is required.");
+
+        var dbPath = ServiceHelper.EnsureDbPath();
+        if (string.IsNullOrWhiteSpace(dbPath))
+            throw new InvalidOperationException("Database path is unavailable.");
+
+        using var conn = new SqliteConnection($"Data Source={dbPath}");
+        conn.Open();
+        EnsureTables(conn);
+
+        var now = DateTimeOffset.UtcNow.ToString("o");
+        Execute(conn,
+            @"INSERT INTO non_standard_documents
+(id, entity_type, entity_name, display_name, file_path, file_kind, content_type, created_at, updated_at)
+VALUES ($id, $entityType, $entityName, $displayName, $filePath, $fileKind, $contentType, $createdAt, $updatedAt);",
+            ("$id", Guid.NewGuid().ToString("N")),
+            ("$entityType", entityType.ToString()),
+            ("$entityName", normalizedEntityName),
+            ("$displayName", normalizedDisplayName),
+            ("$filePath", normalizedFilePath),
+            ("$fileKind", DetermineDocumentKind(contentType, normalizedFilePath)),
+            ("$contentType", string.IsNullOrWhiteSpace(contentType) ? DBNull.Value : contentType),
+            ("$createdAt", now),
+            ("$updatedAt", now));
+
+        return Task.CompletedTask;
+    }
+
+    public static Task DeleteDocumentLinkAsync(string id)
+    {
+        var normalizedId = (id ?? string.Empty).Trim();
+        if (normalizedId.Length == 0)
+            return Task.CompletedTask;
+
+        var dbPath = ServiceHelper.EnsureDbPath();
+        if (string.IsNullOrWhiteSpace(dbPath))
+            return Task.CompletedTask;
+
+        using var conn = new SqliteConnection($"Data Source={dbPath}");
+        conn.Open();
+        EnsureTables(conn);
+        Execute(conn, "DELETE FROM non_standard_documents WHERE id=$id;", ("$id", normalizedId));
+        return Task.CompletedTask;
     }
 
     private static async Task<IReadOnlyList<NonStandardTemplate>> GetClassTemplatesAsync()
@@ -355,6 +490,20 @@ public static class NonStandardContentService
         return payload;
     }
 
+    private static void AppendAssignmentMetadata(JsonObject payload, NonStandardSaveRequest request)
+    {
+        var id = (request.AssignedCharacterId ?? string.Empty).Trim();
+        var name = (request.AssignedCharacterName ?? string.Empty).Trim();
+        var player = (request.AssignedCharacterPlayerName ?? string.Empty).Trim();
+
+        if (id.Length == 0 && name.Length == 0 && player.Length == 0)
+            return;
+
+        payload["assignedCharacterId"] = id;
+        payload["assignedCharacterName"] = name;
+        payload["assignedCharacterPlayerName"] = player;
+    }
+
     private static string BuildClassTemplateJson(CharacterClassRecord record)
     {
         var model = new JsonObject
@@ -401,13 +550,19 @@ public static class NonStandardContentService
     {
         try
         {
+            var updatedColumn = ResolveColumnName(conn, table, "updated_at");
             using var cmd = conn.CreateCommand();
-            cmd.CommandText = $"SELECT {nameColumn}, data_json FROM {table};";
+            cmd.CommandText = updatedColumn == null
+                ? $"SELECT {nameColumn}, data_json FROM {table};"
+                : $"SELECT {nameColumn}, data_json, {updatedColumn} FROM {table};";
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
                 var name = reader.IsDBNull(0) ? string.Empty : reader.GetString(0);
                 var dataJson = reader.IsDBNull(1) ? "{}" : reader.GetString(1);
+                var updatedAt = updatedColumn == null || reader.FieldCount < 3 || reader.IsDBNull(2)
+                    ? DateTimeOffset.UtcNow
+                    : ParseTimestamp(reader.GetString(2));
                 var trimmedName = (name ?? string.Empty).Trim();
                 if (trimmedName.Length == 0)
                     continue;
@@ -527,6 +682,32 @@ public static class NonStandardContentService
         };
     }
 
+    private static DateTimeOffset ParseTimestamp(string? rawValue)
+    {
+        if (DateTimeOffset.TryParse(rawValue, out var parsed))
+            return parsed;
+
+        return DateTimeOffset.UtcNow;
+    }
+
+    private static string DetermineDocumentKind(string? contentType, string filePath)
+    {
+        var normalizedContentType = (contentType ?? string.Empty).Trim().ToLowerInvariant();
+        if (normalizedContentType.StartsWith("image/"))
+            return "Image";
+
+        if (normalizedContentType.Contains("pdf"))
+            return "PDF";
+
+        var extension = Path.GetExtension(filePath ?? string.Empty).Trim().ToLowerInvariant();
+        return extension switch
+        {
+            ".png" or ".jpg" or ".jpeg" or ".gif" or ".webp" or ".bmp" => "Image",
+            ".pdf" => "PDF",
+            _ => "Document"
+        };
+    }
+
     private static void SaveLifeScaleForClass(SqliteConnection conn, string className, NonStandardSaveRequest request)
     {
         var assignments = NormalizeClassLifeScaleAssignments(request);
@@ -543,12 +724,54 @@ public static class NonStandardContentService
 
     private static void SaveLifeScaleForRace(SqliteConnection conn, string raceName, NonStandardSaveRequest request)
     {
-        var className = (request.LifeScaleClassName ?? string.Empty).Trim();
-        if (className.Length == 0)
-            throw new InvalidOperationException("A class must be selected for race life-scale mapping.");
+        var entries = NormalizeRaceLifeScaleEntries(request);
+        if (entries.Count == 0)
+            throw new InvalidOperationException("At least one class must be selected for race life-scale mapping.");
 
-        var points = NormalizeLifeScalePoints(request.LifeScalePoints);
-        UpsertLifeScale(conn, raceName, className, points);
+        Execute(conn,
+            "DELETE FROM lifescales WHERE lower(race)=lower($race);",
+            ("$race", raceName));
+
+        foreach (var (className, points) in entries)
+            UpsertLifeScale(conn, raceName, className, points);
+    }
+
+    private static List<(string ClassName, IReadOnlyList<LifeScalePoint> Points)> NormalizeRaceLifeScaleEntries(
+        NonStandardSaveRequest request)
+    {
+        var normalized = new Dictionary<string, IReadOnlyList<LifeScalePoint>>(StringComparer.OrdinalIgnoreCase);
+
+        var entries = request.RaceLifeScaleEntries ?? Array.Empty<RaceLifeScaleClassEntry>();
+        foreach (var entry in entries)
+        {
+            if (entry == null)
+                continue;
+
+            var className = (entry.ClassName ?? string.Empty).Trim();
+            if (className.Length == 0)
+                continue;
+
+            var points = NormalizeLifeScalePoints(entry.Points);
+            normalized[className] = points;
+        }
+
+        if (normalized.Count > 0)
+        {
+            return normalized
+                .OrderBy(e => e.Key, StringComparer.OrdinalIgnoreCase)
+                .Select(e => (e.Key, e.Value))
+                .ToList();
+        }
+
+        // Fallback to legacy single-class
+        var legacyClass = (request.LifeScaleClassName ?? string.Empty).Trim();
+        if (legacyClass.Length > 0)
+            normalized[legacyClass] = NormalizeLifeScalePoints(request.LifeScalePoints);
+
+        return normalized
+            .OrderBy(e => e.Key, StringComparer.OrdinalIgnoreCase)
+            .Select(e => (e.Key, e.Value))
+            .ToList();
     }
 
     private static List<LifeScalePoint> NormalizeLifeScalePoints(IReadOnlyList<LifeScalePoint>? points)
@@ -1104,6 +1327,19 @@ updated_at TEXT
             @"CREATE TABLE IF NOT EXISTS evoc_ngrams (
 token TEXT,
 evoc_id TEXT
+);");
+
+        Execute(conn,
+            @"CREATE TABLE IF NOT EXISTS non_standard_documents (
+id TEXT PRIMARY KEY,
+entity_type TEXT NOT NULL,
+entity_name TEXT NOT NULL,
+display_name TEXT NOT NULL,
+file_path TEXT NOT NULL,
+file_kind TEXT NOT NULL,
+content_type TEXT,
+created_at TEXT,
+updated_at TEXT
 );");
     }
 

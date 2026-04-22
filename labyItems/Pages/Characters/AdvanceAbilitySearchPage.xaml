@@ -22,10 +22,10 @@
             <Grid ColumnDefinitions="*,Auto"
                   ColumnSpacing="8">
                 <VerticalStackLayout Spacing="2">
-                    <Label Text="Abilities"
+                    <Label Text="{Binding TitleText}"
                            FontAttributes="Bold"
                            FontSize="18"/>
-                    <Label Text="Search merged abilities and save selections"
+                    <Label Text="{Binding SubtitleText}"
                            FontSize="12"
                            Opacity="0.75"/>
                 </VerticalStackLayout>
@@ -197,7 +197,7 @@
                         Text="Cancel"
                         Clicked="OnCancelClicked"/>
                 <Button Grid.Column="2"
-                        Text="Next"
+                        Text="{Binding ConfirmButtonText}"
                         Clicked="OnNextClicked"
                         IsEnabled="{Binding HasSelectedAbilities}"/>
             </Grid>

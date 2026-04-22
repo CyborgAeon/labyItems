@@ -49,7 +49,9 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
     private readonly Dictionary<string, CharacterClassRecord> _allClasses = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, AbilityDefinition> _abilityLookup = new(StringComparer.OrdinalIgnoreCase);
     private readonly List<string> _allRaceNames = new();
+    private readonly List<string> _allBuyAsValues = new();
     private readonly List<NonStandardLifeScaleOption> _lifeScaleOptions = new();
+    private readonly Dictionary<string, string> _raceAssignmentOptions = new(StringComparer.OrdinalIgnoreCase);
 
     private bool _initialized;
     private bool _isBusy;
@@ -68,6 +70,11 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
     private string _lifeScaleAssignmentRaceName = string.Empty;
     private bool _isLifescaleExpanded;
     private bool _useCustomLifeScale;
+    private string _lifeScaleClassFilterText = string.Empty;
+    private string _lifeScaleRaceFilterText = string.Empty;
+    private bool _isLifeScaleAdvancedExpanded;
+    private bool _isLifeScaleSearchExpanded = true;
+    private bool _isPostEighthExpanded;
 
     private NonStandardLifeScaleOption? _selectedLifeScaleOption;
 
@@ -83,6 +90,10 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
 
     public ObservableCollection<string> SelectedArmourOptions { get; } = new();
     public ObservableCollection<string> ArmourRestrictions { get; } = new();
+    public ObservableCollection<TextRowVm> ArmourRestrictionRows { get; } = new();
+
+    public ObservableCollection<string> BuyAsOptions { get; } = new();
+    public ObservableCollection<string> SelectedBuyAsOptions { get; } = new();
 
     public ObservableCollection<string> WeaponSkillOptions { get; } =
     [
@@ -119,9 +130,14 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
 
     public ObservableCollection<LifeScalePointVm> ExpandedLifeScaleRows { get; } = new();
     public ObservableCollection<CustomLifeScalePointVm> CustomLifeScaleRows { get; } = new();
+    public ObservableCollection<LifeScaleSearchOptionVm> FilteredLifeScaleOptions { get; } = new();
     public ObservableCollection<LifeScaleAssignmentVm> LifeScaleAssignments { get; } = new();
     public ObservableCollection<string> RaceWhitelist { get; } = new();
     public ObservableCollection<string> RaceBlacklist { get; } = new();
+    public ObservableCollection<PostEighthEntryVm> PostEighthEntries { get; } = new();
+    public ObservableCollection<string> PostEighthMultiRaces { get; } = new();
+    public ObservableCollection<string> PostEighthMultiClasses { get; } = new();
+    public ObservableCollection<string> PostEighthRestrictions { get; } = new();
 
     public bool IsBusy
     {
@@ -152,8 +168,16 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
     public string BaseClassName
     {
         get => _baseClassName;
-        private set => Set(ref _baseClassName, value ?? string.Empty);
+        private set
+        {
+            if (!Set(ref _baseClassName, value ?? string.Empty))
+                return;
+
+            Raise(nameof(HasBaseSelection));
+        }
     }
+
+    public bool HasBaseSelection => !string.IsNullOrWhiteSpace((BaseClassName ?? string.Empty).Trim());
 
     public string PathClassName
     {
@@ -279,6 +303,8 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
         && !string.IsNullOrWhiteSpace((LifeScaleAssignmentRaceName ?? string.Empty).Trim())
         && GetEffectiveLifeScalePoints().Count >= 8;
 
+    public Dictionary<string, string> RaceAssignmentOptions => _raceAssignmentOptions;
+
     public bool IsLifescaleExpanded
     {
         get => _isLifescaleExpanded;
@@ -290,19 +316,100 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
     public bool UseCustomLifeScale
     {
         get => _useCustomLifeScale;
-        set
+        private set
         {
             if (!Set(ref _useCustomLifeScale, value))
                 return;
 
-            if (_useCustomLifeScale)
-                EnsureCustomLifeScaleRows(GetDefaultLifeScalePointsForCustom());
-
             RebuildExpandedLifeScaleRows(GetEffectiveLifeScalePoints());
+            Raise(nameof(LifeScaleSearchOpacity));
             Raise(nameof(LifescaleSummary));
             Raise(nameof(HasLifeScaleSelection));
             Raise(nameof(CanAddLifeScaleAssignment));
             Raise(nameof(CanSave));
+        }
+    }
+
+    public string LifeScaleClassFilterText
+    {
+        get => _lifeScaleClassFilterText;
+        set
+        {
+            if (!Set(ref _lifeScaleClassFilterText, value ?? string.Empty))
+                return;
+
+            ApplyLifeScaleSearchFilters();
+        }
+    }
+
+    public string LifeScaleRaceFilterText
+    {
+        get => _lifeScaleRaceFilterText;
+        set
+        {
+            if (!Set(ref _lifeScaleRaceFilterText, value ?? string.Empty))
+                return;
+
+            ApplyLifeScaleSearchFilters();
+        }
+    }
+
+    public double LifeScaleSearchOpacity => UseCustomLifeScale || IsLifeScaleAdvancedExpanded ? 0.45 : 1.0;
+
+    public bool IsLifeScaleSearchExpanded
+    {
+        get => _isLifeScaleSearchExpanded;
+        set
+        {
+            if (!Set(ref _isLifeScaleSearchExpanded, value))
+                return;
+
+            Raise(nameof(LifeScaleSearchChevronText));
+        }
+    }
+
+    public string LifeScaleSearchChevronText => IsLifeScaleSearchExpanded ? "▴" : "▾";
+
+    public bool IsLifeScaleAdvancedExpanded
+    {
+        get => _isLifeScaleAdvancedExpanded;
+        set
+        {
+            if (!Set(ref _isLifeScaleAdvancedExpanded, value))
+                return;
+
+            Raise(nameof(LifeScaleAdvancedChevronText));
+            Raise(nameof(LifeScaleSearchOpacity));
+
+            if (_isLifeScaleAdvancedExpanded)
+                IsLifeScaleSearchExpanded = false;
+        }
+    }
+
+    public string LifeScaleAdvancedChevronText => IsLifeScaleAdvancedExpanded ? "▴" : "▾";
+
+    public bool IsPostEighthExpanded
+    {
+        get => _isPostEighthExpanded;
+        set
+        {
+            if (!Set(ref _isPostEighthExpanded, value))
+                return;
+
+            Raise(nameof(PostEighthChevronText));
+        }
+    }
+
+    public string PostEighthChevronText => IsPostEighthExpanded ? "▴" : "▾";
+
+    public string PostEighthSummary
+    {
+        get
+        {
+            if (PostEighthEntries.Count == 0)
+                return "No post-8 progression configured.";
+
+            return string.Join(" | ", PostEighthEntries.Select(entry => entry.ReviewSummary));
         }
     }
 
@@ -335,6 +442,8 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
 
         SelectedBrackets.CollectionChanged += OnSelectedBracketsChanged;
         SelectedPowerbases.CollectionChanged += OnSelectedPowerbasesChanged;
+        ArmourRestrictions.CollectionChanged += OnArmourRestrictionsChanged;
+        PostEighthEntries.CollectionChanged += OnPostEighthEntriesChanged;
 
         _allClasses.Clear();
         var classes = await ClassService.GetAllAsync();
@@ -344,11 +453,29 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
         _allRaceNames.Clear();
         var races = await PeopleService.GetAllAsync();
         _allRaceNames.AddRange(races.Keys.OrderBy(x => x, StringComparer.OrdinalIgnoreCase));
+        _raceAssignmentOptions.Clear();
+        foreach (var race in _allRaceNames)
+            _raceAssignmentOptions[race] = race;
+        Raise(nameof(RaceAssignmentOptions));
+
+        _allBuyAsValues.Clear();
+        _allBuyAsValues.AddRange(
+            classes.Values
+                .SelectMany(entry => entry.BuyAs ?? new List<string>())
+                .Where(value => !string.IsNullOrWhiteSpace(value))
+                .Select(value => value.Trim())
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(value => value, StringComparer.OrdinalIgnoreCase));
+
+        BuyAsOptions.Clear();
+        foreach (var value in _allBuyAsValues)
+            BuyAsOptions.Add(value);
 
         BuildBracketOptions();
         InitializeAlignmentSelection();
         BuildCasterColourOptions();
         BuildLifeScaleOptions(await LifeScalesService.GetAllAsync());
+        RebuildArmourRestrictionRows();
         EnsureAbilityLevels();
 
         await BuildAbilityLookupAsync();
@@ -358,6 +485,34 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
             await SetBaseClassAsync(defaultBase);
 
         RebuildExpandedLifeScaleRows(GetEffectiveLifeScalePoints());
+        IsLifeScaleAdvancedExpanded = false;
+        IsPostEighthExpanded = false;
+    }
+
+    public async Task SearchBuyAsAsync(INavigation navigation)
+    {
+        if (navigation == null || _allBuyAsValues.Count == 0)
+            return;
+
+        var options = _allBuyAsValues
+            .Select(value => new NonStandardSearchOption(value, "Buy-as", value))
+            .ToList();
+
+        var selected = await NonStandardSearchPage.PickManyAsync(navigation, "Select Buy-as (multiple allowed)", options);
+        if (selected == null || selected.Count == 0)
+            return;
+
+        SelectedBuyAsOptions.Clear();
+        foreach (var item in selected)
+        {
+            var value = (item.Value ?? string.Empty).Trim();
+            if (value.Length > 0)
+                SelectedBuyAsOptions.Add(value);
+        }
+        
+        // Keep BuyAsText for backward compatibility
+        BuyAsText = string.Join(", ", SelectedBuyAsOptions);
+        Raise(nameof(CanSave));
     }
 
     public async Task LoadFromWalletEntryAsync(NonStandardWalletEntry? entry)
@@ -464,6 +619,22 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
             ArmourRestrictions.Remove(existing);
     }
 
+    private void OnArmourRestrictionsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        => RebuildArmourRestrictionRows();
+
+    private void RebuildArmourRestrictionRows()
+    {
+        ArmourRestrictionRows.Clear();
+        for (var index = 0; index < ArmourRestrictions.Count; index++)
+        {
+            ArmourRestrictionRows.Add(new TextRowVm
+            {
+                Text = ArmourRestrictions[index],
+                RowBackgroundHex = index % 2 == 0 ? "#F8FAFC" : "#FFFFFF"
+            });
+        }
+    }
+
     public void AddWeaponSkillRestriction()
     {
         var value = (WeaponSkillRestrictionInput ?? string.Empty).Trim();
@@ -501,12 +672,45 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
                 Value: name))
             .ToList();
 
-        var selected = await NonStandardSearchPage.PickAsync(navigation, "Select Ability", options);
-        if (selected == null)
+        var currentSelections = levelRow.Abilities
+            .Select(row => (row.AbilityName ?? string.Empty).Trim())
+            .Where(name => name.Length > 0)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var selected = await NonStandardSearchPage.PickManyAsync(
+            navigation,
+            "Select Abilities",
+            options,
+            currentSelections);
+
+        if (selected.Count == 0)
             return;
 
-        var row = CreateAbilityRow(levelRow.Level, selected.Value);
-        levelRow.Abilities.Insert(0, row);
+        var selectedNames = selected
+            .Select(item => (item.Value ?? string.Empty).Trim())
+            .Where(name => name.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        for (var index = levelRow.Abilities.Count - 1; index >= 0; index--)
+        {
+            if (!selectedNames.Contains((levelRow.Abilities[index].AbilityName ?? string.Empty).Trim()))
+                levelRow.Abilities.RemoveAt(index);
+        }
+
+        foreach (var item in selected)
+        {
+            var abilityName = (item.Value ?? string.Empty).Trim();
+            if (abilityName.Length == 0)
+                continue;
+
+            if (levelRow.Abilities.Any(row => row.AbilityName.Equals(abilityName, StringComparison.OrdinalIgnoreCase)))
+                continue;
+
+            levelRow.Abilities.Add(CreateAbilityRow(levelRow.Level, abilityName));
+        }
+
+        ReindexAbilityRows(levelRow);
     }
 
     public void RemoveAbilityFromLevel(AbilityLevelVm? levelRow, ClassAbilityRowVm? row)
@@ -515,6 +719,35 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
             return;
 
         levelRow.Abilities.Remove(row);
+        ReindexAbilityRows(levelRow);
+    }
+
+    public void ReplaceAbilitiesForLevel(AbilityLevelVm? levelRow, IEnumerable<EvolutionService.AbilityResult>? selectedAbilities)
+    {
+        if (levelRow == null)
+            return;
+
+        var selectedNames = (selectedAbilities ?? Array.Empty<EvolutionService.AbilityResult>())
+            .Select(ability => (ability.Index ?? string.Empty).Trim())
+            .Where(name => name.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        for (var index = levelRow.Abilities.Count - 1; index >= 0; index--)
+        {
+            if (!selectedNames.Contains((levelRow.Abilities[index].AbilityName ?? string.Empty).Trim()))
+                levelRow.Abilities.RemoveAt(index);
+        }
+
+        foreach (var abilityName in selectedNames.OrderBy(name => name, StringComparer.OrdinalIgnoreCase))
+        {
+            if (levelRow.Abilities.Any(row => row.AbilityName.Equals(abilityName, StringComparison.OrdinalIgnoreCase)))
+                continue;
+
+            levelRow.Abilities.Add(CreateAbilityRow(levelRow.Level, abilityName));
+        }
+
+        ReindexAbilityRows(levelRow);
     }
 
     public void AddCasterColourRow()
@@ -564,6 +797,7 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
             return;
 
         _selectedLifeScaleOption = match;
+        ApplyLifeScaleSearchFilters();
         Raise(nameof(LifescaleSummary));
         Raise(nameof(HasLifeScaleSelection));
         Raise(nameof(CanAddLifeScaleAssignment));
@@ -572,6 +806,21 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
         EnsureCustomLifeScaleRows(match.Points);
 
         RebuildExpandedLifeScaleRows(GetEffectiveLifeScalePoints());
+    }
+
+    public void SelectLifeScaleSearchOption(LifeScaleSearchOptionVm? option)
+    {
+        if (option == null)
+            return;
+
+        _selectedLifeScaleOption = option.Source;
+        ApplyLifeScaleSearchFilters();
+        EnsureCustomLifeScaleRows(option.Source.Points);
+        RebuildExpandedLifeScaleRows(GetEffectiveLifeScalePoints());
+        Raise(nameof(LifescaleSummary));
+        Raise(nameof(HasLifeScaleSelection));
+        Raise(nameof(CanAddLifeScaleAssignment));
+        Raise(nameof(CanSave));
     }
 
     public async Task SearchLifeScaleRaceAsync(INavigation navigation)
@@ -619,6 +868,16 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
         Raise(nameof(CanSave));
     }
 
+    public void AddLifeScaleAssignment(string? raceName)
+    {
+        var race = (raceName ?? string.Empty).Trim();
+        if (race.Length == 0)
+            return;
+
+        LifeScaleAssignmentRaceName = race;
+        AddLifeScaleAssignment();
+    }
+
     public void RemoveLifeScaleAssignment(string? raceName)
     {
         var race = (raceName ?? string.Empty).Trim();
@@ -647,6 +906,63 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
     public async Task AddRaceToBlacklistAsync(INavigation navigation)
         => await AddRaceToListAsync(navigation, RaceBlacklist, RaceWhitelist);
 
+    public async Task AddPostEighthRaceAsync(INavigation navigation)
+    {
+        if (navigation == null)
+            return;
+
+        var catalog = await MultiRaceService.GetCatalogAsync();
+        var options = catalog.MultiRaces
+            .Keys
+            .OrderBy(value => value, StringComparer.OrdinalIgnoreCase)
+            .Select(value => new NonStandardSearchOption(value, "Multi-race", value))
+            .ToList();
+
+        var selected = await NonStandardSearchPage.PickAsync(navigation, "Select Multi-race", options);
+        if (selected == null)
+            return;
+
+        AddPostEighthEntry(PostEighthEntryKind.MultiRace, selected.Value);
+    }
+
+    public async Task AddPostEighthClassAsync(INavigation navigation)
+    {
+        if (navigation == null)
+            return;
+
+        var catalog = await MultiClassService.GetCatalogAsync();
+        var options = catalog.MultiClasses.Keys
+            .OrderBy(value => value, StringComparer.OrdinalIgnoreCase)
+            .Select(value => new NonStandardSearchOption(value, "Multi-class", value))
+            .ToList();
+
+        var selected = await NonStandardSearchPage.PickAsync(navigation, "Select Multi-class", options);
+        if (selected == null)
+            return;
+
+        AddPostEighthEntry(PostEighthEntryKind.MultiClass, selected.Value);
+    }
+
+    public void RemovePostEighthEntry(PostEighthEntryVm? entry)
+    {
+        if (entry == null)
+            return;
+
+        PostEighthEntries.Remove(entry);
+        ReindexPostEighthEntries();
+        SyncLegacyPostEighthCollections();
+        Raise(nameof(PostEighthSummary));
+    }
+
+    public void ToggleLifeScaleAdvancedExpanded()
+        => IsLifeScaleAdvancedExpanded = !IsLifeScaleAdvancedExpanded;
+
+    public void ToggleLifeScaleSearchExpanded()
+        => IsLifeScaleSearchExpanded = !IsLifeScaleSearchExpanded;
+
+    public void TogglePostEighthExpanded()
+        => IsPostEighthExpanded = !IsPostEighthExpanded;
+
     private async Task AddRaceToListAsync(INavigation navigation, ObservableCollection<string> target, ObservableCollection<string> opposite)
     {
         if (navigation == null || _allRaceNames.Count == 0)
@@ -670,6 +986,72 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
 
         if (!target.Any(x => x.Equals(raceName, StringComparison.OrdinalIgnoreCase)))
             target.Add(raceName);
+    }
+
+    private void AddPostEighthEntry(PostEighthEntryKind kind, string? rawName, int tablesPerGain = 2, int startingTable = 5)
+    {
+        var name = (rawName ?? string.Empty).Trim();
+        if (name.Length == 0)
+            return;
+
+        if (PostEighthEntries.Any(entry => entry.Kind == kind && entry.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
+            return;
+
+        var entry = new PostEighthEntryVm
+        {
+            Kind = kind,
+            Name = name,
+            TablesPerGainText = Math.Max(1, tablesPerGain).ToString(),
+            StartingTableText = Math.Max(1, startingTable).ToString()
+        };
+        PostEighthEntries.Add(entry);
+
+        ReindexPostEighthEntries();
+        SyncLegacyPostEighthCollections();
+        Raise(nameof(PostEighthSummary));
+    }
+
+    private void OnPostEighthEntriesChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.OldItems != null)
+        {
+            foreach (var item in e.OldItems.OfType<PostEighthEntryVm>())
+                item.PropertyChanged -= OnPostEighthEntryPropertyChanged;
+        }
+
+        if (e.NewItems != null)
+        {
+            foreach (var item in e.NewItems.OfType<PostEighthEntryVm>())
+                item.PropertyChanged += OnPostEighthEntryPropertyChanged;
+        }
+
+        ReindexPostEighthEntries();
+        SyncLegacyPostEighthCollections();
+        Raise(nameof(PostEighthSummary));
+    }
+
+    private void OnPostEighthEntryPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        Raise(nameof(PostEighthSummary));
+    }
+
+    private void ReindexPostEighthEntries()
+    {
+        for (var index = 0; index < PostEighthEntries.Count; index++)
+            PostEighthEntries[index].RowBackgroundHex = index % 2 == 0 ? "#F8FAFC" : "#FFFFFF";
+    }
+
+    private void SyncLegacyPostEighthCollections()
+    {
+        ReplaceCollection(PostEighthMultiRaces,
+            PostEighthEntries
+                .Where(entry => entry.Kind == PostEighthEntryKind.MultiRace)
+                .Select(entry => entry.Name));
+
+        ReplaceCollection(PostEighthMultiClasses,
+            PostEighthEntries
+                .Where(entry => entry.Kind == PostEighthEntryKind.MultiClass)
+                .Select(entry => entry.Name));
     }
 
     public void RemoveFromWhitelist(string? race)
@@ -730,6 +1112,7 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
         BaseClassName = key;
         Name = key;
         PathClassName = key;
+        LifeScaleClassFilterText = key;
 
         ApplyBaseClass(record);
         Raise(nameof(TagsPreview));
@@ -787,6 +1170,7 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
         EnsureCustomLifeScaleRows(GetDefaultLifeScalePointsForCustom());
 
         RebuildExpandedLifeScaleRows(GetEffectiveLifeScalePoints());
+        ApplyLifeScaleSearchFilters();
         Raise(nameof(LifescaleSummary));
         Raise(nameof(HasLifeScaleSelection));
         Raise(nameof(CanAddLifeScaleAssignment));
@@ -821,7 +1205,10 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
 
         var buyAs = ReadStringArray(payload, "Buy as");
         if (buyAs.Count > 0)
+        {
             BuyAsText = buyAs[0];
+            ReplaceCollection(SelectedBuyAsOptions, buyAs);
+        }
 
         if (TryGetObject(payload, "Armour", out var armourObject))
         {
@@ -881,6 +1268,9 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
 
         ReplaceCollection(RaceWhitelist, ReadStringArray(payload, "RaceWhitelist"));
         ReplaceCollection(RaceBlacklist, ReadStringArray(payload, "RaceBlacklist"));
+
+        if (TryGetObject(payload, "Post8Progression", out var postEighthObject))
+            ApplyPostEighthProgression(postEighthObject);
     }
 
     private void BuildWeaponSkillRows(CharacterClassRecord record)
@@ -910,7 +1300,10 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
             }
 
             WeaponSkillLevels.Add(row);
+            AttachWeaponSkillRow(row);
         }
+
+        EnforceWeaponSkillUniqueness();
     }
 
     private void BuildAbilityRows(CharacterClassRecord record)
@@ -943,6 +1336,9 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
                     levelRow.Abilities.Add(row);
                 }
             }
+
+            if (AbilityLevels.FirstOrDefault(entry => entry.Level == level) is { } indexedLevelRow)
+                ReindexAbilityRows(indexedLevelRow);
         }
     }
 
@@ -1134,6 +1530,36 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
 
         _lifeScaleOptions.Sort((left, right) =>
             string.Compare(left.DisplayTitle, right.DisplayTitle, StringComparison.OrdinalIgnoreCase));
+
+        ApplyLifeScaleSearchFilters();
+    }
+
+    private void ApplyLifeScaleSearchFilters()
+    {
+        var classFilter = (LifeScaleClassFilterText ?? string.Empty).Trim();
+        var raceFilter = (LifeScaleRaceFilterText ?? string.Empty).Trim();
+
+        var filtered = _lifeScaleOptions
+            .Where(option => classFilter.Length == 0
+                             || option.ClassName.Contains(classFilter, StringComparison.OrdinalIgnoreCase))
+            .Where(option => raceFilter.Length == 0
+                             || option.RaceName.Contains(raceFilter, StringComparison.OrdinalIgnoreCase))
+            .Take(200)
+            .Select((option, index) => new LifeScaleSearchOptionVm
+            {
+                Source = option,
+                DisplayTitle = option.DisplayTitle,
+                DisplaySubtitle = option.DisplaySubtitle,
+                IsSelected = _selectedLifeScaleOption != null
+                    && option.Key.Equals(_selectedLifeScaleOption.Key, StringComparison.OrdinalIgnoreCase),
+                RowBackgroundHex = _selectedLifeScaleOption != null
+                    && option.Key.Equals(_selectedLifeScaleOption.Key, StringComparison.OrdinalIgnoreCase)
+                    ? "#FFF7ED"
+                    : (index % 2 == 0 ? "#F8FAFC" : "#FFFFFF")
+            })
+            .ToList();
+
+        ReplaceCollection(FilteredLifeScaleOptions, filtered);
     }
 
     private void ApplyAlignmentRule(AlignmentRule? rule)
@@ -1222,6 +1648,8 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
             row.PropertyChanged += OnCustomLifeScaleRowChanged;
             CustomLifeScaleRows.Add(row);
         }
+
+        SyncCustomLifeScaleOverrideState();
     }
 
     private IReadOnlyList<LifeScalePoint> BuildCustomLifeScalePoints()
@@ -1243,8 +1671,7 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
 
     private void OnCustomLifeScaleRowChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (!UseCustomLifeScale)
-            return;
+        SyncCustomLifeScaleOverrideState();
 
         RebuildExpandedLifeScaleRows(GetEffectiveLifeScalePoints());
         Raise(nameof(LifescaleSummary));
@@ -1258,6 +1685,36 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
             return BuildCustomLifeScalePoints();
 
         return _selectedLifeScaleOption?.Points ?? Array.Empty<LifeScalePoint>();
+    }
+
+    private void SyncCustomLifeScaleOverrideState()
+    {
+        var current = BuildCustomLifeScalePoints();
+        var baseline = (_selectedLifeScaleOption?.Points?.Count ?? 0) > 0
+            ? _selectedLifeScaleOption!.Points
+            : GetDefaultLifeScalePointsForCustom();
+
+        UseCustomLifeScale = !AreLifeScalePointsEqual(current, baseline);
+    }
+
+    private static bool AreLifeScalePointsEqual(IReadOnlyList<LifeScalePoint> left, IReadOnlyList<LifeScalePoint> right)
+    {
+        if (left.Count != right.Count)
+            return false;
+
+        for (var index = 0; index < left.Count; index++)
+        {
+            if (left[index].Body != right[index].Body || left[index].Loc != right[index].Loc)
+                return false;
+        }
+
+        return true;
+    }
+
+    private static void ReindexAbilityRows(AbilityLevelVm levelRow)
+    {
+        for (var index = 0; index < levelRow.Abilities.Count; index++)
+            levelRow.Abilities[index].RowBackgroundHex = index % 2 == 0 ? "#F8FAFC" : "#FFFFFF";
     }
 
     private IReadOnlyList<NonStandardLifeScaleAssignment> BuildLifeScaleAssignmentsForSave()
@@ -1301,7 +1758,7 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
     private void ReindexLifeScaleAssignments()
     {
         for (var index = 0; index < LifeScaleAssignments.Count; index++)
-            LifeScaleAssignments[index].RowBackgroundHex = index % 2 == 0 ? "#FFFFFF" : "#F8FAFC";
+            LifeScaleAssignments[index].RowBackgroundHex = index % 2 == 0 ? "#F8FAFC" : "#FFFFFF";
 
         Raise(nameof(CanAddLifeScaleAssignment));
     }
@@ -1352,7 +1809,7 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
         {
             ["Brackets"] = JsonSerializer.SerializeToNode(SelectedBrackets.ToList()) ?? new JsonArray(),
             ["Tags"] = JsonSerializer.SerializeToNode(BuildTags()) ?? new JsonArray(),
-            ["Buy as"] = JsonSerializer.SerializeToNode(new[] { (BuyAsText ?? string.Empty).Trim() }) ?? new JsonArray(),
+            ["Buy as"] = JsonSerializer.SerializeToNode(SelectedBuyAsOptions.ToList()) ?? new JsonArray(),
             ["Levels"] = JsonSerializer.SerializeToNode(BuildLevelsPayload()) ?? new JsonObject(),
             ["Max AC"] = Math.Clamp(ParseInt(MaxAcText), 0, 24),
             ["Powerbase"] = JsonSerializer.SerializeToNode(SelectedPowerbases.Select(MapPowerbaseDisplayToRaw).Where(x => x.Length > 0).ToList()) ?? new JsonArray(),
@@ -1367,6 +1824,18 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
             ["nonStandard"] = true,
             ["is_default"] = 0
         };
+
+        if (PostEighthEntries.Count > 0)
+        {
+            payload["Post8Progression"] = new JsonObject
+            {
+                ["Rate"] = Math.Max(1, ParseInt(PostEighthEntries.FirstOrDefault()?.TablesPerGainText)),
+                ["Entries"] = JsonSerializer.SerializeToNode(BuildPostEighthPayloadEntries()) ?? new JsonArray(),
+                ["MultiRaces"] = JsonSerializer.SerializeToNode(PostEighthMultiRaces.ToList()) ?? new JsonArray(),
+                ["MultiClasses"] = JsonSerializer.SerializeToNode(PostEighthMultiClasses.ToList()) ?? new JsonArray(),
+                ["Restrictions"] = JsonSerializer.SerializeToNode(PostEighthRestrictions.ToList()) ?? new JsonArray()
+            };
+        }
 
         if (_baseClassRecord != null && _baseClassRecord.GuildOverrides != null)
             payload["GuildOverrides"] = JsonSerializer.SerializeToNode(_baseClassRecord.GuildOverrides);
@@ -1384,6 +1853,62 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
             tags.Add($"Base:{BaseClassName}");
 
         return tags;
+    }
+
+    private void ApplyPostEighthProgression(JsonObject progression)
+    {
+        PostEighthEntries.Clear();
+        ReplaceCollection(PostEighthRestrictions, ReadStringArray(progression, "Restrictions"));
+
+        if (TryGetArray(progression, "Entries", out var entriesArray))
+        {
+            foreach (var node in entriesArray)
+            {
+                if (node is not JsonObject entryObject)
+                    continue;
+
+                var kindText = ReadString(entryObject, "Kind");
+                var name = ReadString(entryObject, "Name");
+                var rate = TryReadInt(entryObject, "TablesPerGain", out var parsedRate)
+                    ? parsedRate
+                    : TryReadInt(entryObject, "Rate", out var legacyRate) ? legacyRate : 2;
+                var start = TryReadInt(entryObject, "StartingTable", out var parsedStart)
+                    ? parsedStart
+                    : TryReadInt(entryObject, "StartTable", out var legacyStart) ? legacyStart : 5;
+
+                var kind = string.Equals(kindText, "MultiClass", StringComparison.OrdinalIgnoreCase)
+                    ? PostEighthEntryKind.MultiClass
+                    : PostEighthEntryKind.MultiRace;
+
+                AddPostEighthEntry(kind, name, rate, start);
+            }
+        }
+
+        if (PostEighthEntries.Count == 0)
+        {
+            var fallbackRate = TryReadInt(progression, "Rate", out var parsedRate) ? parsedRate : 2;
+            foreach (var race in ReadStringArray(progression, "MultiRaces"))
+                AddPostEighthEntry(PostEighthEntryKind.MultiRace, race, fallbackRate, 5);
+
+            foreach (var className in ReadStringArray(progression, "MultiClasses"))
+                AddPostEighthEntry(PostEighthEntryKind.MultiClass, className, fallbackRate, 5);
+        }
+
+        SyncLegacyPostEighthCollections();
+        Raise(nameof(PostEighthSummary));
+    }
+
+    private IReadOnlyList<PostEighthProgressionPayloadEntry> BuildPostEighthPayloadEntries()
+    {
+        return PostEighthEntries
+            .Select(entry => new PostEighthProgressionPayloadEntry
+            {
+                Kind = entry.Kind.ToString(),
+                Name = entry.Name,
+                TablesPerGain = Math.Max(1, ParseInt(entry.TablesPerGainText)),
+                StartingTable = Math.Max(1, ParseInt(entry.StartingTableText))
+            })
+            .ToList();
     }
 
     private Dictionary<string, List<AbilityDefinition>> BuildLevelsPayload()
@@ -1782,6 +2307,38 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
             : string.Empty;
     }
 
+    private void AttachWeaponSkillRow(WeaponSkillLevelVm row)
+    {
+        row.SelectedSkills.CollectionChanged += (_, _) => EnforceWeaponSkillUniqueness(row.Level);
+    }
+
+    private void EnforceWeaponSkillUniqueness(int preferredLevel = 0)
+    {
+        if (WeaponSkillLevels.Count == 0)
+            return;
+
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var ordered = preferredLevel > 0
+            ? WeaponSkillLevels.OrderByDescending(level => level.Level == preferredLevel).ThenBy(level => level.Level).ToList()
+            : WeaponSkillLevels.OrderBy(level => level.Level).ToList();
+
+        foreach (var level in ordered)
+        {
+            for (var index = level.SelectedSkills.Count - 1; index >= 0; index--)
+            {
+                var skill = (level.SelectedSkills[index] ?? string.Empty).Trim();
+                if (skill.Length == 0)
+                {
+                    level.SelectedSkills.RemoveAt(index);
+                    continue;
+                }
+
+                if (!seen.Add(skill))
+                    level.SelectedSkills.RemoveAt(index);
+            }
+        }
+    }
+
     private static AbilityDefinition CloneAbility(AbilityDefinition source)
     {
         return new AbilityDefinition
@@ -1967,6 +2524,7 @@ public sealed class ClassAbilityRowVm : INotifyPropertyChanged
     private string _abilityType = string.Empty;
     private bool _isInnate;
     private string _countText = string.Empty;
+    private string _rowBackgroundHex = "#FFFFFF";
 
     public int Level
     {
@@ -2031,6 +2589,19 @@ public sealed class ClassAbilityRowVm : INotifyPropertyChanged
 
             _countText = value ?? string.Empty;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CountText)));
+        }
+    }
+
+    public string RowBackgroundHex
+    {
+        get => _rowBackgroundHex;
+        set
+        {
+            if (string.Equals(_rowBackgroundHex, value, StringComparison.Ordinal))
+                return;
+
+            _rowBackgroundHex = value ?? "#FFFFFF";
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RowBackgroundHex)));
         }
     }
 
@@ -2140,6 +2711,98 @@ public sealed record class LifeScaleAssignmentVm
     }
 }
 
+public sealed class TextRowVm
+{
+    public string Text { get; init; } = string.Empty;
+    public string RowBackgroundHex { get; init; } = "#FFFFFF";
+}
+
+public enum PostEighthEntryKind
+{
+    MultiRace,
+    MultiClass
+}
+
+public sealed class PostEighthEntryVm : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private string _name = string.Empty;
+    private string _tablesPerGainText = "2";
+    private string _startingTableText = "5";
+    private string _rowBackgroundHex = "#FFFFFF";
+
+    public PostEighthEntryKind Kind { get; init; }
+
+    public string KindLabel => Kind == PostEighthEntryKind.MultiRace ? "Multi-race" : "Multi-class";
+
+    public string Name
+    {
+        get => _name;
+        set
+        {
+            if (string.Equals(_name, value, StringComparison.Ordinal))
+                return;
+
+            _name = value ?? string.Empty;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ReviewSummary)));
+        }
+    }
+
+    public string TablesPerGainText
+    {
+        get => _tablesPerGainText;
+        set
+        {
+            if (string.Equals(_tablesPerGainText, value, StringComparison.Ordinal))
+                return;
+
+            _tablesPerGainText = value ?? "2";
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TablesPerGainText)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ReviewSummary)));
+        }
+    }
+
+    public string StartingTableText
+    {
+        get => _startingTableText;
+        set
+        {
+            if (string.Equals(_startingTableText, value, StringComparison.Ordinal))
+                return;
+
+            _startingTableText = value ?? "5";
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StartingTableText)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ReviewSummary)));
+        }
+    }
+
+    public string RowBackgroundHex
+    {
+        get => _rowBackgroundHex;
+        set
+        {
+            if (string.Equals(_rowBackgroundHex, value, StringComparison.Ordinal))
+                return;
+
+            _rowBackgroundHex = value ?? "#FFFFFF";
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RowBackgroundHex)));
+        }
+    }
+
+    public string ReviewSummary
+        => $"{KindLabel}: {Name} - 1 per {Math.Max(1, int.TryParse(TablesPerGainText, out var tables) ? tables : 2)} tables, starting at table {Math.Max(1, int.TryParse(StartingTableText, out var start) ? start : 5)}";
+}
+
+public sealed class PostEighthProgressionPayloadEntry
+{
+    public string Kind { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public int TablesPerGain { get; set; }
+    public int StartingTable { get; set; }
+}
+
 public sealed class AlignmentCellVm : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -2182,4 +2845,13 @@ public sealed class NonStandardLifeScaleOption
     public string DisplayTitle { get; init; } = string.Empty;
     public string DisplaySubtitle { get; init; } = string.Empty;
     public IReadOnlyList<LifeScalePoint> Points { get; init; } = Array.Empty<LifeScalePoint>();
+}
+
+public sealed class LifeScaleSearchOptionVm
+{
+    public required NonStandardLifeScaleOption Source { get; init; }
+    public string DisplayTitle { get; init; } = string.Empty;
+    public string DisplaySubtitle { get; init; } = string.Empty;
+    public bool IsSelected { get; init; }
+    public string RowBackgroundHex { get; init; } = "#FFFFFF";
 }

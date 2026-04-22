@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.Calculator.IspComponentTypePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False"
+    Title="Choose Component">
+
+    <Grid>
+        <ScrollView>
+            <VerticalStackLayout Padding="20,20,20,32"
+                                 Spacing="18">
+                <Grid ColumnDefinitions="Auto,*"
+                      ColumnSpacing="12">
+                    <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
+                    <VerticalStackLayout Grid.Column="1"
+                                         Spacing="2"
+                                         VerticalOptions="Center">
+                        <Label FontAttributes="Bold"
+                               FontSize="28"
+                               Text="Choose component" />
+                        <Label Text="Pick the next part to add to this item."
+                               TextColor="{StaticResource Gray500}" />
+                    </VerticalStackLayout>
+                </Grid>
+
+                <VerticalStackLayout x:Name="ComponentList"
+                                     Spacing="12" />
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
+                                        SelectedRoute="{x:Static controls:ToolsetRouteKeys.ItemsIsp}" />
+    </Grid>
+</ContentPage>

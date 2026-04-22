@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.NonStandard.NonStandardDocumentLinksPage"
+    x:Name="Root"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False"
+    Title="Creation Files">
+
+    <Grid RowDefinitions="Auto,*">
+        <ScrollView>
+            <VerticalStackLayout Padding="16,12,16,24"
+                                 Spacing="16">
+                <Grid ColumnDefinitions="Auto,*,Auto"
+                      ColumnSpacing="10">
+                    <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
+                    <VerticalStackLayout Grid.Column="1"
+                                         Spacing="2">
+                        <Label Text="Creation Files"
+                               FontAttributes="Bold"
+                               FontSize="24" />
+                        <Label Text="{Binding CreationTitle}"
+                               FontSize="13"
+                               Opacity="0.68" />
+                    </VerticalStackLayout>
+                    <Button Grid.Column="2"
+                            Text="Upload Doc"
+                            BackgroundColor="{StaticResource AccentMaroonColor}"
+                            TextColor="{StaticResource White}"
+                            CornerRadius="10"
+                            Padding="14,10"
+                            Clicked="OnUploadClicked" />
+                </Grid>
+
+                <Border Stroke="{StaticResource SurfaceBorderColor}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 16"
+                        BackgroundColor="{StaticResource White}"
+                        Padding="14">
+                    <Label Text="This app doesn't store the file, if it is lost on your device there is no backup"
+                           FontSize="13"
+                           LineBreakMode="WordWrap" />
+                </Border>
+
+                <Label Text="{Binding SummaryText}"
+                       FontSize="12"
+                       Opacity="0.7" />
+
+                <CollectionView ItemsSource="{Binding Documents}"
+                                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Style="{StaticResource SectionCardFrameStyle}"
+                                   Margin="0,0,0,10">
+                                <Grid ColumnDefinitions="*,Auto,Auto"
+                                      ColumnSpacing="10">
+                                    <VerticalStackLayout Spacing="4">
+                                        <Label Text="{Binding DisplayName}"
+                                               FontAttributes="Bold"
+                                               FontSize="16" />
+                                        <Label Text="{Binding MetaText}"
+                                               FontSize="12"
+                                               Opacity="0.7" />
+                                        <Label Text="{Binding FilePath}"
+                                               FontSize="12"
+                                               LineBreakMode="CharacterWrap"
+                                               Opacity="0.58" />
+                                    </VerticalStackLayout>
+
+                                    <Button Grid.Column="1"
+                                            Text="&#xF08E;"
+                                            Style="{StaticResource ListRowGlyphIconButtonStyle}"
+                                            TextColor="{StaticResource AccentMaroonColor}"
+                                            Clicked="OnOpenDocumentClicked"
+                                            CommandParameter="{Binding .}" />
+                                    <Button Grid.Column="2"
+                                            Text="&#xF1F8;"
+                                            Style="{StaticResource ListRowGlyphIconButtonStyle}"
+                                            TextColor="{StaticResource AccentMaroonColor}"
+                                            Clicked="OnDeleteDocumentClicked"
+                                            CommandParameter="{Binding .}" />
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
+                                        Grid.RowSpan="2"
+                                        SelectedRoute="{x:Static controls:ToolsetRouteKeys.NonStandard}" />
+    </Grid>
+</ContentPage>

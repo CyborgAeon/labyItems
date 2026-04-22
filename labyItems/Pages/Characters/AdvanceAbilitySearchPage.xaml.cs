@@ -16,6 +16,13 @@ public partial class AdvanceAbilitySearchPage : ContentPage
         BindingContext = _vm;
     }
 
+    public AdvanceAbilitySearchPage(IAbilitySearchHost host)
+    {
+        _vm = new AdvanceAbilitySearchVm(host);
+        InitializeComponent();
+        BindingContext = _vm;
+    }
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();
@@ -65,33 +72,36 @@ public partial class AdvanceAbilitySearchPage : ContentPage
 
     private async void OnNextClicked(object sender, EventArgs e)
     {
-        var preReqCheck = _vm.GetSelectionPrerequisiteIssues();
-        if (preReqCheck.HasIssues)
+        if (_vm.AllowSpecialisationSelection)
         {
-            var message = _vm.BuildMissingPrerequisiteMessage(preReqCheck);
-            var shouldView = await DisplayAlert(
-                "Missing prerequisites",
-                message,
-                "View",
-                "Cancel");
+            var preReqCheck = _vm.GetSelectionPrerequisiteIssues();
+            if (preReqCheck.HasIssues)
+            {
+                var message = _vm.BuildMissingPrerequisiteMessage(preReqCheck);
+                var shouldView = await DisplayAlert(
+                    "Missing prerequisites",
+                    message,
+                    "View",
+                    "Cancel");
 
-            if (shouldView)
-                _vm.FocusMissingPrerequisites(preReqCheck);
-            return;
-        }
-
-        var selectedAbilities = _vm.GetSelectedAbilities();
-        var specialisationRequests = await _vm.BuildSpecialisationRequestsAsync(selectedAbilities);
-        if (specialisationRequests.Count > 0)
-        {
-            var specialisationPage = new AdvanceAbilitySpecialisationPage(_vm.Draft, specialisationRequests);
-            await Navigation.PushAsync(specialisationPage);
-            var shouldCommit = await specialisationPage.Completion;
-            if (!shouldCommit)
+                if (shouldView)
+                    _vm.FocusMissingPrerequisites(preReqCheck);
                 return;
+            }
+
+            var selectedAbilities = _vm.GetSelectedAbilities();
+            var specialisationRequests = await _vm.BuildSpecialisationRequestsAsync(selectedAbilities);
+            if (specialisationRequests.Count > 0)
+            {
+                var specialisationPage = new AdvanceAbilitySpecialisationPage(_vm.Draft, specialisationRequests);
+                await Navigation.PushAsync(specialisationPage);
+                var shouldCommit = await specialisationPage.Completion;
+                if (!shouldCommit)
+                    return;
+            }
         }
 
-        _vm.CommitSelection(selectedAbilities);
+        _vm.CommitSelection(_vm.GetSelectedAbilities());
         await CloseAsync();
     }
 

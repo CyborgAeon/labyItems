@@ -46,6 +46,10 @@
     <Color x:Key="CalendarBookedCrewColor">#4F46A5</Color>
     <Color x:Key="CalendarDisabledColor">#D4D4D8</Color>
     <Color x:Key="CalendarDisabledTextColor">#71717A</Color>
+    
+    <!-- Alternating row colors for consistent styling across lists -->
+    <Color x:Key="RowBackgroundEven">#F8FAFC</Color>
+    <Color x:Key="RowBackgroundOdd">#FFFFFF</Color>
 
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>

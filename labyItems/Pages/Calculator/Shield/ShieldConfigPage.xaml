@@ -7,6 +7,7 @@
   xmlns:conv="clr-namespace:labyItems.Converters"
   xmlns:controls="clr-namespace:labyItems.Controls"
   xmlns:cfg="clr-namespace:labyItems.Pages.Configs"
+  xmlns:toolset="clr-namespace:labyItems.Controls"
   Title="Configure Shield"
   x:TypeArguments="cfg:ShieldConfig">
 
@@ -16,9 +17,19 @@
     </ResourceDictionary>
   </ContentPage.Resources>
 
-  <Grid RowDefinitions="*,Auto">
+  <Grid>
+    <Grid RowDefinitions="*,Auto">
     <ScrollView Grid.Row="0">
       <VerticalStackLayout Padding="16" Spacing="12">
+        <Grid ColumnDefinitions="Auto,*"
+              ColumnSpacing="12">
+          <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
+          <Label Grid.Column="1"
+                 FontAttributes="Bold"
+                 FontSize="28"
+                 Text="Shield"
+                 VerticalTextAlignment="Center" />
+        </Grid>
 
         <Label Text="Shield Cost Calculator" FontSize="20" FontAttributes="Bold" />
 
@@ -82,10 +93,13 @@
     <controls:StickyFooterControl
       Grid.Row="1"
       Total="{Binding Source={x:Reference RootPage}, Path=FooterRunningTotal}"
-      ButtonText="Return to Calculator"
+      ButtonText="Add to item"
       ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
       ReturnCommandParameter="{x:Reference RootPage}"
       BreakdownItems="{Binding Source={x:Reference RootPage}, Path=FooterBreakdownItems}"
       RemoveContributionCommand="{Binding CalculatorContext.RemoveContributionCommand, Source={x:Reference RootPage}}" />
+    </Grid>
+    <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
+                                    SelectedRoute="{x:Static toolset:ToolsetRouteKeys.ItemsIsp}" />
   </Grid>
 </cfg:ConfigPageBase>

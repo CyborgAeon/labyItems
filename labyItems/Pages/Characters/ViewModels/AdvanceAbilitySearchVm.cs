@@ -51,7 +51,7 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
     private static IReadOnlyDictionary<string, EvolutionService.AbilityResult>? _cachedAbilityLookup;
     private static IReadOnlyList<string>? _cachedSourceBooks;
 
-    private readonly AdvanceCharacterVm _root;
+    private readonly IAbilitySearchHost _host;
     private readonly CharacterDraft _draft;
     private readonly IAbilityAvailabilityService _abilityAvailabilityService;
     private readonly IAbilityChoiceSetResolverService _abilityChoiceSetResolverService;
@@ -95,12 +95,12 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
     public ICommand ToggleSelectedOnlyCommand { get; }
 
     public AdvanceAbilitySearchVm(
-        AdvanceCharacterVm root,
+        IAbilitySearchHost host,
         IAbilityAvailabilityService? abilityAvailabilityService = null,
         IAbilityChoiceSetResolverService? abilityChoiceSetResolverService = null)
     {
-        _root = root ?? throw new ArgumentNullException(nameof(root));
-        _draft = _root.Draft;
+        _host = host ?? throw new ArgumentNullException(nameof(host));
+        _draft = _host.Draft;
         _abilityAvailabilityService = abilityAvailabilityService
             ?? ServiceHelper.ResolveService<IAbilityAvailabilityService>()
             ?? new AbilityAvailabilityService();
@@ -117,7 +117,19 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
         ToggleSelectedOnlyCommand = new Command(ToggleSelectedOnly);
     }
 
+    public AdvanceAbilitySearchVm(
+        AdvanceCharacterVm root,
+        IAbilityAvailabilityService? abilityAvailabilityService = null,
+        IAbilityChoiceSetResolverService? abilityChoiceSetResolverService = null)
+        : this(new AdvanceCharacterAbilitySearchHost(root), abilityAvailabilityService, abilityChoiceSetResolverService)
+    {
+    }
+
     public CharacterDraft Draft => _draft;
+    public string TitleText => _host.TitleText;
+    public string SubtitleText => _host.SubtitleText;
+    public string ConfirmButtonText => _host.ConfirmButtonText;
+    public bool AllowSpecialisationSelection => _host.AllowSpecialisationSelection;
 
     public string SearchText
     {
@@ -195,6 +207,7 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
                               ?? new Dictionary<string, EvolutionService.AbilityResult>(StringComparer.OrdinalIgnoreCase);
         _availabilityByAbilityKey.Clear();
         _selectedAbilityKeys.Clear();
+        _activeAvailableOnly = _host.DefaultAvailableOnly;
 
         BuildFilterOptions();
         ApplyCharacterDefaultFilters();
@@ -206,7 +219,7 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
         => CommitSelection(GetSelectedAbilities());
 
     public void CommitSelection(IEnumerable<EvolutionService.AbilityResult>? selectedAbilities)
-        => _root.AddAdvancementAbilities(selectedAbilities);
+        => _host.CommitSelection(selectedAbilities);
 
     public void ClearSelections()
     {
@@ -943,6 +956,26 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
 
     private void Raise([CallerMemberName] string? propertyName = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+}
+
+internal sealed class AdvanceCharacterAbilitySearchHost : IAbilitySearchHost
+{
+    private readonly AdvanceCharacterVm _root;
+
+    public AdvanceCharacterAbilitySearchHost(AdvanceCharacterVm root)
+    {
+        _root = root ?? throw new ArgumentNullException(nameof(root));
+    }
+
+    public CharacterDraft Draft => _root.Draft;
+    public bool AllowSpecialisationSelection => true;
+    public bool DefaultAvailableOnly => true;
+    public string TitleText => "Abilities";
+    public string SubtitleText => "Search merged abilities and save selections";
+    public string ConfirmButtonText => "Next";
+
+    public void CommitSelection(IEnumerable<EvolutionService.AbilityResult>? selectedAbilities)
+        => _root.AddAdvancementAbilities(selectedAbilities);
 }
 
 internal sealed record CachedAbilityEntry(

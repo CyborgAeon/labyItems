@@ -5,13 +5,28 @@
                             xmlns:controls="clr-namespace:labyItems.Controls"
                             xmlns:enums="clr-namespace:labyItems.Models.Enums"
                             xmlns:local="clr-namespace:labyItems.Pages.Calculator"
+                            xmlns:toolset="clr-namespace:labyItems.Controls"
     x:Name="RootPage"
     Title="Basic">
 
-  <Grid RowDefinitions="*,Auto">
-    <ScrollView>
+  <Grid>
+    <Grid RowDefinitions="*,Auto">
+    <ScrollView Grid.Row="0">
       <VerticalStackLayout Padding="20"
           Spacing="12">
+        <Grid ColumnDefinitions="Auto,*"
+              ColumnSpacing="12">
+          <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
+          <VerticalStackLayout Grid.Column="1"
+                               Spacing="2"
+                               VerticalOptions="Center">
+            <Label FontAttributes="Bold"
+                   FontSize="28"
+                   Text="Standard MP item" />
+            <Label Text="Available on any day."
+                   TextColor="{StaticResource Gray500}" />
+          </VerticalStackLayout>
+        </Grid>
         <Label Text="Add 1st-6th standard spell"
             FontAttributes="Bold"/>
         <Grid ColumnDefinitions="*"
@@ -194,5 +209,8 @@
         Total="{Binding TotalMp}"
         TotalFormat="MP cost: {0}/500"
         BreakdownItems="{Binding Breakdown}"/>
+    </Grid>
+    <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
+                                    SelectedRoute="{x:Static toolset:ToolsetRouteKeys.ItemsMp}" />
   </Grid>
 </local:MpCalculatorPageBase>

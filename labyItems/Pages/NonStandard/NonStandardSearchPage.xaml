@@ -4,23 +4,41 @@
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+        NavigationPage.HasNavigationBar="False"
+        Shell.NavBarIsVisible="False"
     Title="Search"
     BackgroundColor="{StaticResource White}">
 
-    <Grid Padding="16"
-          RowDefinitions="Auto,*"
-          RowSpacing="10">
-        <SearchBar Grid.Row="0"
-                   x:Name="SearchBar"
-                   Placeholder="Search"
-                   BackgroundColor="{StaticResource White}"
-                   TextChanged="OnSearchTextChanged"/>
+        <Grid RowDefinitions="Auto,*,Auto"
+                    RowSpacing="0"
+                    BackgroundColor="{StaticResource White}">
+                <Grid Grid.Row="0"
+                            Padding="12,8"
+                            ColumnDefinitions="Auto,*"
+                            ColumnSpacing="8">
+                        <Button Grid.Column="0"
+                                        Text="&#xF060;"
+                                        FontFamily="FASolid"
+                                        WidthRequest="38"
+                                        HeightRequest="38"
+                                        Padding="0"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource Gray300}"
+                                        Clicked="OnBackClicked"/>
 
-        <CollectionView Grid.Row="1"
-                        x:Name="OptionsView"
-                        ItemsSource="{Binding FilteredOptions}"
-                        BackgroundColor="{StaticResource White}"
-                        SelectionMode="None">
+                        <SearchBar Grid.Column="1"
+                                             x:Name="SearchBar"
+                                             Placeholder="Search"
+                                             BackgroundColor="{StaticResource White}"
+                                             TextChanged="OnSearchTextChanged"/>
+                </Grid>
+
+                <CollectionView Grid.Row="1"
+                                                x:Name="OptionsView"
+                                                Margin="16,10,16,10"
+                                                ItemsSource="{Binding FilteredOptions}"
+                                                BackgroundColor="{StaticResource White}"
+                                                SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Frame Margin="0,0,0,8"
@@ -28,12 +46,22 @@
                            BorderColor="{StaticResource SurfaceBorderColor}"
                            BackgroundColor="{StaticResource White}"
                            HasShadow="False">
-                        <Grid>
+                                                <Grid ColumnDefinitions="Auto,*"
+                                                            ColumnSpacing="8">
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnOptionTapped"
                                                       CommandParameter="{Binding .}"/>
                             </Grid.GestureRecognizers>
-                            <VerticalStackLayout Spacing="4">
+
+                                                        <Label Grid.Column="0"
+                                                                     Text="{Binding SelectionGlyph}"
+                                                                     FontFamily="FASolid"
+                                                                     VerticalTextAlignment="Center"
+                                                                     TextColor="{StaticResource AccentMaroonColor}"
+                                                                     IsVisible="{Binding Source={x:Reference Root}, Path=IsMultiSelect}"/>
+
+                                                        <VerticalStackLayout Grid.Column="1"
+                                                                                                 Spacing="4">
                                 <Label Text="{Binding Title}"
                                        FontAttributes="Bold"
                                        LineBreakMode="WordWrap"/>
@@ -48,5 +76,20 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+
+        <Grid Grid.Row="2"
+              RowDefinitions="1,Auto"
+              IsVisible="{Binding Source={x:Reference Root}, Path=IsMultiSelect}">
+            <BoxView Grid.Row="0"
+                     HeightRequest="1"
+                     BackgroundColor="{StaticResource SurfaceBorderColor}"/>
+            <Grid Grid.Row="1"
+                  Padding="16,10,16,16">
+                <Button Text="Confirm"
+                        IsEnabled="{Binding Source={x:Reference Root}, Path=HasAnySelection}"
+                        Style="{StaticResource ExpandedActionButtonStyle}"
+                        Clicked="OnConfirmClicked"/>
+            </Grid>
+        </Grid>
     </Grid>
 </ContentPage>

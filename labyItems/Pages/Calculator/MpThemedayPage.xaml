@@ -4,11 +4,26 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:controls="clr-namespace:labyItems.Controls"
   xmlns:enums="clr-namespace:labyItems.Models.Enums"
+  xmlns:toolset="clr-namespace:labyItems.Controls"
   xmlns:local="clr-namespace:labyItems.Pages.Calculator" x:Name="RootPage" Title="Themeday">
 
-  <Grid RowDefinitions="*,Auto">
-    <ScrollView x:Name="ThemedayScroll">
+  <Grid>
+    <Grid RowDefinitions="*,Auto">
+    <ScrollView x:Name="ThemedayScroll" Grid.Row="0">
       <VerticalStackLayout Padding="20" Spacing="12">
+        <Grid ColumnDefinitions="Auto,*"
+              ColumnSpacing="12">
+          <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
+          <VerticalStackLayout Grid.Column="1"
+                               Spacing="2"
+                               VerticalOptions="Center">
+            <Label FontAttributes="Bold"
+                   FontSize="28"
+                   Text="Themeday MP item" />
+            <Label Text="Available on any day you've crewed a themeday."
+                   TextColor="{StaticResource Gray500}" />
+          </VerticalStackLayout>
+        </Grid>
         <!-- Spells -->
         <Label Text="Add standard spell (1st-10th) or advanced (0-3)" FontAttributes="Bold" />
         <Grid ColumnDefinitions="*" ColumnSpacing="12">
@@ -195,5 +210,8 @@
     </ScrollView>
 
     <controls:StickyFooterControl Grid.Row="1" ButtonText="Continue" ReturnCommand="{Binding ContinueCommand}" Total="{Binding TotalMp}" TotalFormat="MP cost: {0}/500" BreakdownItems="{Binding Breakdown}" />
+    </Grid>
+    <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
+                                    SelectedRoute="{x:Static toolset:ToolsetRouteKeys.ItemsMp}" />
   </Grid>
 </local:MpCalculatorPageBase>

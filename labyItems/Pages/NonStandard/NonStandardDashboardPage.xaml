@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.NonStandard.NonStandardDashboardPage"
+    x:Name="Root"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False"
+    Title="Create New">
+
+    <Grid RowDefinitions="Auto,*">
+        <ScrollView>
+            <VerticalStackLayout Padding="16,12,16,24"
+                                 Spacing="16">
+                <Grid ColumnDefinitions="Auto,*"
+                      ColumnSpacing="10">
+                    <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
+                    <VerticalStackLayout Grid.Column="1"
+                                         Spacing="2">
+                        <Label Text="Create New"
+                               FontAttributes="Bold"
+                               FontSize="24" />
+                        <Label Text="Choose what you want to create"
+                               FontSize="13"
+                               Opacity="0.68" />
+                    </VerticalStackLayout>
+                </Grid>
+
+                <Border Stroke="{StaticResource SurfaceBorderColor}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 18"
+                        BackgroundColor="{StaticResource White}"
+                        Padding="10,12">
+                    <VerticalStackLayout Spacing="8">
+                        <Border Stroke="{StaticResource SurfaceBorderColor}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 14"
+                                Padding="14,12">
+                            <Grid ColumnDefinitions="32,*,Auto">
+                                <Label FontFamily="FASolid"
+                                       Text="&#xF6E4;"
+                                       FontSize="18"
+                                       TextColor="{StaticResource AccentMaroonColor}"
+                                       VerticalTextAlignment="Center" />
+                                <Label Grid.Column="1"
+                                       Text="Class"
+                                       FontSize="16"
+                                       VerticalTextAlignment="Center" />
+                                <Button Grid.Column="2"
+                                        Text="&#xF054;"
+                                        Style="{StaticResource ListRowGlyphIconButtonStyle}"
+                                        TextColor="{StaticResource AccentMaroonColor}"
+                                        Clicked="OnOpenClassClicked" />
+                            </Grid>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnOpenClassTapped" />
+                            </Border.GestureRecognizers>
+                        </Border>
+
+                        <Border Stroke="{StaticResource SurfaceBorderColor}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 14"
+                                Padding="14,12">
+                            <Grid ColumnDefinitions="32,*,Auto">
+                                <Label FontFamily="FASolid"
+                                       Text="&#xF1B0;"
+                                       FontSize="18"
+                                       TextColor="{StaticResource AccentMaroonColor}"
+                                       VerticalTextAlignment="Center" />
+                                <Label Grid.Column="1"
+                                       Text="Race"
+                                       FontSize="16"
+                                       VerticalTextAlignment="Center" />
+                                <Button Grid.Column="2"
+                                        Text="&#xF054;"
+                                        Style="{StaticResource ListRowGlyphIconButtonStyle}"
+                                        TextColor="{StaticResource AccentMaroonColor}"
+                                        Clicked="OnOpenRaceClicked" />
+                            </Grid>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnOpenRaceTapped" />
+                            </Border.GestureRecognizers>
+                        </Border>
+
+                        <Border Stroke="{StaticResource SurfaceBorderColor}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 14"
+                                Padding="14,12">
+                            <Grid ColumnDefinitions="32,*,Auto">
+                                <Label FontFamily="FASolid"
+                                       Text="&#xF559;"
+                                       FontSize="18"
+                                       TextColor="{StaticResource AccentMaroonColor}"
+                                       VerticalTextAlignment="Center" />
+                                <Label Grid.Column="1"
+                                       Text="Ability"
+                                       FontSize="16"
+                                       VerticalTextAlignment="Center" />
+                                <Button Grid.Column="2"
+                                        Text="&#xF054;"
+                                        Style="{StaticResource ListRowGlyphIconButtonStyle}"
+                                        TextColor="{StaticResource AccentMaroonColor}"
+                                        Clicked="OnOpenAbilityClicked" />
+                            </Grid>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnOpenAbilityTapped" />
+                            </Border.GestureRecognizers>
+                        </Border>
+
+                        <Border Stroke="{StaticResource SurfaceBorderColor}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 14"
+                                Padding="14,12">
+                            <Grid ColumnDefinitions="32,*,Auto">
+                                <Label FontFamily="FASolid"
+                                       Text="&#xF5DA;"
+                                       FontSize="18"
+                                       TextColor="{StaticResource AccentMaroonColor}"
+                                       VerticalTextAlignment="Center" />
+                                <Label Grid.Column="1"
+                                       Text="Spell"
+                                       FontSize="16"
+                                       VerticalTextAlignment="Center" />
+                                <Button Grid.Column="2"
+                                        Text="&#xF054;"
+                                        Style="{StaticResource ListRowGlyphIconButtonStyle}"
+                                        TextColor="{StaticResource AccentMaroonColor}"
+                                        Clicked="OnOpenSpellClicked" />
+                            </Grid>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnOpenSpellTapped" />
+                            </Border.GestureRecognizers>
+                        </Border>
+
+                        <Border Stroke="{StaticResource SurfaceBorderColor}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 14"
+                                Padding="14,12">
+                            <Grid ColumnDefinitions="32,*,Auto">
+                                <Label FontFamily="FASolid"
+                                       Text="&#xF72B;"
+                                       FontSize="18"
+                                       TextColor="{StaticResource AccentMaroonColor}"
+                                       VerticalTextAlignment="Center" />
+                                <Label Grid.Column="1"
+                                       Text="Miracle"
+                                       FontSize="16"
+                                       VerticalTextAlignment="Center" />
+                                <Button Grid.Column="2"
+                                        Text="&#xF054;"
+                                        Style="{StaticResource ListRowGlyphIconButtonStyle}"
+                                        TextColor="{StaticResource AccentMaroonColor}"
+                                        Clicked="OnOpenMiracleClicked" />
+                            </Grid>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnOpenMiracleTapped" />
+                            </Border.GestureRecognizers>
+                        </Border>
+
+                        <Border Stroke="{StaticResource SurfaceBorderColor}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 14"
+                                Padding="14,12">
+                            <Grid ColumnDefinitions="32,*,Auto">
+                                <Label FontFamily="FASolid"
+                                       Text="&#xF0E7;"
+                                       FontSize="18"
+                                       TextColor="{StaticResource AccentMaroonColor}"
+                                       VerticalTextAlignment="Center" />
+                                <Label Grid.Column="1"
+                                       Text="Evocation"
+                                       FontSize="16"
+                                       VerticalTextAlignment="Center" />
+                                <Button Grid.Column="2"
+                                        Text="&#xF054;"
+                                        Style="{StaticResource ListRowGlyphIconButtonStyle}"
+                                        TextColor="{StaticResource AccentMaroonColor}"
+                                        Clicked="OnOpenEvocationClicked" />
+                            </Grid>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnOpenEvocationTapped" />
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
+                                        Grid.RowSpan="2"
+                                        SelectedRoute="{x:Static controls:ToolsetRouteKeys.NonStandard}" />
+    </Grid>
+</ContentPage>

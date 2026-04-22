@@ -3,6 +3,7 @@
   x:Class="labyItems.Pages.ItemRoutePage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:controls="clr-namespace:labyItems.Controls"
   x:Name="RootPage"
   Title="Home"
   NavigationPage.HasNavigationBar="False"
@@ -13,15 +14,7 @@
                            Spacing="22">
         <Grid ColumnDefinitions="Auto,*"
               VerticalOptions="Start">
-          <Button Clicked="OnToggleMenuClicked"
-                  FontSize="28"
-                  HeightRequest="48"
-                  Padding="8,0"
-                  Text="&#x2630;"
-                  TextColor="{StaticResource Gray950}"
-                  WidthRequest="48">
-            <Button.BackgroundColor>Transparent</Button.BackgroundColor>
-          </Button>
+          <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
 
           <Label Grid.Column="1"
                  FontAttributes="Italic"
@@ -57,14 +50,18 @@
               RowSpacing="14">
           <Border Grid.Row="0"
                   Grid.Column="0"
+                  x:Name="NonStandardDashboardCard"
                   Padding="18"
                   Stroke="{StaticResource SurfaceBorderColor}"
                   StrokeShape="RoundRectangle 18">
+            <Border.GestureRecognizers>
+              <TapGestureRecognizer Tapped="OnOpenNonStandardDashboardTapped" />
+            </Border.GestureRecognizers>
             <VerticalStackLayout Spacing="8">
               <Label FontAttributes="Bold"
                      FontSize="20"
-                     Text="Branding Refresh" />
-              <Label Text="Libre Caslon Text is now the default app voice, while specialist rune and glyph fonts stay untouched where they are explicitly chosen." />
+                     Text="Creations Hub" />
+              <Label Text="Create and manage your registered points apps for abilities, classes, races and more." />
             </VerticalStackLayout>
           </Border>
 
@@ -109,59 +106,8 @@
       </VerticalStackLayout>
     </ScrollView>
 
-    <Grid x:Name="MenuOverlay"
-          BackgroundColor="#66000000"
-          ColumnDefinitions="300,*"
-          IsVisible="False"
-          Opacity="0">
-      <Border x:Name="MenuPanel"
-              BackgroundColor="{StaticResource White}"
-              Padding="18,22"
-              StrokeThickness="0">
-        <ScrollView>
-          <VerticalStackLayout Spacing="12">
-            <Grid ColumnDefinitions="*,Auto">
-              <Label FontAttributes="Bold"
-                     FontSize="26"
-                     Text="Navigate"
-                     VerticalTextAlignment="Center" />
-              <Button Grid.Column="1"
-                      Clicked="OnCloseMenuClicked"
-                      FontSize="24"
-                      Padding="4"
-                      Text="&#x2715;"
-                      TextColor="{StaticResource Gray950}">
-                <Button.BackgroundColor>Transparent</Button.BackgroundColor>
-              </Button>
-            </Grid>
-
-            <Label FontAttributes="Italic"
-                   FontSize="14"
-                   Margin="0,0,0,8"
-                   TextColor="{StaticResource Gray500}" />
-
-            <Button Clicked="OnOpenCalendarClicked" Text="Unified Calendar" />
-            <Button Clicked="OnMakeCharacterClicked" Text="Create a Character" />
-            <Button x:Name="CharacterWalletButton" Clicked="OnCharacterWalletClicked" IsEnabled="False" Text="Character Wallet" />
-            <Button Clicked="OnSearchClicked" Text="Search" />
-            <Button Clicked="OnGuildSearchClicked" Text="Guild Search" />
-            <Button Clicked="OnCreateNonStandardClicked" Text="Create New Non-Standard" />
-            <Button Clicked="OnCalculateIspClicked" Text="Calculate Item ISP" />
-            <Button Clicked="OnCreateMpClicked" Text="Create MP Item" />
-            <Button Clicked="OnBuildScrollClicked" Text="Build Scroll" />
-            <Button Clicked="OnInitiateTradeClicked" Text="Initiate Trade" />
-            <Button Clicked="OnItemWalletClicked" Text="Item Wallet" />
-          </VerticalStackLayout>
-        </ScrollView>
-      </Border>
-
-      <BoxView Grid.Column="1"
-               BackgroundColor="Transparent">
-        <BoxView.GestureRecognizers>
-          <TapGestureRecognizer Tapped="OnCloseMenuTapped" />
-        </BoxView.GestureRecognizers>
-      </BoxView>
-    </Grid>
+    <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
+                                    SelectedRoute="{x:Static controls:ToolsetRouteKeys.Home}" />
 
     <Grid x:Name="LoadingOverlay"
           BackgroundColor="#66000000"

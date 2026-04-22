@@ -6,606 +6,569 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:labyItems.Controls"
     xmlns:pickers="clr-namespace:labyItems.Controls.Pickers"
-    Title="Class">
+    Title=""
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False">
 
-    <ContentPage.Resources>
-        <Color x:Key="CardBorderIssueLight">#F9A825</Color>
-        <Color x:Key="CardBgIssueLight">#FFF8E1</Color>
-    </ContentPage.Resources>
-
-    <ScrollView>
-        <VerticalStackLayout Padding="16"
-                             Spacing="12">
-
-            <Frame Style="{StaticResource SectionCardFrameStyle}">
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="From Base"
-                           Style="{StaticResource SectionHeaderLabelStyle}"/>
-                    <Grid ColumnDefinitions="*,Auto"
-                          ColumnSpacing="8">
-                        <Entry Grid.Column="0"
-                               Text="{Binding BaseClassName}"
-                               IsReadOnly="True"/>
-                        <Button Grid.Column="1"
-                                Text="&#xF002;"
-                                FontFamily="FASolid"
-                                WidthRequest="42"
-                                HeightRequest="42"
-                                Padding="0"
-                                Clicked="OnSearchBaseClicked"/>
-                    </Grid>
-                </VerticalStackLayout>
-            </Frame>
-
-            <Frame Style="{StaticResource SectionCardFrameStyle}">
-                <Grid ColumnDefinitions="Auto,*"
-                      ColumnSpacing="12">
-                    <Label Text="class name"
-                           Style="{StaticResource SectionHeaderLabelStyle}"
-                           VerticalTextAlignment="Center"/>
-                    <Entry Grid.Column="1"
-                           Text="{Binding Name, Mode=TwoWay}"
-                           Placeholder="Enter class name"/>
+        <Grid RowDefinitions="Auto,*,Auto"
+          RowSpacing="0">
+                <Grid Grid.Row="0"
+                      Padding="14,10,14,8"
+                      BackgroundColor="{StaticResource White}">
+                        <controls:StepIndicator Steps="{Binding Source={x:Reference Root}, Path=StepItems}"
+                                                CurrentStep="{Binding Source={x:Reference Root}, Path=CurrentStepIndex}"
+                                                MaxAccessibleStep="{Binding Source={x:Reference Root}, Path=MaxAccessibleStep}"
+                                                StepClickCommand="{Binding Source={x:Reference Root}, Path=StepClickCommand}" />
                 </Grid>
-            </Frame>
 
-            <Frame Style="{StaticResource SectionCardFrameStyle}">
-                <Frame.Triggers>
-                    <DataTrigger TargetType="Frame"
-                                 Binding="{Binding HasBracketWarning}"
-                                 Value="True">
-                        <Setter Property="BorderColor"
-                                Value="{StaticResource CardBorderIssueLight}"/>
-                        <Setter Property="BackgroundColor"
-                                Value="{StaticResource CardBgIssueLight}"/>
-                    </DataTrigger>
-                </Frame.Triggers>
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Brackets"
-                           Style="{StaticResource SectionHeaderLabelStyle}"/>
-                    <controls:MultiChipGroup Items="{Binding BracketOptions}"
-                                             SelectedItems="{Binding SelectedBrackets, Mode=TwoWay}"/>
-                    <Label Text="{Binding BracketWarningText}"
-                           TextColor="{StaticResource MutedTextColor}"
-                           IsVisible="{Binding HasBracketWarning}"/>
-                </VerticalStackLayout>
-            </Frame>
-
-            <Frame Style="{StaticResource SectionCardFrameStyle}">
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Path"
-                           Style="{StaticResource SectionHeaderLabelStyle}"/>
-                    <Grid ColumnDefinitions="*,Auto"
-                          ColumnSpacing="8">
-                        <Entry Grid.Column="0"
-                               Text="{Binding PathClassName}"
-                               IsReadOnly="True"/>
-                        <Button Grid.Column="1"
-                                Text="&#xF002;"
-                                FontFamily="FASolid"
-                                WidthRequest="42"
-                                HeightRequest="42"
-                                Padding="0"
-                                Clicked="OnSearchPathClicked"/>
-                    </Grid>
-                </VerticalStackLayout>
-            </Frame>
-
-            <Frame Style="{StaticResource SectionCardFrameStyle}">
-                <VerticalStackLayout Spacing="8">
-                    <HorizontalStackLayout Spacing="8">
-                        <CheckBox IsChecked="{Binding IsRebirth, Mode=TwoWay}"/>
-                        <Label Text="this is a rebirth"
-                               VerticalTextAlignment="Center"/>
-                    </HorizontalStackLayout>
-                    <Label Text="{Binding TagsPreview}"
-                           FontSize="12"
-                           Opacity="0.8"/>
-                </VerticalStackLayout>
-            </Frame>
-
-            <Frame Style="{StaticResource SectionCardFrameStyle}">
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Armour"
-                           Style="{StaticResource SectionHeaderLabelStyle}"/>
-                    <controls:MultiChipGroup Items="{Binding ArmourOptions}"
-                                             SelectedItems="{Binding SelectedArmourOptions, Mode=TwoWay}"/>
-
-                    <Label Text="Restrictions"
-                           FontSize="12"
-                           Opacity="0.8"/>
-                    <Grid ColumnDefinitions="*,Auto"
-                          ColumnSpacing="8">
-                        <Entry Grid.Column="0"
-                               Placeholder="Add restriction"
-                               Text="{Binding ArmourRestrictionInput, Mode=TwoWay}"/>
-                        <Button Grid.Column="1"
-                                Text="Add"
-                                Clicked="OnAddArmourRestrictionClicked"/>
-                    </Grid>
-
-                    <CollectionView ItemsSource="{Binding ArmourRestrictions}"
-                                    SelectionMode="None"
-                                    HeightRequest="120">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16"
+                                 Spacing="12">
+                <ContentView IsVisible="{Binding Source={x:Reference Root}, Path=IsBaseStep}">
+                    <VerticalStackLayout Spacing="12">
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="From Base"
+                                       Style="{StaticResource SectionHeaderLabelStyle}"/>
                                 <Grid ColumnDefinitions="*,Auto"
-                                      ColumnSpacing="8"
-                                      Padding="0,2">
-                                    <Label Text="{Binding .}"/>
+                                      ColumnSpacing="8">
+                                    <Entry Grid.Column="0"
+                                           Text="{Binding BaseClassName}"
+                                           IsReadOnly="True"/>
                                     <Button Grid.Column="1"
-                                            Text="&#xF1F8;"
+                                            Text="&#xF002;"
                                             FontFamily="FASolid"
-                                            WidthRequest="34"
-                                            HeightRequest="34"
+                                            WidthRequest="42"
+                                            HeightRequest="42"
                                             Padding="0"
-                                            Clicked="OnDeleteArmourRestrictionClicked"
-                                            CommandParameter="{Binding .}"/>
+                                            Clicked="OnSearchBaseClicked"/>
                                 </Grid>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </VerticalStackLayout>
-            </Frame>
+                            </VerticalStackLayout>
+                        </Frame>
 
-            <Frame Style="{StaticResource SectionCardFrameStyle}">
-                <Frame.Triggers>
-                    <DataTrigger TargetType="Frame"
-                                 Binding="{Binding ShowMaxAcWarning}"
-                                 Value="True">
-                        <Setter Property="BorderColor"
-                                Value="{StaticResource CardBorderIssueLight}"/>
-                        <Setter Property="BackgroundColor"
-                                Value="{StaticResource CardBgIssueLight}"/>
-                    </DataTrigger>
-                </Frame.Triggers>
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Max AC"
-                           Style="{StaticResource SectionHeaderLabelStyle}"/>
-                    <Entry Text="{Binding MaxAcText, Mode=TwoWay}"
-                           Keyboard="Numeric"
-                           Placeholder="0-24"/>
-                    <Label Text="Usual limit 12"
-                           TextColor="{StaticResource MutedTextColor}"
-                           IsVisible="{Binding ShowMaxAcWarning}"/>
-                </VerticalStackLayout>
-            </Frame>
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Class name"
+                                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+                                <Entry Text="{Binding Name, Mode=TwoWay}"
+                                       Placeholder="Enter class name"/>
+                            </VerticalStackLayout>
+                        </Frame>
 
-            <Frame Style="{StaticResource SectionCardFrameStyle}">
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Weapon Skills"
-                           Style="{StaticResource SectionHeaderLabelStyle}"/>
-                    <CollectionView ItemsSource="{Binding WeaponSkillLevels}"
-                                    SelectionMode="None"
-                                    HeightRequest="360">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid ColumnDefinitions="34,*,Auto"
-                                      ColumnSpacing="8"
-                                      Padding="8,10"
-                                      BackgroundColor="{Binding RowBackgroundHex}">
-                                    <Label Text="{Binding Level}"
-                                           FontAttributes="Bold"
-                                           VerticalTextAlignment="Center"/>
-                                    <Label Grid.Column="1"
-                                           Text="{Binding SelectedSummary}"
-                                           VerticalTextAlignment="Center"
-                                           LineBreakMode="TailTruncation"/>
-                                    <Button Grid.Column="2"
-                                            Text="&#xF303;"
-                                            FontFamily="FASolid"
-                                            WidthRequest="34"
-                                            HeightRequest="34"
-                                            Padding="0"
-                                            BackgroundColor="Transparent"
-                                            TextColor="{StaticResource AccentMaroonColor}"
-                                            Clicked="OnEditWeaponSkillLevelClicked"
-                                            CommandParameter="{Binding .}"/>
-                                </Grid>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Buy as"
+                                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+                                <controls:MultiChipGroup Items="{Binding BuyAsOptions}"
+                                                         SelectedItems="{Binding SelectedBuyAsOptions, Mode=TwoWay}"/>
+                            </VerticalStackLayout>
+                        </Frame>
 
-                    <Label Text="Weapon skill restrictions"
-                           FontSize="12"
-                           Opacity="0.8"/>
-                    <Grid ColumnDefinitions="*,Auto"
-                          ColumnSpacing="8">
-                        <Entry Grid.Column="0"
-                               Placeholder="Add restriction"
-                               Text="{Binding WeaponSkillRestrictionInput, Mode=TwoWay}"/>
-                        <Button Grid.Column="1"
-                                Text="Add"
-                                Clicked="OnAddWeaponSkillRestrictionClicked"/>
-                    </Grid>
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Brackets"
+                                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+                                <controls:MultiChipGroup Items="{Binding BracketOptions}"
+                                                         SelectedItems="{Binding SelectedBrackets, Mode=TwoWay}"/>
+                                <Label Text="{Binding BracketWarningText}"
+                                       TextColor="{StaticResource MutedTextColor}"
+                                       IsVisible="{Binding HasBracketWarning}"/>
+                            </VerticalStackLayout>
+                        </Frame>
 
-                    <CollectionView ItemsSource="{Binding WeaponSkillRestrictions}"
-                                    SelectionMode="None"
-                                    HeightRequest="120">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Path (optional)"
+                                       Style="{StaticResource SectionHeaderLabelStyle}"/>
                                 <Grid ColumnDefinitions="*,Auto"
-                                      ColumnSpacing="8"
-                                      Padding="0,2">
-                                    <Label Text="{Binding .}"/>
+                                      ColumnSpacing="8">
+                                    <Entry Grid.Column="0"
+                                           Text="{Binding PathClassName}"
+                                           IsReadOnly="True"/>
                                     <Button Grid.Column="1"
-                                            Text="&#xF1F8;"
+                                            Text="&#xF002;"
                                             FontFamily="FASolid"
-                                            WidthRequest="28"
-                                            HeightRequest="28"
+                                            WidthRequest="42"
+                                            HeightRequest="42"
                                             Padding="0"
-                                            BackgroundColor="Transparent"
-                                            TextColor="{StaticResource AccentMaroonColor}"
-                                            Clicked="OnDeleteWeaponSkillRestrictionClicked"
-                                            CommandParameter="{Binding .}"/>
+                                            Clicked="OnSearchPathClicked"/>
                                 </Grid>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </VerticalStackLayout>
-            </Frame>
-
-            <Frame Style="{StaticResource SectionCardFrameStyle}">
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Abilities"
-                           Style="{StaticResource SectionHeaderLabelStyle}"/>
-
-                    <CollectionView ItemsSource="{Binding AbilityLevels}"
-                                    SelectionMode="None"
-                                    HeightRequest="360">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid ColumnDefinitions="34,*,Auto"
-                                      ColumnSpacing="8"
-                                      Padding="8,10"
-                                      BackgroundColor="{Binding RowBackgroundHex}">
-                                    <Label Text="{Binding Level}"
-                                           FontAttributes="Bold"
-                                           VerticalTextAlignment="Center"/>
-                                    <Label Grid.Column="1"
-                                           Text="{Binding SummaryText}"
-                                           VerticalTextAlignment="Center"
-                                           LineBreakMode="TailTruncation"/>
-                                    <Button Grid.Column="2"
-                                            Text="&#xF303;"
-                                            FontFamily="FASolid"
-                                            WidthRequest="34"
-                                            HeightRequest="34"
-                                            Padding="0"
-                                            BackgroundColor="Transparent"
-                                            TextColor="{StaticResource AccentMaroonColor}"
-                                            Clicked="OnEditAbilityLevelClicked"
-                                            CommandParameter="{Binding .}"/>
-                                </Grid>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </VerticalStackLayout>
-            </Frame>
-
-            <Frame Style="{StaticResource SectionCardFrameStyle}">
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Buy as"
-                           Style="{StaticResource SectionHeaderLabelStyle}"/>
-                    <Entry Text="{Binding BuyAsText, Mode=TwoWay}"/>
-                </VerticalStackLayout>
-            </Frame>
-
-            <Frame Style="{StaticResource SectionCardFrameStyle}">
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Alignment"
-                           Style="{StaticResource SectionHeaderLabelStyle}"/>
-                    <Label Text="Tap squares to enable/disable allowed alignments"
-                           FontSize="12"
-                           Opacity="0.7"/>
-                    <pickers:AlignmentToggleGridPicker SelectedAlignments="{Binding SelectedAlignments, Mode=TwoWay}"/>
-                </VerticalStackLayout>
-            </Frame>
-
-            <Frame Style="{StaticResource SectionCardFrameStyle}">
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Powerbase"
-                           Style="{StaticResource SectionHeaderLabelStyle}"/>
-                    <controls:MultiChipGroup Items="{Binding PowerbaseOptions}"
-                                             SelectedItems="{Binding SelectedPowerbases, Mode=TwoWay}"/>
-                    <Label Text="{Binding PowerbaseExplanation}"
-                           FontSize="12"
-                           Opacity="0.8"
-                           LineBreakMode="WordWrap"/>
-
-                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding PowerCalculations}"
-                                         Spacing="4">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate>
-                                <Grid ColumnDefinitions="*,*"
-                                      ColumnSpacing="8"
-                                      Padding="0,2">
-                                    <Label Grid.Column="0"
-                                           Text="{Binding PowerBaseDisplay}"
-                                           VerticalTextAlignment="Center"
-                                           LineBreakMode="TailTruncation"
-                                           MaxLines="1"/>
-                                    <Entry Grid.Column="1"
-                                           Placeholder="e.g. CL^2+CL"
-                                           Text="{Binding Calculation, Mode=TwoWay}"/>
-                                </Grid>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                        </Frame>
                     </VerticalStackLayout>
-                </VerticalStackLayout>
-            </Frame>
+                </ContentView>
 
-            <Frame Style="{StaticResource SectionCardFrameStyle}"
-                   IsVisible="{Binding HasMagicPowerbase}">
-                <VerticalStackLayout Spacing="8">
-                    <Grid ColumnDefinitions="*,Auto"
-                          ColumnSpacing="8">
-                        <Label Text="Magic caster level"
-                               Style="{StaticResource SectionHeaderLabelStyle}"/>
-                        <Button Grid.Column="1"
-                                Text="Add"
-                                Clicked="OnAddCasterColourClicked"/>
-                    </Grid>
-
-                    <CollectionView ItemsSource="{Binding CasterLevelRows}"
-                                    SelectionMode="None">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid ColumnDefinitions="Auto,*,Auto"
-                                      ColumnSpacing="8"
-                                      Padding="0,2">
-                                    <Label Grid.Column="0"
-                                           Text="for all"
-                                           VerticalTextAlignment="Center"
-                                           IsVisible="{Binding IsAll}"/>
-                                    <Picker Grid.Column="0"
-                                            WidthRequest="170"
-                                            IsVisible="{Binding CanRemove}"
-                                            ItemsSource="{Binding Source={x:Reference Root}, Path=BindingContext.CasterColourOptions}"
-                                            SelectedItem="{Binding Colour, Mode=TwoWay}"/>
-                                    <Entry Grid.Column="1"
-                                           Keyboard="Numeric"
-                                           Placeholder="="
-                                           Text="{Binding LevelText, Mode=TwoWay}"/>
-                                    <Button Grid.Column="2"
-                                            Text="&#xF1F8;"
-                                            FontFamily="FASolid"
-                                            WidthRequest="34"
-                                            HeightRequest="34"
-                                            Padding="0"
-                                            IsVisible="{Binding CanRemove}"
-                                            Clicked="OnDeleteCasterColourClicked"
-                                            CommandParameter="{Binding .}"/>
-                                </Grid>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </VerticalStackLayout>
-            </Frame>
-
-            <Frame Style="{StaticResource SectionCardFrameStyle}">
-                <VerticalStackLayout Spacing="8">
-                    <Grid ColumnDefinitions="*,Auto"
-                          ColumnSpacing="8">
-                        <Label Text="Lifescale"
-                               Style="{StaticResource SectionHeaderLabelStyle}"
-                               VerticalTextAlignment="Center"/>
-                        <Button Grid.Column="1"
-                                Text="&#xF002;"
-                                FontFamily="FASolid"
-                                WidthRequest="42"
-                                HeightRequest="42"
-                                Padding="0"
-                                Clicked="OnSearchLifescaleClicked"/>
-                    </Grid>
-
-                    <Label Text="{Binding LifescaleSummary}"
-                           FontSize="12"
-                           Opacity="0.8"
-                           IsVisible="{Binding HasLifeScaleSelection}"/>
-
-                    <HorizontalStackLayout Spacing="8">
-                        <CheckBox IsChecked="{Binding UseCustomLifeScale, Mode=TwoWay}"/>
-                        <Label Text="Use custom lifescale"
-                               VerticalTextAlignment="Center"/>
-                    </HorizontalStackLayout>
-
-                    <CollectionView ItemsSource="{Binding CustomLifeScaleRows}"
-                                    IsVisible="{Binding UseCustomLifeScale}"
-                                    SelectionMode="None">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid ColumnDefinitions="60,*,*"
-                                      ColumnSpacing="8"
-                                      Padding="8,6"
-                                      BackgroundColor="{Binding RowBackgroundHex}">
-                                    <Label Text="{Binding Level, StringFormat='Lv {0}'}"
-                                           VerticalTextAlignment="Center"/>
-                                    <Entry Grid.Column="1"
-                                           Keyboard="Numeric"
-                                           Placeholder="Body"
-                                           Text="{Binding BodyText, Mode=TwoWay}"/>
-                                    <Entry Grid.Column="2"
-                                           Keyboard="Numeric"
-                                           Placeholder="Loc"
-                                           Text="{Binding LocText, Mode=TwoWay}"/>
-                                </Grid>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-
-                    <Grid ColumnDefinitions="Auto,*"
-                          ColumnSpacing="8">
-                        <Button Grid.Column="0"
-                                Text="{Binding LifescaleChevronText}"
-                                Style="{StaticResource ChevronButtonStyle}"
-                                Clicked="OnToggleLifescaleExpandedClicked"/>
-                        <Label Grid.Column="1"
-                               Text="Level 8 in collapsed view, full levels when expanded"
-                               VerticalTextAlignment="Center"
-                               FontSize="12"
-                               Opacity="0.75"/>
-                    </Grid>
-
-                    <CollectionView ItemsSource="{Binding ExpandedLifeScaleRows}"
-                                    IsVisible="{Binding IsLifescaleExpanded}"
-                                    SelectionMode="None">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid ColumnDefinitions="60,*,*"
-                                      ColumnSpacing="8"
-                                      Padding="0,2">
-                                    <Label Text="{Binding Level, StringFormat='Lv {0}'}"/>
-                                    <Label Grid.Column="1"
-                                           Text="{Binding Body, StringFormat='Body {0}'}"/>
-                                    <Label Grid.Column="2"
-                                           Text="{Binding Loc, StringFormat='Loc {0}'}"/>
-                                </Grid>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-
-                    <Label Text="Assign to race"
-                           Style="{StaticResource SectionHeaderLabelStyle}"/>
-                    <Grid ColumnDefinitions="*,Auto"
-                          ColumnSpacing="8">
-                        <Entry Grid.Column="0"
-                               Text="{Binding LifeScaleAssignmentRaceName, Mode=OneWay}"
-                               IsReadOnly="True"
-                               Placeholder="Pick race for this lifescale"/>
-                        <Button Grid.Column="1"
-                                Text="&#xF002;"
-                                FontFamily="FASolid"
-                                WidthRequest="42"
-                                HeightRequest="42"
-                                Padding="0"
-                                Clicked="OnSearchLifescaleRaceClicked"/>
-                    </Grid>
-
-                    <Button Text="Add lifescale for race"
-                            IsEnabled="{Binding CanAddLifeScaleAssignment}"
-                            Clicked="OnAddLifescaleAssignmentClicked"/>
-
-                    <CollectionView ItemsSource="{Binding LifeScaleAssignments}"
-                                    SelectionMode="None"
-                                    HeightRequest="170">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
+                <ContentView IsVisible="{Binding Source={x:Reference Root}, Path=IsLifeStep}">
+                    <VerticalStackLayout Spacing="12">
+                        <Frame Style="{StaticResource SectionCardFrameStyle}"
+                               Opacity="{Binding LifeScaleSearchOpacity}">
+                            <VerticalStackLayout Spacing="8">
                                 <Grid ColumnDefinitions="*,Auto"
-                                      ColumnSpacing="8"
-                                      Padding="8,6"
-                                      BackgroundColor="{Binding RowBackgroundHex}">
-                                    <VerticalStackLayout Spacing="2">
-                                        <Label Text="{Binding RaceClassSummary}"
-                                               FontAttributes="Bold"
-                                               VerticalTextAlignment="Center"/>
-                                        <Label Text="{Binding SourceSummary}"
-                                               FontSize="12"
-                                               Opacity="0.8"/>
-                                        <Label Text="{Binding LevelEightSummary}"
+                                      ColumnSpacing="8">
+                                    <Label Grid.Column="0"
+                                           Text="Lifescale Search"
+                                           Style="{StaticResource SectionHeaderLabelStyle}"
+                                           VerticalTextAlignment="Center"/>
+                                    <Button Grid.Column="1"
+                                            Text="{Binding IsLifeScaleSearchExpanded, Converter={StaticResource ChevronConverter}}"
+                                            Style="{StaticResource CardChevronButtonStyle}"
+                                            Clicked="OnToggleLifeScaleSearchClicked"/>
+                                </Grid>
+
+                                <VerticalStackLayout Spacing="8"
+                                                     IsVisible="{Binding IsLifeScaleSearchExpanded}">
+                                    <Entry Placeholder="Search classes"
+                                           Text="{Binding LifeScaleClassFilterText, Mode=TwoWay}"/>
+                                    <Entry Placeholder="Search races"
+                                           Text="{Binding LifeScaleRaceFilterText, Mode=TwoWay}"/>
+
+                                    <CollectionView ItemsSource="{Binding FilteredLifeScaleOptions}"
+                                                    HeightRequest="220"
+                                                    SelectionMode="None">
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid ColumnDefinitions="*,Auto"
+                                                      ColumnSpacing="8"
+                                                      Padding="10,8"
+                                                      BackgroundColor="{Binding RowBackgroundHex}">
+                                                    <Grid.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnUseLifeScaleOptionClicked"
+                                                                              CommandParameter="{Binding .}"/>
+                                                    </Grid.GestureRecognizers>
+                                                    <Label Text="{Binding DisplayTitle}"
+                                                           FontAttributes="Bold"
+                                                           VerticalTextAlignment="Center"/>
+                                                    <Label Grid.Column="1"
+                                                           Text="&#xF054;"
+                                                           FontFamily="FASolid"
+                                                           FontSize="12"
+                                                           TextColor="{StaticResource SubtleTextColor}"
+                                                           VerticalTextAlignment="Center"
+                                                           HorizontalTextAlignment="Center"
+                                                           IsVisible="{Binding IsSelected, Converter={StaticResource InverseBoolConverter}}"/>
+                                                    <Label Grid.Column="1"
+                                                           Text="&#xF00C;"
+                                                           FontFamily="FASolid"
+                                                           FontSize="14"
+                                                           TextColor="{StaticResource AccentMaroonColor}"
+                                                           IsVisible="{Binding IsSelected}"
+                                                           VerticalTextAlignment="Center"
+                                                           HorizontalTextAlignment="Center"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+                                    </CollectionView>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </Frame>
+
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Race Assignments"
+                                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+                                <controls:DictionarySearchBar x:TypeArguments="x:String"
+                                                              PlaceholderText="Search races..."
+                                                              ItemsSource="{Binding RaceAssignmentOptions}"
+                                                              ResultSelectedCommand="{Binding Source={x:Reference Root}, Path=AddRaceAssignmentCommand}"
+                                                              KeepFocusOnResultSelection="True"
+                                                              ClearAfterResultSelection="True" />
+                                <CollectionView ItemsSource="{Binding LifeScaleAssignments}"
+                                                SelectionMode="None"
+                                                HeightRequest="150">
+                                    <CollectionView.EmptyView>
+                                        <Label Text="No race assignments yet."
                                                FontSize="12"
                                                Opacity="0.75"/>
-                                    </VerticalStackLayout>
-                                    <Button Grid.Column="1"
-                                            Text="&#xF1F8;"
-                                            FontFamily="FASolid"
-                                            WidthRequest="34"
-                                            HeightRequest="34"
-                                            Padding="0"
-                                            Clicked="OnDeleteLifescaleAssignmentClicked"
-                                            CommandParameter="{Binding RaceName}"/>
-                                </Grid>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </VerticalStackLayout>
-            </Frame>
+                                    </CollectionView.EmptyView>
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnDefinitions="*,Auto"
+                                                  ColumnSpacing="8"
+                                                  Padding="10,8"
+                                                  BackgroundColor="{Binding RowBackgroundHex}">
+                                                <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                                                    <Label Text="{Binding RaceName}" FontAttributes="Bold"/>
+                                                    <Label Text="{Binding RaceClassSummary}" FontSize="12" Opacity="0.75"/>
+                                                </VerticalStackLayout>
+                                                <Button Grid.Column="1"
+                                                        Text="&#xF1F8;"
+                                                        Style="{StaticResource ListRowGlyphIconButtonStyle}"
+                                                        Clicked="OnDeleteLifescaleAssignmentClicked"
+                                                        CommandParameter="{Binding RaceName}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
+                        </Frame>
 
-            <Frame Style="{StaticResource SectionCardFrameStyle}">
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Included races"
-                           Style="{StaticResource SectionHeaderLabelStyle}"/>
-                    <Button Text="Add to included"
-                            Clicked="OnAddWhitelistRaceClicked"/>
-                    <CollectionView ItemsSource="{Binding RaceWhitelist}"
-                                    SelectionMode="None"
-                                    HeightRequest="130">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid ColumnDefinitions="*,Auto,Auto"
-                                      ColumnSpacing="8"
-                                      Padding="0,2">
-                                    <Label Text="{Binding .}"
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Grid ColumnDefinitions="*,Auto"
+                                      ColumnSpacing="8">
+                                    <Label Grid.Column="0"
+                                           Text="Advanced override table"
+                                           Style="{StaticResource SectionHeaderLabelStyle}"
                                            VerticalTextAlignment="Center"/>
                                     <Button Grid.Column="1"
-                                            Text="&#xF362;"
-                                            FontFamily="FASolid"
-                                            WidthRequest="34"
-                                            HeightRequest="34"
-                                            Padding="0"
-                                            Clicked="OnMoveWhitelistToBlacklistClicked"
-                                            CommandParameter="{Binding .}"/>
-                                    <Button Grid.Column="2"
-                                            Text="&#xF1F8;"
-                                            FontFamily="FASolid"
-                                            WidthRequest="34"
-                                            HeightRequest="34"
-                                            Padding="0"
-                                            Clicked="OnDeleteWhitelistRaceClicked"
-                                            CommandParameter="{Binding .}"/>
+                                            Text="{Binding IsLifeScaleAdvancedExpanded, Converter={StaticResource ChevronConverter}}"
+                                            Style="{StaticResource CardChevronButtonStyle}"
+                                            Clicked="OnToggleLifeScaleAdvancedClicked"/>
                                 </Grid>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
 
-                    <Label Text="Excluded races"
-                           Style="{StaticResource SectionHeaderLabelStyle}"/>
-                    <Button Text="Add to excluded"
-                            Clicked="OnAddBlacklistRaceClicked"/>
-                    <CollectionView ItemsSource="{Binding RaceBlacklist}"
-                                    SelectionMode="None"
-                                    HeightRequest="130">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid ColumnDefinitions="*,Auto,Auto"
-                                      ColumnSpacing="8"
-                                      Padding="0,2">
-                                    <Label Text="{Binding .}"
+                                <VerticalStackLayout Spacing="8"
+                                                     IsVisible="{Binding IsLifeScaleAdvancedExpanded}">
+                                    <Label Text="Level 1-8 values below override automatically when they differ from the selected lifescale."
+                                           FontSize="12"
+                                           Opacity="0.75"/>
+
+                                    <CollectionView ItemsSource="{Binding CustomLifeScaleRows}"
+                                                    SelectionMode="None">
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid ColumnDefinitions="60,*,*"
+                                                      ColumnSpacing="8"
+                                                      Padding="8,6"
+                                                      BackgroundColor="{Binding RowBackgroundHex}">
+                                                    <Label Text="{Binding Level, StringFormat='Lv {0}'}"
+                                                           VerticalTextAlignment="Center"/>
+                                                    <Entry Grid.Column="1"
+                                                           Keyboard="Numeric"
+                                                           Placeholder="TBLP"
+                                                           Text="{Binding BodyText, Mode=TwoWay}"/>
+                                                    <Entry Grid.Column="2"
+                                                           Keyboard="Numeric"
+                                                           Placeholder="LOC"
+                                                           Text="{Binding LocText, Mode=TwoWay}"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+                                    </CollectionView>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </VerticalStackLayout>
+                </ContentView>
+
+                <ContentView IsVisible="{Binding Source={x:Reference Root}, Path=IsArmourStep}">
+                    <VerticalStackLayout Spacing="12">
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Armour"
+                                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+                                <controls:MultiChipGroup Items="{Binding ArmourOptions}"
+                                                         SelectedItems="{Binding SelectedArmourOptions, Mode=TwoWay}"/>
+                            </VerticalStackLayout>
+                        </Frame>
+
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Restrictions"
+                                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+                                <Grid ColumnDefinitions="*,Auto"
+                                      ColumnSpacing="8">
+                                    <Entry Grid.Column="0"
+                                           Placeholder="Add restriction"
+                                           Text="{Binding ArmourRestrictionInput, Mode=TwoWay}"/>
+                                    <Button Grid.Column="1"
+                                            Text="Add"
+                                            Clicked="OnAddArmourRestrictionClicked"/>
+                                </Grid>
+                                <CollectionView ItemsSource="{Binding ArmourRestrictionRows}"
+                                                SelectionMode="None"
+                                                HeightRequest="180">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnDefinitions="*,Auto"
+                                                  ColumnSpacing="8"
+                                                  Padding="10,8"
+                                                  BackgroundColor="{Binding RowBackgroundHex}">
+                                                <Label Text="{Binding Text}"/>
+                                                <Button Grid.Column="1"
+                                                        Text="&#xF1F8;"
+                                                        Style="{StaticResource ListRowGlyphIconButtonStyle}"
+                                                        Clicked="OnDeleteArmourRestrictionClicked"
+                                                        CommandParameter="{Binding Text}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </VerticalStackLayout>
+                </ContentView>
+
+                <ContentView IsVisible="{Binding Source={x:Reference Root}, Path=IsSkillsStep}">
+                    <VerticalStackLayout Spacing="12">
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Weapon skills by level"
+                                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+                                <CollectionView ItemsSource="{Binding WeaponSkillLevels}"
+                                                SelectionMode="None"
+                                                HeightRequest="320">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnDefinitions="34,*,Auto"
+                                                  ColumnSpacing="8"
+                                                  Padding="8,8"
+                                                  BackgroundColor="{Binding RowBackgroundHex}">
+                                                <Label Text="{Binding Level}" FontAttributes="Bold" VerticalTextAlignment="Center"/>
+                                                <Label Grid.Column="1" Text="{Binding SelectedSummary}" VerticalTextAlignment="Center"/>
+                                                <Button Grid.Column="2"
+                                                        Text="&#xF1FC;"
+                                                        Style="{StaticResource ListRowGlyphIconButtonStyle}"
+                                                        Clicked="OnEditWeaponSkillLevelClicked"
+                                                        CommandParameter="{Binding .}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
+                        </Frame>
+
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Abilities by level"
+                                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+                                <CollectionView ItemsSource="{Binding AbilityLevels}"
+                                                SelectionMode="None"
+                                                HeightRequest="320">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnDefinitions="34,*,Auto"
+                                                  ColumnSpacing="8"
+                                                  Padding="8,8"
+                                                  BackgroundColor="{Binding RowBackgroundHex}">
+                                                <Label Text="{Binding Level}" FontAttributes="Bold" VerticalTextAlignment="Center"/>
+                                                <Label Grid.Column="1" Text="{Binding SummaryText}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation"/>
+                                                <Button Grid.Column="2"
+                                                        Text="&#xF1FC;"
+                                                        Style="{StaticResource ListRowGlyphIconButtonStyle}"
+                                                        Clicked="OnEditAbilityLevelClicked"
+                                                        CommandParameter="{Binding .}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
+                        </Frame>
+
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Grid ColumnDefinitions="*,Auto"
+                                      ColumnSpacing="8">
+                                    <Label Grid.Column="0"
+                                           Text="Post 8th progression"
+                                           Style="{StaticResource SectionHeaderLabelStyle}"
                                            VerticalTextAlignment="Center"/>
                                     <Button Grid.Column="1"
-                                            Text="&#xF362;"
-                                            FontFamily="FASolid"
-                                            WidthRequest="34"
-                                            HeightRequest="34"
-                                            Padding="0"
-                                            Clicked="OnMoveBlacklistToWhitelistClicked"
-                                            CommandParameter="{Binding .}"/>
-                                    <Button Grid.Column="2"
-                                            Text="&#xF1F8;"
-                                            FontFamily="FASolid"
-                                            WidthRequest="34"
-                                            HeightRequest="34"
-                                            Padding="0"
-                                            Clicked="OnDeleteBlacklistRaceClicked"
-                                            CommandParameter="{Binding .}"/>
+                                            Text="{Binding IsPostEighthExpanded, Converter={StaticResource ChevronConverter}}"
+                                            Style="{StaticResource CardChevronButtonStyle}"
+                                            Clicked="OnTogglePostEighthClicked"/>
                                 </Grid>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </VerticalStackLayout>
-            </Frame>
 
-            <Button Text="Save Non-standard Class"
-                    IsEnabled="{Binding CanSave}"
-                    Clicked="OnSaveClicked"/>
+                                <VerticalStackLayout IsVisible="{Binding IsPostEighthExpanded}"
+                                                     Spacing="8">
+                                     <Label Text="Add post-8 multi-races and multi-classes, then set how often they progress and which table they begin on."
+                                         FontSize="12"
+                                         Opacity="0.75"/>
+                                     <HorizontalStackLayout Spacing="8">
+                                         <Button Text="Add multi-race"
+                                              Clicked="OnAddPostEighthRaceClicked"/>
+                                         <Button Text="Add multi-class"
+                                              Clicked="OnAddPostEighthClassClicked"/>
+                                     </HorizontalStackLayout>
+                                     <CollectionView ItemsSource="{Binding PostEighthEntries}"
+                                               SelectionMode="None">
+                                         <CollectionView.EmptyView>
+                                          <Label Text="No post-8 progression entries yet."
+                                              FontSize="12"
+                                              Opacity="0.75"/>
+                                         </CollectionView.EmptyView>
+                                         <CollectionView.ItemTemplate>
+                                          <DataTemplate>
+                                              <Grid ColumnDefinitions="*,Auto"
+                                                 RowDefinitions="Auto,Auto"
+                                                 ColumnSpacing="8"
+                                                 RowSpacing="6"
+                                                 Padding="8,8"
+                                                 BackgroundColor="{Binding RowBackgroundHex}">
+                                               <VerticalStackLayout Spacing="2">
+                                                <Label Text="{Binding KindLabel}"
+                                                    FontSize="11"
+                                                    Opacity="0.7"/>
+                                                <Label Text="{Binding Name}"
+                                                    FontAttributes="Bold"/>
+                                               </VerticalStackLayout>
+                                               <Button Grid.Column="1"
+                                                    Text="&#xF1F8;"
+                                                    Style="{StaticResource ListRowGlyphIconButtonStyle}"
+                                                    Clicked="OnDeletePostEighthEntryClicked"
+                                                    CommandParameter="{Binding .}"/>
+                                               <Grid Grid.Row="1"
+                                                  Grid.Column="0"
+                                                  Grid.ColumnSpan="2"
+                                                  ColumnDefinitions="*,*"
+                                                  ColumnSpacing="8">
+                                                <Entry Grid.Column="0"
+                                                    Keyboard="Numeric"
+                                                    Placeholder="Tables per gain"
+                                                    Text="{Binding TablesPerGainText, Mode=TwoWay}"/>
+                                                <Entry Grid.Column="1"
+                                                    Keyboard="Numeric"
+                                                    Placeholder="Starting table"
+                                                    Text="{Binding StartingTableText, Mode=TwoWay}"/>
+                                               </Grid>
+                                              </Grid>
+                                          </DataTemplate>
+                                         </CollectionView.ItemTemplate>
+                                     </CollectionView>
+                                    <Label Text="{Binding PostEighthSummary}"
+                                           FontSize="12"
+                                           Opacity="0.75"/>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </VerticalStackLayout>
+                </ContentView>
 
-            <ActivityIndicator IsVisible="{Binding IsBusy}"
-                               IsRunning="{Binding IsBusy}"/>
+                <ContentView IsVisible="{Binding Source={x:Reference Root}, Path=IsPowerStep}">
+                    <VerticalStackLayout Spacing="12">
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Powerbase"
+                                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+                                <controls:MultiChipGroup Items="{Binding PowerbaseOptions}"
+                                                         SelectedItems="{Binding SelectedPowerbases, Mode=TwoWay}"/>
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding PowerCalculations}"
+                                                     Spacing="4">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                                                <Label Grid.Column="0" Text="{Binding PowerBaseDisplay}" VerticalTextAlignment="Center"/>
+                                                <Entry Grid.Column="1" Placeholder="e.g. CL^2+CL" Text="{Binding Calculation, Mode=TwoWay}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </Frame>
 
-            <Label Text="{Binding SaveStatus}"
-                   TextColor="{StaticResource AccentMaroonColor}"
-                   IsVisible="{Binding HasSaveStatus}"
-                   LineBreakMode="WordWrap"/>
-        </VerticalStackLayout>
-    </ScrollView>
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Alignment"
+                                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+                                <pickers:AlignmentToggleGridPicker SelectedAlignments="{Binding SelectedAlignments, Mode=TwoWay}"/>
+                                <HorizontalStackLayout Spacing="8">
+                                    <CheckBox IsChecked="{Binding IsRebirth, Mode=TwoWay}"/>
+                                    <Label Text="this is a rebirth"
+                                           VerticalTextAlignment="Center"/>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </VerticalStackLayout>
+                </ContentView>
+
+                <ContentView IsVisible="{Binding Source={x:Reference Root}, Path=IsReviewStep}">
+                    <VerticalStackLayout Spacing="12">
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="Base" FontAttributes="Bold"/>
+                                    <Label Text="{Binding Source={x:Reference Root}, Path=ReviewBaseSummary}" FontSize="12" LineBreakMode="WordWrap"/>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditBaseStepClicked"/>
+                            </Grid>
+                        </Frame>
+
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="Life" FontAttributes="Bold"/>
+                                    <Label Text="{Binding Source={x:Reference Root}, Path=ReviewLifeSummary}" FontSize="12" LineBreakMode="WordWrap"/>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditLifeStepClicked"/>
+                            </Grid>
+                        </Frame>
+
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="Armour" FontAttributes="Bold"/>
+                                    <Label Text="{Binding Source={x:Reference Root}, Path=ReviewArmourSummary}" FontSize="12" LineBreakMode="WordWrap"/>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditArmourStepClicked"/>
+                            </Grid>
+                        </Frame>
+
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="Skills" FontAttributes="Bold"/>
+                                    <Label Text="{Binding Source={x:Reference Root}, Path=ReviewSkillsSummary}" FontSize="12" LineBreakMode="WordWrap"/>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditSkillsStepClicked"/>
+                            </Grid>
+                        </Frame>
+
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="Post 8th progression" FontAttributes="Bold"/>
+                                    <Label Text="{Binding Source={x:Reference Root}, Path=ReviewPostEighthSummary}" FontSize="12" LineBreakMode="WordWrap"/>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditSkillsStepClicked"/>
+                            </Grid>
+                        </Frame>
+
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="Power" FontAttributes="Bold"/>
+                                    <Label Text="{Binding Source={x:Reference Root}, Path=ReviewPowerSummary}" FontSize="12" LineBreakMode="WordWrap"/>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditPowerStepClicked"/>
+                            </Grid>
+                        </Frame>
+
+                        <Label Text="{Binding Source={x:Reference Root}, Path=ReviewSaveHint}"
+                               FontSize="12"
+                               Opacity="0.8"
+                               LineBreakMode="WordWrap"/>
+
+                        <Label Text="{Binding SaveStatus}"
+                               TextColor="{StaticResource AccentMaroonColor}"
+                               IsVisible="{Binding HasSaveStatus}"/>
+                    </VerticalStackLayout>
+                </ContentView>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Grid Grid.Row="2"
+              RowDefinitions="1,Auto"
+              BackgroundColor="{StaticResource White}">
+            <BoxView Grid.Row="0"
+                     HeightRequest="1"
+                     BackgroundColor="{StaticResource SurfaceBorderColor}"/>
+            <Grid Grid.Row="1"
+                  ColumnDefinitions="Auto,*,Auto"
+                  ColumnSpacing="8"
+                  Padding="16,10,16,16">
+                <Button Grid.Column="0"
+                        Text="Back"
+                        IsEnabled="{Binding Source={x:Reference Root}, Path=CanGoPrevious}"
+                        Clicked="OnPreviousStepClicked"/>
+                <Label Grid.Column="1"
+                       Text="{Binding Source={x:Reference Root}, Path=StepCounterText}"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"
+                       Opacity="0.75"/>
+                <Button Grid.Column="2"
+                        Text="{Binding Source={x:Reference Root}, Path=NextButtonText}"
+                    IsEnabled="{Binding Source={x:Reference Root}, Path=CanGoNext}"
+                        Clicked="OnNextStepClicked"/>
+            </Grid>
+        </Grid>
+    </Grid>
 </ContentPage>

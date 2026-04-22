@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="labyItems.Controls.BurgerMenuButton"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="Root">
+
+    <Button AutomationProperties.Name="Menu"
+            Command="{Binding Source={x:Reference Root}, Path=Command}"
+            FontSize="28"
+            HeightRequest="48"
+            Padding="8,0"
+            Text="&#x2630;"
+            TextColor="{StaticResource Gray950}"
+            WidthRequest="48">
+        <Button.BackgroundColor>Transparent</Button.BackgroundColor>
+    </Button>
+</ContentView>

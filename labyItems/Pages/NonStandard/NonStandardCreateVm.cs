@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using labyItems.Helpers;
+using labyItems.Models;
 using labyItems.Models.Characters;
 using labyItems.Services;
 
@@ -24,8 +25,10 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
     private static readonly HashSet<string> RaceStructuredFieldKeys = new(
         [
             NormalizeFieldKey("PeopleType"),
+            NormalizeFieldKey("Tags"),
             NormalizeFieldKey("levelledAbilities"),
             NormalizeFieldKey("Subtype"),
+            NormalizeFieldKey("Buy-as"),
             NormalizeFieldKey("GuildOverrides"),
             NormalizeFieldKey("alignmentRule")
         ],
@@ -61,6 +64,7 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
             [NonStandardEntityType.CharacterRace] =
             [
                 new("PeopleType", NonStandardFieldKind.Json),
+                new("Tags", NonStandardFieldKind.Json),
                 new("Description", NonStandardFieldKind.Text),
                 new("levelledAbilities", NonStandardFieldKind.Json),
                 new("AdditionalInfo", NonStandardFieldKind.Text),
@@ -131,12 +135,18 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
     private readonly ObservableCollection<string> _classOptions = new();
     private readonly ObservableCollection<string> _racePeopleTypeOptions = new();
     private readonly ObservableCollection<string> _selectedRacePeopleTypes = new();
+    private readonly ObservableCollection<string> _selectedRaceTags = new();
+    private readonly ObservableCollection<RaceTagRowVm> _raceTagRows = new();
     private readonly ObservableCollection<RaceAbilityRowVm> _raceAbilityRows = new();
     private readonly ObservableCollection<string> _guildOverrideTypeOptions = new(GuildOverrideTypes);
     private readonly ObservableCollection<string> _selectedRaceGuildOverrideTypes = new();
     private readonly ObservableCollection<Alignment> _selectedRaceAlignments = new();
     private readonly ObservableCollection<RaceSubtypeOptionVm> _raceSubtypeOptions = new();
     private readonly ObservableCollection<RaceSubtypeCopyVm> _raceSubtypeCopies = new();
+    private readonly ObservableCollection<CharacterAssignmentOptionVm> _assignableCharacters = new();
+    private readonly ObservableCollection<CustomLifeScalePointVm> _customLifeScaleRows = new();
+    private readonly ObservableCollection<RaceLifeScaleClassEntryVm> _raceLifeScaleEntries = new();
+    private readonly List<string> _raceTagOptions = new();
 
     private readonly Dictionary<string, EvolutionService.AbilityResult> _raceAbilityLookup =
         new(StringComparer.OrdinalIgnoreCase);
@@ -148,6 +158,7 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
     private bool _isBusy;
     private bool _raceLookupsLoaded;
     private bool _specialisationLookupLoaded;
+    private bool _syncingLifeScaleRows;
     private string _name = string.Empty;
     private string _saveStatus = string.Empty;
     private string _lifeScalePointsJson = string.Empty;
@@ -160,6 +171,9 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
     private string _raceSubtypeSelectionMode = "SingleOptional";
     private string _raceSubtypeOptionsSource = string.Empty;
     private string _raceSubtypeAbilityMapKey = string.Empty;
+    private string _raceBuyAsText = string.Empty;
+    private string _raceTagInput = string.Empty;
+    private string? _raceTagSelectedValue;
 
     private NonStandardTypeOptionVm? _selectedEntityType;
     private NonStandardTemplate? _selectedBaseTemplate;
@@ -167,12 +181,14 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
     private string? _selectedLifeScaleTargetClass;
     private string? _selectedLifeScaleSourceRace;
     private string? _selectedLifeScaleSourceClass;
+    private RaceSubtypeOptionVm? _selectedRaceSubtypeOption;
 
     private EvolutionService.AbilityResult? _previewAbility;
     private SpellService.SpellRaw? _previewSpell;
     private MiracleService.MiracRaw? _previewMiracle;
     private DruidEvocationService.EvocRaw? _previewEvocation;
     private string _jsonPreviewText = string.Empty;
+    private CharacterAssignmentOptionVm? _selectedAssignedCharacter;
 
     public ObservableCollection<NonStandardTypeOptionVm> EntityTypes => _entityTypes;
     public ObservableCollection<NonStandardTemplate> BaseTemplates => _baseTemplates;
@@ -181,16 +197,45 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
     public ObservableCollection<string> LifeScaleClassOptions => _classOptions;
     public ObservableCollection<string> RacePeopleTypeOptions => _racePeopleTypeOptions;
     public ObservableCollection<string> SelectedRacePeopleTypes => _selectedRacePeopleTypes;
+    public ObservableCollection<string> SelectedRaceTags => _selectedRaceTags;
+    public ObservableCollection<RaceTagRowVm> RaceTagRows => _raceTagRows;
     public ObservableCollection<RaceAbilityRowVm> RaceAbilityRows => _raceAbilityRows;
     public ObservableCollection<string> GuildOverrideTypeOptions => _guildOverrideTypeOptions;
     public ObservableCollection<string> SelectedRaceGuildOverrideTypes => _selectedRaceGuildOverrideTypes;
     public ObservableCollection<Alignment> SelectedRaceAlignments => _selectedRaceAlignments;
     public ObservableCollection<RaceSubtypeOptionVm> RaceSubtypeOptions => _raceSubtypeOptions;
+    public RaceSubtypeOptionVm? SelectedRaceSubtypeOption
+    {
+        get => _selectedRaceSubtypeOption;
+        set
+        {
+            if (!Set(ref _selectedRaceSubtypeOption, value))
+                return;
+
+            ReindexSubtypeOptions();
+        }
+    }
+
+    public Dictionary<string, string> RaceTagDictionary
+        => _raceTagOptions
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(tag => tag, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(tag => tag, tag => tag, StringComparer.OrdinalIgnoreCase);
     public ObservableCollection<RaceSubtypeCopyVm> RaceSubtypeCopies => _raceSubtypeCopies;
+    public ObservableCollection<CharacterAssignmentOptionVm> AssignableCharacters => _assignableCharacters;
+    public ObservableCollection<CustomLifeScalePointVm> CustomLifeScaleRows => _customLifeScaleRows;
+    public ObservableCollection<RaceLifeScaleClassEntryVm> RaceLifeScaleEntries => _raceLifeScaleEntries;
 
     public NonStandardCreateVm()
     {
         _selectedRacePeopleTypes.CollectionChanged += (_, _) => OnRaceStructuredDataChanged();
+        _selectedRaceTags.CollectionChanged += (_, _) =>
+        {
+            Raise(nameof(HasRaceTags));
+            Raise(nameof(RaceTagCountLabel));
+            OnRaceStructuredDataChanged();
+            RebuildRaceTagRows();
+        };
         _selectedRaceGuildOverrideTypes.CollectionChanged += (_, _) => OnRaceStructuredDataChanged();
         _selectedRaceAlignments.CollectionChanged += (_, _) => OnRaceStructuredDataChanged();
         _raceAbilityRows.CollectionChanged += OnRaceAbilityRowsChanged;
@@ -210,6 +255,7 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
             Raise(nameof(ShowClassLifeScaleSelectors));
             Raise(nameof(ShowRaceLifeScaleSelectors));
             Raise(nameof(IsRaceType));
+            Raise(nameof(RequiresCharacterAssignment));
             Raise(nameof(ShowStructuredRaceEditor));
             Raise(nameof(HasSubtypeEditorData));
             Raise(nameof(CanSave));
@@ -238,6 +284,9 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         {
             if (!Set(ref _name, value ?? string.Empty))
                 return;
+
+            if (IsRaceType)
+                UpdateSubtypeMapKey();
 
             Raise(nameof(CanSave));
             UpdatePreview();
@@ -271,8 +320,63 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
     public bool HasSaveStatus => !string.IsNullOrWhiteSpace((SaveStatus ?? string.Empty).Trim());
 
     public bool IsRaceType => CurrentType == NonStandardEntityType.CharacterRace;
+    public bool RequiresCharacterAssignment => CurrentType is NonStandardEntityType.Ability
+        or NonStandardEntityType.Spell
+        or NonStandardEntityType.Miracle
+        or NonStandardEntityType.Evocation;
+
+    public CharacterAssignmentOptionVm? SelectedAssignedCharacter
+    {
+        get => _selectedAssignedCharacter;
+        set
+        {
+            if (!Set(ref _selectedAssignedCharacter, value))
+                return;
+
+            Raise(nameof(CanSave));
+        }
+    }
 
     public bool ShowStructuredRaceEditor => IsRaceType;
+
+    public bool HasRaceTags => SelectedRaceTags.Count > 0;
+    public string RaceTagCountLabel => $"{SelectedRaceTags.Count}/3";
+
+    public string RaceBuyAsText
+    {
+        get => _raceBuyAsText;
+        set
+        {
+            if (!Set(ref _raceBuyAsText, value ?? string.Empty))
+                return;
+
+            OnRaceStructuredDataChanged();
+        }
+    }
+
+    public string RaceTagInput
+    {
+        get => _raceTagInput;
+        set => Set(ref _raceTagInput, value ?? string.Empty);
+    }
+
+    public string? RaceTagSelectedValue
+    {
+        get => _raceTagSelectedValue;
+        set
+        {
+            if (!Set(ref _raceTagSelectedValue, value))
+                return;
+
+            var selected = (value ?? string.Empty).Trim();
+            if (selected.Length == 0)
+                return;
+
+            AddRaceTagValue(selected);
+            _raceTagSelectedValue = null;
+            Raise(nameof(RaceTagSelectedValue));
+        }
+    }
 
     public bool HasSubtypeEditorData
         => !string.IsNullOrWhiteSpace((_raceSubtypeKey ?? string.Empty).Trim())
@@ -415,6 +519,7 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
                 return;
 
             Raise(nameof(CanSave));
+            Raise(nameof(SelectedLifeScaleTargetClassDisplay));
             _ = RefreshLifeScaleFromSelectionAsync();
         }
     }
@@ -427,6 +532,7 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
             if (!Set(ref _selectedLifeScaleSourceRace, value))
                 return;
 
+            Raise(nameof(SelectedLifeScaleSourceRaceDisplay));
             _ = RefreshLifeScaleFromSelectionAsync();
         }
     }
@@ -454,8 +560,21 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
             Raise(nameof(LifeScaleCollapsedSummary));
             Raise(nameof(LifeScaleExpandedSummary));
             Raise(nameof(CanSave));
+
+            if (!_syncingLifeScaleRows)
+                SyncLifeScaleRowsFromJson();
         }
     }
+
+    public string SelectedLifeScaleTargetClassDisplay
+        => string.IsNullOrWhiteSpace((SelectedLifeScaleTargetClass ?? string.Empty).Trim())
+            ? "Select playable class"
+            : SelectedLifeScaleTargetClass!;
+
+    public string SelectedLifeScaleSourceRaceDisplay
+        => string.IsNullOrWhiteSpace((SelectedLifeScaleSourceRace ?? string.Empty).Trim())
+            ? "Select source race"
+            : SelectedLifeScaleSourceRace!;
 
     public bool IsLifeScaleExpanded
     {
@@ -548,21 +667,32 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
                 return false;
 
             if (!RequiresLifeScale)
-                return true;
+                return !RequiresCharacterAssignment || SelectedAssignedCharacter != null;
 
             if (CurrentType == NonStandardEntityType.CharacterClass)
             {
                 if (string.IsNullOrWhiteSpace((SelectedLifeScaleTargetRace ?? string.Empty).Trim()))
                     return false;
+
+                if (!TryParseLifeScalePoints(LifeScalePointsJson, out var classPoints) || classPoints.Count < 8)
+                    return false;
             }
 
             if (CurrentType == NonStandardEntityType.CharacterRace)
             {
-                if (string.IsNullOrWhiteSpace((SelectedLifeScaleTargetClass ?? string.Empty).Trim()))
+                if (_raceLifeScaleEntries.Count == 0)
+                    return false;
+
+                if (_raceLifeScaleEntries.Any(entry =>
+                    string.IsNullOrWhiteSpace((entry.ClassName ?? string.Empty).Trim())))
                     return false;
             }
 
-            return TryParseLifeScalePoints(LifeScalePointsJson, out var points) && points.Count >= 8;
+            if (CurrentType != NonStandardEntityType.CharacterRace
+                && (!TryParseLifeScalePoints(LifeScalePointsJson, out var points) || points.Count < 8))
+                return false;
+
+            return !RequiresCharacterAssignment || SelectedAssignedCharacter != null;
         }
     }
 
@@ -587,6 +717,7 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         SelectedEntityType = _entityTypes.FirstOrDefault();
 
         await LoadLifeScaleLookupsAsync();
+        await LoadAssignableCharactersAsync();
         await EnsureRaceEditorLookupsAsync();
         await ReloadForSelectedTypeAsync(preferredTemplateName: null);
 
@@ -683,6 +814,7 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
             return;
 
         await LoadLifeScaleLookupsAsync();
+        await LoadAssignableCharactersAsync();
         await EnsureRaceEditorLookupsAsync();
         EnsureLifeScaleSelectionsAreValid();
         await RefreshSubtypeOptionsAsync();
@@ -717,6 +849,157 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
             return;
 
         AddRaceAbilityRow(level: 1, selected.Value, type: "Static", countText: string.Empty, subtypeCopyId: null);
+    }
+
+    public async Task SearchRaceTagsAsync(INavigation navigation)
+    {
+        if (!IsRaceType || navigation == null)
+            return;
+
+        await EnsureRaceEditorLookupsAsync();
+        var options = _raceTagOptions
+            .Select(tag => new NonStandardTagSearchOption(tag, tag))
+            .ToList();
+
+        var selected = await NonStandardTagSearchPage.PickAsync(
+            navigation,
+            "Select race tags",
+            options,
+            SelectedRaceTags.ToList(),
+            3);
+
+        ReplaceItems(_selectedRaceTags, selected);
+        Raise(nameof(RaceTagDictionary));
+        RebuildRaceTagRows();
+        Raise(nameof(HasRaceTags));
+        OnRaceStructuredDataChanged();
+    }
+
+    public void AddRaceTag()
+    {
+        var value = (RaceTagInput ?? string.Empty).Trim();
+        if (value.Length == 0)
+            return;
+
+        AddRaceTagValue(value);
+        RaceTagInput = string.Empty;
+    }
+
+    public void RemoveRaceTag(string? tag)
+    {
+        var value = (tag ?? string.Empty).Trim();
+        if (value.Length == 0)
+            return;
+
+        var existing = _selectedRaceTags.FirstOrDefault(item => item.Equals(value, StringComparison.OrdinalIgnoreCase));
+        if (existing != null)
+            _selectedRaceTags.Remove(existing);
+
+        RebuildRaceTagRows();
+    }
+
+    public async Task SearchLifeScaleTargetClassAsync(INavigation navigation)
+    {
+        if (navigation == null || !ShowRaceLifeScaleSelectors)
+            return;
+
+        var selected = await NonStandardClassSearchPage.PickAsync(navigation, SelectedLifeScaleTargetClass);
+        if (!string.IsNullOrWhiteSpace(selected))
+            SelectedLifeScaleTargetClass = selected;
+    }
+
+    public async Task AddRaceLifeScaleEntryAsync(INavigation navigation)
+    {
+        if (navigation == null || !IsRaceType)
+            return;
+
+        var selected = await NonStandardClassSearchPage.PickAsync(navigation, null);
+        if (string.IsNullOrWhiteSpace(selected))
+            return;
+
+        var className = selected.Trim();
+        if (_raceLifeScaleEntries.Any(entry =>
+            string.Equals(entry.ClassName, className, StringComparison.OrdinalIgnoreCase)))
+        {
+            return;
+        }
+
+        var entry = new RaceLifeScaleClassEntryVm { ClassName = className };
+        _raceLifeScaleEntries.Add(entry);
+        ReindexRaceLifeScaleEntries();
+        Raise(nameof(CanSave));
+
+        await RefreshRaceLifeScaleEntryAsync(entry);
+    }
+
+    public async Task SearchRaceLifeScaleClassAsync(INavigation navigation, RaceLifeScaleClassEntryVm? entry)
+    {
+        if (navigation == null || entry == null || !IsRaceType)
+            return;
+
+        var selected = await NonStandardClassSearchPage.PickAsync(navigation, entry.ClassName);
+        if (string.IsNullOrWhiteSpace(selected))
+            return;
+
+        entry.ClassName = selected.Trim();
+        Raise(nameof(CanSave));
+    }
+
+    public void RemoveRaceLifeScaleEntry(RaceLifeScaleClassEntryVm? entry)
+    {
+        if (entry == null)
+            return;
+
+        _raceLifeScaleEntries.Remove(entry);
+        ReindexRaceLifeScaleEntries();
+        Raise(nameof(CanSave));
+    }
+
+    public void ToggleRaceLifeScaleEntryEditor(RaceLifeScaleClassEntryVm? entry)
+    {
+        if (entry == null)
+            return;
+
+        entry.IsEditorExpanded = !entry.IsEditorExpanded;
+    }
+
+    private void ReindexRaceLifeScaleEntries()
+    {
+        for (var i = 0; i < _raceLifeScaleEntries.Count; i++)
+            _raceLifeScaleEntries[i].RowBackgroundHex = i % 2 == 0 ? "#FFFFFF" : "#F8F8F8";
+    }
+
+    private async Task RefreshRaceLifeScaleEntryAsync(RaceLifeScaleClassEntryVm entry)
+    {
+        var className = (entry.ClassName ?? string.Empty).Trim();
+        if (className.Length == 0)
+            return;
+
+        var sourceRace = (SelectedLifeScaleSourceRace ?? string.Empty).Trim();
+        if (sourceRace.Length == 0)
+            return;
+
+        var points = await LifeScalesService.GetLifeScaleAsync(sourceRace, className);
+        if (points.Count == 0)
+            return;
+
+        entry.ApplyPoints(points);
+    }
+
+    public async Task SearchLifeScaleSourceRaceAsync(INavigation navigation)
+    {
+        if (navigation == null || _raceOptions.Count == 0)
+            return;
+
+        var options = _raceOptions
+            .Select(race => new NonStandardSearchOption(race, "Race", race))
+            .ToList();
+
+        var selected = await NonStandardSearchPage.PickAsync(navigation, "Select source race", options);
+        if (selected == null)
+            return;
+
+        SelectedLifeScaleSourceRace = (selected.Value ?? string.Empty).Trim();
     }
 
     public void RemoveRaceAbilityRow(RaceAbilityRowVm? row)
@@ -872,20 +1155,36 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
                 DataJson = payloadJson
             };
 
+            if (RequiresCharacterAssignment)
+            {
+                var selected = SelectedAssignedCharacter
+                    ?? throw new InvalidOperationException("Select a character before saving.");
+
+                request.AssignedCharacterId = selected.Id;
+                request.AssignedCharacterName = selected.Name;
+                request.AssignedCharacterPlayerName = selected.PlayerName;
+            }
+
             if (RequiresLifeScale)
             {
-                if (!TryParseLifeScalePoints(LifeScalePointsJson, out var points) || points.Count < 8)
-                    throw new InvalidOperationException("Life-scale must contain 8 levels.");
-
-                request.LifeScalePoints = points;
-
                 if (CurrentType == NonStandardEntityType.CharacterClass)
                 {
+                    if (!TryParseLifeScalePoints(LifeScalePointsJson, out var points) || points.Count < 8)
+                        throw new InvalidOperationException("Life-scale must contain 8 levels.");
+
+                    request.LifeScalePoints = points;
                     request.LifeScaleRaceName = (SelectedLifeScaleTargetRace ?? string.Empty).Trim();
                 }
-                else
+                else if (CurrentType == NonStandardEntityType.CharacterRace)
                 {
-                    request.LifeScaleClassName = (SelectedLifeScaleTargetClass ?? string.Empty).Trim();
+                    request.RaceLifeScaleEntries = _raceLifeScaleEntries
+                        .Where(entry => !string.IsNullOrWhiteSpace((entry.ClassName ?? string.Empty).Trim()))
+                        .Select(entry => new RaceLifeScaleClassEntry
+                        {
+                            ClassName = entry.ClassName.Trim(),
+                            Points = entry.ToPoints()
+                        })
+                        .ToList();
                 }
             }
 
@@ -914,12 +1213,34 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         await SelectEntityTypeAsync(entry.EntityType);
         await ReloadForSelectedTypeAsync(entry.Name);
         BuildFields(entry.EntityType, entry.DataJson);
+        ApplyAssignedCharacterFromPayload(entry.DataJson);
         Name = entry.Name;
         SaveStatus = string.Empty;
         UpdatePreview();
 
         await LoadExistingLifeScaleSelectionAsync(entry.EntityType, entry.Name);
         Raise(nameof(CanSave));
+    }
+
+    private void ApplyAssignedCharacterFromPayload(string? payloadJson)
+    {
+        var payload = ParseObjectProperties(payloadJson);
+        if (!payload.TryGetValue(NormalizeFieldKey("assignedCharacterId"), out var property)
+            || property.Value.ValueKind != JsonValueKind.String)
+        {
+            SelectDefaultAssignedCharacter();
+            return;
+        }
+
+        var id = (property.Value.GetString() ?? string.Empty).Trim();
+        if (id.Length == 0)
+        {
+            SelectDefaultAssignedCharacter();
+            return;
+        }
+
+        SelectedAssignedCharacter = AssignableCharacters.FirstOrDefault(option =>
+            option.Id.Equals(id, StringComparison.OrdinalIgnoreCase));
     }
 
     private async Task ReloadForSelectedTypeAsync(string? preferredTemplateName)
@@ -949,6 +1270,7 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         }
 
         await ConfigureLifeScaleDefaultsAsync();
+        SelectDefaultAssignedCharacter();
         Raise(nameof(CanSave));
     }
 
@@ -961,6 +1283,35 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         ReplaceItems(_classOptions, classes.Keys.OrderBy(name => name, StringComparer.OrdinalIgnoreCase));
     }
 
+    private Task LoadAssignableCharactersAsync()
+    {
+        var characters = LiteDbService.GetCharacters()
+            .OrderBy(character => character.Name, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(character => character.PlayerName, StringComparer.OrdinalIgnoreCase)
+            .Select(character => new CharacterAssignmentOptionVm(
+                character.Id,
+                character.Name,
+                character.PlayerName,
+                character.Class))
+            .ToList();
+
+        ReplaceItems(_assignableCharacters, characters);
+        SelectDefaultAssignedCharacter();
+        Raise(nameof(CanSave));
+        return Task.CompletedTask;
+    }
+
+    private void SelectDefaultAssignedCharacter()
+    {
+        if (SelectedAssignedCharacter != null
+            && AssignableCharacters.Any(option => option.Id.Equals(SelectedAssignedCharacter.Id, StringComparison.OrdinalIgnoreCase)))
+        {
+            return;
+        }
+
+        SelectedAssignedCharacter = AssignableCharacters.FirstOrDefault();
+    }
+
     private async Task ConfigureLifeScaleDefaultsAsync()
     {
         if (!RequiresLifeScale)
@@ -970,14 +1321,13 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         {
             SelectedLifeScaleTargetRace ??= _raceOptions.FirstOrDefault();
             SelectedLifeScaleSourceClass ??= (SelectedBaseTemplate?.Name ?? _classOptions.FirstOrDefault());
+            await RefreshLifeScaleFromSelectionAsync();
+            SyncLifeScaleRowsFromJson();
         }
         else if (CurrentType == NonStandardEntityType.CharacterRace)
         {
-            SelectedLifeScaleTargetClass ??= _classOptions.FirstOrDefault();
             SelectedLifeScaleSourceRace ??= (SelectedBaseTemplate?.Name ?? _raceOptions.FirstOrDefault());
         }
-
-        await RefreshLifeScaleFromSelectionAsync();
     }
 
     private async Task RefreshLifeScaleFromSelectionAsync()
@@ -1007,7 +1357,17 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
             return;
 
         var tuples = points.Select(point => new[] { point.Body, point.Loc }).ToList();
-        LifeScalePointsJson = JsonSerializer.Serialize(tuples, PrettyJson);
+        _syncingLifeScaleRows = true;
+        try
+        {
+            LifeScalePointsJson = JsonSerializer.Serialize(tuples, PrettyJson);
+        }
+        finally
+        {
+            _syncingLifeScaleRows = false;
+        }
+
+        SyncLifeScaleRowsFromJson();
     }
 
     private async Task LoadExistingLifeScaleSelectionAsync(NonStandardEntityType entityType, string name)
@@ -1029,9 +1389,19 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
 
                 SelectedLifeScaleTargetRace = raceEntry.Key;
                 SelectedLifeScaleSourceClass = token;
-                LifeScalePointsJson = JsonSerializer.Serialize(
-                    points.Where(point => point is { Length: >= 2 }).Select(point => new[] { point[0], point[1] }).ToList(),
-                    PrettyJson);
+                _syncingLifeScaleRows = true;
+                try
+                {
+                    LifeScalePointsJson = JsonSerializer.Serialize(
+                        points.Where(point => point is { Length: >= 2 }).Select(point => new[] { point[0], point[1] }).ToList(),
+                        PrettyJson);
+                }
+                finally
+                {
+                    _syncingLifeScaleRows = false;
+                }
+
+                SyncLifeScaleRowsFromJson();
                 return;
             }
 
@@ -1041,15 +1411,27 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         if (!allLifeScales.TryGetValue(token, out var classOptions) || classOptions.Count == 0)
             return;
 
-        var first = classOptions
-            .OrderBy(option => option.Key, StringComparer.OrdinalIgnoreCase)
-            .First();
+        // Load all class entries for this race
+        _raceLifeScaleEntries.Clear();
+        foreach (var option in classOptions.OrderBy(kv => kv.Key, StringComparer.OrdinalIgnoreCase))
+        {
+            var entry = new RaceLifeScaleClassEntryVm { ClassName = option.Key };
+            var rawPoints = option.Value
+                .Where(point => point is { Length: >= 2 })
+                .Select(point => new LifeScalePoint(Math.Max(0, point[0]), Math.Max(0, point[1])))
+                .ToList();
+            if (rawPoints.Count > 0)
+                entry.ApplyPoints(rawPoints);
+            _raceLifeScaleEntries.Add(entry);
+        }
 
+        ReindexRaceLifeScaleEntries();
+        Raise(nameof(CanSave));
+
+        // Keep legacy fields in sync (first entry)
+        var first = classOptions.OrderBy(kv => kv.Key, StringComparer.OrdinalIgnoreCase).First();
         SelectedLifeScaleTargetClass = first.Key;
         SelectedLifeScaleSourceRace = token;
-        LifeScalePointsJson = JsonSerializer.Serialize(
-            first.Value.Where(point => point is { Length: >= 2 }).Select(point => new[] { point[0], point[1] }).ToList(),
-            PrettyJson);
     }
 
     private void ApplySelectedBaseTemplate()
@@ -1069,6 +1451,10 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         if (CurrentType == NonStandardEntityType.CharacterRace)
             SelectedLifeScaleSourceRace = template?.Name ?? SelectedLifeScaleSourceRace;
 
+        if (CurrentType == NonStandardEntityType.CharacterRace)
+            UpdateSubtypeMapKey();
+
+        SyncLifeScaleRowsFromJson();
         UpdatePreview();
     }
 
@@ -1161,6 +1547,7 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
                 row.PropertyChanged += OnRaceAbilityRowChanged;
         }
 
+        ReindexRaceAbilityRows();
         OnRaceStructuredDataChanged();
     }
 
@@ -1178,6 +1565,7 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
                 AttachSubtypeCopy(copy);
         }
 
+        ReindexSubtypeCopies();
         Raise(nameof(HasSubtypeEditorData));
         OnRaceStructuredDataChanged();
     }
@@ -1212,6 +1600,7 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
                 row.PropertyChanged += OnRaceAbilityRowChanged;
         }
 
+        ReindexSubtypeCopies();
         OnRaceStructuredDataChanged();
     }
 
@@ -1232,9 +1621,96 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         }
     }
 
+    private void AddRaceTagValue(string value)
+    {
+        if (_selectedRaceTags.Count >= 3)
+            return;
+
+        if (!_selectedRaceTags.Any(tag => tag.Equals(value, StringComparison.OrdinalIgnoreCase)))
+            _selectedRaceTags.Add(value);
+
+        if (!_raceTagOptions.Any(tag => tag.Equals(value, StringComparison.OrdinalIgnoreCase)))
+        {
+            _raceTagOptions.Add(value);
+            Raise(nameof(RaceTagDictionary));
+        }
+
+        RebuildRaceTagRows();
+    }
+
+    private void RebuildRaceTagRows()
+    {
+        _raceTagRows.Clear();
+        for (var index = 0; index < _selectedRaceTags.Count; index++)
+        {
+            _raceTagRows.Add(new RaceTagRowVm
+            {
+                Value = _selectedRaceTags[index],
+                RowBackgroundHex = index % 2 == 0 ? "#F8FAFC" : "#FFFFFF"
+            });
+        }
+    }
+
+    private void ReindexRaceAbilityRows()
+    {
+        for (var index = 0; index < _raceAbilityRows.Count; index++)
+            _raceAbilityRows[index].RowBackgroundHex = index % 2 == 0 ? "#F8FAFC" : "#FFFFFF";
+    }
+
+    private void ReindexSubtypeOptions()
+    {
+        for (var index = 0; index < _raceSubtypeOptions.Count; index++)
+        {
+            var option = _raceSubtypeOptions[index];
+            var isSelected = ReferenceEquals(option, _selectedRaceSubtypeOption);
+            option.IsSelected = isSelected;
+            option.RowBackgroundHex = isSelected
+                ? "#FFF7ED"
+                : (index % 2 == 0 ? "#F8FAFC" : "#FFFFFF");
+        }
+    }
+
+    private void ReindexSubtypeCopies()
+    {
+        for (var copyIndex = 0; copyIndex < _raceSubtypeCopies.Count; copyIndex++)
+        {
+            var copy = _raceSubtypeCopies[copyIndex];
+            copy.RowBackgroundHex = copyIndex % 2 == 0 ? "#F8FAFC" : "#FFFFFF";
+
+            for (var abilityIndex = 0; abilityIndex < copy.Abilities.Count; abilityIndex++)
+                copy.Abilities[abilityIndex].RowBackgroundHex = abilityIndex % 2 == 0 ? "#F8FAFC" : "#FFFFFF";
+        }
+    }
+
+    private void UpdateSubtypeMapKey()
+    {
+        if (!IsRaceType)
+            return;
+
+        var raceName = (SelectedBaseTemplate?.Name ?? Name ?? string.Empty).Trim();
+        if (raceName.Length == 0)
+            return;
+
+        var mapKey = $"{raceName}SubtypeAbilities";
+        if (!string.Equals(_raceSubtypeAbilityMapKey, mapKey, StringComparison.Ordinal))
+        {
+            _raceSubtypeAbilityMapKey = mapKey;
+            Raise(nameof(RaceSubtypeAbilityMapKey));
+            _ = RefreshSubtypeOptionsAsync();
+        }
+
+        if (!string.IsNullOrWhiteSpace(_raceSubtypeOptionsSource))
+        {
+            _raceSubtypeOptionsSource = string.Empty;
+            Raise(nameof(RaceSubtypeOptionsSource));
+        }
+    }
+
     private void OnRaceStructuredDataChanged()
     {
         SaveStatus = string.Empty;
+        if (IsRaceType)
+            UpdateSubtypeMapKey();
         Raise(nameof(CanSave));
         UpdatePreview();
     }
@@ -1242,10 +1718,14 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
     private void ResetRaceStructuredState()
     {
         _selectedRacePeopleTypes.Clear();
+        _selectedRaceTags.Clear();
         _raceAbilityRows.Clear();
         _selectedRaceGuildOverrideTypes.Clear();
         _raceSubtypeOptions.Clear();
         _raceSubtypeCopies.Clear();
+        _customLifeScaleRows.Clear();
+        _raceLifeScaleEntries.Clear();
+        _selectedRaceSubtypeOption = null;
 
         _raceSubtypeKey = string.Empty;
         _raceSubtypeDisplayName = string.Empty;
@@ -1253,16 +1733,27 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         _raceSubtypeSelectionMode = "SingleOptional";
         _raceSubtypeOptionsSource = string.Empty;
         _raceSubtypeAbilityMapKey = string.Empty;
-        _includeRaceAlignmentRule = false;
+        _raceBuyAsText = string.Empty;
+        _raceTagInput = string.Empty;
+        _raceTagSelectedValue = null;
+        _includeRaceAlignmentRule = true;
         InitializeRaceAlignmentDefaults();
+        Raise(nameof(RaceBuyAsText));
+        Raise(nameof(RaceTagInput));
+        Raise(nameof(RaceTagSelectedValue));
+        Raise(nameof(HasRaceTags));
+        Raise(nameof(RaceTagCountLabel));
+        Raise(nameof(RaceTagDictionary));
         Raise(nameof(RaceSubtypeKey));
         Raise(nameof(RaceSubtypeDisplayName));
         Raise(nameof(RaceSubtypeDescription));
         Raise(nameof(RaceSubtypeSelectionMode));
         Raise(nameof(RaceSubtypeOptionsSource));
         Raise(nameof(RaceSubtypeAbilityMapKey));
+        Raise(nameof(SelectedRaceSubtypeOption));
         Raise(nameof(IncludeRaceAlignmentRule));
         Raise(nameof(HasSubtypeEditorData));
+        RebuildRaceTagRows();
     }
 
     private async Task EnsureRaceEditorLookupsAsync()
@@ -1279,6 +1770,15 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
                 .ToList();
 
             ReplaceItems(_racePeopleTypeOptions, peopleTypes);
+
+            _raceTagOptions.Clear();
+            _raceTagOptions.AddRange(races.Values
+                .SelectMany(record => record.Tags ?? new List<string>())
+                .Select(value => (value ?? string.Empty).Trim())
+                .Where(value => value.Length > 0)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(value => value, StringComparer.OrdinalIgnoreCase));
+            Raise(nameof(RaceTagDictionary));
 
             _raceAbilityLookup.Clear();
             var abilities = await EvolutionService.GetAllAbilitiesAsync();
@@ -1313,6 +1813,12 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
             properties.Remove(NormalizeFieldKey("PeopleType"));
         }
 
+        if (properties.TryGetValue(NormalizeFieldKey("Tags"), out var tagsProperty))
+        {
+            ParseRaceTags(tagsProperty.Value);
+            properties.Remove(NormalizeFieldKey("Tags"));
+        }
+
         if (properties.TryGetValue(NormalizeFieldKey("levelledAbilities"), out var levelledProperty))
         {
             ParseRaceLevelledAbilities(levelledProperty.Value);
@@ -1323,6 +1829,12 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         {
             ParseRaceSubtype(subtypeProperty.Value);
             properties.Remove(NormalizeFieldKey("Subtype"));
+        }
+
+        if (properties.TryGetValue(NormalizeFieldKey("Buy-as"), out var buyAsProperty))
+        {
+            ParseRaceBuyAs(buyAsProperty.Value);
+            properties.Remove(NormalizeFieldKey("Buy-as"));
         }
 
         if (properties.TryGetValue(NormalizeFieldKey("GuildOverrides"), out var guildProperty))
@@ -1363,6 +1875,40 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         }
 
         ReplaceItems(_selectedRacePeopleTypes, parsed.Distinct(StringComparer.OrdinalIgnoreCase));
+    }
+
+    private void ParseRaceTags(JsonElement element)
+    {
+        var parsed = new List<string>();
+        if (element.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var item in element.EnumerateArray())
+            {
+                if (item.ValueKind != JsonValueKind.String)
+                    continue;
+
+                var value = (item.GetString() ?? string.Empty).Trim();
+                if (value.Length > 0)
+                    parsed.Add(value);
+            }
+        }
+        else if (element.ValueKind == JsonValueKind.String)
+        {
+            var value = (element.GetString() ?? string.Empty).Trim();
+            if (value.Length > 0)
+                parsed.Add(value);
+        }
+
+        ReplaceItems(_selectedRaceTags, parsed.Distinct(StringComparer.OrdinalIgnoreCase));
+        foreach (var tag in _selectedRaceTags)
+        {
+            if (!_raceTagOptions.Any(existing => existing.Equals(tag, StringComparison.OrdinalIgnoreCase)))
+                _raceTagOptions.Add(tag);
+        }
+
+        Raise(nameof(RaceTagDictionary));
+        Raise(nameof(RaceTagCountLabel));
+        RebuildRaceTagRows();
     }
 
     private void ParseRaceLevelledAbilities(JsonElement element)
@@ -1415,8 +1961,8 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         RaceSubtypeSelectionMode = string.IsNullOrWhiteSpace(ReadStringProperty(element, "SelectionMode"))
             ? "SingleOptional"
             : ReadStringProperty(element, "SelectionMode");
-        RaceSubtypeOptionsSource = ReadStringProperty(element, "OptionsSource");
-        RaceSubtypeAbilityMapKey = ReadStringProperty(element, "AbilityMapKey");
+        RaceSubtypeOptionsSource = string.Empty;
+        UpdateSubtypeMapKey();
 
         foreach (var copy in _raceSubtypeCopies.ToList())
             DetachSubtypeCopy(copy);
@@ -1478,6 +2024,13 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         }
     }
 
+    private void ParseRaceBuyAs(JsonElement element)
+    {
+        RaceBuyAsText = element.ValueKind == JsonValueKind.String
+            ? (element.GetString() ?? string.Empty).Trim()
+            : string.Empty;
+    }
+
     private void ParseRaceGuildOverrides(JsonElement element)
     {
         ReplaceItems(_selectedRaceGuildOverrideTypes, ParseGuildOverrideTypes(element));
@@ -1490,17 +2043,14 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
             var parsed = JsonSerializer.Deserialize<AlignmentRule>(element.GetRawText());
             if (parsed == null)
             {
-                IncludeRaceAlignmentRule = false;
                 InitializeRaceAlignmentDefaults();
                 return;
             }
 
-            IncludeRaceAlignmentRule = true;
             ApplyRaceAlignmentRule(parsed);
         }
         catch
         {
-            IncludeRaceAlignmentRule = false;
             InitializeRaceAlignmentDefaults();
         }
     }
@@ -1546,6 +2096,10 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         }
 
         ReplaceItems(_raceSubtypeOptions, built);
+        if (_selectedRaceSubtypeOption != null)
+            _selectedRaceSubtypeOption = _raceSubtypeOptions.FirstOrDefault(item =>
+                item.Name.Equals(_selectedRaceSubtypeOption.Name, StringComparison.OrdinalIgnoreCase));
+        ReindexSubtypeOptions();
         Raise(nameof(HasSubtypeEditorData));
         UpdatePreview();
     }
@@ -1933,7 +2487,7 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
                     break;
                 case NonStandardEntityType.CharacterClass:
                 case NonStandardEntityType.CharacterRace:
-                    JsonPreviewText = payload.ToJsonString(PrettyJson);
+                    JsonPreviewText = string.Empty;
                     break;
             }
         }
@@ -2050,6 +2604,18 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         if (peopleTypes.Count > 0)
             payload["PeopleType"] = JsonSerializer.SerializeToNode(peopleTypes);
 
+        var tags = SelectedRaceTags
+            .Select(value => (value ?? string.Empty).Trim())
+            .Where(value => value.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        if (tags.Count > 0)
+            payload["Tags"] = JsonSerializer.SerializeToNode(tags);
+
+        var buyAs = (RaceBuyAsText ?? string.Empty).Trim();
+        if (buyAs.Length > 0)
+            payload["Buy-as"] = buyAs;
+
         payload["levelledAbilities"] = BuildRaceLevelledAbilitiesPayload();
 
         var subtypePayload = BuildRaceSubtypePayload();
@@ -2060,8 +2626,7 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         if (guildPayload != null)
             payload["GuildOverrides"] = guildPayload;
 
-        if (IncludeRaceAlignmentRule)
-            payload["alignmentRule"] = JsonSerializer.SerializeToNode(BuildRaceAlignmentRule());
+        payload["alignmentRule"] = JsonSerializer.SerializeToNode(BuildRaceAlignmentRule());
     }
 
     private JsonObject BuildRaceLevelledAbilitiesPayload()
@@ -2439,6 +3004,60 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         }
     }
 
+    private void SyncLifeScaleRowsFromJson()
+    {
+        if (_syncingLifeScaleRows)
+            return;
+
+        var points = TryParseLifeScalePoints(LifeScalePointsJson, out var parsed)
+            ? parsed
+            : new List<LifeScalePoint>();
+
+        while (points.Count < 8)
+            points.Add(new LifeScalePoint(0, 0));
+
+        foreach (var row in _customLifeScaleRows)
+            row.PropertyChanged -= OnCustomLifeScaleRowChanged;
+
+        _customLifeScaleRows.Clear();
+        for (var index = 0; index < 8; index++)
+        {
+            var row = new CustomLifeScalePointVm
+            {
+                Level = index + 1,
+                BodyText = points[index].Body.ToString(),
+                LocText = points[index].Loc.ToString()
+            };
+            row.PropertyChanged += OnCustomLifeScaleRowChanged;
+            _customLifeScaleRows.Add(row);
+        }
+    }
+
+    private void OnCustomLifeScaleRowChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is not (nameof(CustomLifeScalePointVm.BodyText) or nameof(CustomLifeScalePointVm.LocText)))
+            return;
+
+        _syncingLifeScaleRows = true;
+        try
+        {
+            var points = _customLifeScaleRows
+                .OrderBy(row => row.Level)
+                .Select(row => new[]
+                {
+                    Math.Max(0, int.TryParse((row.BodyText ?? string.Empty).Trim(), out var body) ? body : 0),
+                    Math.Max(0, int.TryParse((row.LocText ?? string.Empty).Trim(), out var loc) ? loc : 0)
+                })
+                .ToList();
+
+            LifeScalePointsJson = JsonSerializer.Serialize(points, PrettyJson);
+        }
+        finally
+        {
+            _syncingLifeScaleRows = false;
+        }
+    }
+
     private static bool TryReadInt(JsonElement element, out int value)
     {
         value = 0;
@@ -2600,6 +3219,25 @@ public sealed class NonStandardTypeOptionVm
     public string Label { get; }
 }
 
+public sealed class CharacterAssignmentOptionVm
+{
+    public CharacterAssignmentOptionVm(string id, string name, string playerName, string className)
+    {
+        Id = (id ?? string.Empty).Trim();
+        Name = (name ?? string.Empty).Trim();
+        PlayerName = (playerName ?? string.Empty).Trim();
+        ClassName = (className ?? string.Empty).Trim();
+    }
+
+    public string Id { get; }
+    public string Name { get; }
+    public string PlayerName { get; }
+    public string ClassName { get; }
+    public string Display => string.IsNullOrWhiteSpace(PlayerName)
+        ? $"{Name} ({ClassName})"
+        : $"{Name} ({ClassName}) - {PlayerName}";
+}
+
 public enum NonStandardFieldKind
 {
     Auto,
@@ -2667,10 +3305,12 @@ public sealed class RaceAbilityRowVm : INotifyPropertyChanged
     private string _abilityName = string.Empty;
     private string _abilityType = "Static";
     private string _countText = string.Empty;
+    private string _rowBackgroundHex = "#FFFFFF";
 
     public Guid? SubtypeCopyId { get; set; }
     public AbilityDefinition? SourceAbility { get; set; }
     public string SourceContext { get; set; } = string.Empty;
+    public IReadOnlyList<int> LevelOptions { get; } = Enumerable.Range(1, 8).ToList();
 
     public int Level
     {
@@ -2735,6 +3375,20 @@ public sealed class RaceAbilityRowVm : INotifyPropertyChanged
 
     public string LevelLabel => $"L{Level}";
 
+    public string RowBackgroundHex
+    {
+        get => _rowBackgroundHex;
+        set
+        {
+            var next = value ?? "#FFFFFF";
+            if (string.Equals(_rowBackgroundHex, next, StringComparison.Ordinal))
+                return;
+
+            _rowBackgroundHex = next;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RowBackgroundHex)));
+        }
+    }
+
     public string RowSummary
     {
         get
@@ -2756,11 +3410,42 @@ public sealed class RaceAbilityRowVm : INotifyPropertyChanged
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RowSummary)));
 }
 
-public sealed class RaceSubtypeOptionVm
+public sealed class RaceSubtypeOptionVm : INotifyPropertyChanged
 {
+    public event PropertyChangedEventHandler? PropertyChanged;
+    private string _rowBackgroundHex = "#FFFFFF";
+    private bool _isSelected;
+
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public ObservableCollection<RaceAbilityRowVm> Abilities { get; } = new();
+
+    public bool IsSelected
+    {
+        get => _isSelected;
+        set
+        {
+            if (_isSelected == value)
+                return;
+
+            _isSelected = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSelected)));
+        }
+    }
+
+    public string RowBackgroundHex
+    {
+        get => _rowBackgroundHex;
+        set
+        {
+            var next = value ?? "#FFFFFF";
+            if (string.Equals(_rowBackgroundHex, next, StringComparison.Ordinal))
+                return;
+
+            _rowBackgroundHex = next;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RowBackgroundHex)));
+        }
+    }
 
     public string AbilitySummary
     {
@@ -2785,6 +3470,7 @@ public sealed class RaceSubtypeCopyVm : INotifyPropertyChanged
 
     private string _name = string.Empty;
     private string _description = string.Empty;
+    private string _rowBackgroundHex = "#FFFFFF";
 
     public RaceSubtypeCopyVm()
     {
@@ -2823,4 +3509,104 @@ public sealed class RaceSubtypeCopyVm : INotifyPropertyChanged
     }
 
     public string AbilityCountSummary => Abilities.Count == 1 ? "1 ability row" : $"{Abilities.Count} ability rows";
+
+    public string RowBackgroundHex
+    {
+        get => _rowBackgroundHex;
+        set
+        {
+            var next = value ?? "#FFFFFF";
+            if (string.Equals(_rowBackgroundHex, next, StringComparison.Ordinal))
+                return;
+
+            _rowBackgroundHex = next;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RowBackgroundHex)));
+        }
+    }
+}
+
+public sealed class RaceTagRowVm
+{
+    public string Value { get; init; } = string.Empty;
+    public string RowBackgroundHex { get; init; } = "#FFFFFF";
+}
+
+public sealed class RaceLifeScaleClassEntryVm : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private string _className = string.Empty;
+    private bool _isEditorExpanded;
+    private string _rowBackgroundHex = "#FFFFFF";
+
+    public RaceLifeScaleClassEntryVm()
+    {
+        CustomLifeScaleRows = new ObservableCollection<CustomLifeScalePointVm>(
+            Enumerable.Range(1, 8).Select(level => new CustomLifeScalePointVm { Level = level }));
+    }
+
+    public string ClassName
+    {
+        get => _className;
+        set
+        {
+            var next = value ?? string.Empty;
+            if (string.Equals(_className, next, StringComparison.Ordinal))
+                return;
+            _className = next;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ClassName)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ClassNameDisplay)));
+        }
+    }
+
+    public string ClassNameDisplay => string.IsNullOrWhiteSpace(_className) ? "Select class…" : _className;
+
+    public bool IsEditorExpanded
+    {
+        get => _isEditorExpanded;
+        set
+        {
+            if (_isEditorExpanded == value)
+                return;
+            _isEditorExpanded = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsEditorExpanded)));
+        }
+    }
+
+    public string RowBackgroundHex
+    {
+        get => _rowBackgroundHex;
+        set
+        {
+            var next = value ?? "#FFFFFF";
+            if (string.Equals(_rowBackgroundHex, next, StringComparison.Ordinal))
+                return;
+            _rowBackgroundHex = next;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RowBackgroundHex)));
+        }
+    }
+
+    public ObservableCollection<CustomLifeScalePointVm> CustomLifeScaleRows { get; }
+
+    public void ApplyPoints(IReadOnlyList<LifeScalePoint> points)
+    {
+        CustomLifeScaleRows.Clear();
+        for (var i = 0; i < 8; i++)
+        {
+            var point = i < points.Count ? points[i] : new LifeScalePoint(0, 0);
+            CustomLifeScaleRows.Add(new CustomLifeScalePointVm
+            {
+                Level = i + 1,
+                BodyText = point.Body.ToString(),
+                LocText = point.Loc.ToString()
+            });
+        }
+    }
+
+    public IReadOnlyList<LifeScalePoint> ToPoints()
+        => CustomLifeScaleRows
+            .Select(row => new LifeScalePoint(
+                Math.Max(0, int.TryParse((row.BodyText ?? string.Empty).Trim(), out var body) ? body : 0),
+                Math.Max(0, int.TryParse((row.LocText ?? string.Empty).Trim(), out var loc) ? loc : 0)))
+            .ToList();
 }

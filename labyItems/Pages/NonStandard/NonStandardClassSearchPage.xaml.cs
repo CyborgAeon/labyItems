@@ -80,12 +80,18 @@ public partial class NonStandardClassSearchPage : ContentPage
             return;
 
         _vm.SetSelected(card.Key);
-        _completion.TrySetResult(card.Key);
+    }
 
-        if (_presentedModally && Navigation.ModalStack.LastOrDefault() == this)
-            await Navigation.PopModalAsync();
-        else if (Navigation.NavigationStack.LastOrDefault() == this)
-            await Navigation.PopAsync();
+    private async void OnBackClicked(object? sender, EventArgs e)
+    {
+        _completion.TrySetResult(null);
+        await CloseSelfAsync();
+    }
+
+    private async void OnConfirmSelectionClicked(object? sender, EventArgs e)
+    {
+        _completion.TrySetResult(_vm.SelectedClassKey);
+        await CloseSelfAsync();
     }
 
     private async Task OnToggleExpandedAsync(ClassCardVm? card)
@@ -105,6 +111,14 @@ public partial class NonStandardClassSearchPage : ContentPage
         }
 
         card.IsExpanded = !card.IsExpanded;
+    }
+
+    private async Task CloseSelfAsync()
+    {
+        if (_presentedModally && Navigation.ModalStack.LastOrDefault() == this)
+            await Navigation.PopModalAsync();
+        else if (Navigation.NavigationStack.LastOrDefault() == this)
+            await Navigation.PopAsync();
     }
 }
 
@@ -126,9 +140,24 @@ internal sealed class NonStandardClassSearchVm : INotifyPropertyChanged
     private readonly ObservableCollection<ClassCardVm> _allClasses = new();
     private readonly string _initialSelection;
     private string _searchText = string.Empty;
+    private string _selectedClassKey = string.Empty;
 
     public ObservableCollection<ClassCardVm> FilteredClasses { get; } = new();
     public ObservableCollection<NonStandardClassFilterChipVm> FilterChips { get; } = new();
+
+    public string SelectedClassKey
+    {
+        get => _selectedClassKey;
+        private set
+        {
+            if (!Set(ref _selectedClassKey, value ?? string.Empty))
+                return;
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasSelection)));
+        }
+    }
+
+    public bool HasSelection => !string.IsNullOrWhiteSpace(SelectedClassKey);
 
     public string SearchText
     {
@@ -165,6 +194,8 @@ internal sealed class NonStandardClassSearchVm : INotifyPropertyChanged
         var key = (classKey ?? string.Empty).Trim();
         foreach (var card in _allClasses)
             card.IsSelected = card.Key.Equals(key, StringComparison.OrdinalIgnoreCase);
+
+        SelectedClassKey = key;
     }
 
     public void ToggleFilterChip(NonStandardClassFilterChipVm? chip)
