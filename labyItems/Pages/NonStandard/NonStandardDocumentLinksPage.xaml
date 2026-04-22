@@ -84,26 +84,12 @@
 
                                     <Button Grid.Column="1"
                                             Text="&#xF08E;"
-                                            FontFamily="FASolid"
-                                            FontSize="13"
-                                            Padding="0"
-                                            HeightRequest="22"
-                                            WidthRequest="22"
-                                            MinimumHeightRequest="0"
-                                            MinimumWidthRequest="0"
-                                            BackgroundColor="Transparent"
+                                            Style="{StaticResource ListRowGlyphIconButtonStyle}"
                                             Clicked="OnOpenDocumentClicked"
                                             CommandParameter="{Binding .}" />
                                     <Button Grid.Column="2"
                                             Text="&#xF1F8;"
-                                            FontFamily="FASolid"
-                                            FontSize="13"
-                                            Padding="0"
-                                            HeightRequest="22"
-                                            WidthRequest="22"
-                                            MinimumHeightRequest="0"
-                                            MinimumWidthRequest="0"
-                                            BackgroundColor="Transparent"
+                                            Style="{StaticResource ListRowGlyphIconButtonStyle}"
                                             Clicked="OnDeleteDocumentClicked"
                                             CommandParameter="{Binding .}" />
                                 </Grid>

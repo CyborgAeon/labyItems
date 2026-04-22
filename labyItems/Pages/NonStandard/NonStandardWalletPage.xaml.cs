@@ -127,7 +127,7 @@ public partial class NonStandardWalletPage : ContentPage
         if (vm == null)
             return;
 
-        await OpenEntryAsync(vm.Entry);
+        await OpenReviewAsync(vm.Entry);
     }
 
     private async void OnEditClicked(object sender, EventArgs e)
@@ -170,6 +170,29 @@ public partial class NonStandardWalletPage : ContentPage
         var pageLegacy = new NonStandardLegacyCreatePage
         {
             FixedEntityTypeKey = entry.EntityType.ToString()
+        };
+
+        await Navigation.PushAsync(pageLegacy);
+        await pageLegacy.LoadFromWalletEntryAsync(entry);
+    }
+
+    private async Task OpenReviewAsync(NonStandardWalletEntry entry)
+    {
+        if (entry.EntityType == NonStandardEntityType.CharacterClass)
+        {
+            var page = new NonStandardClassCreatePage
+            {
+                IsReviewOnly = true
+            };
+            await Navigation.PushAsync(page);
+            await page.LoadFromWalletEntryAsync(entry);
+            return;
+        }
+
+        var pageLegacy = new NonStandardLegacyCreatePage
+        {
+            FixedEntityTypeKey = entry.EntityType.ToString(),
+            IsReviewOnly = true
         };
 
         await Navigation.PushAsync(pageLegacy);

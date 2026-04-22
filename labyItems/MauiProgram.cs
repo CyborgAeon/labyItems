@@ -123,6 +123,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<IBattleboardDocumentService, BattleboardDocumentService>();
 		builder.Services.AddSingleton<IFileService, MauiFileService>();
 		builder.Services.AddSingleton<IClipboardService, MauiClipboardService>();
+		builder.Services.AddSingleton<IDocumentReferenceService, DocumentReferenceService>();
 		builder.Services.AddSingleton<ILauncherService, MauiLauncherService>();
 		builder.Services.AddSingleton<IShareService, MauiShareService>();
 		builder.Services.AddSingleton<IExportService, ExportService>();

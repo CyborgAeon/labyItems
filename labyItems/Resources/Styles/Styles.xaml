@@ -349,7 +349,7 @@
 
     <Style TargetType="Button" x:Key="GlyphIconButtonStyle">
         <Setter Property="BackgroundColor" Value="Transparent"/>
-        <Setter Property="TextColor" Value="{StaticResource SubtleTextColor}"/>
+        <Setter Property="TextColor" Value="{StaticResource GlyphIconButtonColor}"/>
         <Setter Property="FontFamily" Value="FASolid"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="Padding" Value="0"/>

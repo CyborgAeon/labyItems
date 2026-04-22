@@ -16,17 +16,32 @@
 
        <Grid RowDefinitions="Auto,*,Auto"
              RowSpacing="0">
-                    <Grid Grid.Row="0"
-                         Padding="14,10,14,8"
-                         ColumnDefinitions="*"
-                         ColumnSpacing="8"
-                         BackgroundColor="{StaticResource White}">
+                     <Grid Grid.Row="0"
+                          Padding="14,10,14,8"
+                          ColumnDefinitions="*"
+                          ColumnSpacing="8"
+                         BackgroundColor="{StaticResource White}"
+                         IsVisible="{Binding Source={x:Reference Root}, Path=ShowWizardHeader}">
                           <controls:StepIndicator x:Name="WizardStepIndicator"
                                                Grid.Column="0"
                                                Steps="{Binding Source={x:Reference Root}, Path=StepItems}"
                                                CurrentStep="{Binding Source={x:Reference Root}, Path=CurrentStepIndex}"
                                                StepClickCommand="{Binding Source={x:Reference Root}, Path=StepClickCommand}"
                                                MaxAccessibleStep="{Binding Source={x:Reference Root}, Path=MaxAccessibleStep}"/>
+                     </Grid>
+
+                    <Grid Grid.Row="0"
+                         Padding="14,10,14,8"
+                         ColumnDefinitions="Auto,*"
+                         ColumnSpacing="12"
+                         BackgroundColor="{StaticResource White}"
+                         IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewHeader}">
+                          <controls:BackNavigationButton Command="{Binding Source={x:Reference Root}, Path=BackButtonCommand}" />
+                          <Label Grid.Column="1"
+                                 Text="Review"
+                                 FontAttributes="Bold"
+                                 FontSize="24"
+                                 VerticalTextAlignment="Center" />
                     </Grid>
 
               <ScrollView Grid.Row="1">
@@ -651,7 +666,8 @@
                                                                              Padding="0"
                                                                              BackgroundColor="Transparent"
                                                                              TextColor="{StaticResource AccentMaroonColor}"
-                                                                       Clicked="OnReviewEditBaseClicked"/>
+                                                                       Clicked="OnReviewEditBaseClicked"
+                                                                       IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                                                         </Grid>
                                                         <Label Text="{Binding Source={x:Reference Root}, Path=ReviewBaseSummary}"
                                                                LineBreakMode="WordWrap"/>
@@ -672,7 +688,8 @@
                                                                              Padding="0"
                                                                              BackgroundColor="Transparent"
                                                                              TextColor="{StaticResource AccentMaroonColor}"
-                                                                       Clicked="OnReviewEditRaceDetailsClicked"/>
+                                                                       Clicked="OnReviewEditRaceDetailsClicked"
+                                                                       IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                                                         </Grid>
                                                         <Label Text="{Binding Source={x:Reference Root}, Path=ReviewRaceDetailsSummary}"
                                                                LineBreakMode="WordWrap"/>
@@ -693,7 +710,8 @@
                                                                              Padding="0"
                                                                              BackgroundColor="Transparent"
                                                                              TextColor="{StaticResource AccentMaroonColor}"
-                                                                       Clicked="OnReviewEditAbilitiesClicked"/>
+                                                                       Clicked="OnReviewEditAbilitiesClicked"
+                                                                       IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                                                         </Grid>
                                                         <Label Text="{Binding Source={x:Reference Root}, Path=ReviewAbilitiesSummary}"
                                                                LineBreakMode="WordWrap"/>
@@ -715,7 +733,8 @@
                                                                              Padding="0"
                                                                              BackgroundColor="Transparent"
                                                                              TextColor="{StaticResource AccentMaroonColor}"
-                                                                       Clicked="OnReviewEditLifeScaleClicked"/>
+                                                                       Clicked="OnReviewEditLifeScaleClicked"
+                                                                       IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                                                         </Grid>
                                                         <Label Text="{Binding Source={x:Reference Root}, Path=ReviewLifeScaleSummary}"
                                                                LineBreakMode="WordWrap"/>
@@ -748,7 +767,8 @@
                     Padding="14,8,14,12"
                     ColumnDefinitions="Auto,*,Auto"
                     ColumnSpacing="8"
-                    BackgroundColor="{StaticResource White}">
+                    BackgroundColor="{StaticResource White}"
+                    IsVisible="{Binding Source={x:Reference Root}, Path=ShowFooter}">
                      <Button Grid.Column="0"
                              Text="Back"
                              Clicked="OnPreviousStepClicked"/>

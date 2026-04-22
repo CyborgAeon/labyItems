@@ -28,6 +28,7 @@
     <Color x:Key="SurfaceBorderColor">#E5E7EB</Color>
     <Color x:Key="MutedTextColor">#6B7280</Color>
     <Color x:Key="SubtleTextColor">#4B5563</Color>
+    <Color x:Key="GlyphIconButtonColor">#141414</Color>
     <Color x:Key="AccentMaroonColor">#7F1D1D</Color>
     <Color x:Key="SurfaceMutedBackgroundColor">#F3F4F6</Color>
     <Color x:Key="SelectedSurfaceBackgroundColor">#FFF7ED</Color>

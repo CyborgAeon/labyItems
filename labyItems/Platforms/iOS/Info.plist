@@ -30,5 +30,9 @@
 	<string>Assets.xcassets/appicon.appiconset</string>
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Allow camera access so you can attach a photo to a creation.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allow photo library access so the app can keep long-term links to your chosen or captured creation files.</string>
 </dict>
 </plist>

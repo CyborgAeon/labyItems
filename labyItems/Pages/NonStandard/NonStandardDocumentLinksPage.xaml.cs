@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using labyItems.Services;
 using Microsoft.Maui.ApplicationModel;
-using Microsoft.Maui.Storage;
 
 namespace labyItems.Pages.NonStandard;
 
@@ -36,16 +35,8 @@ public sealed class NonStandardDocumentLinkVm
 
 public partial class NonStandardDocumentLinksPage : ContentPage
 {
-    private static readonly FilePickerFileType AllowedDocumentTypes = new(new Dictionary<DevicePlatform, IEnumerable<string>>
-    {
-        [DevicePlatform.iOS] = ["public.image", "com.adobe.pdf"],
-        [DevicePlatform.MacCatalyst] = ["public.image", "com.adobe.pdf"],
-        [DevicePlatform.Android] = ["image/*", "application/pdf"],
-        [DevicePlatform.WinUI] = [".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".pdf"],
-        [DevicePlatform.Tizen] = ["image/*", "application/pdf"]
-    });
-
     private readonly NonStandardWalletEntry _entry;
+    private readonly IDocumentReferenceService _documentReferenceService;
 
     public ObservableCollection<NonStandardDocumentLinkVm> Documents { get; } = new();
     public string CreationTitle => $"{_entry.Name} • {(_entry.Subtitle ?? string.Empty).Replace("â€¢", "•")}";
@@ -58,6 +49,7 @@ public partial class NonStandardDocumentLinksPage : ContentPage
     public NonStandardDocumentLinksPage(NonStandardWalletEntry entry)
     {
         _entry = entry;
+        _documentReferenceService = ServiceHelper.ResolveService<IDocumentReferenceService>() ?? new DocumentReferenceService();
         InitializeComponent();
         BindingContext = this;
     }
@@ -95,7 +87,7 @@ public partial class NonStandardDocumentLinksPage : ContentPage
             if (file == null)
                 return;
 
-            var suggestedName = Path.GetFileNameWithoutExtension(file.FileName);
+            var suggestedName = Path.GetFileNameWithoutExtension(file.FileName ?? file.DisplayPath ?? "linked-file");
             var displayName = await DisplayPromptAsync(
                 "Document name",
                 "Enter a name for this linked file.",
@@ -111,8 +103,7 @@ public partial class NonStandardDocumentLinksPage : ContentPage
                 _entry.EntityType,
                 _entry.Name,
                 displayName,
-                file.FullPath ?? file.FileName,
-                file.ContentType);
+                file);
 
             await ReloadAsync();
         }
@@ -122,7 +113,7 @@ public partial class NonStandardDocumentLinksPage : ContentPage
         }
     }
 
-    private async Task<FileResult?> PickDocumentAsync()
+    private async Task<DocumentReferenceCapture?> PickDocumentAsync()
     {
         var action = await DisplayActionSheet(
             "Add a linked file",
@@ -134,45 +125,20 @@ public partial class NonStandardDocumentLinksPage : ContentPage
         return action switch
         {
             "Take photo" => await CapturePhotoAsync(),
-            "Choose file" => await FilePicker.Default.PickAsync(new PickOptions
-            {
-                PickerTitle = "Select an image or PDF",
-                FileTypes = AllowedDocumentTypes
-            }),
+            "Choose file" => await _documentReferenceService.PickDocumentAsync(),
             _ => null
         };
     }
 
-    private async Task<FileResult?> CapturePhotoAsync()
+    private async Task<DocumentReferenceCapture?> CapturePhotoAsync()
     {
-        if (!MediaPicker.Default.IsCaptureSupported)
-        {
-            await DisplayAlert("Camera unavailable", "This device does not support taking photos from the app.", "OK");
-            return null;
-        }
-
-        var permission = await Permissions.RequestAsync<Permissions.Camera>();
-        if (permission != PermissionStatus.Granted)
-        {
-            await DisplayAlert("Camera permission needed", "Allow camera access to attach a photo to this creation.", "OK");
-            return null;
-        }
-
         try
         {
-            return await MediaPicker.Default.CapturePhotoAsync(new MediaPickerOptions
-            {
-                Title = $"Creation photo {DateTime.Now:yyyyMMdd_HHmmss}"
-            });
+            return await _documentReferenceService.CapturePhotoAsync();
         }
-        catch (FeatureNotSupportedException)
+        catch (InvalidOperationException ex)
         {
-            await DisplayAlert("Camera unavailable", "This device does not support taking photos from the app.", "OK");
-            return null;
-        }
-        catch (PermissionException)
-        {
-            await DisplayAlert("Camera permission needed", "Allow camera access to attach a photo to this creation.", "OK");
+            await DisplayAlert("Camera unavailable", ex.Message, "OK");
             return null;
         }
     }
@@ -185,14 +151,13 @@ public partial class NonStandardDocumentLinksPage : ContentPage
 
         try
         {
-            if (!File.Exists(vm.Document.FilePath))
+            if (!await _documentReferenceService.IsAvailableAsync(vm.Document))
             {
                 await DisplayAlert("Missing file", "That file is no longer available on this device.", "OK");
                 return;
             }
 
-            var launcher = ServiceHelper.ResolveService<ILauncherService>() ?? new MauiLauncherService();
-            await launcher.OpenFileAsync(vm.Document.FilePath);
+            await _documentReferenceService.OpenAsync(vm.Document);
         }
         catch (Exception ex)
         {

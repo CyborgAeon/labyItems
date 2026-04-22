@@ -11,6 +11,7 @@ public partial class NonStandardClassCreatePage : ContentPage
     private readonly NonStandardClassCreateVm _vm = new();
     private bool _appeared;
     private int _currentStepIndex;
+    private bool _isReviewOnly;
 
     public ObservableCollection<StepItem> StepItems { get; } =
     [
@@ -24,11 +25,13 @@ public partial class NonStandardClassCreatePage : ContentPage
 
     public Command<int> StepClickCommand { get; }
     public Command<string> AddRaceAssignmentCommand { get; }
+    public Command BackButtonCommand { get; }
 
     public NonStandardClassCreatePage()
     {
         StepClickCommand = new Command<int>(OnStepBubbleClicked);
         AddRaceAssignmentCommand = new Command<string>(OnRaceAssignmentSelected);
+        BackButtonCommand = new Command(async () => await Navigation.PopAsync());
         InitializeComponent();
         BindingContext = _vm;
         _vm.PropertyChanged += OnVmPropertyChanged;
@@ -72,6 +75,26 @@ public partial class NonStandardClassCreatePage : ContentPage
     public bool IsSkillsStep => CurrentStepIndex == 3;
     public bool IsPowerStep => CurrentStepIndex == 4;
     public bool IsReviewStep => CurrentStepIndex == 5;
+    public bool IsReviewOnly
+    {
+        get => _isReviewOnly;
+        set
+        {
+            if (_isReviewOnly == value)
+                return;
+
+            _isReviewOnly = value;
+            OnPropertyChanged(nameof(IsReviewOnly));
+            OnPropertyChanged(nameof(ShowWizardHeader));
+            OnPropertyChanged(nameof(ShowReviewHeader));
+            OnPropertyChanged(nameof(ShowFooter));
+            OnPropertyChanged(nameof(ShowReviewEditActions));
+        }
+    }
+    public bool ShowWizardHeader => !IsReviewOnly;
+    public bool ShowReviewHeader => IsReviewOnly;
+    public bool ShowFooter => !IsReviewOnly;
+    public bool ShowReviewEditActions => !IsReviewOnly;
     public bool CanGoPrevious => !_vm.IsBusy;
     public bool CanGoNext => ResolveCanGoNext();
     public string NextButtonText => IsReviewStep ? "Finish" : "Next";
@@ -88,6 +111,8 @@ public partial class NonStandardClassCreatePage : ContentPage
         try
         {
             await _vm.InitializeAsync();
+            if (IsReviewOnly)
+                SetStep(5);
             OnPropertyChanged(nameof(ReviewBaseSummary));
             OnPropertyChanged(nameof(ReviewLifeSummary));
             OnPropertyChanged(nameof(ReviewArmourSummary));
@@ -105,6 +130,8 @@ public partial class NonStandardClassCreatePage : ContentPage
         try
         {
             await _vm.LoadFromWalletEntryAsync(entry);
+            if (IsReviewOnly)
+                SetStep(5);
         }
         catch (Exception ex)
         {
@@ -331,6 +358,12 @@ public partial class NonStandardClassCreatePage : ContentPage
 
     private async void OnPreviousStepClicked(object sender, EventArgs e)
     {
+        if (IsReviewOnly)
+        {
+            await Navigation.PopAsync();
+            return;
+        }
+
         if (CurrentStepIndex == 0)
         {
             if (Navigation.NavigationStack.LastOrDefault() == this)

@@ -11,17 +11,36 @@ public partial class NonStandardLegacyCreatePage : ContentPage
     private bool _appeared;
     private int _currentStepIndex;
     private readonly List<string> _stepKeys = new();
+    private bool _isReviewOnly;
 
     public string? FixedEntityTypeKey { get; set; }
+    public bool IsReviewOnly
+    {
+        get => _isReviewOnly;
+        set
+        {
+            if (_isReviewOnly == value)
+                return;
+
+            _isReviewOnly = value;
+            OnPropertyChanged(nameof(IsReviewOnly));
+            OnPropertyChanged(nameof(ShowWizardHeader));
+            OnPropertyChanged(nameof(ShowReviewHeader));
+            OnPropertyChanged(nameof(ShowFooter));
+            OnPropertyChanged(nameof(ShowReviewEditActions));
+        }
+    }
 
     public ObservableCollection<StepItem> StepItems { get; } = new();
     public Command<int> StepClickCommand { get; }
+    public Command BackButtonCommand { get; }
 
     public NonStandardLegacyCreatePage()
     {
         InitializeComponent();
         BindingContext = _vm;
         StepClickCommand = new Command<int>(SetStep);
+        BackButtonCommand = new Command(async () => await Navigation.PopAsync());
         OnPropertyChanged(nameof(StepClickCommand));
         _vm.PropertyChanged += OnVmPropertyChanged;
         RebuildStepFlow(resetToStart: true);
@@ -58,6 +77,10 @@ public partial class NonStandardLegacyCreatePage : ContentPage
     private bool HasLifeScaleFlow => _vm.RequiresLifeScale;
 
     public bool ShowBackButton => StepItems.Count > 0;
+    public bool ShowWizardHeader => !IsReviewOnly;
+    public bool ShowReviewHeader => IsReviewOnly;
+    public bool ShowFooter => !IsReviewOnly;
+    public bool ShowReviewEditActions => !IsReviewOnly;
     public int MaxAccessibleStep => Math.Max(0, CurrentStepIndex);
     public bool CanAdvance => !(_vm.IsBusy);
     public string NextButtonText => IsReviewStep ? "Save" : (CurrentStepIndex == StepItems.Count - 2 ? "Review" : "Next");
@@ -87,6 +110,8 @@ public partial class NonStandardLegacyCreatePage : ContentPage
                 throw new InvalidOperationException($"This tab only edits {fixedType.Value} entries.");
 
             await _vm.LoadFromWalletEntryAsync(entry);
+            if (IsReviewOnly)
+                SetStepForKey("review");
         }
         catch (Exception ex)
         {
@@ -107,11 +132,15 @@ public partial class NonStandardLegacyCreatePage : ContentPage
                 _appeared = true;
                 await _vm.InitializeAsync(fixedType);
                 RebuildStepFlow(resetToStart: true);
+                if (IsReviewOnly)
+                    SetStepForKey("review");
             }
             else
             {
                 await _vm.RefreshLookupsOnAppearAsync();
                 RebuildStepFlow(resetToStart: false);
+                if (IsReviewOnly)
+                    SetStepForKey("review");
             }
         }
         catch (Exception ex)
@@ -371,16 +400,28 @@ public partial class NonStandardLegacyCreatePage : ContentPage
     }
 
     private void OnReviewEditBaseClicked(object sender, EventArgs e)
-        => SetStepForKey("base");
+    {
+        if (!IsReviewOnly)
+            SetStepForKey("base");
+    }
 
     private void OnReviewEditRaceDetailsClicked(object sender, EventArgs e)
-        => SetStepForKey("race");
+    {
+        if (!IsReviewOnly)
+            SetStepForKey("race");
+    }
 
     private void OnReviewEditAbilitiesClicked(object sender, EventArgs e)
-        => SetStepForKey("abilities");
+    {
+        if (!IsReviewOnly)
+            SetStepForKey("abilities");
+    }
 
     private void OnReviewEditLifeScaleClicked(object sender, EventArgs e)
-        => SetStepForKey("lifescale");
+    {
+        if (!IsReviewOnly)
+            SetStepForKey("lifescale");
+    }
 
     private NonStandardEntityType? ResolveFixedEntityType()
     {
@@ -400,7 +441,12 @@ public partial class NonStandardLegacyCreatePage : ContentPage
             or nameof(NonStandardCreateVm.IsRaceType)
             or nameof(NonStandardCreateVm.RequiresLifeScale))
         {
-            MainThread.BeginInvokeOnMainThread(() => RebuildStepFlow(resetToStart: true));
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                RebuildStepFlow(resetToStart: true);
+                if (IsReviewOnly)
+                    SetStepForKey("review");
+            });
             return;
         }
 

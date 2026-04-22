@@ -41,6 +41,10 @@ public sealed record NonStandardDocumentLink(
     string FilePath,
     string FileKind,
     string? ContentType,
+    string StorageKind,
+    string PersistentReference,
+    string? SourceUri,
+    string? AccessReference,
     DateTimeOffset UpdatedAtUtc);
 
 public sealed class NonStandardLifeScaleAssignment
@@ -276,7 +280,7 @@ public static class NonStandardContentService
 
         using var cmd = conn.CreateCommand();
         cmd.CommandText =
-            @"SELECT id, entity_name, display_name, file_path, file_kind, content_type, updated_at
+            @"SELECT id, entity_name, display_name, file_path, file_kind, content_type, storage_kind, persistent_reference, source_uri, access_reference, updated_at
 FROM non_standard_documents
 WHERE entity_type=$entityType AND lower(entity_name)=lower($entityName)
 ORDER BY lower(display_name), updated_at DESC;";
@@ -293,7 +297,11 @@ ORDER BY lower(display_name), updated_at DESC;";
             var filePath = reader.IsDBNull(3) ? string.Empty : reader.GetString(3);
             var fileKind = reader.IsDBNull(4) ? "Document" : reader.GetString(4);
             var contentType = reader.IsDBNull(5) ? null : reader.GetString(5);
-            var updatedAtRaw = reader.IsDBNull(6) ? string.Empty : reader.GetString(6);
+            var storageKind = reader.IsDBNull(6) ? DocumentReferenceKinds.LegacyPath : reader.GetString(6);
+            var persistentReference = reader.IsDBNull(7) ? filePath : reader.GetString(7);
+            var sourceUri = reader.IsDBNull(8) ? null : reader.GetString(8);
+            var accessReference = reader.IsDBNull(9) ? null : reader.GetString(9);
+            var updatedAtRaw = reader.IsDBNull(10) ? string.Empty : reader.GetString(10);
 
             links.Add(new NonStandardDocumentLink(
                 Id: id,
@@ -303,6 +311,10 @@ ORDER BY lower(display_name), updated_at DESC;";
                 FilePath: filePath,
                 FileKind: fileKind,
                 ContentType: contentType,
+                StorageKind: string.IsNullOrWhiteSpace(storageKind) ? DocumentReferenceKinds.LegacyPath : storageKind,
+                PersistentReference: string.IsNullOrWhiteSpace(persistentReference) ? filePath : persistentReference,
+                SourceUri: sourceUri,
+                AccessReference: accessReference,
                 UpdatedAtUtc: ParseTimestamp(updatedAtRaw)));
         }
 
@@ -313,18 +325,21 @@ ORDER BY lower(display_name), updated_at DESC;";
         NonStandardEntityType entityType,
         string entityName,
         string displayName,
-        string filePath,
-        string? contentType)
+        DocumentReferenceCapture documentReference)
     {
         var normalizedEntityName = (entityName ?? string.Empty).Trim();
         var normalizedDisplayName = (displayName ?? string.Empty).Trim();
-        var normalizedFilePath = (filePath ?? string.Empty).Trim();
+        var normalizedFilePath = (documentReference.DisplayPath ?? documentReference.FileName ?? string.Empty).Trim();
+        var normalizedPersistentReference = (documentReference.PersistentReference ?? string.Empty).Trim();
+        var normalizedStorageKind = (documentReference.StorageKind ?? string.Empty).Trim();
         if (normalizedEntityName.Length == 0)
             throw new InvalidOperationException("A creation must have a name before documents can be attached.");
         if (normalizedDisplayName.Length == 0)
             throw new InvalidOperationException("Document name is required.");
-        if (normalizedFilePath.Length == 0)
-            throw new InvalidOperationException("Document path is required.");
+        if (normalizedPersistentReference.Length == 0)
+            throw new InvalidOperationException("A persistent document reference is required.");
+        if (normalizedStorageKind.Length == 0)
+            throw new InvalidOperationException("A document storage kind is required.");
 
         var dbPath = ServiceHelper.EnsureDbPath();
         if (string.IsNullOrWhiteSpace(dbPath))
@@ -337,15 +352,19 @@ ORDER BY lower(display_name), updated_at DESC;";
         var now = DateTimeOffset.UtcNow.ToString("o");
         Execute(conn,
             @"INSERT INTO non_standard_documents
-(id, entity_type, entity_name, display_name, file_path, file_kind, content_type, created_at, updated_at)
-VALUES ($id, $entityType, $entityName, $displayName, $filePath, $fileKind, $contentType, $createdAt, $updatedAt);",
+(id, entity_type, entity_name, display_name, file_path, file_kind, content_type, storage_kind, persistent_reference, source_uri, access_reference, created_at, updated_at)
+VALUES ($id, $entityType, $entityName, $displayName, $filePath, $fileKind, $contentType, $storageKind, $persistentReference, $sourceUri, $accessReference, $createdAt, $updatedAt);",
             ("$id", Guid.NewGuid().ToString("N")),
             ("$entityType", entityType.ToString()),
             ("$entityName", normalizedEntityName),
             ("$displayName", normalizedDisplayName),
             ("$filePath", normalizedFilePath),
-            ("$fileKind", DetermineDocumentKind(contentType, normalizedFilePath)),
-            ("$contentType", string.IsNullOrWhiteSpace(contentType) ? DBNull.Value : contentType),
+            ("$fileKind", DetermineDocumentKind(documentReference.ContentType, normalizedFilePath)),
+            ("$contentType", string.IsNullOrWhiteSpace(documentReference.ContentType) ? DBNull.Value : documentReference.ContentType),
+            ("$storageKind", normalizedStorageKind),
+            ("$persistentReference", normalizedPersistentReference),
+            ("$sourceUri", string.IsNullOrWhiteSpace(documentReference.SourceUri) ? DBNull.Value : documentReference.SourceUri),
+            ("$accessReference", string.IsNullOrWhiteSpace(documentReference.AccessReference) ? DBNull.Value : documentReference.AccessReference),
             ("$createdAt", now),
             ("$updatedAt", now));
 
@@ -1338,9 +1357,26 @@ display_name TEXT NOT NULL,
 file_path TEXT NOT NULL,
 file_kind TEXT NOT NULL,
 content_type TEXT,
+storage_kind TEXT,
+persistent_reference TEXT,
+source_uri TEXT,
+access_reference TEXT,
 created_at TEXT,
 updated_at TEXT
 );");
+
+        EnsureColumn(conn, "non_standard_documents", "storage_kind", "TEXT");
+        EnsureColumn(conn, "non_standard_documents", "persistent_reference", "TEXT");
+        EnsureColumn(conn, "non_standard_documents", "source_uri", "TEXT");
+        EnsureColumn(conn, "non_standard_documents", "access_reference", "TEXT");
+    }
+
+    private static void EnsureColumn(SqliteConnection conn, string tableName, string columnName, string sqlType)
+    {
+        if (ResolveColumnName(conn, tableName, columnName) != null)
+            return;
+
+        Execute(conn, $"ALTER TABLE {tableName} ADD COLUMN {columnName} {sqlType};");
     }
 
     private static JsonNode ParseNodeOrString(string text)

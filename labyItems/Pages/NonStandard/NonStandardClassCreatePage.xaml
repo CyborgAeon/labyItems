@@ -14,11 +14,26 @@
           RowSpacing="0">
                 <Grid Grid.Row="0"
                       Padding="14,10,14,8"
-                      BackgroundColor="{StaticResource White}">
+                      BackgroundColor="{StaticResource White}"
+                      IsVisible="{Binding Source={x:Reference Root}, Path=ShowWizardHeader}">
                         <controls:StepIndicator Steps="{Binding Source={x:Reference Root}, Path=StepItems}"
                                                 CurrentStep="{Binding Source={x:Reference Root}, Path=CurrentStepIndex}"
                                                 MaxAccessibleStep="{Binding Source={x:Reference Root}, Path=MaxAccessibleStep}"
                                                 StepClickCommand="{Binding Source={x:Reference Root}, Path=StepClickCommand}" />
+                </Grid>
+
+                <Grid Grid.Row="0"
+                      Padding="14,10,14,8"
+                      ColumnDefinitions="Auto,*"
+                      ColumnSpacing="12"
+                      BackgroundColor="{StaticResource White}"
+                      IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewHeader}">
+                    <controls:BackNavigationButton Command="{Binding Source={x:Reference Root}, Path=BackButtonCommand}" />
+                    <Label Grid.Column="1"
+                           Text="Review"
+                           FontAttributes="Bold"
+                           FontSize="24"
+                           VerticalTextAlignment="Center" />
                 </Grid>
 
         <ScrollView Grid.Row="1">
@@ -478,7 +493,7 @@
                                     <Label Text="Base" FontAttributes="Bold"/>
                                     <Label Text="{Binding Source={x:Reference Root}, Path=ReviewBaseSummary}" FontSize="12" LineBreakMode="WordWrap"/>
                                 </VerticalStackLayout>
-                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditBaseStepClicked"/>
+                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditBaseStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                             </Grid>
                         </Frame>
 
@@ -488,7 +503,7 @@
                                     <Label Text="Life" FontAttributes="Bold"/>
                                     <Label Text="{Binding Source={x:Reference Root}, Path=ReviewLifeSummary}" FontSize="12" LineBreakMode="WordWrap"/>
                                 </VerticalStackLayout>
-                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditLifeStepClicked"/>
+                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditLifeStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                             </Grid>
                         </Frame>
 
@@ -498,7 +513,7 @@
                                     <Label Text="Armour" FontAttributes="Bold"/>
                                     <Label Text="{Binding Source={x:Reference Root}, Path=ReviewArmourSummary}" FontSize="12" LineBreakMode="WordWrap"/>
                                 </VerticalStackLayout>
-                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditArmourStepClicked"/>
+                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditArmourStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                             </Grid>
                         </Frame>
 
@@ -508,7 +523,7 @@
                                     <Label Text="Skills" FontAttributes="Bold"/>
                                     <Label Text="{Binding Source={x:Reference Root}, Path=ReviewSkillsSummary}" FontSize="12" LineBreakMode="WordWrap"/>
                                 </VerticalStackLayout>
-                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditSkillsStepClicked"/>
+                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditSkillsStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                             </Grid>
                         </Frame>
 
@@ -518,7 +533,7 @@
                                     <Label Text="Post 8th progression" FontAttributes="Bold"/>
                                     <Label Text="{Binding Source={x:Reference Root}, Path=ReviewPostEighthSummary}" FontSize="12" LineBreakMode="WordWrap"/>
                                 </VerticalStackLayout>
-                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditSkillsStepClicked"/>
+                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditSkillsStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                             </Grid>
                         </Frame>
 
@@ -528,7 +543,7 @@
                                     <Label Text="Power" FontAttributes="Bold"/>
                                     <Label Text="{Binding Source={x:Reference Root}, Path=ReviewPowerSummary}" FontSize="12" LineBreakMode="WordWrap"/>
                                 </VerticalStackLayout>
-                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditPowerStepClicked"/>
+                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditPowerStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                             </Grid>
                         </Frame>
 
@@ -547,7 +562,8 @@
 
         <Grid Grid.Row="2"
               RowDefinitions="1,Auto"
-              BackgroundColor="{StaticResource White}">
+              BackgroundColor="{StaticResource White}"
+              IsVisible="{Binding Source={x:Reference Root}, Path=ShowFooter}">
             <BoxView Grid.Row="0"
                      HeightRequest="1"
                      BackgroundColor="{StaticResource SurfaceBorderColor}"/>

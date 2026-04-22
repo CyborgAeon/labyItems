@@ -26,7 +26,7 @@ public sealed class PackagedDatabaseSynchronizer : IPackagedDatabaseSynchronizer
         if (string.IsNullOrWhiteSpace(dbPath) || !File.Exists(dbPath))
             return;
 
-        var tempPath = Path.Combine(FileSystem.CacheDirectory, "laby.pkg.db");
+        var tempPath = Path.Combine(FileSystem.CacheDirectory, $"laby.pkg.{Guid.NewGuid():N}.db");
         Directory.CreateDirectory(Path.GetDirectoryName(tempPath) ?? FileSystem.CacheDirectory);
 
         try
@@ -60,18 +60,26 @@ public sealed class PackagedDatabaseSynchronizer : IPackagedDatabaseSynchronizer
                 return;
             }
 
-            using var tx = conn.BeginTransaction();
-            foreach (var tableName in tables)
+            AttachPackagedDatabase(conn, tempPath);
+            try
             {
-                if (!TableExists(conn, tableName))
-                    continue;
+                using var tx = conn.BeginTransaction();
+                foreach (var tableName in tables)
+                {
+                    if (!TableExists(conn, tableName) || !TableExists(conn, tableName, "packaged"))
+                        continue;
 
-                DeleteDefaultRows(conn, tx, tableName);
-                CopyDefaultRows(conn, tx, tempPath, tableName);
+                    DeleteDefaultRows(conn, tx, tableName);
+                    CopyDefaultRows(conn, tx, tableName);
+                }
+
+                SaveChecksum(conn, tx, packagedChecksum);
+                tx.Commit();
             }
-
-            SaveChecksum(conn, tx, packagedChecksum);
-            tx.Commit();
+            finally
+            {
+                DetachPackagedDatabase(conn);
+            }
 
             InvalidateCaches();
             _logger.LogInformation("Packaged DB synchronized from updated package. Tables refreshed: {Tables}", string.Join(", ", tables));
@@ -153,38 +161,17 @@ public sealed class PackagedDatabaseSynchronizer : IPackagedDatabaseSynchronizer
         cmd.ExecuteNonQuery();
     }
 
-    private static void CopyDefaultRows(SqliteConnection conn, SqliteTransaction tx, string packagedDbPath, string tableName)
+    private static void CopyDefaultRows(SqliteConnection conn, SqliteTransaction tx, string tableName)
     {
-        using var packagedConn = new SqliteConnection($"Data Source={packagedDbPath};Mode=ReadOnly");
-        packagedConn.Open();
-
-        var columns = GetTableColumns(packagedConn, tableName).ToList();
+        var columns = GetTableColumns(conn, tableName, "packaged").ToList();
         if (columns.Count == 0)
             return;
 
-        packagedConn.Close();
-
-        using var attach = conn.CreateCommand();
-        attach.Transaction = tx;
-        attach.CommandText = "ATTACH DATABASE $source AS packaged;";
-        attach.Parameters.AddWithValue("$source", packagedDbPath);
-        attach.ExecuteNonQuery();
-
-        try
-        {
-            var columnList = string.Join(", ", columns.Select(EscapeIdentifier));
-            using var insert = conn.CreateCommand();
-            insert.Transaction = tx;
-            insert.CommandText = $"INSERT OR IGNORE INTO {EscapeIdentifier(tableName)} ({columnList}) SELECT {columnList} FROM packaged.{EscapeIdentifier(tableName)} WHERE is_default = 1;";
-            insert.ExecuteNonQuery();
-        }
-        finally
-        {
-            using var detach = conn.CreateCommand();
-            detach.Transaction = tx;
-            detach.CommandText = "DETACH DATABASE packaged;";
-            detach.ExecuteNonQuery();
-        }
+        var columnList = string.Join(", ", columns.Select(EscapeIdentifier));
+        using var insert = conn.CreateCommand();
+        insert.Transaction = tx;
+        insert.CommandText = $"INSERT OR IGNORE INTO {EscapeIdentifier(tableName)} ({columnList}) SELECT {columnList} FROM packaged.{EscapeIdentifier(tableName)} WHERE is_default = 1;";
+        insert.ExecuteNonQuery();
     }
 
     private static void TryDeleteTemp(string tempPath)
@@ -200,21 +187,41 @@ public sealed class PackagedDatabaseSynchronizer : IPackagedDatabaseSynchronizer
         }
     }
 
-    private static IEnumerable<string> GetTableColumns(SqliteConnection conn, string tableName)
+    private static IEnumerable<string> GetTableColumns(SqliteConnection conn, string tableName, string? databaseName = null)
     {
         using var cmd = conn.CreateCommand();
-        cmd.CommandText = $"PRAGMA table_info({EscapeIdentifier(tableName)});";
+        cmd.CommandText = string.IsNullOrWhiteSpace(databaseName)
+            ? $"PRAGMA table_info({EscapeIdentifier(tableName)});"
+            : $"PRAGMA {EscapeIdentifier(databaseName)}.table_info({EscapeIdentifier(tableName)});";
         using var reader = cmd.ExecuteReader();
         while (reader.Read())
             yield return reader.GetString(1);
     }
 
-    private static bool TableExists(SqliteConnection conn, string tableName)
+    private static bool TableExists(SqliteConnection conn, string tableName, string databaseName = "main")
     {
         using var cmd = conn.CreateCommand();
-        cmd.CommandText = "SELECT COUNT(1) FROM sqlite_master WHERE type = 'table' AND name = $tableName;";
+        var schemaTable = string.Equals(databaseName, "main", StringComparison.OrdinalIgnoreCase)
+            ? "sqlite_master"
+            : $"{EscapeIdentifier(databaseName)}.sqlite_master";
+        cmd.CommandText = $"SELECT COUNT(1) FROM {schemaTable} WHERE type = 'table' AND name = $tableName;";
         cmd.Parameters.AddWithValue("$tableName", tableName);
         return Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+    }
+
+    private static void AttachPackagedDatabase(SqliteConnection conn, string packagedDbPath)
+    {
+        using var attach = conn.CreateCommand();
+        attach.CommandText = "ATTACH DATABASE $source AS packaged;";
+        attach.Parameters.AddWithValue("$source", packagedDbPath);
+        attach.ExecuteNonQuery();
+    }
+
+    private static void DetachPackagedDatabase(SqliteConnection conn)
+    {
+        using var detach = conn.CreateCommand();
+        detach.CommandText = "DETACH DATABASE packaged;";
+        detach.ExecuteNonQuery();
     }
 
     private static void EnsureSeedMetadataTable(SqliteConnection conn)
