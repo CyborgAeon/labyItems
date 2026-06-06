@@ -94,6 +94,7 @@ $Config = [ordered]@{
         ItemName        = @('itemName','name','displayName','item.name','item.displayName')
         Abilities       = @('abilities','item.abilities','effects','powers','ispBreakdown','breakdown')
         SubmittedAt     = @('submittedAt','createdAt','createdDate','submittedDate')
+        BlowUpDate      = @('blowUpDate','blowupDate','blowUpAt','expiresAt','expiryDate','item.blowUpDate','item.blowupDate','item.expiresAt','item.expiryDate','recipient.blowUpDate')
     }
 }
 
@@ -113,6 +114,20 @@ function Write-Log {
 function Get-CutoffDate {
     param([int]$Months)
     return (Get-Date).AddMonths(-$Months)
+}
+
+function ConvertTo-PlainText {
+    param([AllowNull()][object]$Value)
+
+    if ($null -eq $Value) { return '' }
+    if ($Value -is [datetime]) { return $Value.ToString('s') }
+
+    try {
+        return [Convert]::ToString($Value, [Globalization.CultureInfo]::InvariantCulture)
+    }
+    catch {
+        return "$Value"
+    }
 }
 
 # =========================
@@ -316,73 +331,255 @@ function Normalize-Isp {
     return $n
 }
 
+function Join-TextWithAnd {
+    param([AllowNull()][object[]]$Values)
+
+    $parts = New-Object System.Collections.Generic.List[string]
+    foreach ($value in @($Values)) {
+        $text = ConvertTo-PlainText $value
+        $text = [regex]::Replace($text.Trim(), '\s+', ' ')
+        if (-not [string]::IsNullOrWhiteSpace($text)) {
+            $parts.Add($text)
+        }
+    }
+
+    if ($parts.Count -eq 0) { return '' }
+    if ($parts.Count -eq 1) { return $parts[0] }
+    if ($parts.Count -eq 2) { return "$($parts[0]) and $($parts[1])" }
+
+    $head = $parts.GetRange(0, $parts.Count - 1).ToArray() -join ', '
+    return "$head and $($parts[$parts.Count - 1])"
+}
+
+function Split-AbilityText {
+    param([AllowNull()][object]$Value)
+
+    $text = ConvertTo-PlainText $Value
+    $text = [regex]::Replace($text.Trim(), '\s+', ' ')
+    if ([string]::IsNullOrWhiteSpace($text)) { return @() }
+
+    return @([Text.RegularExpressions.Regex]::Split(
+        $text,
+        '\s*,\s*(?=(?:Spell|Miracle|Evocation)\s*:)',
+        [Text.RegularExpressions.RegexOptions]::IgnoreCase
+    ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+}
+
+function Remove-TrailingAbilityMetadata {
+    param([AllowNull()][object]$Value)
+
+    $text = ConvertTo-PlainText $Value
+    $text = [regex]::Replace($text.Trim(), '\s+', ' ')
+    if ([string]::IsNullOrWhiteSpace($text)) { return '' }
+
+    return [Text.RegularExpressions.Regex]::Replace(
+        $text,
+        '\s*\((?:(?:lvl\s*)?\d+[^)]*|[^)]*\b(?:handbook|advanced|adv)\b[^)]*)\)\s*$',
+        '',
+        [Text.RegularExpressions.RegexOptions]::IgnoreCase
+    ).Trim()
+}
+
+function ConvertTo-HumanAbilityText {
+    param([AllowNull()][object]$Value)
+
+    $text = ConvertTo-PlainText $Value
+    $text = [regex]::Replace($text.Trim(), '\s+', ' ')
+    if ([string]::IsNullOrWhiteSpace($text)) { return '' }
+
+    $text = [regex]::Replace($text, '\s*=\s*-?\d+\s*$', '').Trim()
+    $text = [Text.RegularExpressions.Regex]::Replace(
+        $text,
+        '^(?:Spell|Miracle|Evocation)\s*:\s*',
+        '',
+        [Text.RegularExpressions.RegexOptions]::IgnoreCase
+    ).Trim()
+
+    $usesMatch = [Text.RegularExpressions.Regex]::Match(
+        $text,
+        '^(?<name>.+?)\s+x(?<uses>\d+)\s*$',
+        [Text.RegularExpressions.RegexOptions]::IgnoreCase
+    )
+    if ($usesMatch.Success) {
+        $abilityName = Remove-TrailingAbilityMetadata $usesMatch.Groups['name'].Value
+        $uses = 0
+        if ([int]::TryParse($usesMatch.Groups['uses'].Value, [ref]$uses) -and $uses -gt 0 -and $abilityName) {
+            return "$abilityName $uses/day"
+        }
+        return $abilityName
+    }
+
+    return (Remove-TrailingAbilityMetadata $text)
+}
+
+function Get-ObjectPropertyText {
+    param(
+        [AllowNull()][object]$Object,
+        [Parameter(Mandatory)][string[]]$PropertyNames
+    )
+
+    if ($null -eq $Object) { return '' }
+
+    foreach ($propName in $PropertyNames) {
+        $prop = $Object.PSObject.Properties[$propName]
+        if ($null -ne $prop -and -not [string]::IsNullOrWhiteSpace([string]$prop.Value)) {
+            return [string]$prop.Value
+        }
+    }
+
+    return ''
+}
+
+function Get-ObjectPropertyValue {
+    param(
+        [AllowNull()][object]$Object,
+        [Parameter(Mandatory)][string[]]$PropertyNames
+    )
+
+    if ($null -eq $Object) { return $null }
+
+    foreach ($propName in $PropertyNames) {
+        $prop = $Object.PSObject.Properties[$propName]
+        if ($null -ne $prop) {
+            return $prop.Value
+        }
+    }
+
+    return $null
+}
+
+function ConvertTo-NonNegativeInt {
+    param([AllowNull()][object]$Value)
+
+    if ($null -eq $Value) { return 0 }
+
+    $text = ConvertTo-PlainText $Value
+    $parsed = 0
+    if ([int]::TryParse($text, [ref]$parsed) -and $parsed -gt 0) {
+        return $parsed
+    }
+
+    return 0
+}
+
+function ConvertTo-HumanAbilityTextFromDetail {
+    param(
+        [AllowNull()][object]$Detail,
+        [Parameter(Mandatory)][string[]]$NameProperties
+    )
+
+    $abilityName = Get-ObjectPropertyText -Object $Detail -PropertyNames $NameProperties
+    if ([string]::IsNullOrWhiteSpace($abilityName)) {
+        $abilityName = Get-ObjectPropertyText -Object $Detail -PropertyNames @('name','abilityName','title')
+    }
+
+    $abilityName = (ConvertTo-PlainText $abilityName).Trim()
+    if ([string]::IsNullOrWhiteSpace($abilityName)) { return '' }
+
+    $uses = (ConvertTo-NonNegativeInt (Get-ObjectPropertyValue -Object $Detail -PropertyNames @('basicPerDay'))) +
+            (ConvertTo-NonNegativeInt (Get-ObjectPropertyValue -Object $Detail -PropertyNames @('advancedPerDay')))
+
+    if ($uses -gt 0) { return "$abilityName $uses/day" }
+    return $abilityName
+}
+
+function Get-AbilityDetailTexts {
+    param([AllowNull()][object]$Ability)
+
+    $details = Get-ObjectPropertyValue -Object $Ability -PropertyNames @('details','Details')
+    if ($null -eq $details) { return @() }
+
+    $texts = New-Object System.Collections.Generic.List[string]
+    foreach ($group in @(
+        @{ Key = 'spells';      Names = @('spellName') },
+        @{ Key = 'miracles';    Names = @('miracleName') },
+        @{ Key = 'evocations';  Names = @('evocationName') }
+    )) {
+        $rows = Get-ObjectPropertyValue -Object $details -PropertyNames @($group.Key)
+        foreach ($row in (ConvertTo-ValueArray -Value $rows)) {
+            $humanText = ConvertTo-HumanAbilityTextFromDetail -Detail $row -NameProperties $group.Names
+            if (-not [string]::IsNullOrWhiteSpace($humanText)) { $texts.Add($humanText) }
+        }
+    }
+
+    return $texts.ToArray()
+}
+
 function Get-AbilitiesText {
     param($Abilities)
 
     if ($null -eq $Abilities) { return '' }
 
     if ($Abilities -is [string]) {
-        return $Abilities.Trim()
+        $parts = foreach ($part in (Split-AbilityText $Abilities)) {
+            ConvertTo-HumanAbilityText $part
+        }
+        return (Join-TextWithAnd $parts)
     }
 
     $names = New-Object System.Collections.Generic.List[string]
     foreach ($ability in $Abilities) {
         if ($ability -is [string]) {
-            if (-not [string]::IsNullOrWhiteSpace($ability)) { $names.Add($ability.Trim()) }
+            foreach ($part in (Split-AbilityText $ability)) {
+                $humanText = ConvertTo-HumanAbilityText $part
+                if (-not [string]::IsNullOrWhiteSpace($humanText)) { $names.Add($humanText) }
+            }
             continue
         }
 
-        $candidateName = $null
-        foreach ($propName in @('name','abilityName','title','text','summary')) {
-            $prop = $ability.PSObject.Properties[$propName]
-            if ($null -ne $prop -and -not [string]::IsNullOrWhiteSpace([string]$prop.Value)) {
-                $candidateName = [string]$prop.Value
-                break
+        $detailTexts = @(Get-AbilityDetailTexts $ability)
+        if ($detailTexts.Count -gt 0) {
+            foreach ($humanText in $detailTexts) {
+                if (-not [string]::IsNullOrWhiteSpace($humanText)) { $names.Add($humanText) }
             }
+            continue
         }
 
+        $candidateName = Get-ObjectPropertyText -Object $ability -PropertyNames @('summary','text','abilityName','name','title')
+
         if (-not [string]::IsNullOrWhiteSpace($candidateName)) {
-            $names.Add($candidateName.Trim())
+            foreach ($part in (Split-AbilityText $candidateName)) {
+                $humanText = ConvertTo-HumanAbilityText $part
+                if (-not [string]::IsNullOrWhiteSpace($humanText)) { $names.Add($humanText) }
+            }
         }
     }
 
-    return ($names.ToArray() -join ', ')
+    return (Join-TextWithAnd $names.ToArray())
 }
 
 function Build-DescriptionText {
     param(
-        [string]$ItemName,
-        [string]$AbilitiesText
+        [AllowNull()][object]$ItemName,
+        [AllowNull()][object]$AbilitiesText
     )
 
-    $safeName = [string]$ItemName
-    if ($null -eq $safeName) { $safeName = '' }
+    $safeName = ConvertTo-PlainText $ItemName
     $safeName = $safeName.Trim()
 
-    $safeAbilities = [string]$AbilitiesText
-    if ($null -eq $safeAbilities) { $safeAbilities = '' }
+    $safeAbilities = ConvertTo-PlainText $AbilitiesText
     $safeAbilities = $safeAbilities.Trim()
 
-    if ($safeName -and $safeAbilities) { return "$safeName`: $safeAbilities" }
-    if ($safeName) { return "$safeName`:" }
-    return $safeAbilities
+    if ($safeName -and $safeAbilities) { return "$safeName - Grants $safeAbilities" }
+    if ($safeName) { return "$safeName -" }
+    if ($safeAbilities) { return "Grants $safeAbilities" }
+    return ''
 }
 
 function Build-DisplayNumber {
     param(
-        [string]$SourcePrefix,
-        $SourceNumber
+        [AllowNull()][object]$SourcePrefix,
+        [AllowNull()][object]$SourceNumber
     )
 
     if ($null -eq $SourceNumber -or "$SourceNumber" -eq '') { return '' }
-    $prefix = [string]$SourcePrefix
-    if ($null -eq $prefix) { $prefix = '' }
+    $prefix = ConvertTo-PlainText $SourcePrefix
     $prefix = $prefix.Trim()
     if ($prefix) {
         if ($prefix -ieq 'MP') { return "MP$SourceNumber" }
         return "$prefix$SourceNumber"
     }
-    return [string]$SourceNumber
+    return (ConvertTo-PlainText $SourceNumber)
 }
 
 function Convert-SubmissionToRecord {
@@ -401,15 +598,23 @@ function Convert-SubmissionToRecord {
         $submittedDate = [datetime]$MailItem.ReceivedTime
     }
 
+    $rawBlowUpDate = Resolve-JsonField -JsonObject $JsonObject -Candidates $Config.JsonFieldCandidates.BlowUpDate
+    if ($rawBlowUpDate) {
+        $blowUpDate = [datetime]$rawBlowUpDate
+    }
+    else {
+        $blowUpDate = $submittedDate.AddYears(2)
+    }
+
     $rawAbilities  = Resolve-JsonField -JsonObject $JsonObject -Candidates $Config.JsonFieldCandidates.Abilities
     $itemType      = Normalize-ItemTypes -Value (Resolve-JsonField -JsonObject $JsonObject -Candidates $Config.JsonFieldCandidates.ItemType) -FallbackAbilities $rawAbilities
     $sourceNumber  = Resolve-JsonField -JsonObject $JsonObject -Candidates $Config.JsonFieldCandidates.SourceNumber
     $sourcePrefix  = Resolve-JsonField -JsonObject $JsonObject -Candidates $Config.JsonFieldCandidates.SourcePrefix
     $isp           = Normalize-Isp (Resolve-JsonField -JsonObject $JsonObject -Candidates $Config.JsonFieldCandidates.Isp)
-    $characterName = [string](Resolve-JsonField -JsonObject $JsonObject -Candidates $Config.JsonFieldCandidates.CharacterName)
-    $className     = [string](Resolve-JsonField -JsonObject $JsonObject -Candidates $Config.JsonFieldCandidates.ClassName)
-    $playerName    = [string](Resolve-JsonField -JsonObject $JsonObject -Candidates $Config.JsonFieldCandidates.PlayerName)
-    $itemName      = [string](Resolve-JsonField -JsonObject $JsonObject -Candidates $Config.JsonFieldCandidates.ItemName)
+    $characterName = ConvertTo-PlainText (Resolve-JsonField -JsonObject $JsonObject -Candidates $Config.JsonFieldCandidates.CharacterName)
+    $className     = ConvertTo-PlainText (Resolve-JsonField -JsonObject $JsonObject -Candidates $Config.JsonFieldCandidates.ClassName)
+    $playerName    = ConvertTo-PlainText (Resolve-JsonField -JsonObject $JsonObject -Candidates $Config.JsonFieldCandidates.PlayerName)
+    $itemName      = ConvertTo-PlainText (Resolve-JsonField -JsonObject $JsonObject -Candidates $Config.JsonFieldCandidates.ItemName)
     $abilitiesText = Get-AbilitiesText $rawAbilities
 
     [pscustomobject]@{
@@ -422,11 +627,11 @@ function Convert-SubmissionToRecord {
         EmailEntryId      = [string]$MailItem.EntryID
         MadeBy            = $MadeBy
         SubmittedAt       = $submittedDate
-        BlowUpDate        = $submittedDate.AddYears(2)
+        BlowUpDate        = $blowUpDate
         ItemType          = $itemType
-        SourcePrefix      = [string]$sourcePrefix
-        SourceNumber      = [string]$sourceNumber
-        DisplayNumber     = Build-DisplayNumber -SourcePrefix ([string]$sourcePrefix) -SourceNumber $sourceNumber
+        SourcePrefix      = ConvertTo-PlainText $sourcePrefix
+        SourceNumber      = ConvertTo-PlainText $sourceNumber
+        DisplayNumber     = Build-DisplayNumber -SourcePrefix $sourcePrefix -SourceNumber $sourceNumber
         ISP               = $isp
         CharacterName     = $characterName.Trim()
         ClassName         = $className.Trim()
@@ -545,6 +750,53 @@ function Get-NextId {
     return ($maxId + 1)
 }
 
+function Set-ExcelCellValue {
+    param(
+        [Parameter(Mandatory)]$Cell,
+        [Parameter(Mandatory)][string]$Header,
+        [AllowNull()][object]$Value
+    )
+
+    if ($null -eq $Value) {
+        $Cell.Value2 = ''
+        return
+    }
+
+    # Excel stores dates internally as OLE Automation numbers, but Word/PowerShell
+    # reads those back as doubles. Use Excel's .Value setter for date cells so COM
+    # gets a real DateTime value rather than a raw double assignment.
+    if ($Value -is [datetime]) {
+        $dateValue = [datetime]$Value
+        if ($Header -eq 'BlowUpDate') {
+            $Cell.NumberFormat = 'dd/mm/yyyy'
+            $Cell.Value = $dateValue.Date
+        }
+        else {
+            $Cell.NumberFormat = 'dd/mm/yyyy hh:mm'
+            $Cell.Value = $dateValue
+        }
+        return
+    }
+
+    switch ($Header) {
+        'Id'  {
+            $Cell.NumberFormat = '0'
+            $Cell.Value2 = [double]$Value
+            return
+        }
+        'ISP' {
+            $Cell.NumberFormat = '0'
+            $Cell.Value2 = [double]$Value
+            return
+        }
+        default {
+            $Cell.NumberFormat = '@'
+            $Cell.Value2 = [string](ConvertTo-PlainText -Value $Value)
+            return
+        }
+    }
+}
+
 function Add-RecordToExcel {
     param(
         $Sheet,
@@ -557,14 +809,8 @@ function Add-RecordToExcel {
     for ($i = 0; $i -lt $headers.Count; $i++) {
         $header = $headers[$i]
         $value = $Record.$header
-
-        if ($value -is [datetime]) {
-            $Sheet.Cells.Item($nextRow, $i + 1).Value2 = $value.ToOADate()
-            $Sheet.Cells.Item($nextRow, $i + 1).NumberFormat = 'dd/mm/yyyy hh:mm'
-        }
-        else {
-            $Sheet.Cells.Item($nextRow, $i + 1).Value2 = [string]$value
-        }
+        $cell = $Sheet.Cells.Item($nextRow, $i + 1)
+        Set-ExcelCellValue -Cell $cell -Header $header -Value $value
     }
 
     return $nextRow
@@ -604,9 +850,10 @@ function Update-ExcelRecordStatus {
     foreach ($row in $Rows) {
         $Sheet.Cells.Item($row, $colMap['Status']).Value2 = $Status
         if ($DocxFile) {
-            $Sheet.Cells.Item($row, $colMap['AddedToDocxFile']).Value2 = $DocxFile
-            $Sheet.Cells.Item($row, $colMap['AddedToDocxAt']).Value2 = $now.ToOADate()
-            $Sheet.Cells.Item($row, $colMap['AddedToDocxAt']).NumberFormat = 'dd/mm/yyyy hh:mm'
+            $Sheet.Cells.Item($row, $colMap['AddedToDocxFile']).Value2 = [string]$DocxFile
+            $addedAtCell = $Sheet.Cells.Item($row, $colMap['AddedToDocxAt'])
+            $addedAtCell.NumberFormat = 'dd/mm/yyyy hh:mm'
+            $addedAtCell.Value = $now
         }
     }
 }
@@ -620,7 +867,7 @@ function Remove-OldExcelRows {
     foreach ($record in ($records | Sort-Object -Property _Row -Descending)) {
         $submitted = $null
         if ($record.SubmittedAt) {
-            try { $submitted = [datetime]$record.SubmittedAt } catch {}
+            try { $submitted = Convert-ExcelDateToDateTime $record.SubmittedAt } catch {}
         }
         if ($null -ne $submitted -and $submitted -lt $cutoff) {
             $Sheet.Rows.Item([int]$record._Row).Delete()
@@ -782,38 +1029,26 @@ function Set-ContentControlText {
     param(
         [Parameter(Mandatory)]$Document,
         [Parameter(Mandatory)][string]$Title,
-        [AllowNull()][string]$Text,
-        [int]$BaseFontSize = 0,
-        [int]$MinFontSize = 6,
-        [int]$ShrinkAfterLength = 0,
-        [int]$CharsPerPoint = 35
+        [AllowNull()][object]$Text
     )
 
     $cc = Get-ContentControlByTitle -Document $Document -Title $Title
-    $safeText = [string]$Text
-    if ($null -eq $safeText) { $safeText = '' }
+    $safeText = ConvertTo-PlainText $Text
 
+    # Write the full field text explicitly instead of appending to the placeholder.
+    # This avoids blank/hidden placeholder fragments and keeps labels stable.
     $cc.Range.Text = $safeText
-
-    if ($BaseFontSize -gt 0) {
-        $fontSize = $BaseFontSize
-        if ($ShrinkAfterLength -gt 0 -and $safeText.Length -gt $ShrinkAfterLength) {
-            $overBy = $safeText.Length - $ShrinkAfterLength
-            $fontSize = [Math]::Max($MinFontSize, $BaseFontSize - [Math]::Ceiling($overBy / [double]$CharsPerPoint))
-        }
-        try { $cc.Range.Font.Size = $fontSize } catch {}
-    }
 }
 
 function Set-ContentControlDropdownValue {
     param(
         [Parameter(Mandatory)]$Document,
         [Parameter(Mandatory)][string]$Title,
-        [Parameter(Mandatory)][string]$Value
+        [Parameter(Mandatory)][object]$Value
     )
 
     $cc = Get-ContentControlByTitle -Document $Document -Title $Title
-    $wanted = ([string]$Value).Trim()
+    $wanted = (ConvertTo-PlainText $Value).Trim()
 
     # For dropdown/list content controls, select an existing list entry where possible.
     try {
@@ -835,7 +1070,7 @@ function Set-ContentControlDropdownValue {
 }
 
 function Format-ItemTypeText {
-    param([string]$ItemType)
+    param([AllowNull()][object]$ItemType)
 
     $normalized = Normalize-ItemTypeToken -Value $ItemType
     if ([string]::IsNullOrWhiteSpace($normalized)) { return 'Physical' }
@@ -847,15 +1082,55 @@ function Set-CardField {
         [Parameter(Mandatory)]$Document,
         [Parameter(Mandatory)][int]$CardNumber,
         [Parameter(Mandatory)][string]$FieldTitle,
-        [AllowNull()][string]$Text,
-        [int]$BaseFontSize = 0,
-        [int]$MinFontSize = 6,
-        [int]$ShrinkAfterLength = 0,
-        [int]$CharsPerPoint = 35
+        [AllowNull()][object]$Text
     )
 
     $title = "$FieldTitle$CardNumber"
-    Set-ContentControlText -Document $Document -Title $title -Text $Text -BaseFontSize $BaseFontSize -MinFontSize $MinFontSize -ShrinkAfterLength $ShrinkAfterLength -CharsPerPoint $CharsPerPoint
+    Set-ContentControlText -Document $Document -Title $title -Text $Text
+}
+
+function Get-DescriptionFontSize {
+    param([AllowNull()][object]$Text)
+
+    $safeText = ConvertTo-PlainText $Text
+    $length = $safeText.Length
+
+    if ($length -le 32)  { return 18 }
+    if ($length -le 54)  { return 16 }
+    if ($length -le 60)  { return 14 }
+    if ($length -le 96)  { return 12 }
+    if ($length -le 104) { return 11 }
+    if ($length -le 112) { return 10 }
+    if ($length -le 160) { return 9 }
+    return 8
+}
+
+function Set-DescriptionCardField {
+    param(
+        [Parameter(Mandatory)]$Document,
+        [Parameter(Mandatory)][int]$CardNumber,
+        [AllowNull()][object]$Text,
+        [Parameter(Mandatory)][int]$RecordId
+    )
+
+    $title = "Description$CardNumber"
+    $cc = Get-ContentControlByTitle -Document $Document -Title $title
+
+    $safeText = ConvertTo-PlainText $Text
+
+    $length = $safeText.Length
+    if ($length -gt 216) {
+        Write-Log "ERROR: Record ID $RecordId description length $length exceeds one card length limit of 216 characters. Rendering at minimum description font size."
+    }
+
+    $cc.Range.Text = $safeText
+
+    try {
+        $cc.Range.Font.Size = Get-DescriptionFontSize -Text $safeText
+    }
+    catch {
+        Write-Log "ERROR: Record ID $RecordId description font size could not be set for '$title': $($_.Exception.Message)"
+    }
 }
 
 function Fill-CardByNumber {
@@ -866,34 +1141,116 @@ function Fill-CardByNumber {
     )
 
     $itemType = Format-ItemTypeText -ItemType $Record.ItemType
-    $descriptionText = [string]$Record.ItemText
+    $descriptionText = ConvertTo-PlainText $Record.ItemText
+
+    $recordId = [int]$Record.Id
+    $blowUpDate = Resolve-RecordBlowUpDate -Record $Record -RecordId $recordId
+    $blowUpText = Format-LongOrdinalDate $blowUpDate
 
     Set-ContentControlDropdownValue -Document $Document -Title "Item Type$CardNumber" -Value $itemType
-    Set-CardField -Document $Document -CardNumber $CardNumber -FieldTitle 'ISP'            -Text "# $($Record.DisplayNumber) ISP: $($Record.ISP)" -BaseFontSize 10 -MinFontSize 7 -ShrinkAfterLength 20 -CharsPerPoint 12
-    Set-CardField -Document $Document -CardNumber $CardNumber -FieldTitle 'CharacterName'  -Text ([string]$Record.CharacterName) -BaseFontSize 10 -MinFontSize 7 -ShrinkAfterLength 22 -CharsPerPoint 12
-    Set-CardField -Document $Document -CardNumber $CardNumber -FieldTitle 'CharacterClass' -Text ([string]$Record.ClassName)     -BaseFontSize 10 -MinFontSize 7 -ShrinkAfterLength 22 -CharsPerPoint 12
-    Set-CardField -Document $Document -CardNumber $CardNumber -FieldTitle 'PlayerName'     -Text ([string]$Record.RealName)      -BaseFontSize 10 -MinFontSize 7 -ShrinkAfterLength 22 -CharsPerPoint 12
-    Set-CardField -Document $Document -CardNumber $CardNumber -FieldTitle 'BlowUpDate'     -Text ((Convert-ExcelDateToDateTime $Record.BlowUpDate).ToString('dd/MM/yyyy')) -BaseFontSize 10 -MinFontSize 7
-    Set-CardField -Document $Document -CardNumber $CardNumber -FieldTitle 'Description'    -Text $descriptionText -BaseFontSize 9 -MinFontSize 5 -ShrinkAfterLength 120 -CharsPerPoint 45
+
+    # The ISP content control contains the whole top-right line:
+    # ID follows immediately after '#', ISP follows immediately after 'ISP:'.
+    Set-CardField -Document $Document -CardNumber $CardNumber -FieldTitle 'ISP'            -Text "#BB$recordId ISP: $($Record.ISP)"
+
+    # These controls are written as complete labelled values, not appended to existing placeholder text.
+    Set-CardField -Document $Document -CardNumber $CardNumber -FieldTitle 'CharacterName'  -Text "Character: $($Record.CharacterName)"
+    Set-CardField -Document $Document -CardNumber $CardNumber -FieldTitle 'CharacterClass' -Text "Class: $($Record.ClassName)"
+    Set-CardField -Document $Document -CardNumber $CardNumber -FieldTitle 'PlayerName'     -Text "Real Name: $($Record.RealName)"
+    Set-CardField -Document $Document -CardNumber $CardNumber -FieldTitle 'BlowUpDate'     -Text "Blow Up Date: $blowUpText"
+
+    # Description is the only card field whose font size is changed by script.
+    # Character-count mapping:
+    #   0-32   => 18pt
+    #   33-54  => 16pt
+    #   55-60  => 14pt
+    #   61-96  => 12pt
+    #   97-104 => 11pt
+    #   105-112=> 10pt
+    #   113-160=> 9pt
+    #   161+   => 8pt
+    # If it exceeds 216 characters, log an error because it is over one card length.
+    Set-DescriptionCardField -Document $Document -CardNumber $CardNumber -Text $descriptionText -RecordId $recordId
 }
 
 function Convert-ExcelDateToDateTime {
-    param($Value)
+    param([AllowNull()][object]$Value)
 
-    if ($null -eq $Value -or [string]::IsNullOrWhiteSpace([string]$Value)) {
-        return $null
-    }
+    if ($null -eq $Value) { return $null }
 
     if ($Value -is [datetime]) {
         return $Value
     }
 
+    $text = ConvertTo-PlainText $Value
+    if ([string]::IsNullOrWhiteSpace($text)) { return $null }
+
     $number = 0.0
-    if ([double]::TryParse([string]$Value, [ref]$number)) {
-        return [datetime]::FromOADate($number)
+    if ([double]::TryParse($text, [Globalization.NumberStyles]::Float, [Globalization.CultureInfo]::InvariantCulture, [ref]$number)) {
+        try { return [datetime]::FromOADate($number) } catch {}
     }
 
-    return [datetime]$Value
+    $parsed = [datetime]::MinValue
+    if ([datetime]::TryParse($text, [Globalization.CultureInfo]::InvariantCulture, [Globalization.DateTimeStyles]::AssumeLocal, [ref]$parsed)) {
+        return $parsed
+    }
+
+    if ([datetime]::TryParse($text, [Globalization.CultureInfo]::CurrentCulture, [Globalization.DateTimeStyles]::AssumeLocal, [ref]$parsed)) {
+        return $parsed
+    }
+
+    return $null
+}
+
+function Get-DayOrdinalSuffix {
+    param([int]$Day)
+
+    if ($Day -ge 11 -and $Day -le 13) { return 'th' }
+
+    switch ($Day % 10) {
+        1 { return 'st' }
+        2 { return 'nd' }
+        3 { return 'rd' }
+        default { return 'th' }
+    }
+}
+
+function Format-LongOrdinalDate {
+    param([AllowNull()][object]$Value)
+
+    $date = Convert-ExcelDateToDateTime $Value
+    if ($null -eq $date) { return '' }
+
+    $suffix = Get-DayOrdinalSuffix -Day $date.Day
+    $month = $date.ToString('MMMM', [Globalization.CultureInfo]::InvariantCulture)
+    return '{0}{1} {2} {3}' -f $date.Day, $suffix, $month, $date.Year
+}
+
+function Resolve-RecordBlowUpDate {
+    param(
+        [Parameter(Mandatory)]$Record,
+        [Parameter(Mandatory)][int]$RecordId
+    )
+
+    $date = Convert-ExcelDateToDateTime $Record.BlowUpDate
+    if ($null -ne $date) { return $date }
+
+    $submitted = Convert-ExcelDateToDateTime $Record.SubmittedAt
+    if ($null -ne $submitted) {
+        $fallback = $submitted.AddYears(2)
+        Write-Log "WARNING: Record ID $RecordId has a missing/invalid BlowUpDate. Using SubmittedAt + 2 years: $(Format-LongOrdinalDate $fallback)."
+        return $fallback
+    }
+
+    $received = Convert-ExcelDateToDateTime $Record.EmailReceivedAt
+    if ($null -ne $received) {
+        $fallback = $received.AddYears(2)
+        Write-Log "WARNING: Record ID $RecordId has a missing/invalid BlowUpDate and SubmittedAt. Using EmailReceivedAt + 2 years: $(Format-LongOrdinalDate $fallback)."
+        return $fallback
+    }
+
+    Write-Log "ERROR: Record ID $RecordId does not have a usable BlowUpDate, SubmittedAt, or EmailReceivedAt. Rendering Blow Up Date as blank."
+    return $null
 }
 
 function Render-BatchToDocx {
@@ -915,6 +1272,13 @@ function Render-BatchToDocx {
     $stamp   = Get-Date -Format 'yy-MM-dd'
     $outputName = "{0}-{1}-{2}.docx" -f $firstId, $lastId, $stamp
     $outputPath = Join-Path $OutputFolder $outputName
+
+    # Avoid overwriting/locking collisions when the previous output is still open in Word.
+    if (Test-Path $outputPath) {
+        $suffix = Get-Date -Format 'HHmmss'
+        $outputName = "{0}-{1}-{2}-{3}.docx" -f $firstId, $lastId, $stamp, $suffix
+        $outputPath = Join-Path $OutputFolder $outputName
+    }
 
     Copy-Item -Path $TemplatePath -Destination $outputPath -Force
     $wordState = $null
@@ -991,6 +1355,7 @@ try {
         }
         catch {
             Write-Log "Failed to process email '$($mail.Subject)': $($_.Exception.Message)"
+            Write-Log "Stack: $($_.ScriptStackTrace)"
         }
     }
 
