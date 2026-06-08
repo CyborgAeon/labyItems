@@ -14,10 +14,19 @@ public partial class MakeSheetPage : ContentPage
 {
     private readonly MakeSheetViewModel _vm;
 
+    public MakeSheetPage()
+    {
+        InitializeComponent();
+        _vm = new MakeSheetViewModel();
+        Title = _vm.PageTitle;
+        BindingContext = _vm;
+    }
+
     public MakeSheetPage(Character character)
     {
         InitializeComponent();
         _vm = new MakeSheetViewModel(character);
+        Title = _vm.PageTitle;
         BindingContext = _vm;
     }
 
@@ -111,7 +120,8 @@ public partial class MakeSheetPage : ContentPage
         try
         {
             _vm.SelectedBonusMode = "Manual";
-            var picked = await new MakeAbility(_vm.Draft).PickManyAsync(Navigation);
+            var picked = await new MakeAbility(_vm.Draft, draftingMode: _vm.IsDraftingMode)
+                .PickManyAsync(Navigation);
             if (picked.Count == 0)
                 return;
 

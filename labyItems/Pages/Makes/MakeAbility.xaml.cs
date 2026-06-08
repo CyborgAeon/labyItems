@@ -71,6 +71,7 @@ namespace labyItems.Pages
         private readonly Dictionary<string, Result> _selectedByKey = new(StringComparer.OrdinalIgnoreCase);
         private readonly CharacterDraft _draft;
         private readonly IAbilityAvailabilityService _availabilityService;
+        private readonly bool _draftingMode;
         private IReadOnlyDictionary<string, CharacterClassRecord> _classes =
             new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
         private IReadOnlyDictionary<string, PeopleRecord> _races =
@@ -80,30 +81,64 @@ namespace labyItems.Pages
         private bool _loaded;
         private bool _availabilityContextReady;
         private bool _showAvailableOnly = true;
+        private string? _selectedBracketFilter;
+        private bool _suppressBracketFilterReload;
 
         public MakeAbility(
             CharacterDraft? draft = null,
-            IAbilityAvailabilityService? availabilityService = null)
+            IAbilityAvailabilityService? availabilityService = null,
+            bool draftingMode = false)
         {
             _draft = draft ?? new CharacterDraft();
             _availabilityService = availabilityService
                 ?? ServiceHelper.ResolveService<IAbilityAvailabilityService>()
                 ?? new AbilityAvailabilityService();
+            _draftingMode = draftingMode;
+            if (_draftingMode)
+                _showAvailableOnly = false;
+
             InitializeComponent();
             BindingContext = this;
             Rows.CollectionChanged += (_, _) => RaiseStateProperties();
+            BracketFilterOptions.CollectionChanged += (_, _) => OnPropertyChanged(nameof(ShowBracketFilters));
         }
 
         public ObservableCollection<Row> Rows { get; } = new();
+        public ObservableCollection<string> BracketFilterOptions { get; } = new();
 
         public bool HasRows => Rows.Count > 0;
         public bool HasSelectedRows => _selectedByKey.Count > 0;
         public string SelectionSummaryText => $"Selected: {_selectedByKey.Count}";
+        public bool ShowAvailabilityFilter => !_draftingMode;
+        public bool ShowBracketFilters => _draftingMode && BracketFilterOptions.Count > 0;
+        public int SearchColumn => ShowAvailabilityFilter ? 2 : 0;
+        public int SearchColumnSpan => ShowAvailabilityFilter ? 1 : 3;
+
+        public string? SelectedBracketFilter
+        {
+            get => _selectedBracketFilter;
+            set
+            {
+                var normalized = string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+                if (string.Equals(_selectedBracketFilter, normalized, StringComparison.OrdinalIgnoreCase))
+                    return;
+
+                _selectedBracketFilter = normalized;
+                OnPropertyChanged(nameof(SelectedBracketFilter));
+
+                if (!_suppressBracketFilterReload)
+                    _ = LoadAsync((Search?.Text ?? string.Empty).Trim());
+            }
+        }
+
         public bool ShowAvailableOnly
         {
             get => _showAvailableOnly;
             set
             {
+                if (_draftingMode)
+                    value = false;
+
                 if (_showAvailableOnly == value)
                     return;
 
@@ -161,23 +196,39 @@ namespace labyItems.Pages
                 .Select(entry => new
                 {
                     Entry = entry,
-                    IsAvailable = _availabilityService.IsAvailable(
+                    IsAvailable = _draftingMode || _availabilityService.IsAvailable(
                         entry.availabilityRules,
                         _draft,
                         _classes,
                         _races)
                 })
-                .Where(item => !ShowAvailableOnly || item.IsAvailable)
+                .Where(item => _draftingMode || !ShowAvailableOnly || item.IsAvailable)
                 .Select(item => new
                 {
                     item.Entry,
                     item.IsAvailable
                 })
+                .ToList();
+
+            if (_draftingMode)
+            {
+                RebuildBracketFilterOptions(results.Select(item => item.Entry));
+
+                var selectedBracket = (SelectedBracketFilter ?? string.Empty).Trim();
+                if (selectedBracket.Length > 0)
+                {
+                    results = results
+                        .Where(item => EntryMatchesBracketFilter(item.Entry, selectedBracket))
+                        .ToList();
+                }
+            }
+
+            var orderedResults = results
                 .OrderBy(item => item.Entry.name, StringComparer.OrdinalIgnoreCase)
                 .ToList();
 
             Rows.Clear();
-            foreach (var item in results)
+            foreach (var item in orderedResults)
             {
                 var entry = item.Entry;
                 var result = new Result(
@@ -325,7 +376,80 @@ namespace labyItems.Pages
             OnPropertyChanged(nameof(ConfirmButtonText));
             OnPropertyChanged(nameof(ShowAvailableOnly));
             OnPropertyChanged(nameof(AvailabilityToggleText));
+            OnPropertyChanged(nameof(ShowAvailabilityFilter));
+            OnPropertyChanged(nameof(ShowBracketFilters));
+            OnPropertyChanged(nameof(SearchColumn));
+            OnPropertyChanged(nameof(SearchColumnSpan));
         }
+
+        private void RebuildBracketFilterOptions(IEnumerable<ManuAbilityService.ManuAbilityEntry> entries)
+        {
+            var filters = entries
+                .SelectMany(ExtractBracketRuleValues)
+                .Where(value => value.Length > 0)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(value => NormalizeFilterToken(value), StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            var current = BracketFilterOptions.ToList();
+            if (!current.SequenceEqual(filters, StringComparer.OrdinalIgnoreCase))
+            {
+                BracketFilterOptions.Clear();
+                foreach (var filter in filters)
+                    BracketFilterOptions.Add(filter);
+            }
+
+            if (!string.IsNullOrWhiteSpace(SelectedBracketFilter)
+                && !filters.Any(filter => string.Equals(filter, SelectedBracketFilter, StringComparison.OrdinalIgnoreCase)))
+            {
+                _suppressBracketFilterReload = true;
+                try
+                {
+                    SelectedBracketFilter = null;
+                }
+                finally
+                {
+                    _suppressBracketFilterReload = false;
+                }
+            }
+
+            OnPropertyChanged(nameof(ShowBracketFilters));
+        }
+
+        private static bool EntryMatchesBracketFilter(ManuAbilityService.ManuAbilityEntry entry, string selectedBracket)
+        {
+            var selectedToken = NormalizeFilterToken(selectedBracket);
+            if (selectedToken.Length == 0)
+                return true;
+
+            return ExtractBracketRuleValues(entry)
+                .Any(value =>
+                {
+                    var token = NormalizeFilterToken(value);
+                    return token.Equals(selectedToken, StringComparison.OrdinalIgnoreCase)
+                           || IsAllBracketToken(token);
+                });
+        }
+
+        private static IEnumerable<string> ExtractBracketRuleValues(ManuAbilityService.ManuAbilityEntry entry)
+            => (entry.availabilityRules ?? Array.Empty<RuleClause>())
+                .Where(rule => rule != null
+                               && rule.IsValid
+                               && rule.Field.Equals("Bracket", StringComparison.OrdinalIgnoreCase))
+                .SelectMany(rule => rule.Value ?? new List<string>())
+                .Select(value => (value ?? string.Empty).Trim())
+                .Where(value => value.Length > 0);
+
+        private static bool IsAllBracketToken(string token)
+            => token.Equals("all", StringComparison.OrdinalIgnoreCase)
+               || token.Equals("any", StringComparison.OrdinalIgnoreCase);
+
+        private static string NormalizeFilterToken(string? value)
+            => new((value ?? string.Empty)
+                .Trim()
+                .Where(char.IsLetterOrDigit)
+                .Select(char.ToLowerInvariant)
+                .ToArray());
 
         private static string BuildAbilityKey(ManuAbilityService.ManuAbilityEntry entry)
         {

@@ -9,7 +9,7 @@
 
   <ScrollView>
     <VerticalStackLayout Padding="20" Spacing="16">
-      <Label Text="MP Item Breakdown"
+      <Label Text="{Binding BreakdownTitle}"
              FontAttributes="Bold"
              FontSize="24" />
 
@@ -58,6 +58,7 @@
           <Label Text="Email to desk"
                  FontAttributes="Bold"
                  FontSize="18" />
+          <Entry x:Name="ItemNameEntry" Placeholder="Item name" MaxLength="30" IsVisible="{Binding RequiresItemName}" />
           <Entry x:Name="RecipientPlayerNameEntry" Placeholder="Recipient player name" />
           <Entry x:Name="RecipientCharacterNameEntry" Placeholder="Recipient character name" />
           <Entry x:Name="RecipientCharacterClassEntry" Placeholder="Recipient character class" />
@@ -65,7 +66,7 @@
         </VerticalStackLayout>
       </Border>
 
-      <Button Text="Save"
+      <Button Text="{Binding SaveButtonText}"
               Clicked="OnSaveClicked" />
     </VerticalStackLayout>
   </ScrollView>

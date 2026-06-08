@@ -357,8 +357,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     {
         ApplyRaceSpecificVitaeRules();
         var referenceData = await _dataProvider.LoadReferenceDataAsync();
-        await _abilityService.WarmCachesAsync();
         ApplyReferenceData(referenceData);
+        await _abilityService.WarmAbilityDetailsAsync(_draft.AdvancementAbilities);
         await LoadDraftStateAsync();
         FinalizeInitialization();
     }
@@ -2343,7 +2343,10 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             return;
 
         var selectedColours = GetWizardColourSelections();
-        var listLabel = WizardSpellRules.BuildBaseSpellListLabel(selectedColours);
+        var isSorcerer = IsSorcorialClass();
+        var listLabel = isSorcerer
+            ? "Sorcerer Spells"
+            : WizardSpellRules.BuildBaseSpellListLabel(selectedColours);
 
         if (_draft.SpellLists == null)
             _draft.SpellLists = new List<SpellListDraft>();
@@ -2398,8 +2401,12 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         if (_allSpells.Count == 0)
             return;
 
-        var includeWizardGreyBonus = ShouldIncludeNonGreyWizardGreyBonus(selectedColours);
-        var rebuilt = WizardSpellRules.BuildBaseSpellEntries(_allSpells, selectedColours, includeWizardGreyBonus);
+        var rebuilt = IsSorcorialClass()
+            ? WizardSpellRules.BuildSorcererSpellEntries(_allSpells)
+            : WizardSpellRules.BuildBaseSpellEntries(
+                _allSpells,
+                selectedColours,
+                ShouldIncludeNonGreyWizardGreyBonus(selectedColours));
         if (rebuilt.Count == 0 && target.Entries.Count > 0)
             return;
 

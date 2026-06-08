@@ -10,6 +10,32 @@ namespace labyItems.Helpers;
 
 public static class WizardSpellRules
 {
+    private static readonly HashSet<string> SorcererExactSpellNames = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Detect Magic",
+        "See Through Magical Darkness (Self)",
+        "Animate Scarecrow",
+        "Unseen Servant",
+        "Summon Undine",
+        "Talk to Elementals",
+        "Silence",
+        "Sword of Power",
+        "Dancing Venom Sword"
+    };
+
+    private static readonly HashSet<int> SorcererElementalSummonLevels = new() { 6, 8, 10 };
+
+    private static readonly string[] SorcererElementalSummonPrefixes =
+    {
+        "Summon Elemental",
+        "Summon Gnome",
+        "Summon Salamander",
+        "Summon Shade",
+        "Summon Sprite",
+        "Summon Sylph",
+        "Summon Undine"
+    };
+
     public static List<string> ParseWizardSelections(string? raw)
     {
         var list = new List<string>();
@@ -177,6 +203,60 @@ public static class WizardSpellRules
                 IsAdvanced = s.isAdvanced ?? false
             })
             .ToList();
+    }
+
+    public static List<SpellListEntryDraft> BuildSorcererSpellEntries(IReadOnlyList<SpellService.SpellRaw> allSpells)
+    {
+        var uniqueByName = new Dictionary<string, SpellService.SpellRaw>(StringComparer.OrdinalIgnoreCase);
+        foreach (var spell in allSpells ?? Array.Empty<SpellService.SpellRaw>())
+        {
+            if (!IsSorcererBaseSpell(spell))
+                continue;
+
+            var key = spell.name.Trim();
+            if (!uniqueByName.ContainsKey(key))
+                uniqueByName[key] = spell;
+        }
+
+        return uniqueByName.Values
+            .OrderBy(s => s.level)
+            .ThenBy(s => s.name, StringComparer.OrdinalIgnoreCase)
+            .Select(s => new SpellListEntryDraft
+            {
+                Name = s.name ?? string.Empty,
+                Level = s.level,
+                Colour = ResolveListEntryColour(s.colour, Array.Empty<string>()),
+                IsAdvanced = s.isAdvanced ?? false
+            })
+            .ToList();
+    }
+
+    public static bool IsSorcererBaseSpell(SpellService.SpellRaw? spell)
+    {
+        if (spell == null || string.IsNullOrWhiteSpace(spell.name))
+            return false;
+
+        var name = spell.name.Trim();
+        if (SorcererExactSpellNames.Contains(name))
+            return true;
+
+        if (name.StartsWith("Dispel Magic", StringComparison.OrdinalIgnoreCase)
+            && spell.level is >= 1 and <= 10)
+        {
+            return true;
+        }
+
+        return IsSorcererElementalSummon(spell, name);
+    }
+
+    private static bool IsSorcererElementalSummon(SpellService.SpellRaw spell, string name)
+    {
+        if (!SorcererElementalSummonLevels.Contains(spell.level))
+            return false;
+
+        return SorcererElementalSummonPrefixes.Any(prefix =>
+            name.Equals(prefix, StringComparison.OrdinalIgnoreCase)
+            || name.StartsWith(prefix + " ", StringComparison.OrdinalIgnoreCase));
     }
 
     private static string ResolveListEntryColour(string? rawColour, IReadOnlyList<string> selectedColours)

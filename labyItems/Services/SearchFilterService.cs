@@ -7,7 +7,6 @@ namespace labyItems.Services;
 public sealed class SearchFilterService
 {
     private const int MaxVisibleResults = 300;
-    private const int Ngram = 3;
 
     public async Task<IReadOnlyList<GlobalSearchResultVm>> FilterAndSortAsync(
         IReadOnlyList<GlobalSearchResultVm> allResults,
@@ -45,18 +44,16 @@ public sealed class SearchFilterService
                 {
                     Result = r,
                     NameRank = ComputeFieldMatchRank(r.Name, normalized),
-                    GroupRank = ComputeFieldMatchRank(r.GroupText, normalized),
-                    DescriptionRank = ComputeFieldMatchRank(r.DescriptionText, normalized)
+                    GroupRank = ComputeFieldMatchRank(r.GroupText, normalized)
                 })
+                .Where(x => x.NameRank.MatchType != MatchType.None
+                            || x.GroupRank.MatchType != MatchType.None)
                 .OrderBy(x => x.NameRank.MatchType)
                 .ThenBy(x => x.NameRank.Position)
                 .ThenBy(x => x.NameRank.LengthDelta)
                 .ThenBy(x => x.GroupRank.MatchType)
                 .ThenBy(x => x.GroupRank.Position)
                 .ThenBy(x => x.GroupRank.LengthDelta)
-                .ThenBy(x => x.DescriptionRank.MatchType)
-                .ThenBy(x => x.DescriptionRank.Position)
-                .ThenBy(x => x.DescriptionRank.LengthDelta)
                 .ThenBy(x => x.Result.Name, StringComparer.OrdinalIgnoreCase)
                 .ThenBy(x => x.Result.Kind)
                 .Take(MaxVisibleResults)
@@ -272,25 +269,7 @@ public sealed class SearchFilterService
         if (pos >= 0)
             return (MatchType.Contains, pos, fieldLen - queryLen);
 
-        if (ContainsAllNgrams(normalized, normalizedQuery))
-            return (MatchType.NgramMatch, int.MaxValue, fieldLen - queryLen);
-
         return (MatchType.None, int.MaxValue, int.MaxValue);
-    }
-
-    private static bool ContainsAllNgrams(string text, string query)
-    {
-        if (query.Length < Ngram)
-            return false;
-
-        for (var i = 0; i <= query.Length - Ngram; i++)
-        {
-            var ngram = query.Substring(i, Ngram);
-            if (!text.Contains(ngram, StringComparison.OrdinalIgnoreCase))
-                return false;
-        }
-
-        return true;
     }
 
     private enum MatchType
@@ -298,7 +277,6 @@ public sealed class SearchFilterService
         Exact = 0,
         Prefix = 1,
         Contains = 2,
-        NgramMatch = 3,
-        None = 4
+        None = 3
     }
 }

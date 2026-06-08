@@ -14,7 +14,6 @@ public sealed class AdvanceCharacterDataProvider : IAdvanceCharacterDataProvider
         var miraclesTask = MiracleService.GetAllAsync();
         var spellsTask = SpellService.GetAllAsync();
         var evocationsTask = EvocationCatalogService.GetAllAsync();
-        var abilitiesTask = ManuAbilityService.GetAllAsync();
 
         await Task.WhenAll(
             guildsTask,
@@ -22,8 +21,7 @@ public sealed class AdvanceCharacterDataProvider : IAdvanceCharacterDataProvider
             racesTask,
             miraclesTask,
             spellsTask,
-            evocationsTask,
-            abilitiesTask);
+            evocationsTask);
 
         return new AdvanceCharacterReferenceData(
             Guilds: guildsTask.Result,
@@ -32,7 +30,7 @@ public sealed class AdvanceCharacterDataProvider : IAdvanceCharacterDataProvider
             Miracles: miraclesTask.Result,
             Spells: spellsTask.Result,
             Evocations: evocationsTask.Result,
-            Abilities: abilitiesTask.Result);
+            Abilities: Array.Empty<ManuAbilityService.ManuAbilityEntry>());
     }
 
     public async Task<IReadOnlyList<SpellService.SpellRaw>> LoadSpellsAsync()
@@ -48,5 +46,5 @@ public sealed class AdvanceCharacterDataProvider : IAdvanceCharacterDataProvider
 public sealed class AdvanceAbilityLookupService : IAdvanceAbilityLookupService
 {
     public Task<EvolutionService.AbilityResult?> FindByNameAsync(string? abilityName)
-        => AbilityDetailsLookupService.FindByIndexAsync(abilityName);
+        => EvolutionService.FindAbilityAsync(abilityName);
 }

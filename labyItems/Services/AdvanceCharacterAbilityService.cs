@@ -12,6 +12,7 @@ namespace labyItems.Services;
 public interface IAdvanceCharacterAbilityService
 {
     Task WarmCachesAsync();
+    Task WarmAbilityDetailsAsync(IEnumerable<string>? rawKeysOrNames);
     EvolutionService.AbilityResult? TryResolveAbilityDetails(string? rawKeyOrName);
     string ResolveAbilityDisplayName(string? rawKeyOrName);
     Dictionary<string, ManuAbilityOption> BuildAbilityOptionsByName(
@@ -137,6 +138,25 @@ public sealed class AdvanceCharacterAbilityService : IAdvanceCharacterAbilitySer
         catch
         {
             _abilityDefinitionsByKey = new Dictionary<string, AbilityDefinition>(StringComparer.OrdinalIgnoreCase);
+        }
+    }
+
+    public async Task WarmAbilityDetailsAsync(IEnumerable<string>? rawKeysOrNames)
+    {
+        var values = (rawKeysOrNames ?? Array.Empty<string>())
+            .Select(value => (value ?? string.Empty).Trim())
+            .Where(value => value.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        foreach (var value in values)
+        {
+            if (TryResolveAbilityDetails(value) != null)
+                continue;
+
+            var ability = await _abilityLookupService.FindByNameAsync(value);
+            if (ability != null)
+                CacheAbilityDetails(ability);
         }
     }
 

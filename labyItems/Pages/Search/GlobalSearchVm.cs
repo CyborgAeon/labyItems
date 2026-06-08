@@ -299,10 +299,14 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             IconGlyph: "\uf013",
             MetaText: $"Ability · {dto.ExtraInfo}",
             DescriptionText: dto.Description,
-            Ability: null, // Would require loading full data if user clicks
+            Ability: null, // Loaded lazily when the card is opened.
             Spell: null,
             Miracle: null,
-            Evocation: null);
+            Evocation: null)
+        {
+            DetailKey = string.IsNullOrWhiteSpace(dto.LookupKey) ? dto.Name : dto.LookupKey,
+            AbilityTable = dto.AbilityTable
+        };
     }
 
     private GlobalSearchResultVm CreateSpellResultFromDto(OptimizedSearchService.SearchResultDto dto)
@@ -317,7 +321,10 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Ability: null,
             Spell: null,
             Miracle: null,
-            Evocation: null);
+            Evocation: null)
+        {
+            DetailKey = string.IsNullOrWhiteSpace(dto.LookupKey) ? dto.Name : dto.LookupKey
+        };
     }
 
     private GlobalSearchResultVm CreateMiracleResultFromDto(OptimizedSearchService.SearchResultDto dto)
@@ -332,7 +339,10 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Ability: null,
             Spell: null,
             Miracle: null,
-            Evocation: null);
+            Evocation: null)
+        {
+            DetailKey = string.IsNullOrWhiteSpace(dto.LookupKey) ? dto.Name : dto.LookupKey
+        };
     }
 
     private GlobalSearchResultVm CreateEvocationResultFromDto(OptimizedSearchService.SearchResultDto dto)
@@ -347,7 +357,10 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Ability: null,
             Spell: null,
             Miracle: null,
-            Evocation: null);
+            Evocation: null)
+        {
+            DetailKey = string.IsNullOrWhiteSpace(dto.LookupKey) ? dto.Name : dto.LookupKey
+        };
     }
 
     private HashSet<string> BuildSelectedFiltersSet()
@@ -894,7 +907,19 @@ public sealed record GlobalSearchResultVm(
     MiracleService.MiracRaw? Miracle,
     DruidEvocationService.EvocRaw? Evocation)
 {
-    public bool CanOpenDetails => Ability != null || Spell != null || Miracle != null || Evocation != null;
+    public string DetailKey { get; init; } = string.Empty;
+
+    public int? AbilityTable { get; init; }
+
+    public bool CanOpenDetails
+        => Ability != null
+           || Spell != null
+           || Miracle != null
+           || Evocation != null
+           || Kind is GlobalSearchKind.Ability
+               or GlobalSearchKind.Spell
+               or GlobalSearchKind.Miracle
+               or GlobalSearchKind.Evocation;
 
     public bool HasDescription => !string.IsNullOrWhiteSpace(DescriptionText);
 

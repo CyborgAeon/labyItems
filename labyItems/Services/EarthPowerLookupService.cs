@@ -1,5 +1,4 @@
 using System.Text.Json;
-using System.Text;
 using SQLite;
 
 namespace labyItems.Services;
@@ -34,7 +33,6 @@ public static class EarthPowerService
     }
 
     private static string? _dbPath;
-    private const int NGRAM_N = 3;
 
     public static bool HasDatabase => !string.IsNullOrEmpty(_dbPath) && File.Exists(_dbPath);
 
@@ -101,26 +99,11 @@ public static class EarthPowerService
             return Deserialize(rows);
         }
 
-        var normalized = NormalizeForNgrams(trimmed.ToLowerInvariant());
-        var tokens = GenerateNGrams(normalized, NGRAM_N).Distinct().ToList();
-        if (tokens.Count == 0)
-            return Array.Empty<EvocRaw>();
-
-        var tokenPlaceholders = string.Join(",", Enumerable.Repeat("?", tokens.Count));
-        var args = tokens.Cast<object>().ToList();
-        whereClause = BuildWhereClause(args, includeAdvanced, maxPower);
-
-        var sqlWithTokens = $"SELECT e.data_json FROM evocs e JOIN (SELECT evoc_id, COUNT(*) as ct FROM evoc_ngrams WHERE token IN ({tokenPlaceholders}) GROUP BY evoc_id ORDER BY ct DESC LIMIT 50) g ON e.id = g.evoc_id{whereClause} ORDER BY ct DESC, e.name LIMIT 50;";
-        var tokenRows = conn.Query<DbRow>(sqlWithTokens, args.ToArray());
-        var tokenResults = Deserialize(tokenRows);
-        if (tokenResults.Count > 0)
-            return tokenResults.Take(20).ToList();
-
         var likeArgs = new List<object> { "%" + trimmed.ToLowerInvariant() + "%" };
         var likeWhere = BuildWhereClause(likeArgs, includeAdvanced, maxPower, " AND ");
-        var fallbackSql = $"SELECT e.data_json FROM evocs e WHERE e.name_lower LIKE ?{likeWhere} ORDER BY e.name LIMIT 20;";
-        var fallbackRows = conn.Query<DbRow>(fallbackSql, likeArgs.ToArray());
-        return Deserialize(fallbackRows);
+        var searchSql = $"SELECT e.data_json FROM evocs e WHERE e.name_lower LIKE ?{likeWhere} ORDER BY e.name LIMIT 20;";
+        var searchRows = conn.Query<DbRow>(searchSql, likeArgs.ToArray());
+        return Deserialize(searchRows);
     }
 
     private static async Task<IReadOnlyList<EvocRaw>> LoadFromPackagedJsonAsync()
@@ -145,12 +128,9 @@ public static class EarthPowerService
 
         if (trimmed.Length > 0)
         {
-            var token = trimmed.ToLowerInvariant();
             filtered = filtered.Where(e =>
                 (e.name ?? string.Empty).Contains(trimmed, StringComparison.OrdinalIgnoreCase)
-                || (e.description ?? string.Empty).Contains(trimmed, StringComparison.OrdinalIgnoreCase)
-                || (e.fields ?? new List<string>()).Any(f => (f ?? string.Empty).Contains(trimmed, StringComparison.OrdinalIgnoreCase))
-                || NormalizeForNgrams($"{e.name} {string.Join(" ", e.fields ?? new List<string>())} {e.description}").Contains(token, StringComparison.OrdinalIgnoreCase));
+                || (e.fields ?? new List<string>()).Any(f => (f ?? string.Empty).Contains(trimmed, StringComparison.OrdinalIgnoreCase)));
         }
 
         return filtered
@@ -177,31 +157,6 @@ public static class EarthPowerService
             description = source.description ?? string.Empty,
             isAdvanced = source.isAdvanced
         };
-    }
-
-    private static string NormalizeForNgrams(string s)
-    {
-        var b = new StringBuilder();
-        foreach (var ch in s)
-        {
-            if (char.IsLetterOrDigit(ch) || char.IsWhiteSpace(ch)) b.Append(ch);
-            else b.Append(' ');
-        }
-        var normalized = string.Join(' ', b.ToString().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
-        return normalized;
-    }
-
-    private static IEnumerable<string> GenerateNGrams(string s, int n)
-    {
-        var t = s.Replace(" ", " ");
-        if (t.Length <= n)
-        {
-            yield return t;
-            yield break;
-        }
-
-        for (int i = 0; i <= t.Length - n; i++)
-            yield return t.Substring(i, n);
     }
 
     private static string BuildWhereClause(List<object> args, bool includeAdvanced, int? maxPower, string prefix = " WHERE ")

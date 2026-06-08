@@ -53,7 +53,8 @@
 
                 <CollectionView ItemsSource="{Binding Source={x:Reference Root}, Path=ComponentCards}"
                                 SelectionMode="None"
-                                HeightRequest="220">
+                                HeightRequest="220"
+                                ItemSizingStrategy="MeasureFirstItem">
                     <CollectionView.EmptyView>
                         <Border Padding="18"
                                 Stroke="{StaticResource SurfaceBorderColor}"
@@ -70,12 +71,23 @@
                                                                         StrokeShape="RoundRectangle 8"
                                                                         BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}">
                                 <Grid ColumnDefinitions="*,Auto,Auto"
-                                                                            ColumnSpacing="8">
-                                                                        <Label Text="{Binding AppliedConfigurationText}"
-                                                                                     FontSize="14"
-                                                                                     MaxLines="1"
-                                                                                     LineBreakMode="TailTruncation"
-                                                                                     VerticalTextAlignment="Center" />
+                                      ColumnSpacing="8">
+                                    <VerticalStackLayout Grid.Column="0"
+                                                         Spacing="1"
+                                                         VerticalOptions="Center">
+                                        <Label Text="{Binding DisplayTitle}"
+                                               FontAttributes="Bold"
+                                               FontSize="14"
+                                               MaxLines="1"
+                                               LineBreakMode="TailTruncation"
+                                               VerticalTextAlignment="Center" />
+                                        <Label Text="{Binding GrantText}"
+                                               FontSize="12"
+                                               TextColor="{StaticResource Gray500}"
+                                               MaxLines="1"
+                                               LineBreakMode="TailTruncation"
+                                               VerticalTextAlignment="Center" />
+                                    </VerticalStackLayout>
                                     <Button Grid.Column="1"
                                             Clicked="OnEditComponentClicked"
                                             CommandParameter="{Binding .}"

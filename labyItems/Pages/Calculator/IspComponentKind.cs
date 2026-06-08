@@ -8,6 +8,7 @@ public enum IspComponentKind
     Miracle,
     Spell,
     Evocation,
+    Abilities,
     Neuronic,
     Life,
     Utility

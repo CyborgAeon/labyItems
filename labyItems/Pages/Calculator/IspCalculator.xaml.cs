@@ -4,9 +4,9 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using labyItems.Controls;
 using labyItems.Models;
+using labyItems.Pages;
 using labyItems.Pages.Configs;
 using labyItems.Services;
-using Microsoft.Maui.ApplicationModel;
 
 namespace labyItems.Pages.Calculator;
 
@@ -29,6 +29,8 @@ public partial class IspCalculator : ContentPage
     public ObservableCollection<ContributionRow> BreakdownItems { get; } = new();
     public ObservableCollection<ComponentCardVm> ComponentCards { get; } = new();
     public int BaseTotal => _baseIsp;
+    public string SelectedBodyComponentTitle =>
+        ComponentCards.FirstOrDefault(component => IsBodyComponentKind(component.Kind))?.Title ?? string.Empty;
 
     public string ItemName
     {
@@ -126,44 +128,132 @@ public partial class IspCalculator : ContentPage
                 .Sum(component => component.Result.TotalIsp));
     }
 
+    public bool HasComponentKind(IspComponentKind kind)
+        => FindComponentByKind(kind) != null;
+
+    public bool IsComponentKindAvailable(IspComponentKind kind)
+    {
+        if (!IsBodyComponentKind(kind))
+            return true;
+
+        var selectedBodyComponent = ComponentCards.FirstOrDefault(component => IsBodyComponentKind(component.Kind));
+        return selectedBodyComponent == null || selectedBodyComponent.Kind == kind;
+    }
+
+    private ComponentCardVm? FindComponentByKind(IspComponentKind kind)
+        => ComponentCards.FirstOrDefault(component => component.Kind == kind);
+
+    private static bool IsBodyComponentKind(IspComponentKind kind)
+        => kind is IspComponentKind.Shield or IspComponentKind.Armour or IspComponentKind.Weapon;
+
+    private static string BuildComponentId(IspComponentKind kind)
+        => kind switch
+        {
+            IspComponentKind.Utility => "more",
+            _ => kind.ToString().ToLowerInvariant()
+        };
+
+    private static IspComponentKind? ResolveComponentKind(string? abilityType)
+    {
+        var type = (abilityType ?? string.Empty).Trim();
+        if (type.Equals("Shield", StringComparison.OrdinalIgnoreCase))
+            return IspComponentKind.Shield;
+        if (type.Equals("Armour", StringComparison.OrdinalIgnoreCase))
+            return IspComponentKind.Armour;
+        if (type.Equals("Weapon", StringComparison.OrdinalIgnoreCase))
+            return IspComponentKind.Weapon;
+        if (type.Equals("Miracle", StringComparison.OrdinalIgnoreCase))
+            return IspComponentKind.Miracle;
+        if (type.Equals("Spell", StringComparison.OrdinalIgnoreCase))
+            return IspComponentKind.Spell;
+        if (type.Equals("Evocation", StringComparison.OrdinalIgnoreCase))
+            return IspComponentKind.Evocation;
+        if (type.Equals("General", StringComparison.OrdinalIgnoreCase)
+            || type.Equals("Abilities", StringComparison.OrdinalIgnoreCase))
+        {
+            return IspComponentKind.Abilities;
+        }
+        if (type.Equals("Life", StringComparison.OrdinalIgnoreCase))
+            return IspComponentKind.Life;
+        if (type.Equals("More", StringComparison.OrdinalIgnoreCase)
+            || type.Equals("Utility", StringComparison.OrdinalIgnoreCase))
+        {
+            return IspComponentKind.Utility;
+        }
+        if (type.Equals("Neuronic", StringComparison.OrdinalIgnoreCase))
+            return IspComponentKind.Neuronic;
+
+        return null;
+    }
+
     public async Task BeginAddComponentAsync(IspComponentKind kind)
     {
+        if (!IsComponentKindAvailable(kind))
+        {
+            await DisplayAlert(
+                "Component unavailable",
+                $"Remove {SelectedBodyComponentTitle.ToLowerInvariant()} before selecting another body component.",
+                "OK");
+            return;
+        }
+
+        var existing = FindComponentByKind(kind);
+        if (existing != null)
+        {
+            await OpenExistingComponentAsync(existing);
+            return;
+        }
+
         switch (kind)
         {
             case IspComponentKind.Shield:
                 await OpenConfigComponentAsync(CreateConfigComponent(
+                    IspComponentKind.Shield,
                     "Shield",
                     new ShieldConfigPage(),
                     page => page.ResetConfig()));
                 break;
             case IspComponentKind.Armour:
                 await OpenConfigComponentAsync(CreateConfigComponent(
+                    IspComponentKind.Armour,
                     "Armour",
                     new ArmourConfigPage(),
                     page => page.ResetConfig()));
                 break;
             case IspComponentKind.Weapon:
                 await OpenConfigComponentAsync(CreateConfigComponent(
+                    IspComponentKind.Weapon,
                     "Weapon",
                     new WeaponConfigPage(),
                     page => page.ResetConfig()));
                 break;
             case IspComponentKind.Miracle:
                 await OpenConfigComponentAsync(CreateConfigComponent(
+                    IspComponentKind.Miracle,
                     "Miracle",
                     new MiracleConfigPage(),
                     page => page.ResetConfig()));
                 break;
             case IspComponentKind.Spell:
                 await OpenConfigComponentAsync(CreateConfigComponent(
+                    IspComponentKind.Spell,
                     "Spell",
                     new SpellConfigPage(),
                     page => page.ResetConfig()));
                 break;
             case IspComponentKind.Evocation:
                 await OpenConfigComponentAsync(CreateConfigComponent(
+                    IspComponentKind.Evocation,
                     "Evocation",
                     new EvocationConfigPage(),
+                    page => page.ResetConfig()));
+                break;
+            case IspComponentKind.Abilities:
+                var abilitiesPage = new GeneralConfigPage();
+                await OpenConfigComponentAsync(CreateConfigComponent(
+                    IspComponentKind.Abilities,
+                    "Abilities",
+                    abilitiesPage,
                     page => page.ResetConfig()));
                 break;
             case IspComponentKind.Life:
@@ -181,24 +271,45 @@ public partial class IspCalculator : ContentPage
     private async Task OpenConfigComponentAsync(ComponentCardVm component)
     {
         var result = await component.OpenEditorAsync();
-        if (result == null)
+        if (result == null || !IsConfiguredResult(result))
             return;
 
         component.Update(result);
         UpsertComponent(component);
     }
 
+    private async Task OpenExistingComponentAsync(ComponentCardVm component)
+    {
+        var result = await component.OpenEditorAsync();
+        if (result != null)
+        {
+            if (!IsConfiguredResult(result))
+            {
+                RemoveComponentMatches(component);
+                RefreshCollections();
+                return;
+            }
+
+            component.Update(result);
+            UpsertComponent(component);
+            return;
+        }
+
+        RefreshCollections();
+    }
+
     private async Task OpenLifeComponentAsync()
     {
-        var id = Guid.NewGuid().ToString("N");
+        var id = BuildComponentId(IspComponentKind.Life);
         var page = new CalcNav.LifeConfigPage
         {
             BindingContext = this
         };
-        page.ReturnToFormCommand = new Command(async () => await Navigation.PopAsync());
 
-        var component = new ComponentCardVm(
+        ComponentCardVm? component = null;
+        component = new ComponentCardVm(
             id,
+            IspComponentKind.Life,
             "Life",
             new CalcResult
             {
@@ -207,15 +318,11 @@ public partial class IspCalculator : ContentPage
                 Summary = "Life not configured yet.",
                 TotalIsp = 0
             },
-            async () =>
-            {
-                await Navigation.PushAsync(page);
-                return null;
-            });
+            async () => await OpenLiveContributionEditorAsync(component!, page));
 
         page.ContributionAdded += contribution =>
         {
-            component.Update(contribution.Result);
+            component!.Update(contribution.Result);
             UpsertComponent(component);
         };
 
@@ -224,15 +331,16 @@ public partial class IspCalculator : ContentPage
 
     private async Task OpenUtilityComponentAsync()
     {
-        var id = Guid.NewGuid().ToString("N");
+        var id = BuildComponentId(IspComponentKind.Utility);
         var page = new CalcNav.MoreNav
         {
             CalculatorContext = this
         };
-        page.ReturnToFormCommand = new Command(async () => await Navigation.PopAsync());
 
-        var component = new ComponentCardVm(
+        ComponentCardVm? component = null;
+        component = new ComponentCardVm(
             id,
+            IspComponentKind.Utility,
             "Utility",
             new CalcResult
             {
@@ -241,33 +349,78 @@ public partial class IspCalculator : ContentPage
                 Summary = "Utility not configured yet.",
                 TotalIsp = 0
             },
-            async () =>
-            {
-                await Navigation.PushAsync(page);
-                return null;
-            });
+            async () => await OpenLiveContributionEditorAsync(component!, page));
 
         page.ContributionAdded += contribution =>
         {
-            component.Update(contribution.Result);
+            component!.Update(contribution.Result);
             UpsertComponent(component);
         };
 
         await component.OpenEditorAsync();
     }
 
+    private async Task<CalcResult?> OpenLiveContributionEditorAsync(ComponentCardVm component, Page page)
+    {
+        var originalResult = FindComponentByKind(component.Kind)?.Result;
+        var committed = false;
+
+        switch (page)
+        {
+            case CalcNav.LifeConfigPage lifePage:
+                lifePage.ReturnToFormCommand = new Command(async () =>
+                {
+                    committed = true;
+                    await Navigation.PopAsync();
+                });
+                break;
+            case CalcNav.MoreNav morePage:
+                morePage.ReturnToFormCommand = new Command(async () =>
+                {
+                    committed = true;
+                    await Navigation.PopAsync();
+                });
+                break;
+        }
+
+        await Navigation.PushAsync(page);
+
+        if (committed)
+        {
+            if (IsConfiguredResult(component.Result))
+                UpsertComponent(component);
+            else
+                RemoveComponentMatches(component);
+
+            RefreshCollections();
+            return null;
+        }
+
+        RemoveComponentMatches(component);
+        if (originalResult != null && IsConfiguredResult(originalResult))
+        {
+            component.Update(originalResult);
+            ComponentCards.Add(component);
+        }
+
+        RefreshCollections();
+        return null;
+    }
+
     private ComponentCardVm CreateConfigComponent<TConfig>(
+        IspComponentKind kind,
         string title,
         ConfigPageBase<TConfig> page,
         Action<ConfigPageBase<TConfig>> resetAction)
         where TConfig : ConfigBase, new()
     {
-        var id = Guid.NewGuid().ToString("N");
+        var id = BuildComponentId(kind);
         page.CalculatorContext = this;
         page.ApplyBaseTotal(GetTotalExcludingContribution(id));
 
         return new ComponentCardVm(
             id,
+            kind,
             title,
             new CalcResult
             {
@@ -297,8 +450,13 @@ public partial class IspCalculator : ContentPage
                 continue;
             }
 
+            var kind = ResolveComponentKind(ability.AbilityType);
+            if (kind.HasValue && FindComponentByKind(kind.Value) != null)
+                continue;
+
             ComponentCards.Add(new ComponentCardVm(
-                Guid.NewGuid().ToString("N"),
+                kind.HasValue ? BuildComponentId(kind.Value) : Guid.NewGuid().ToString("N"),
+                kind ?? IspComponentKind.Utility,
                 ability.AbilityType,
                 ability,
                 () => Task.FromResult<CalcResult?>(null)));
@@ -307,12 +465,40 @@ public partial class IspCalculator : ContentPage
 
     private void UpsertComponent(ComponentCardVm component)
     {
-        var existing = ComponentCards.FirstOrDefault(item => string.Equals(item.Id, component.Id, StringComparison.Ordinal));
-        if (existing != null)
-            ComponentCards.Remove(existing);
+        if (!IsConfiguredResult(component.Result))
+        {
+            RemoveComponentMatches(component);
+            RefreshCollections();
+            return;
+        }
+
+        RemoveComponentMatches(component);
 
         ComponentCards.Add(component);
         RefreshCollections();
+    }
+
+    private void RemoveComponentMatches(ComponentCardVm component)
+    {
+        var matches = ComponentCards
+            .Where(item =>
+                string.Equals(item.Id, component.Id, StringComparison.Ordinal)
+                || item.Kind == component.Kind)
+            .ToList();
+
+        foreach (var match in matches)
+            ComponentCards.Remove(match);
+    }
+
+    private static bool IsConfiguredResult(CalcResult? result)
+    {
+        if (result == null)
+            return false;
+
+        if (result.TotalIsp != 0)
+            return true;
+
+        return ItemEmailService.BuildHumanReadableAbilityLines(new[] { result }).Count > 0;
     }
 
     private void RemoveContributionById(string? id)
@@ -362,7 +548,10 @@ public partial class IspCalculator : ContentPage
 
     private IspCalculationResult BuildCalculationResult()
     {
-        var abilities = ComponentCards.Select(component => component.Result).ToList();
+        var abilities = ComponentCards
+            .Select(component => component.Result)
+            .Where(IsConfiguredResult)
+            .ToList();
         if (_baseIsp > 0)
         {
             abilities.Insert(0, new CalcResult
@@ -414,22 +603,6 @@ public partial class IspCalculator : ContentPage
         catch (Exception ex)
         {
             await DisplayAlert("Save failed", ex.Message, "OK");
-        }
-    }
-
-    private async Task EmailItemAsync(IspCalculationResult result)
-    {
-        try
-        {
-            var item = BuildWalletItem(result);
-            var payload = ItemEmailService.BuildItemPayload(item, result.Abilities);
-            item.PayloadJson = ItemEmailService.SerializeItemPayload(payload);
-            var draft = ItemEmailService.BuildItemEmailDraft(item, payload);
-            await Launcher.OpenAsync(draft.MailtoUri);
-        }
-        catch (Exception ex)
-        {
-            await DisplayAlert("Email failed", ex.Message, "OK");
         }
     }
 
@@ -495,7 +668,36 @@ public partial class IspCalculator : ContentPage
         => await SaveOrReturnAsync();
 
     private async void OnEmailDeskClicked(object sender, EventArgs e)
-        => await EmailItemAsync(BuildCalculationResult());
+    {
+        var result = BuildCalculationResult();
+        var payload = BuildDeskSubmissionPayload(result);
+        var recipient = new RecipientInfo
+        {
+            ItemName = payload.ItemName
+        };
+
+        await Navigation.PushAsync(new RecipientPage(recipient, payload));
+    }
+
+    private MpSubmissionPayload BuildDeskSubmissionPayload(IspCalculationResult result)
+    {
+        var abilities = (result.Abilities ?? new List<CalcResult>())
+            .Where(ability => ability != null)
+            .ToList();
+
+        var payload = new MpSubmissionPayload
+        {
+            ItemName = (ItemName ?? string.Empty).Trim(),
+            SourceFlow = "isp",
+            PhysicalRepresentation = (PhysicalRepresentation ?? string.Empty).Trim(),
+            TotalIsp = Math.Max(0, result.TotalIsp),
+            TotalMp = 0,
+            Abilities = abilities,
+            IspBreakdown = BreakdownItems.ToList()
+        };
+        payload.ItemTypes = ItemEmailService.DeriveMpItemTypes(payload);
+        return payload;
+    }
 
     private async void OnEditComponentClicked(object sender, EventArgs e)
     {
@@ -503,15 +705,7 @@ public partial class IspCalculator : ContentPage
         if (component == null)
             return;
 
-        var result = await component.OpenEditorAsync();
-        if (result != null)
-        {
-            component.Update(result);
-            UpsertComponent(component);
-            return;
-        }
-
-        RefreshCollections();
+        await OpenExistingComponentAsync(component);
     }
 
     private void OnDeleteComponentClicked(object sender, EventArgs e)
@@ -541,12 +735,14 @@ public partial class IspCalculator : ContentPage
 
         public ComponentCardVm(
             string id,
+            IspComponentKind kind,
             string title,
             CalcResult result,
             Func<Task<CalcResult?>> openEditorAsync,
             Action? resetAction = null)
         {
             Id = id;
+            Kind = kind;
             Title = title;
             _result = result;
             OpenEditorAsync = openEditorAsync;
@@ -554,10 +750,23 @@ public partial class IspCalculator : ContentPage
         }
 
         public string Id { get; }
+        public IspComponentKind Kind { get; }
         public string Title { get; }
         public CalcResult Result => _result;
         public Func<Task<CalcResult?>> OpenEditorAsync { get; }
         public Action? ResetAction { get; }
+        public string DisplayTitle => Title;
+        public string GrantText
+        {
+            get
+            {
+                var grantText = ItemEmailService.BuildGrantSummary(new[] { _result });
+                if (!string.IsNullOrWhiteSpace(grantText))
+                    return grantText;
+
+                return "No choices selected";
+            }
+        }
         public string Summary => (_result.Summary ?? string.Empty).Split('\n').FirstOrDefault()?.Trim() ?? string.Empty;
         public string TotalText => $"ISP: {_result.TotalIsp}";
         public string AppliedConfigurationText => string.IsNullOrWhiteSpace(Summary)
@@ -570,6 +779,8 @@ public partial class IspCalculator : ContentPage
         {
             _result = result;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Result)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DisplayTitle)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(GrantText)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Summary)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalText)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AppliedConfigurationText)));

@@ -21,10 +21,12 @@ public sealed class OptimizedSearchService
     public sealed record SearchResultDto
     {
         public string Id { get; init; } = string.Empty;
+        public string LookupKey { get; init; } = string.Empty;
         public string Name { get; init; } = string.Empty;
         public string Description { get; init; } = string.Empty;
         public int Kind { get; init; } // GlobalSearchKind enum value
         public string? ExtraInfo { get; init; }
+        public int? AbilityTable { get; init; }
         public string? DataJson { get; init; }
     }
 
@@ -161,10 +163,10 @@ public sealed class OptimizedSearchService
     private List<SearchResultDto> SearchAbilities(SQLiteConnection conn, string searchText, bool isEmptySearch)
     {
         const string query = @"
-            SELECT id, idx as name, description, data_json
+            SELECT id, idx as name, description, cost, table_id, data_json
             FROM evolution
             WHERE (@empty = 1) OR
-                  (LOWER(idx) LIKE @search OR LOWER(description) LIKE @search)
+                  LOWER(idx) LIKE @search
             ORDER BY idx COLLATE NOCASE
             LIMIT 5000";
 
@@ -173,14 +175,17 @@ public sealed class OptimizedSearchService
         cmd.Bind("@search", $"%{searchText}%");
 
         var results = new List<SearchResultDto>();
-        foreach (var row in cmd.ExecuteQuery<(string id, string name, string description, string dataJson)>())
+        foreach (var row in cmd.ExecuteQuery<(string id, string name, string description, int cost, int tableId, string dataJson)>())
         {
             results.Add(new SearchResultDto
             {
                 Id = row.id,
+                LookupKey = BuildAbilityLookupKey(row.tableId, row.name),
                 Name = row.name,
                 Description = row.description ?? string.Empty,
                 Kind = (int)GlobalSearchKind.Ability,
+                ExtraInfo = BuildAbilityExtraInfo(row.tableId, row.cost),
+                AbilityTable = row.tableId,
                 DataJson = row.dataJson
             });
         }
@@ -205,10 +210,10 @@ public sealed class OptimizedSearchService
         }
 
         var query = $@"
-            SELECT id, idx as name, description, data_json
+            SELECT id, idx as name, description, cost, table_id, data_json
             FROM evolution
             WHERE ({whereClause}) AND
-                  ((@empty = 1) OR (LOWER(idx) LIKE @search OR LOWER(description) LIKE @search))
+                  ((@empty = 1) OR LOWER(idx) LIKE @search)
             ORDER BY idx COLLATE NOCASE
             LIMIT 5000";
 
@@ -217,14 +222,17 @@ public sealed class OptimizedSearchService
         cmd.Bind("@search", $"%{searchText}%");
 
         var results = new List<SearchResultDto>();
-        foreach (var row in cmd.ExecuteQuery<(string id, string name, string description, string dataJson)>())
+        foreach (var row in cmd.ExecuteQuery<(string id, string name, string description, int cost, int tableId, string dataJson)>())
         {
             results.Add(new SearchResultDto
             {
                 Id = row.id,
+                LookupKey = BuildAbilityLookupKey(row.tableId, row.name),
                 Name = row.name,
                 Description = row.description ?? string.Empty,
                 Kind = (int)GlobalSearchKind.Ability,
+                ExtraInfo = BuildAbilityExtraInfo(row.tableId, row.cost),
+                AbilityTable = row.tableId,
                 DataJson = row.dataJson
             });
         }
@@ -237,10 +245,10 @@ public sealed class OptimizedSearchService
     private List<SearchResultDto> SearchSpells(SQLiteConnection conn, string searchText, bool isEmptySearch)
     {
         const string query = @"
-            SELECT id, name, description, is_advanced, colour, level
+            SELECT id, name, description, is_advanced, colour, level, data_json
             FROM spells
             WHERE (@empty = 1) OR
-                  (LOWER(name) LIKE @search OR LOWER(description) LIKE @search)
+                  LOWER(name) LIKE @search
             ORDER BY name COLLATE NOCASE
             LIMIT 5000";
 
@@ -249,15 +257,17 @@ public sealed class OptimizedSearchService
         cmd.Bind("@search", $"%{searchText}%");
 
         var results = new List<SearchResultDto>();
-        foreach (var row in cmd.ExecuteQuery<(string id, string name, string description, int isAdvanced, string colour, int level)>())
+        foreach (var row in cmd.ExecuteQuery<(string id, string name, string description, int isAdvanced, string colour, int level, string dataJson)>())
         {
             results.Add(new SearchResultDto
             {
                 Id = row.id,
+                LookupKey = row.name,
                 Name = row.name,
                 Description = row.description ?? string.Empty,
                 Kind = (int)GlobalSearchKind.Spell,
-                ExtraInfo = $"Level {row.level}{(row.isAdvanced == 1 ? " (Advanced)" : string.Empty)}"
+                ExtraInfo = BuildSpellExtraInfo(row.level, row.colour, row.isAdvanced == 1),
+                DataJson = row.dataJson
             });
         }
 
@@ -294,10 +304,10 @@ public sealed class OptimizedSearchService
         }
 
         var query = $@"
-            SELECT id, name, description, is_advanced, colour, level
+            SELECT id, name, description, is_advanced, colour, level, data_json
             FROM spells
             WHERE ({whereClause}) AND
-                  ((@empty = 1) OR (LOWER(name) LIKE @search OR LOWER(description) LIKE @search))
+                  ((@empty = 1) OR LOWER(name) LIKE @search)
             ORDER BY name COLLATE NOCASE
             LIMIT 5000";
 
@@ -306,15 +316,17 @@ public sealed class OptimizedSearchService
         cmd.Bind("@search", $"%{searchText}%");
 
         var results = new List<SearchResultDto>();
-        foreach (var row in cmd.ExecuteQuery<(string id, string name, string description, int isAdvanced, string colour, int level)>())
+        foreach (var row in cmd.ExecuteQuery<(string id, string name, string description, int isAdvanced, string colour, int level, string dataJson)>())
         {
             results.Add(new SearchResultDto
             {
                 Id = row.id,
+                LookupKey = row.name,
                 Name = row.name,
                 Description = row.description ?? string.Empty,
                 Kind = (int)GlobalSearchKind.Spell,
-                ExtraInfo = $"Level {row.level}{(row.isAdvanced == 1 ? " (Advanced)" : string.Empty)}"
+                ExtraInfo = BuildSpellExtraInfo(row.level, row.colour, row.isAdvanced == 1),
+                DataJson = row.dataJson
             });
         }
 
@@ -326,10 +338,10 @@ public sealed class OptimizedSearchService
     private List<SearchResultDto> SearchMiracles(SQLiteConnection conn, string searchText, bool isEmptySearch)
     {
         const string query = @"
-            SELECT id, name, description, is_advanced, sphere
+            SELECT id, name, description, is_advanced, sphere, data_json
             FROM miracles
             WHERE (@empty = 1) OR
-                  (LOWER(name) LIKE @search OR LOWER(description) LIKE @search)
+                  LOWER(name) LIKE @search
             ORDER BY name COLLATE NOCASE
             LIMIT 5000";
 
@@ -338,15 +350,17 @@ public sealed class OptimizedSearchService
         cmd.Bind("@search", $"%{searchText}%");
 
         var results = new List<SearchResultDto>();
-        foreach (var row in cmd.ExecuteQuery<(string id, string name, string description, int isAdvanced, string sphere)>())
+        foreach (var row in cmd.ExecuteQuery<(string id, string name, string description, int isAdvanced, string sphere, string dataJson)>())
         {
             results.Add(new SearchResultDto
             {
                 Id = row.id,
+                LookupKey = row.name,
                 Name = row.name,
                 Description = row.description ?? string.Empty,
                 Kind = (int)GlobalSearchKind.Miracle,
-                ExtraInfo = $"{row.sphere}{(row.isAdvanced == 1 ? " (Advanced)" : string.Empty)}"
+                ExtraInfo = BuildMiracleExtraInfo(row.sphere, row.isAdvanced == 1),
+                DataJson = row.dataJson
             });
         }
 
@@ -387,10 +401,10 @@ public sealed class OptimizedSearchService
         }
 
         var query = $@"
-            SELECT id, name, description, is_advanced, sphere
+            SELECT id, name, description, is_advanced, sphere, data_json
             FROM miracles
             WHERE ({whereClause}) AND
-                  ((@empty = 1) OR (LOWER(name) LIKE @search OR LOWER(description) LIKE @search))
+                  ((@empty = 1) OR LOWER(name) LIKE @search)
             ORDER BY name COLLATE NOCASE
             LIMIT 5000";
 
@@ -399,15 +413,17 @@ public sealed class OptimizedSearchService
         cmd.Bind("@search", $"%{searchText}%");
 
         var results = new List<SearchResultDto>();
-        foreach (var row in cmd.ExecuteQuery<(string id, string name, string description, int isAdvanced, string sphere)>())
+        foreach (var row in cmd.ExecuteQuery<(string id, string name, string description, int isAdvanced, string sphere, string dataJson)>())
         {
             results.Add(new SearchResultDto
             {
                 Id = row.id,
+                LookupKey = row.name,
                 Name = row.name,
                 Description = row.description ?? string.Empty,
                 Kind = (int)GlobalSearchKind.Miracle,
-                ExtraInfo = $"{row.sphere}{(row.isAdvanced == 1 ? " (Advanced)" : string.Empty)}"
+                ExtraInfo = BuildMiracleExtraInfo(row.sphere, row.isAdvanced == 1),
+                DataJson = row.dataJson
             });
         }
 
@@ -419,10 +435,10 @@ public sealed class OptimizedSearchService
     private List<SearchResultDto> SearchEvocations(SQLiteConnection conn, string searchText, bool isEmptySearch)
     {
         const string query = @"
-            SELECT id, name, description, is_advanced, fields_json
+            SELECT id, name, description, power, is_advanced, fields_json, data_json
             FROM evocs
             WHERE (@empty = 1) OR
-                  (LOWER(name) LIKE @search OR LOWER(description) LIKE @search)
+                  LOWER(name) LIKE @search
             ORDER BY name COLLATE NOCASE
             LIMIT 5000";
 
@@ -431,15 +447,17 @@ public sealed class OptimizedSearchService
         cmd.Bind("@search", $"%{searchText}%");
 
         var results = new List<SearchResultDto>();
-        foreach (var row in cmd.ExecuteQuery<(string id, string name, string description, int isAdvanced, string fieldsJson)>())
+        foreach (var row in cmd.ExecuteQuery<(string id, string name, string description, int power, int isAdvanced, string fieldsJson, string dataJson)>())
         {
             results.Add(new SearchResultDto
             {
                 Id = row.id,
+                LookupKey = row.name,
                 Name = row.name,
                 Description = row.description ?? string.Empty,
                 Kind = (int)GlobalSearchKind.Evocation,
-                ExtraInfo = row.isAdvanced == 1 ? "Advanced" : null
+                ExtraInfo = BuildEvocationExtraInfo(row.power, row.fieldsJson, row.isAdvanced == 1),
+                DataJson = row.dataJson
             });
         }
 
@@ -471,10 +489,10 @@ public sealed class OptimizedSearchService
         }
 
         var query = $@"
-            SELECT id, name, description, is_advanced, fields_json
+            SELECT id, name, description, power, is_advanced, fields_json, data_json
             FROM evocs
             WHERE ({whereClause}) AND
-                  ((@empty = 1) OR (LOWER(name) LIKE @search OR LOWER(description) LIKE @search))
+                  ((@empty = 1) OR LOWER(name) LIKE @search)
             ORDER BY name COLLATE NOCASE
             LIMIT 5000";
 
@@ -483,15 +501,17 @@ public sealed class OptimizedSearchService
         cmd.Bind("@search", $"%{searchText}%");
 
         var results = new List<SearchResultDto>();
-        foreach (var row in cmd.ExecuteQuery<(string id, string name, string description, int isAdvanced, string fieldsJson)>())
+        foreach (var row in cmd.ExecuteQuery<(string id, string name, string description, int power, int isAdvanced, string fieldsJson, string dataJson)>())
         {
             results.Add(new SearchResultDto
             {
                 Id = row.id,
+                LookupKey = row.name,
                 Name = row.name,
                 Description = row.description ?? string.Empty,
                 Kind = (int)GlobalSearchKind.Evocation,
-                ExtraInfo = row.isAdvanced == 1 ? "Advanced" : null
+                ExtraInfo = BuildEvocationExtraInfo(row.power, row.fieldsJson, row.isAdvanced == 1),
+                DataJson = row.dataJson
             });
         }
 
@@ -503,6 +523,70 @@ public sealed class OptimizedSearchService
     private static string NormalizeSearchText(string text)
     {
         return (text ?? string.Empty).Trim().ToLowerInvariant();
+    }
+
+    private static string BuildAbilityLookupKey(int tableId, string name)
+        => $"{tableId}|{(name ?? string.Empty).Trim().ToLowerInvariant()}";
+
+    private static string BuildAbilityExtraInfo(int tableId, int cost)
+        => $"Table {tableId} - Cost {Math.Max(0, cost)}";
+
+    private static string BuildSpellExtraInfo(int level, string? colour, bool isAdvanced)
+    {
+        var parts = new List<string> { $"Level {Math.Max(0, level)}" };
+        var colourText = (colour ?? string.Empty).Trim();
+        if (colourText.Length > 0)
+            parts.Add(colourText);
+        if (isAdvanced)
+            parts.Add("Advanced");
+        return string.Join(" - ", parts);
+    }
+
+    private static string BuildMiracleExtraInfo(string? sphere, bool isAdvanced)
+    {
+        var parts = new List<string>();
+        var sphereText = (sphere ?? string.Empty).Trim();
+        if (sphereText.Length > 0)
+            parts.Add(sphereText);
+        if (isAdvanced)
+            parts.Add("Advanced");
+        return string.Join(" - ", parts);
+    }
+
+    private static string BuildEvocationExtraInfo(int power, string? fieldsJson, bool isAdvanced)
+    {
+        var parts = new List<string> { $"{Math.Max(0, power)} EP" };
+        var fields = ParseStringArray(fieldsJson);
+        if (fields.Count > 0)
+            parts.Add(string.Join(", ", fields));
+        if (isAdvanced)
+            parts.Add("Advanced");
+        return string.Join(" - ", parts);
+    }
+
+    private static IReadOnlyList<string> ParseStringArray(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            return Array.Empty<string>();
+
+        try
+        {
+            using var doc = System.Text.Json.JsonDocument.Parse(json);
+            if (doc.RootElement.ValueKind != System.Text.Json.JsonValueKind.Array)
+                return Array.Empty<string>();
+
+            return doc.RootElement
+                .EnumerateArray()
+                .Where(item => item.ValueKind == System.Text.Json.JsonValueKind.String)
+                .Select(item => (item.GetString() ?? string.Empty).Trim())
+                .Where(item => item.Length > 0)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+        catch
+        {
+            return Array.Empty<string>();
+        }
     }
 
     private static List<SearchResultDto> SortResults(List<SearchResultDto> results)

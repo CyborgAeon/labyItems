@@ -5,6 +5,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:labyItems.Controls"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
     Shell.NavBarIsVisible="False"
     NavigationPage.HasNavigationBar="False">
 
@@ -61,7 +62,7 @@
                                                       CommandParameter="{Binding .}"/>
                             </Border.GestureRecognizers>
 
-                            <Grid ColumnDefinitions="Auto,*"
+                            <Grid ColumnDefinitions="Auto,*,Auto"
                                   ColumnSpacing="10">
                                 <Border Stroke="{Binding IconBorderColor}"
                                         BackgroundColor="{Binding IconBackgroundColor}"
@@ -84,7 +85,8 @@
                                     <Label Text="{Binding Name}"
                                            FontSize="18"
                                            FontAttributes="Bold"
-                                           LineBreakMode="WordWrap"/>
+                                           LineBreakMode="WordWrap"
+                                           Margin="0,0,4,0"/>
                                     <Label Text="{Binding MetaText}"
                                            FontSize="12"
                                            Opacity="0.75"
@@ -96,6 +98,24 @@
                                            MaxLines="2"
                                            IsVisible="{Binding HasDescription}"/>
                                 </VerticalStackLayout>
+
+                                <Border Grid.Column="2"
+                                        Stroke="{StaticResource SubtleTextColor}"
+                                        BackgroundColor="{StaticResource White}"
+                                        StrokeThickness="1"
+                                        StrokeShape="RoundRectangle 999"
+                                        WidthRequest="28"
+                                        HeightRequest="28"
+                                        VerticalOptions="Start"
+                                        HorizontalOptions="End"
+                                        IsVisible="{Binding CanOpenDetails}">
+                                    <Label Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
+                                           FontFamily="{x:Static helpers:FontAwesomeGlyphs.SolidFamily}"
+                                           FontSize="13"
+                                           TextColor="{StaticResource SubtleTextColor}"
+                                           HorizontalTextAlignment="Center"
+                                           VerticalTextAlignment="Center"/>
+                                </Border>
                             </Grid>
                         </Border>
                     </DataTemplate>

@@ -9,7 +9,10 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="12">
-            <Frame BorderColor="{StaticResource Gray200}" Padding="12">
+            <Frame
+                BorderColor="{StaticResource Gray200}"
+                IsVisible="{Binding HasCharacterContext}"
+                Padding="12">
                 <VerticalStackLayout Spacing="4">
                     <Label FontAttributes="Bold" FontSize="18" Text="{Binding CharacterName}" />
                     <Label Text="{Binding PlayerName, StringFormat='Player: {0}'}" />
@@ -305,8 +308,9 @@
 
                 <Frame BorderColor="{StaticResource Gray200}" Padding="12">
                     <VerticalStackLayout Spacing="10">
-                        <Label FontAttributes="Bold" Text="Bonus Mode" />
+                        <Label FontAttributes="Bold" Text="{Binding BonusSectionTitle}" />
                         <Picker
+                            IsVisible="{Binding ShowBonusModePicker}"
                             ItemsSource="{Binding BonusModes}"
                             SelectedItem="{Binding SelectedBonusMode, Mode=TwoWay}" />
 
@@ -455,7 +459,10 @@
                     </VerticalStackLayout>
                 </Frame>
 
-                <Frame BorderColor="{StaticResource Gray200}" Padding="12">
+                <Frame
+                    BorderColor="{StaticResource Gray200}"
+                    IsVisible="{Binding ShowOwnedAbilitySummary}"
+                    Padding="12">
                     <VerticalStackLayout Spacing="8">
                         <Label FontAttributes="Bold" Text="Make Requirements / Notes" />
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding RequirementLines}" Spacing="4">

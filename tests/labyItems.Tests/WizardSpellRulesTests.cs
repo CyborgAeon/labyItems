@@ -88,4 +88,53 @@ public sealed class WizardSpellRulesTests
         Assert.Contains(result, entry => entry.Name == "Grey Eight");
         Assert.DoesNotContain(result, entry => entry.Name == "Grey Nine");
     }
+
+    [Fact]
+    public void BuildSorcererSpellEntries_Uses_Explicit_Sorcerer_List()
+    {
+        var spells = new List<SpellService.SpellRaw>
+        {
+            new() { name = "Detect Magic", level = 0, colour = "Grey", isAdvanced = false },
+            new() { name = "Dispel Magic I", level = 1, colour = "Grey", isAdvanced = false },
+            new() { name = "Dispel Magic X", level = 10, colour = "Grey", isAdvanced = false },
+            new() { name = "Dispel Magic XI", level = 11, colour = "Grey", isAdvanced = true },
+            new() { name = "See Through Magical Darkness (Self)", level = 3, colour = "Grey", isAdvanced = false },
+            new() { name = "See Through Magical Darkness (Other)", level = 4, colour = "White", isAdvanced = false },
+            new() { name = "Animate Scarecrow", level = 4, colour = "Black", isAdvanced = false },
+            new() { name = "Unseen Servant", level = 4, colour = "Green", isAdvanced = false },
+            new() { name = "Summon Undine", level = 4, colour = "Green", isAdvanced = false },
+            new() { name = "Talk to Elementals", level = 8, colour = "Grey", isAdvanced = true },
+            new() { name = "Silence", level = 6, colour = "Grey", isAdvanced = false },
+            new() { name = "Sword of Power", level = 6, colour = "Red", isAdvanced = false },
+            new() { name = "Summon Gnome 'Child'", level = 6, colour = "Brown", isAdvanced = false },
+            new() { name = "Summon Elemental 'Child'", level = 8, colour = "Grey", isAdvanced = false },
+            new() { name = "Summon Sprite 'Lord'", level = 10, colour = "White", isAdvanced = false },
+            new() { name = "Summon Elemental 'Champion'", level = 12, colour = "Ele bar Grey", isAdvanced = true },
+            new() { name = "Dancing Venom Sword", level = 8, colour = "Black", isAdvanced = false },
+            new() { name = "Sorcery Bolt", level = 2, colour = "Sorcery", isAdvanced = false }
+        };
+
+        var result = WizardSpellRules.BuildSorcererSpellEntries(spells);
+        var names = result.Select(entry => entry.Name).OrderBy(name => name, StringComparer.OrdinalIgnoreCase).ToList();
+        var expectedNames = new[]
+        {
+            "Animate Scarecrow",
+            "Dancing Venom Sword",
+            "Detect Magic",
+            "Dispel Magic I",
+            "Dispel Magic X",
+            "See Through Magical Darkness (Self)",
+            "Silence",
+            "Summon Elemental 'Child'",
+            "Summon Gnome 'Child'",
+            "Summon Sprite 'Lord'",
+            "Summon Undine",
+            "Sword of Power",
+            "Talk to Elementals",
+            "Unseen Servant"
+        }.OrderBy(name => name, StringComparer.OrdinalIgnoreCase);
+
+        Assert.Equal(expectedNames, names);
+        Assert.Contains(result, entry => entry.Name == "Talk to Elementals" && entry.IsAdvanced);
+    }
 }

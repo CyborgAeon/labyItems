@@ -14,7 +14,7 @@ public interface IEvolutionDataSynchronizer
 
 public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
 {
-    private const string SeedVersion = "evolution-defaults-v2";
+    private const string SeedVersion = "evolution-defaults-v3";
     private const int NgramSize = 3;
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -85,6 +85,7 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
         RebuildEvolutionNgrams(conn, tx);
         SaveChecksum(conn, tx, checksum);
         tx.Commit();
+        CompactAfterNgramRebuild(conn);
 
         EvolutionService.InvalidateCache();
         _logger.LogInformation("Evolution defaults synchronized. Upserted {Count} defaults.", defaults.Count);
@@ -428,11 +429,11 @@ WHERE is_default = 1
             clear.ExecuteNonQuery();
         }
 
-        var rows = new List<(string Id, string Index, string Description)>();
+        var rows = new List<(string Id, string Index)>();
         using (var read = conn.CreateCommand())
         {
             read.Transaction = tx;
-            read.CommandText = "SELECT id, idx, description FROM evolution;";
+            read.CommandText = "SELECT id, idx FROM evolution;";
             using var reader = read.ExecuteReader();
             while (reader.Read())
             {
@@ -444,8 +445,7 @@ WHERE is_default = 1
                     continue;
 
                 var idx = reader.IsDBNull(1) ? string.Empty : (reader.GetString(1) ?? string.Empty);
-                var description = reader.IsDBNull(2) ? string.Empty : (reader.GetString(2) ?? string.Empty);
-                rows.Add((id, idx, description));
+                rows.Add((id, idx));
             }
         }
 
@@ -457,8 +457,7 @@ WHERE is_default = 1
 
         foreach (var row in rows)
         {
-            var combined = $"{row.Index} {row.Description}".ToLowerInvariant();
-            var normalized = ServiceHelper.NormalizeForNgrams(combined);
+            var normalized = ServiceHelper.NormalizeForNgrams(row.Index.ToLowerInvariant());
             if (string.IsNullOrWhiteSpace(normalized))
                 continue;
 
@@ -473,6 +472,26 @@ WHERE is_default = 1
                 evolutionIdParam.Value = row.Id;
                 insert.ExecuteNonQuery();
             }
+        }
+    }
+
+    private void CompactAfterNgramRebuild(SqliteConnection conn)
+    {
+        try
+        {
+            using (var checkpoint = conn.CreateCommand())
+            {
+                checkpoint.CommandText = "PRAGMA wal_checkpoint(TRUNCATE);";
+                checkpoint.ExecuteNonQuery();
+            }
+
+            using var vacuum = conn.CreateCommand();
+            vacuum.CommandText = "VACUUM;";
+            vacuum.ExecuteNonQuery();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Database compaction after evolution ngram rebuild failed.");
         }
     }
 

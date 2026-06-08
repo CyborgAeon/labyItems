@@ -989,7 +989,7 @@ VALUES ($id, $idx, $lower, $description, $cost, $available, $table, $multi, $pre
                 ("$updated", now));
         }
 
-        ReplaceNgramRows(conn, "evolution_ngrams", "evolution_id", id, $"{index} {description}");
+        ReplaceNgramRows(conn, "evolution_ngrams", "evolution_id", id, index);
     }
 
     private static void UpsertSpell(SqliteConnection conn, string defaultName, JsonObject payload)
@@ -1186,7 +1186,7 @@ VALUES ($id, $name, $lower, $power, $range, $duration, $verbal, $fields, $descri
                 ("$updated", now));
         }
 
-        ReplaceNgramRows(conn, "evoc_ngrams", "evoc_id", id, $"{name} {description}");
+        ReplaceNgramRows(conn, "evoc_ngrams", "evoc_id", id, name);
     }
 
     private static void ReplaceNgramRows(

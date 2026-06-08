@@ -122,12 +122,29 @@ public sealed class GeneralAbilitySearchVm : INotifyPropertyChanged
     }
 
     private readonly HashSet<int> _selectedTables = new();
+    private readonly HashSet<string> _selectedSourceBooks = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _selectedAbilityKeys = new(StringComparer.OrdinalIgnoreCase);
     private IReadOnlyList<EvolutionService.AbilityResult> _allAbilities = Array.Empty<EvolutionService.AbilityResult>();
     private bool _isLoaded;
 
     public ObservableCollection<GeneralAbilityTableFilterChipVm> TableFilterChips { get; } = new();
+    public ObservableCollection<GeneralAbilitySourceBookFilterChipVm> SourceBookFilterChips { get; } = new();
     public ObservableCollection<GeneralAbilitySearchResultVm> FilteredResults { get; } = new();
+
+    public ICommand OpenFiltersCommand { get; }
+    public ICommand CancelFiltersCommand { get; }
+    public ICommand ApplyFiltersCommand { get; }
+    public ICommand ToggleSourceBookFilterCommand { get; }
+    public ICommand ToggleTableFilterCommand { get; }
+
+    public GeneralAbilitySearchVm()
+    {
+        OpenFiltersCommand = new Command(OpenFilters);
+        CancelFiltersCommand = new Command(CancelFilters);
+        ApplyFiltersCommand = new Command(ApplyFilterModal);
+        ToggleSourceBookFilterCommand = new Command<GeneralAbilitySourceBookFilterChipVm>(ToggleSourceBookFilter);
+        ToggleTableFilterCommand = new Command<GeneralAbilityTableFilterChipVm>(TogglePendingTableFilter);
+    }
 
     private bool _isLoading;
     public bool IsLoading
@@ -143,6 +160,13 @@ public sealed class GeneralAbilitySearchVm : INotifyPropertyChanged
     }
 
     public bool HasNoResults => !IsLoading && FilteredResults.Count == 0;
+
+    private bool _isFilterModalOpen;
+    public bool IsFilterModalOpen
+    {
+        get => _isFilterModalOpen;
+        private set => Set(ref _isFilterModalOpen, value);
+    }
 
     private string _searchText = string.Empty;
     public string SearchText
@@ -174,10 +198,11 @@ public sealed class GeneralAbilitySearchVm : INotifyPropertyChanged
         _allAbilities = (abilities ?? Array.Empty<EvolutionService.AbilityResult>())
             .Where(ability => ability != null && ability.Cost > 0)
             .OrderBy(ability => ability.Table)
+            .ThenBy(ability => NormalizeSourceBook(ability.SourceBook), StringComparer.OrdinalIgnoreCase)
             .ThenBy(ability => ability.Index, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        RebuildTableChips();
+        RebuildFilterChips();
         _isLoaded = true;
         IsLoading = false;
         ApplyFilters();
@@ -193,10 +218,24 @@ public sealed class GeneralAbilitySearchVm : INotifyPropertyChanged
         else
             _selectedTables.Add(chip.Table);
 
-        foreach (var tableChip in TableFilterChips)
-            tableChip.IsSelected = _selectedTables.Contains(tableChip.Table);
-
+        SyncFilterChipSelection();
         ApplyFilters();
+    }
+
+    public void ToggleSourceBookFilter(GeneralAbilitySourceBookFilterChipVm? chip)
+    {
+        if (chip == null)
+            return;
+
+        chip.IsSelected = !chip.IsSelected;
+    }
+
+    private static void TogglePendingTableFilter(GeneralAbilityTableFilterChipVm? chip)
+    {
+        if (chip == null)
+            return;
+
+        chip.IsSelected = !chip.IsSelected;
     }
 
     public void ToggleSelected(GeneralAbilitySearchResultVm result)
@@ -246,13 +285,51 @@ public sealed class GeneralAbilitySearchVm : INotifyPropertyChanged
         Raise(nameof(DoneButtonText));
     }
 
-    private void RebuildTableChips()
+    private void OpenFilters()
+    {
+        SyncFilterChipSelection();
+        IsFilterModalOpen = true;
+    }
+
+    private void CancelFilters()
+    {
+        SyncFilterChipSelection();
+        IsFilterModalOpen = false;
+    }
+
+    private void ApplyFilterModal()
+    {
+        _selectedSourceBooks.Clear();
+        foreach (var chip in SourceBookFilterChips.Where(chip => chip.IsSelected))
+            _selectedSourceBooks.Add(chip.SourceBook);
+
+        _selectedTables.Clear();
+        foreach (var chip in TableFilterChips.Where(chip => chip.IsSelected))
+            _selectedTables.Add(chip.Table);
+
+        IsFilterModalOpen = false;
+        ApplyFilters();
+    }
+
+    private void RebuildFilterChips()
     {
         TableFilterChips.Clear();
         foreach (var table in _allAbilities.Select(ability => ability.Table).Distinct().OrderBy(table => table))
         {
             TableFilterChips.Add(new GeneralAbilityTableFilterChipVm(table, $"T{table}"));
         }
+
+        SourceBookFilterChips.Clear();
+        foreach (var sourceBook in _allAbilities
+                     .Select(ability => NormalizeSourceBook(ability.SourceBook))
+                     .Where(sourceBook => sourceBook.Length > 0)
+                     .Distinct(StringComparer.OrdinalIgnoreCase)
+                     .OrderBy(sourceBook => sourceBook, StringComparer.OrdinalIgnoreCase))
+        {
+            SourceBookFilterChips.Add(new GeneralAbilitySourceBookFilterChipVm(sourceBook));
+        }
+
+        SyncFilterChipSelection();
     }
 
     private void ApplyFilters()
@@ -267,8 +344,12 @@ public sealed class GeneralAbilitySearchVm : INotifyPropertyChanged
         var query = (SearchText ?? string.Empty).Trim();
         var hasQuery = query.Length > 0;
         var hasTableFilters = _selectedTables.Count > 0;
+        var hasSourceBookFilters = _selectedSourceBooks.Count > 0;
 
         IEnumerable<EvolutionService.AbilityResult> filtered = _allAbilities;
+        if (hasSourceBookFilters)
+            filtered = filtered.Where(ability => _selectedSourceBooks.Contains(NormalizeSourceBook(ability.SourceBook)));
+
         if (hasTableFilters)
             filtered = filtered.Where(ability => _selectedTables.Contains(ability.Table));
 
@@ -276,7 +357,7 @@ public sealed class GeneralAbilitySearchVm : INotifyPropertyChanged
         {
             filtered = filtered.Where(ability =>
                 Matches(ability.Index, query)
-                || Matches(ability.Description, query)
+                || Matches(NormalizeSourceBook(ability.SourceBook), query)
                 || Matches($"table {ability.Table}", query)
                 || Matches($"cost {ability.Cost}", query));
         }
@@ -299,6 +380,21 @@ public sealed class GeneralAbilitySearchVm : INotifyPropertyChanged
     private static bool Matches(string? source, string query)
         => !string.IsNullOrWhiteSpace(source)
            && source.Contains(query, StringComparison.OrdinalIgnoreCase);
+
+    private void SyncFilterChipSelection()
+    {
+        foreach (var chip in SourceBookFilterChips)
+            chip.IsSelected = _selectedSourceBooks.Contains(chip.SourceBook);
+
+        foreach (var chip in TableFilterChips)
+            chip.IsSelected = _selectedTables.Contains(chip.Table);
+    }
+
+    private static string NormalizeSourceBook(string? sourceBook)
+    {
+        var value = (sourceBook ?? string.Empty).Trim();
+        return value.Length == 0 ? "Unknown" : value;
+    }
 
     private static string NormalizeAbilityKey(string? name)
         => new string((name ?? string.Empty)
@@ -335,6 +431,37 @@ public sealed class GeneralAbilityTableFilterChipVm : INotifyPropertyChanged
     {
         Table = table;
         Label = label;
+    }
+}
+
+public sealed class GeneralAbilitySourceBookFilterChipVm : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private void Raise([CallerMemberName] string? name = null)
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+    public string SourceBook { get; }
+    public string Label => SourceBook;
+
+    private bool _isSelected;
+    public bool IsSelected
+    {
+        get => _isSelected;
+        set
+        {
+            if (_isSelected == value)
+                return;
+            _isSelected = value;
+            Raise();
+        }
+    }
+
+    public GeneralAbilitySourceBookFilterChipVm(string sourceBook)
+    {
+        SourceBook = string.IsNullOrWhiteSpace(sourceBook)
+            ? "Unknown"
+            : sourceBook.Trim();
     }
 }
 

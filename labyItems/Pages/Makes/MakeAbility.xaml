@@ -4,6 +4,7 @@
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
     Title="Manufacture"
     BackgroundColor="{StaticResource White}">
 
@@ -17,24 +18,34 @@
                 StrokeShape="RoundRectangle 10"
                 BackgroundColor="{StaticResource White}"
                 Padding="8,4">
-            <Grid ColumnDefinitions="Auto,Auto,*"
-                  ColumnSpacing="8">
-                <CheckBox Grid.Column="0"
-                          VerticalOptions="Center"
-                          IsChecked="{Binding ShowAvailableOnly, Source={x:Reference Root}, Mode=TwoWay}"
-                          CheckedChanged="OnAvailabilityToggleChanged" />
-                <Label Grid.Column="1"
-                       Text="{Binding AvailabilityToggleText, Source={x:Reference Root}}"
-                       VerticalTextAlignment="Center"
-                       FontAttributes="Bold"
-                       FontSize="12"
-                       Opacity="0.8" />
-                <SearchBar Grid.Column="2"
-                           x:Name="Search"
-                           Placeholder="Search by name or description"
-                           BackgroundColor="{StaticResource White}"
-                           TextChanged="OnSearchChanged" />
-            </Grid>
+            <VerticalStackLayout Spacing="8">
+                <Grid ColumnDefinitions="Auto,Auto,*"
+                      ColumnSpacing="8">
+                    <CheckBox Grid.Column="0"
+                              IsVisible="{Binding ShowAvailabilityFilter, Source={x:Reference Root}}"
+                              VerticalOptions="Center"
+                              IsChecked="{Binding ShowAvailableOnly, Source={x:Reference Root}, Mode=TwoWay}"
+                              CheckedChanged="OnAvailabilityToggleChanged" />
+                    <Label Grid.Column="1"
+                           IsVisible="{Binding ShowAvailabilityFilter, Source={x:Reference Root}}"
+                           Text="{Binding AvailabilityToggleText, Source={x:Reference Root}}"
+                           VerticalTextAlignment="Center"
+                           FontAttributes="Bold"
+                           FontSize="12"
+                           Opacity="0.8" />
+                    <SearchBar Grid.Column="{Binding SearchColumn, Source={x:Reference Root}}"
+                               Grid.ColumnSpan="{Binding SearchColumnSpan, Source={x:Reference Root}}"
+                               x:Name="Search"
+                               Placeholder="Search by name or description"
+                               BackgroundColor="{StaticResource White}"
+                               TextChanged="OnSearchChanged" />
+                </Grid>
+
+                <controls:ChipGroup
+                    IsVisible="{Binding ShowBracketFilters, Source={x:Reference Root}}"
+                    Items="{Binding BracketFilterOptions, Source={x:Reference Root}}"
+                    SelectedItem="{Binding SelectedBracketFilter, Source={x:Reference Root}, Mode=TwoWay}" />
+            </VerticalStackLayout>
         </Border>
 
         <Grid Grid.Row="1">

@@ -60,6 +60,7 @@ public sealed class MakeSheetViewModel : ObservableObject
 
     private readonly Character _character;
     private readonly CharacterDraft _draft;
+    private readonly bool _isDraftingMode;
     private readonly List<OwnedAbilityEntry> _ownedAbilities = new();
     private readonly HashSet<string> _ownedAbilityDedupes = new(StringComparer.OrdinalIgnoreCase);
     private bool _isLoaded;
@@ -114,10 +115,24 @@ public sealed class MakeSheetViewModel : ObservableObject
     private string _itemSetupStatusText = string.Empty;
     private bool _itemSetupHasWarning;
 
+    public MakeSheetViewModel()
+        : this(new Character { Name = "Crafting Draft" }, isDraftingMode: true)
+    {
+    }
+
     public MakeSheetViewModel(Character character)
+        : this(character, isDraftingMode: false)
+    {
+    }
+
+    private MakeSheetViewModel(Character character, bool isDraftingMode)
     {
         _character = character ?? throw new ArgumentNullException(nameof(character));
-        _draft = LiteDbService.ToDraft(character) ?? new CharacterDraft();
+        _isDraftingMode = isDraftingMode;
+        _draft = isDraftingMode
+            ? new CharacterDraft()
+            : LiteDbService.ToDraft(character) ?? new CharacterDraft();
+        _selectedBonusMode = isDraftingMode ? BonusModeManual : BonusModeAutomated;
 
         PlayerName = _character.PlayerName ?? string.Empty;
         CharacterName = _character.Name ?? string.Empty;
@@ -132,11 +147,10 @@ public sealed class MakeSheetViewModel : ObservableObject
             DisciplineSmithed
         };
 
-        BonusModes = new ObservableCollection<string>
-        {
-            BonusModeAutomated,
-            BonusModeManual
-        };
+        BonusModes = new ObservableCollection<string>(
+            isDraftingMode
+                ? new[] { BonusModeManual }
+                : new[] { BonusModeAutomated, BonusModeManual });
 
         WeaponTierOptions = new ObservableCollection<string>
         {
@@ -209,6 +223,12 @@ public sealed class MakeSheetViewModel : ObservableObject
     public string CharacterName { get; }
     public string CharacterClass { get; }
     public CharacterDraft Draft => _draft;
+    public bool IsDraftingMode => _isDraftingMode;
+    public bool HasCharacterContext => !IsDraftingMode;
+    public bool ShowOwnedAbilitySummary => HasCharacterContext;
+    public string PageTitle => IsDraftingMode ? "Crafting" : "Make Sheet";
+    public string BonusSectionTitle => IsDraftingMode ? "Abilities" : "Bonus Mode";
+    public bool ShowBonusModePicker => !IsDraftingMode;
 
     public ObservableCollection<string> Disciplines { get; }
     public ObservableCollection<string> ItemTypes { get; }
@@ -290,6 +310,9 @@ public sealed class MakeSheetViewModel : ObservableObject
         set
         {
             var normalized = NormalizeSelection(value, _selectedBonusMode);
+            if (IsDraftingMode)
+                normalized = BonusModeManual;
+
             if (!SetProperty(ref _selectedBonusMode, normalized))
                 return;
 
@@ -756,7 +779,9 @@ public sealed class MakeSheetViewModel : ObservableObject
             return;
 
         _isLoaded = true;
-        await LoadOwnedAbilitiesAsync();
+        if (!IsDraftingMode)
+            await LoadOwnedAbilitiesAsync();
+
         await RefreshEffectLookupAsync();
         Recalculate();
     }
@@ -1054,10 +1079,14 @@ public sealed class MakeSheetViewModel : ObservableObject
         builder.AppendLine("Make Sheet Export");
         builder.AppendLine($"Generated: {DateTime.UtcNow:yyyy-MM-dd HH:mm} UTC");
         builder.AppendLine();
-        builder.AppendLine($"Character: {CharacterName}");
-        builder.AppendLine($"Player: {PlayerName}");
-        builder.AppendLine($"Class: {CharacterClass}");
-        builder.AppendLine();
+        if (HasCharacterContext)
+        {
+            builder.AppendLine($"Character: {CharacterName}");
+            builder.AppendLine($"Player: {PlayerName}");
+            builder.AppendLine($"Class: {CharacterClass}");
+            builder.AppendLine();
+        }
+
         builder.AppendLine("Build");
         builder.AppendLine($"Discipline: {SelectedDiscipline}");
         builder.AppendLine($"Item Type: {SelectedItemType}");
@@ -1113,8 +1142,9 @@ public sealed class MakeSheetViewModel : ObservableObject
         }
 
         builder.AppendLine();
-        builder.AppendLine($"Bonus Mode: {SelectedBonusMode}");
-        builder.AppendLine("Bonuses");
+        if (ShowBonusModePicker)
+            builder.AppendLine($"Bonus Mode: {SelectedBonusMode}");
+        builder.AppendLine(BonusSectionTitle);
         if (ShowAutomatedBonusMode)
         {
             foreach (var line in AutomatedBonusLines)
@@ -1147,10 +1177,13 @@ public sealed class MakeSheetViewModel : ObservableObject
         foreach (var line in RequirementLines)
             builder.AppendLine($"- {line}");
 
-        builder.AppendLine();
-        builder.AppendLine("Detected Character / Item Abilities");
-        foreach (var line in OwnedAbilityLines)
-            builder.AppendLine($"- {line}");
+        if (ShowOwnedAbilitySummary)
+        {
+            builder.AppendLine();
+            builder.AppendLine("Detected Character / Item Abilities");
+            foreach (var line in OwnedAbilityLines)
+                builder.AppendLine($"- {line}");
+        }
 
         builder.AppendLine();
         builder.AppendLine("Failure Table");
@@ -1527,10 +1560,17 @@ public sealed class MakeSheetViewModel : ObservableObject
             requirementNotes.Add("Reciprocates Binding enabled: -5% and item may be named for no blow-up-on-death.");
         }
 
-        var setupAvailability = EvaluateItemSetupAvailability();
-        ApplyItemSetupStatus(setupAvailability);
-        if (setupAvailability.HasWarning && setupAvailability.Message.Length > 0)
-            requirementNotes.Add(setupAvailability.Message);
+        if (IsDraftingMode)
+        {
+            ApplyDraftingItemSetupStatus();
+        }
+        else
+        {
+            var setupAvailability = EvaluateItemSetupAvailability();
+            ApplyItemSetupStatus(setupAvailability);
+            if (setupAvailability.HasWarning && setupAvailability.Message.Length > 0)
+                requirementNotes.Add(setupAvailability.Message);
+        }
 
         var classBonus = ResolveClassBonus();
         var finalChance = Math.Clamp(BaseChancePercent + classBonus + bonusFromMode - calculation.DifficultyPercent, 0, 99);
@@ -2515,6 +2555,14 @@ public sealed class MakeSheetViewModel : ObservableObject
         ItemSetupBackgroundColor = Color.FromArgb("#FFF9E6");
         ItemSetupStatusText = availability.Message;
         ItemSetupHasWarning = true;
+    }
+
+    private void ApplyDraftingItemSetupStatus()
+    {
+        ItemSetupBorderColor = Color.FromArgb("#D1D5DB");
+        ItemSetupBackgroundColor = Color.FromArgb("#FFFFFF");
+        ItemSetupStatusText = string.Empty;
+        ItemSetupHasWarning = false;
     }
 
     private static void AddBonusIf(

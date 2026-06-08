@@ -73,106 +73,110 @@
             </Border>
 
             <Grid Grid.Row="1">
-                <ScrollView IsVisible="{Binding HasResults}">
-                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding FilteredAbilities}"
-                                         Spacing="8">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate>
-                                <Border Stroke="{StaticResource SurfaceBorderColor}"
-                                        StrokeThickness="1"
-                                        StrokeShape="RoundRectangle 10"
-                                        BackgroundColor="{StaticResource White}"
-                                        Padding="10,8">
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnAbilityCardTapped"
-                                                              CommandParameter="{Binding .}"/>
-                                    </Border.GestureRecognizers>
-                                    <Border.Triggers>
-                                        <DataTrigger TargetType="Border"
-                                                     Binding="{Binding IsSelected}"
-                                                     Value="True">
-                                            <Setter Property="Stroke"
-                                                    Value="{StaticResource AccentMaroonColor}"/>
-                                            <Setter Property="BackgroundColor"
-                                                    Value="{StaticResource SelectedSurfaceBackgroundColor}"/>
-                                        </DataTrigger>
-                                    </Border.Triggers>
+                <CollectionView ItemsSource="{Binding FilteredAbilities}"
+                                IsVisible="{Binding HasResults}"
+                                ItemSizingStrategy="MeasureFirstItem"
+                                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Stroke="{StaticResource SurfaceBorderColor}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 10"
+                                    BackgroundColor="{StaticResource White}"
+                                    Padding="10,8"
+                                    Margin="0,0,0,8">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnAbilityCardTapped"
+                                                          CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border"
+                                                 Binding="{Binding IsSelected}"
+                                                 Value="True">
+                                        <Setter Property="Stroke"
+                                                Value="{StaticResource AccentMaroonColor}"/>
+                                        <Setter Property="BackgroundColor"
+                                                Value="{StaticResource SelectedSurfaceBackgroundColor}"/>
+                                    </DataTrigger>
+                                </Border.Triggers>
 
-                                    <Grid RowDefinitions="Auto,Auto,Auto,Auto"
-                                          ColumnDefinitions="Auto,*,Auto"
-                                          RowSpacing="6"
-                                          ColumnSpacing="8">
-                                        <Button Grid.Row="0"
-                                                Text="{Binding SelectionGlyph}"
-                                                FontFamily="FASolid"
-                                                FontSize="14"
-                                                Padding="0"
-                                                BackgroundColor="Transparent"
-                                                TextColor="{Binding SelectionColor}"
-                                                HeightRequest="24"
-                                                WidthRequest="24"
-                                                MinimumHeightRequest="0"
-                                                MinimumWidthRequest="0"
-                                                Command="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleSelectAbilityCommand}"
-                                                CommandParameter="{Binding .}"/>
-
-                                        <Label Grid.Row="0"
-                                               Grid.Column="1"
-                                               Text="{Binding Name}"
-                                               TextColor="{StaticResource Black}"
-                                               FontAttributes="Bold"
-                                               FontSize="15"
-                                               HorizontalTextAlignment="Start"
-                                               VerticalTextAlignment="Center">
-                                            <Label.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleSelectAbilityCommand}"
-                                                                      CommandParameter="{Binding .}"/>
-                                            </Label.GestureRecognizers>
-                                        </Label>
-
-                                        <Label Grid.Row="0"
-                                               Grid.Column="2"
-                                               Text="&#xF05A;"
+                                <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+                                      ColumnDefinitions="Auto,*,Auto"
+                                      RowSpacing="6"
+                                      ColumnSpacing="8">
+                                    <Border Grid.Row="0"
+                                            Stroke="Transparent"
+                                            BackgroundColor="Transparent"
+                                            HeightRequest="24"
+                                            WidthRequest="24">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleSelectAbilityCommand}"
+                                                                  CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                        <Label Text="{Binding SelectionGlyph}"
                                                FontFamily="FASolid"
-                                               FontSize="13"
-                                               TextColor="{StaticResource SubtleTextColor}"
-                                               VerticalTextAlignment="Center"
-                                               HorizontalTextAlignment="Center"/>
+                                               FontSize="14"
+                                               TextColor="{Binding SelectionColor}"
+                                               HorizontalTextAlignment="Center"
+                                               VerticalTextAlignment="Center"/>
+                                    </Border>
 
-                                        <Label Grid.Row="1"
-                                               Grid.Column="0"
-                                               Grid.ColumnSpan="3"
-                                               Text="{Binding SourceBook}"
-                                               FontSize="11"
-                                               Opacity="0.6"/>
+                                    <Label Grid.Row="0"
+                                           Grid.Column="1"
+                                           Text="{Binding Name}"
+                                           TextColor="{StaticResource Black}"
+                                           FontAttributes="Bold"
+                                           FontSize="15"
+                                           HorizontalTextAlignment="Start"
+                                           VerticalTextAlignment="Center">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleSelectAbilityCommand}"
+                                                                  CommandParameter="{Binding .}"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
 
-                                        <Label Grid.Row="2"
-                                               Grid.Column="1"
-                                               Text="{Binding MetaText}"
-                                               FontSize="12"
-                                               Opacity="0.75"/>
+                                    <Label Grid.Row="0"
+                                           Grid.Column="2"
+                                           Text="&#xF05A;"
+                                           FontFamily="FASolid"
+                                           FontSize="13"
+                                           TextColor="{StaticResource SubtleTextColor}"
+                                           VerticalTextAlignment="Center"
+                                           HorizontalTextAlignment="Center"/>
 
-                                        <Label Grid.Row="2"
-                                               Grid.Column="2"
-                                               Text="{Binding AvailabilityText}"
-                                               FontSize="11"
-                                               Opacity="0.7"
-                                               HorizontalTextAlignment="End"/>
+                                    <Label Grid.Row="1"
+                                           Grid.Column="0"
+                                           Grid.ColumnSpan="3"
+                                           Text="{Binding SourceBook}"
+                                           FontSize="11"
+                                           Opacity="0.6"/>
 
-                                        <Label Grid.Row="3"
-                                               Grid.Column="0"
-                                               Grid.ColumnSpan="3"
-                                               Text="{Binding Description}"
-                                               FontSize="12"
-                                               Opacity="0.85"
-                                               MaxLines="3"
-                                               LineBreakMode="TailTruncation"/>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </VerticalStackLayout>
-                </ScrollView>
+                                    <Label Grid.Row="2"
+                                           Grid.Column="1"
+                                           Text="{Binding MetaText}"
+                                           FontSize="12"
+                                           Opacity="0.75"/>
+
+                                    <Label Grid.Row="2"
+                                           Grid.Column="2"
+                                           Text="{Binding AvailabilityText}"
+                                           FontSize="11"
+                                           Opacity="0.7"
+                                           HorizontalTextAlignment="End"/>
+
+                                    <Label Grid.Row="3"
+                                           Grid.Column="0"
+                                           Grid.ColumnSpan="3"
+                                           Text="{Binding Description}"
+                                           FontSize="12"
+                                           Opacity="0.85"
+                                           MaxLines="3"
+                                           LineBreakMode="TailTruncation"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
 
                 <Label Text="No abilities found for the current search/filter selection."
                        IsVisible="{Binding HasResults, Converter={StaticResource InverseBoolConverter}}"

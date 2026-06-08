@@ -105,6 +105,57 @@ public static class EvolutionService
         }
     }
 
+    public static async Task<AbilityResult?> FindAbilityAsync(string? rawKeyOrName)
+    {
+        await EnsureDatabaseInitializedAsync();
+
+        var token = (rawKeyOrName ?? string.Empty).Trim();
+        if (token.Length == 0)
+            return null;
+
+        try
+        {
+            using var conn = ServiceHelper.OpenReadOnlyConnection();
+
+            if (TryParseEvolutionFallbackKey(token, out var table, out var indexLower))
+            {
+                var byFallback = conn.Query<AbilityRow>(
+                    "SELECT idx, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json FROM evolution WHERE table_id = ? AND idx_lower = ? ORDER BY idx LIMIT 1;",
+                    table,
+                    indexLower);
+                if (byFallback.Count > 0)
+                    return ToAbilityResult(byFallback[0]);
+            }
+
+            var normalizedName = token.ToLowerInvariant();
+            var byName = conn.Query<AbilityRow>(
+                "SELECT idx, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json FROM evolution WHERE idx_lower = ? ORDER BY idx LIMIT 1;",
+                normalizedName);
+            if (byName.Count > 0)
+                return ToAbilityResult(byName[0]);
+
+            var escapedToken = token.Replace("\\", "\\\\", StringComparison.Ordinal)
+                .Replace("\"", "\\\"", StringComparison.Ordinal);
+            var abilityRefPattern = $"%\"abilityRef\":\"{escapedToken}\"%";
+            var byAbilityRef = conn.Query<AbilityRow>(
+                "SELECT idx, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json FROM evolution WHERE data_json LIKE ? ORDER BY idx LIMIT 1;",
+                abilityRefPattern);
+            if (byAbilityRef.Count > 0)
+                return ToAbilityResult(byAbilityRef[0]);
+
+            var loosePattern = $"%{token}%";
+            var byLooseDataMatch = conn.Query<AbilityRow>(
+                "SELECT idx, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json FROM evolution WHERE data_json LIKE ? ORDER BY idx LIMIT 1;",
+                loosePattern);
+            return byLooseDataMatch.Count > 0 ? ToAbilityResult(byLooseDataMatch[0]) : null;
+        }
+        catch (Exception ex)
+        {
+            ServiceHelper.LogDbError("Find ability", ex);
+            return null;
+        }
+    }
+
     public static async Task<IReadOnlyList<EvolutionResult>> SearchByIndexAsync(string? query, int? table = null)
     {
         await EnsureDatabaseInitializedAsync();
@@ -323,6 +374,22 @@ public static class EvolutionService
         {
             return new List<string>();
         }
+    }
+
+    private static bool TryParseEvolutionFallbackKey(string token, out int table, out string indexLower)
+    {
+        table = 0;
+        indexLower = string.Empty;
+
+        var separator = token.IndexOf('|', StringComparison.Ordinal);
+        if (separator <= 0 || separator >= token.Length - 1)
+            return false;
+
+        if (!int.TryParse(token[..separator], out table))
+            return false;
+
+        indexLower = token[(separator + 1)..].Trim().ToLowerInvariant();
+        return indexLower.Length > 0;
     }
 
     private static IReadOnlyList<AbilityResult> SearchAbilitiesByLike(SQLite.SQLiteConnection conn, string query, int? table)

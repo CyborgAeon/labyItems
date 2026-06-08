@@ -647,14 +647,14 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
         var resolved = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var sourceBook in AlwaysIncludedSourceBooks)
-            resolved.Add(ResolveCachedSourceBook(sourceBook));
+            AddResolvedSourceBook(resolved, sourceBook);
 
         foreach (var bracket in ResolveActiveClassBrackets())
         {
             foreach (var (token, sourceBook) in BracketSpecificSourceBooks)
             {
                 if (bracket.Contains(token, StringComparison.OrdinalIgnoreCase))
-                    resolved.Add(ResolveCachedSourceBook(sourceBook));
+                    AddResolvedSourceBook(resolved, sourceBook);
             }
         }
 
@@ -662,6 +662,13 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
             .Where(sourceBook => !string.IsNullOrWhiteSpace(sourceBook))
             .OrderBy(sourceBook => sourceBook, Comparer<string>.Create(CompareSourceBooks))
             .ToList();
+    }
+
+    private void AddResolvedSourceBook(HashSet<string> target, string token)
+    {
+        var resolved = ResolveCachedSourceBook(token);
+        if (!string.IsNullOrWhiteSpace(resolved))
+            target.Add(resolved);
     }
 
     private IReadOnlyList<string> ResolveActiveClassBrackets()
@@ -731,7 +738,7 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
     private string ResolveCachedSourceBook(string token)
         => (_cachedSourceBooks ?? Array.Empty<string>())
             .FirstOrDefault(sourceBook => SourceBooksMatch(sourceBook, token))
-           ?? token;
+           ?? string.Empty;
 
     private static int CompareItems(AdvanceAbilitySearchItemVm? left, AdvanceAbilitySearchItemVm? right)
     {

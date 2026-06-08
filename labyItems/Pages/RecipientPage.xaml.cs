@@ -38,6 +38,13 @@ public partial class RecipientPage : ContentPage
     public bool HasSubmissionSummaryRows => SubmissionSummaryRows.Count > 0;
     public bool IsSummaryEmptyStateVisible => HasSubmissionSummary && !HasSubmissionSummaryRows;
     public string SummaryEmptyText => _summaryEmptyText;
+    public bool RequiresItemName => _submission != null;
+    public string BreakdownTitle => ResolveSubmissionSourceFlow(_submission) == "isp"
+        ? "ISP Item Breakdown"
+        : "MP Item Breakdown";
+    public string SaveButtonText => ResolveSubmissionSourceFlow(_submission) == "isp"
+        ? "Save item"
+        : "Save";
 
     public RecipientPage(RecipientInfo? existing = null, MpSubmissionPayload? submission = null)
     {
@@ -47,9 +54,14 @@ public partial class RecipientPage : ContentPage
         BuildSummaryRows(submission);
         if (existing != null)
         {
+            ItemNameEntry.Text = existing.ItemName;
             RecipientPlayerNameEntry.Text = existing.PlayerName;
             RecipientCharacterNameEntry.Text = existing.CharacterName;
             RecipientCharacterClassEntry.Text = existing.CharacterClass;
+        }
+        else if (!string.IsNullOrWhiteSpace(submission?.ItemName))
+        {
+            ItemNameEntry.Text = submission.ItemName.Trim();
         }
         BindingContext = this;
     }
@@ -59,8 +71,16 @@ public partial class RecipientPage : ContentPage
 
     private async void OnSubmit(object sender, EventArgs e)
     {
+        var itemName = NormalizeItemName(ItemNameEntry.Text);
+        if (RequiresItemName && !TryValidateItemName(itemName, out var validationMessage))
+        {
+            await DisplayAlert("Item name", validationMessage, "OK");
+            return;
+        }
+
         var result = new RecipientInfo
         {
+            ItemName = itemName,
             PlayerName = RecipientPlayerNameEntry.Text?.Trim() ?? string.Empty,
             CharacterName = RecipientCharacterNameEntry.Text?.Trim() ?? string.Empty,
             CharacterClass = RecipientCharacterClassEntry.Text?.Trim() ?? string.Empty
@@ -70,6 +90,16 @@ public partial class RecipientPage : ContentPage
 
         if (_submission != null)
         {
+            try
+            {
+                SaveSubmissionToWallet(_submission, itemName, result);
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Save failed", ex.Message, "OK");
+                return;
+            }
+
             await SendSubmissionEmailAsync(result, _submission);
             await Navigation.PopToRootAsync();
             return;
@@ -77,6 +107,35 @@ public partial class RecipientPage : ContentPage
 
         await Navigation.PopAsync();
     }
+
+    private static bool TryValidateItemName(string itemName, out string message)
+    {
+        if (string.IsNullOrWhiteSpace(itemName))
+        {
+            message = "Enter an item name.";
+            return false;
+        }
+
+        if (itemName.Length > 30)
+        {
+            message = "Item name must be 30 characters or fewer.";
+            return false;
+        }
+
+        if (!itemName.All(character => char.IsLetter(character) || character == ' '))
+        {
+            message = "Item name must contain letters and spaces only.";
+            return false;
+        }
+
+        message = string.Empty;
+        return true;
+    }
+
+    private static string NormalizeItemName(string? itemName)
+        => string.Join(' ', (itemName ?? string.Empty)
+            .Trim()
+            .Split(' ', StringSplitOptions.RemoveEmptyEntries));
 
     private async void OnSaveClicked(object sender, EventArgs e)
     {
@@ -88,11 +147,22 @@ public partial class RecipientPage : ContentPage
 
         try
         {
-            var item = BuildWalletItem(_submission);
-            if (!LiteDbService.UpdateItem(item))
-                LiteDbService.InsertItem(item);
+            var itemName = NormalizeItemName(ItemNameEntry.Text);
+            if (RequiresItemName && !TryValidateItemName(itemName, out var validationMessage))
+            {
+                await DisplayAlert("Item name", validationMessage, "OK");
+                return;
+            }
 
-            await DisplayAlert("Saved", "MP item saved to wallet.", "OK");
+            SaveSubmissionToWallet(_submission, itemName, new RecipientInfo
+            {
+                ItemName = itemName,
+                PlayerName = RecipientPlayerNameEntry.Text?.Trim() ?? string.Empty,
+                CharacterName = RecipientCharacterNameEntry.Text?.Trim() ?? string.Empty,
+                CharacterClass = RecipientCharacterClassEntry.Text?.Trim() ?? string.Empty
+            });
+
+            await DisplayAlert("Saved", $"{ResolveSubmissionSourceLabel(_submission)} item saved to wallet.", "OK");
             await Navigation.PopToRootAsync();
         }
         catch (Exception ex)
@@ -101,9 +171,16 @@ public partial class RecipientPage : ContentPage
         }
     }
 
+    private static void SaveSubmissionToWallet(MpSubmissionPayload payload, string? itemName, RecipientInfo? recipient)
+    {
+        var item = BuildWalletItem(payload, itemName, recipient);
+        if (!LiteDbService.UpdateItem(item))
+            LiteDbService.InsertItem(item);
+    }
+
     private async Task SendSubmissionEmailAsync(RecipientInfo recipient, MpSubmissionPayload payload)
     {
-        var emailDraft = ItemEmailService.BuildMpSubmissionEmailDraft(recipient, payload);
+        var emailDraft = ItemEmailService.BuildDeskSubmissionEmailDraft(recipient, payload);
 
         try
         {
@@ -115,23 +192,53 @@ public partial class RecipientPage : ContentPage
         }
     }
 
-    private static Item BuildWalletItem(MpSubmissionPayload payload)
+    private static Item BuildWalletItem(MpSubmissionPayload payload, string? itemName = null, RecipientInfo? recipient = null)
     {
-        var description = new StringBuilder()
-            .AppendLine($"Source: Monster point item")
-            .AppendLine($"MP cost: {payload.TotalMp}")
+        var displayName = (itemName ?? payload.ItemName ?? string.Empty).Trim();
+        if (displayName.Length == 0)
+            displayName = ResolveSubmissionSourceFlow(payload) == "isp"
+                ? $"ISP Item ({payload.TotalIsp} ISP)"
+                : $"MP Item ({payload.TotalMp} MP)";
+
+        var itemTypes = ItemEmailService.DeriveMpItemTypes(payload);
+        var sourceLabel = ResolveSubmissionSourceLabel(payload);
+        var descriptionBuilder = new StringBuilder()
+            .AppendLine($"Name: {displayName}")
+            .AppendLine($"Source: {sourceLabel} item");
+        if (payload.TotalMp > 0)
+            descriptionBuilder.AppendLine($"MP cost: {payload.TotalMp}");
+        if (!string.IsNullOrWhiteSpace(payload.PhysicalRepresentation))
+            descriptionBuilder.AppendLine($"Phys rep: {payload.PhysicalRepresentation.Trim()}");
+
+        descriptionBuilder
             .AppendLine($"ISP total: {payload.TotalIsp}")
-            .AppendLine()
-            .AppendLine("MP breakdown:")
-            .AppendLine(string.Join(Environment.NewLine, payload.Breakdown.Select(row => row.Text)))
-            .ToString()
-            .Trim();
+            .AppendLine();
+
+        if (payload.IspBreakdown?.Count > 0)
+        {
+            descriptionBuilder
+                .AppendLine("ISP breakdown:")
+                .AppendLine(string.Join(Environment.NewLine, payload.IspBreakdown.Select(row => row.Text)));
+        }
+
+        if (payload.Breakdown?.Count > 0)
+        {
+            descriptionBuilder
+                .AppendLine()
+                .AppendLine("MP breakdown:")
+                .AppendLine(string.Join(Environment.NewLine, payload.Breakdown.Select(row => row.Text)));
+        }
+
+        var description = descriptionBuilder.ToString().Trim();
 
         var item = new Item
         {
-            ItemType = ItemTypeEnum.Other,
+            ItemType = ResolvePrimaryItemType(itemTypes),
             Description = description,
             Isp = Math.Max(0, payload.TotalIsp),
+            RecipientPlayerName = recipient?.PlayerName ?? string.Empty,
+            RecipientCharacterName = recipient?.CharacterName ?? string.Empty,
+            RecipientCharacterClass = recipient?.CharacterClass ?? string.Empty,
             CreatedDate = DateTime.Now,
             PayloadJson = ItemEmailService.SerializeItemPayload(new ItemJsonPayload
             {
@@ -139,14 +246,22 @@ public partial class RecipientPage : ContentPage
                 Isp = Math.Max(0, payload.TotalIsp),
                 CreatedDate = DateTime.Now,
                 WitnessName = string.Empty,
+                Recipient = recipient == null
+                    ? null
+                    : new RecipientPayload
+                    {
+                        PlayerName = recipient.PlayerName ?? string.Empty,
+                        CharacterName = recipient.CharacterName ?? string.Empty,
+                        CharacterClass = recipient.CharacterClass ?? string.Empty
+                    },
                 Item = new ItemJsonDetail
                 {
-                    DisplayName = $"MP Item ({payload.TotalMp} MP)",
-                    SourceFlow = "monster-point",
+                    DisplayName = displayName,
+                    SourceFlow = ResolveSubmissionSourceFlow(payload),
                     MonsterPointCost = Math.Max(0, payload.TotalMp),
-                    PhysicalRepresentation = string.Empty,
-                    Types = new List<ItemTypeEnum> { ItemTypeEnum.Other },
-                    Abilities = new List<CalcResult>(),
+                    PhysicalRepresentation = payload.PhysicalRepresentation ?? string.Empty,
+                    Types = itemTypes,
+                    Abilities = payload.Abilities ?? new List<CalcResult>(),
                     Status = "saved",
                     Modifiers = new List<object>()
                 }
@@ -154,6 +269,21 @@ public partial class RecipientPage : ContentPage
         };
 
         return item;
+    }
+
+    private static ItemTypeEnum ResolvePrimaryItemType(IReadOnlyList<string> itemTypes)
+    {
+        var primary = itemTypes.FirstOrDefault() ?? "physical";
+        return primary.Trim().ToLowerInvariant() switch
+        {
+            "earthpower" => ItemTypeEnum.EarthPower,
+            "magical" or "magic" => ItemTypeEnum.Magic,
+            "spiritual" or "spirit" => ItemTypeEnum.Spirit,
+            "neuronic" => ItemTypeEnum.Neuronic,
+            "mantic" => ItemTypeEnum.Other,
+            "physical" => ItemTypeEnum.Physical,
+            _ => ItemTypeEnum.Physical
+        };
     }
 
     private void BuildSummaryRows(MpSubmissionPayload? payload)
@@ -184,13 +314,13 @@ public partial class RecipientPage : ContentPage
             sourceRows.AddRange(payload.IspBreakdown);
         }
 
-        if (sourceRows.Count == 0 && payload.TotalMp > 0)
+        if (sourceRows.Count == 0 && (payload.TotalMp > 0 || payload.TotalIsp > 0))
         {
             sourceRows.Add(new ContributionRow
             {
-                Id = "mp-total-only",
-                Text = "MP total",
-                RunningTotal = payload.TotalMp
+                Id = ResolveSubmissionSourceFlow(payload) == "isp" ? "isp-total-only" : "mp-total-only",
+                Text = ResolveSubmissionSourceFlow(payload) == "isp" ? "ISP total" : "MP total",
+                RunningTotal = ResolveSubmissionSourceFlow(payload) == "isp" ? payload.TotalIsp : payload.TotalMp
             });
         }
 
@@ -209,4 +339,18 @@ public partial class RecipientPage : ContentPage
         OnPropertyChanged(nameof(HasSubmissionSummaryRows));
         OnPropertyChanged(nameof(IsSummaryEmptyStateVisible));
     }
+
+    private static string ResolveSubmissionSourceFlow(MpSubmissionPayload? payload)
+    {
+        var sourceFlow = (payload?.SourceFlow ?? string.Empty).Trim();
+        return sourceFlow.Length == 0 ? "monster-point" : sourceFlow.ToLowerInvariant();
+    }
+
+    private static string ResolveSubmissionSourceLabel(MpSubmissionPayload payload)
+        => ResolveSubmissionSourceFlow(payload) switch
+        {
+            "isp" => "ISP",
+            "monster-point" => "MP",
+            _ => ResolveSubmissionSourceFlow(payload).Replace("-", " ")
+        };
 }

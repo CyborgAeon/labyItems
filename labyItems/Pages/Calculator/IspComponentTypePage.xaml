@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:labyItems.Controls"
+    x:Name="RootPage"
     NavigationPage.HasNavigationBar="False"
     Shell.NavBarIsVisible="False"
     Title="Choose Component">
@@ -14,7 +15,7 @@
                                  Spacing="18">
                 <Grid ColumnDefinitions="Auto,*"
                       ColumnSpacing="12">
-                    <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
+                    <controls:BackNavigationButton Command="{Binding Source={x:Reference RootPage}, Path=BackNavigationCommand}" />
                     <VerticalStackLayout Grid.Column="1"
                                          Spacing="2"
                                          VerticalOptions="Center">
@@ -43,15 +44,12 @@
                                TextColor="{StaticResource Primary}"
                                VerticalTextAlignment="Center" />
                         <Label Grid.Column="1"
-                               Text="You can add multiple of any type."
+                               Text="Shield, armour and weapon are mutually exclusive."
                                TextColor="{StaticResource Gray500}"
                                VerticalTextAlignment="Center" />
                     </Grid>
                 </Border>
             </VerticalStackLayout>
         </ScrollView>
-
-        <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
-                                        SelectedRoute="{x:Static controls:ToolsetRouteKeys.ItemsIsp}" />
     </Grid>
 </ContentPage>

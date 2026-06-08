@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using labyItems.Controls;
 using labyItems.Helpers;
+using labyItems.Models;
 using labyItems.Models.Enums;
 using labyItems.Pages.Configs;
 using labyItems.Pages;
@@ -307,13 +308,15 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     protected virtual MpSubmissionPayload BuildSubmissionPayload()
     {
         var ispBreakdown = BuildIspBreakdown(out var totalIsp);
-        return new MpSubmissionPayload
+        var payload = new MpSubmissionPayload
         {
             TotalMp = TotalMp,
             Breakdown = Breakdown.ToList(),
             TotalIsp = totalIsp,
             IspBreakdown = ispBreakdown
         };
+        payload.ItemTypes = ItemEmailService.DeriveMpItemTypes(payload);
+        return payload;
     }
 
     protected override async void OnAppearing()
@@ -1187,6 +1190,11 @@ public sealed class SelectedItemUseVm<TOption> : INotifyPropertyChanged, IConfig
 
 public class MpSubmissionPayload
 {
+    public string ItemName { get; set; } = string.Empty;
+    public string SourceFlow { get; set; } = "monster-point";
+    public string PhysicalRepresentation { get; set; } = string.Empty;
+    public List<string> ItemTypes { get; set; } = new();
+    public List<CalcResult> Abilities { get; set; } = new();
     public int TotalMp { get; set; }
     public List<ContributionRow> Breakdown { get; set; } = new();
     public int TotalIsp { get; set; }

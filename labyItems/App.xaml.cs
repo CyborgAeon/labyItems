@@ -15,14 +15,16 @@ namespace labyItems;
 public partial class App : Application
 {
     private readonly IDatabaseInitializer _dbInitializer;
+    private readonly ICacheMaintenanceService _cacheMaintenanceService;
     private readonly NavigationPage _mainNavPage;
     private static readonly object FirstChanceSync = new();
     private static readonly HashSet<string> FirstChanceSignatures = new(StringComparer.Ordinal);
     private const int FirstChanceSignatureCap = 64;
 
-    public App(IDatabaseInitializer dbInitializer)
+    public App(IDatabaseInitializer dbInitializer, ICacheMaintenanceService cacheMaintenanceService)
     {
         _dbInitializer = dbInitializer;
+        _cacheMaintenanceService = cacheMaintenanceService;
         InitializeComponent();
         UserAppTheme = AppTheme.Light;
 
@@ -69,6 +71,7 @@ public partial class App : Application
         {
             try
             {
+                await _cacheMaintenanceService.RunStartupCleanupAsync();
                 await _dbInitializer.InitializeAsync();
             }
             catch (Exception ex)

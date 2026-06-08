@@ -13,11 +13,24 @@
           RowSpacing="10"
           Padding="16">
         <Grid Grid.Row="0"
-              ColumnDefinitions="Auto,*"
+              ColumnDefinitions="Auto,Auto,*"
               ColumnSpacing="8">
             <controls:BackNavigationButton Grid.Column="0"
                                            Command="{Binding Source={x:Reference RootPage}, Path=BackNavigationCommand}" />
-            <Entry Grid.Column="1"
+            <Button Grid.Column="1"
+                    Text="&#xF0B0;"
+                    FontFamily="FASolid"
+                    FontSize="13"
+                    Padding="0"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource SubtleTextColor}"
+                    HeightRequest="32"
+                    WidthRequest="32"
+                    MinimumHeightRequest="0"
+                    MinimumWidthRequest="0"
+                    VerticalOptions="Center"
+                    Command="{Binding OpenFiltersCommand}"/>
+            <Entry Grid.Column="2"
                    ClearButtonVisibility="WhileEditing"
                    Placeholder="Search abilities..."
                    Text="{Binding SearchText, Mode=TwoWay}"/>
@@ -138,5 +151,92 @@
                 Text="{Binding DoneButtonText}"
                 Style="{StaticResource ExpandedActionButtonStyle}"
                 Clicked="OnDoneClicked"/>
+
+        <Grid Grid.RowSpan="4"
+              IsVisible="{Binding IsFilterModalOpen}"
+              BackgroundColor="#66000000"
+              InputTransparent="False">
+            <Border HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    WidthRequest="360"
+                    MaximumWidthRequest="420"
+                    Stroke="{StaticResource SurfaceBorderColor}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    BackgroundColor="{StaticResource White}"
+                    Padding="14">
+                <Grid RowDefinitions="Auto,*,Auto"
+                      RowSpacing="10">
+                    <Label Text="Filters"
+                           FontAttributes="Bold"
+                           FontSize="18"/>
+
+                    <ScrollView Grid.Row="1">
+                        <VerticalStackLayout Spacing="12">
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Source Book"
+                                       FontAttributes="Bold"
+                                       FontSize="13"/>
+                                <FlexLayout BindableLayout.ItemsSource="{Binding SourceBookFilterChips}"
+                                            Wrap="Wrap"
+                                            Direction="Row"
+                                            AlignItems="Start"
+                                            JustifyContent="Start">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource SelectableFilterPillBorderStyle}"
+                                                    Margin="0,0,8,8">
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={x:Reference RootPage}, Path=BindingContext.ToggleSourceBookFilterCommand}"
+                                                                          CommandParameter="{Binding .}"/>
+                                                </Border.GestureRecognizers>
+                                                <Label Text="{Binding Label}"
+                                                       Style="{StaticResource FilterPillLabelStyle}"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </FlexLayout>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Table"
+                                       FontAttributes="Bold"
+                                       FontSize="13"/>
+                                <FlexLayout BindableLayout.ItemsSource="{Binding TableFilterChips}"
+                                            Wrap="Wrap"
+                                            Direction="Row"
+                                            AlignItems="Start"
+                                            JustifyContent="Start">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource SelectableFilterPillBorderStyle}"
+                                                    Margin="0,0,8,8">
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={x:Reference RootPage}, Path=BindingContext.ToggleTableFilterCommand}"
+                                                                          CommandParameter="{Binding .}"/>
+                                                </Border.GestureRecognizers>
+                                                <Label Text="{Binding Label}"
+                                                       Style="{StaticResource FilterPillLabelStyle}"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </FlexLayout>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </ScrollView>
+
+                    <Grid Grid.Row="2"
+                          ColumnDefinitions="Auto,*,Auto"
+                          ColumnSpacing="10">
+                        <Button Grid.Column="0"
+                                Text="Cancel"
+                                Command="{Binding CancelFiltersCommand}"/>
+                        <Button Grid.Column="2"
+                                Text="Search"
+                                Command="{Binding ApplyFiltersCommand}"/>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </ContentPage>

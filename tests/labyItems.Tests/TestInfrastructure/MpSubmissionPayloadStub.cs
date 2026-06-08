@@ -1,7 +1,14 @@
+using labyItems.Models;
+
 namespace labyItems.Pages.Calculator;
 
 public sealed class MpSubmissionPayload
 {
+    public string ItemName { get; set; } = string.Empty;
+    public string SourceFlow { get; set; } = "monster-point";
+    public string PhysicalRepresentation { get; set; } = string.Empty;
+    public List<string> ItemTypes { get; set; } = new();
+    public List<CalcResult> Abilities { get; set; } = new();
     public int TotalIsp { get; set; }
     public int TotalMp { get; set; }
     public List<MpSubmissionBreakdownEntry>? Breakdown { get; set; }
