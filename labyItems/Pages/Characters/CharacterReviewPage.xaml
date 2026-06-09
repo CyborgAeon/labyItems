@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="labyItems.Pages.Characters.CharacterReviewPage"
+    x:Name="RootPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:labyItems.Controls"
@@ -10,29 +11,17 @@
     NavigationPage.HasNavigationBar="False"
     Shell.NavBarIsVisible="False">
 
-    <Grid Padding="0">
-        <local:CharacterReviewView x:Name="Review"
-                                   Margin="0,60,0,0"
-                                   ShowSaveButton="False" />
-
-        <BoxView x:Name="ActionBackdrop"
-                 BackgroundColor="#88000000"
-                 IsVisible="False"
-                 InputTransparent="True"
-                 Opacity="0">
-            <BoxView.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnActionBackdropTapped" />
-            </BoxView.GestureRecognizers>
-        </BoxView>
-
-        <Grid x:Name="HeaderBar"
-              VerticalOptions="Start"
-              BackgroundColor="{StaticResource White}"
-              Padding="4,6,4,6"
-              RowDefinitions="Auto,Auto">
-            <Grid Grid.Row="0"
+    <Grid Padding="0"
+          RowDefinitions="Auto,*">
+        <VerticalStackLayout x:Name="HeaderPanel"
+                             Grid.Row="0"
+                             ZIndex="20"
+                             BackgroundColor="{StaticResource Primary}"
+                             Spacing="0"
+                             BindingContext="{x:Reference RootPage}">
+            <Grid Padding="8,6"
                   ColumnDefinitions="Auto,*,Auto"
-                  ColumnSpacing="6">
+                  ColumnSpacing="8">
                 <ImageButton Grid.Column="0"
                              AutomationProperties.Name="Back"
                              Style="{StaticResource BackArrowImageButtonStyle}"
@@ -40,90 +29,307 @@
                     <ImageButton.Source>
                         <FontImageSource FontFamily="FASolid"
                                          Glyph="&#xf060;"
-                                         Size="24"
-                                         Color="{StaticResource Gray300}" />
+                                         Size="18"
+                                         Color="{StaticResource White}" />
                     </ImageButton.Source>
                 </ImageButton>
 
-                <HorizontalStackLayout x:Name="CollapsedActionIcons"
-                                       Grid.Column="1"
-                                       HorizontalOptions="Start"
-                                       VerticalOptions="Center"
-                                       Spacing="2">
-                    <controls:GlyphIconButtonView AutomationProperties.Name="Edit character"
-                                                  StyleId="{x:Static helpers:CharacterActionOrderHelper.EditStyleId}"
-                                                  ButtonSize="34"
-                                                  GlyphSize="16"
-                                                  Glyph="{x:Static helpers:FontAwesomeGlyphs.Edit}"
-                                                  Clicked="OnEditClicked" />
+                <Label Grid.Column="1"
+                       Text="Review Character"
+                       FontSize="19"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource White}"
+                       VerticalTextAlignment="Center" />
 
-                    <controls:GlyphIconButtonView AutomationProperties.Name="Advance character"
-                                                  StyleId="{x:Static helpers:CharacterActionOrderHelper.AdvanceStyleId}"
-                                                  ButtonSize="34"
-                                                  GlyphSize="16"
-                                                  Glyph="{x:Static helpers:FontAwesomeGlyphs.Advance}"
-                                                  Clicked="OnAdvanceClicked" />
+                <ImageButton Grid.Column="2"
+                             AutomationProperties.Name="More actions"
+                             Style="{StaticResource HeaderOverflowImageButtonStyle}"
+                             Clicked="OnOverflowTapped">
+                    <ImageButton.Source>
+                        <FontImageSource FontFamily="FASolid"
+                                         Glyph="&#xf142;"
+                                         Size="14"
+                                         Color="{StaticResource White}" />
+                    </ImageButton.Source>
+                </ImageButton>
+            </Grid>
 
-                    <controls:GlyphIconButtonView AutomationProperties.Name="Battleboard"
-                                                  StyleId="{x:Static helpers:CharacterActionOrderHelper.BattleboardStyleId}"
-                                                  ButtonSize="34"
-                                                  GlyphSize="16"
-                                                  Glyph="{x:Static helpers:FontAwesomeGlyphs.Battleboard}"
-                                                  GlyphFontFamily=""
-                                                  Clicked="OnBattleboardClicked" />
+            <Grid Padding="12,10,12,14"
+                  ColumnDefinitions="Auto,*"
+                  ColumnSpacing="12"
+                  RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+                <Grid Grid.RowSpan="4"
+                      WidthRequest="104"
+                      HeightRequest="104"
+                      VerticalOptions="Start">
+                    <controls:ClassBracketIconView x:Name="ProfilePortrait"
+                                                   IconSize="104"
+                                                   BorderColor="{StaticResource White}" />
 
-                    <controls:GlyphIconButtonView AutomationProperties.Name="Export battleboard"
-                                                  StyleId="{x:Static helpers:CharacterActionOrderHelper.ExportStyleId}"
-                                                  ButtonSize="34"
-                                                  GlyphSize="16"
-                                                  Glyph="{x:Static helpers:FontAwesomeGlyphs.ExportBattleboard}"
-                                                  Clicked="OnExportExcelClicked" />
+                    <Border HorizontalOptions="End"
+                            VerticalOptions="End"
+                            StrokeThickness="1"
+                            Stroke="{StaticResource White}"
+                            BackgroundColor="{StaticResource Secondary}"
+                            StrokeShape="RoundRectangle 999"
+                            WidthRequest="30"
+                            HeightRequest="30"
+                            Margin="0,0,2,2">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnEditPortraitTapped" />
+                        </Border.GestureRecognizers>
+                        <Label Text="&#xF1FC;"
+                               FontFamily="FASolid"
+                               FontSize="12"
+                               TextColor="{StaticResource White}"
+                               HorizontalTextAlignment="Center"
+                               VerticalTextAlignment="Center" />
+                    </Border>
+                </Grid>
 
-                    <controls:GlyphIconButtonView AutomationProperties.Name="Open makes sheet"
-                                                  StyleId="{x:Static helpers:CharacterActionOrderHelper.MakeSheetStyleId}"
-                                                  ButtonSize="34"
-                                                  GlyphSize="16"
-                                                  Glyph="{x:Static helpers:FontAwesomeGlyphs.Crafting}"
-                                                  Clicked="OnManufacturingClicked" />
+                <Label x:Name="ProfileNameLabel"
+                       Grid.Column="1"
+                       Grid.Row="0"
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource White}"
+                       LineBreakMode="TailTruncation" />
 
-                    <controls:GlyphIconButtonView AutomationProperties.Name="Delete character"
-                                                  StyleId="{x:Static helpers:CharacterActionOrderHelper.DeleteStyleId}"
-                                                  ButtonSize="34"
-                                                  GlyphSize="16"
-                                                  Glyph="{x:Static helpers:FontAwesomeGlyphs.Delete}"
-                                                  GlyphColor="#B91C1C"
-                                                  Clicked="OnDeleteClicked" />
-                </HorizontalStackLayout>
+                <Label x:Name="ProfileMetaLabel"
+                       Grid.Column="1"
+                       Grid.Row="1"
+                       FontSize="12"
+                       TextColor="{StaticResource White}"
+                       LineBreakMode="TailTruncation" />
 
-                <controls:ChevronIconView x:Name="ActionsChevron"
-                                          Grid.Column="2"
-                                          AnimateRotation="True"
-                                          GlyphSize="18"
-                                          GlyphColor="{StaticResource Gray950}"
-                                          HorizontalOptions="Center"
-                                          VerticalOptions="Center">
-                    <controls:ChevronIconView.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnActionsChevronTapped" />
-                    </controls:ChevronIconView.GestureRecognizers>
-                </controls:ChevronIconView>
+                <Grid Grid.Column="1"
+                      Grid.Row="2"
+                      ColumnDefinitions="Auto,*,Auto"
+                      ColumnSpacing="8">
+                    <HorizontalStackLayout Grid.Column="0"
+                                           Spacing="6"
+                                           VerticalOptions="Center">
+                        <Label Text="&#xF500;"
+                               FontFamily="FASolid"
+                               FontSize="12"
+                               TextColor="{StaticResource White}"
+                               VerticalTextAlignment="Center" />
+                        <Label x:Name="ProfileRaceLabel"
+                               FontSize="12"
+                               TextColor="{StaticResource White}"
+                               VerticalTextAlignment="Center" />
+                        <Border x:Name="ProfileSubtypeChip"
+                                Padding="8,2"
+                                StrokeThickness="0"
+                                BackgroundColor="#2CFFFFFF"
+                                StrokeShape="RoundRectangle 999"
+                                IsVisible="False">
+                            <Label x:Name="ProfileSubtypeLabel"
+                                   FontSize="11"
+                                   TextColor="{StaticResource White}" />
+                        </Border>
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Grid.Column="2"
+                                           Spacing="6"
+                                           VerticalOptions="Center">
+                        <Label x:Name="AlignmentMoralGlyphLabel"
+                               FontFamily="FASolid"
+                               FontSize="12"
+                               TextColor="{StaticResource White}" />
+                        <Label x:Name="AlignmentMoralTextLabel"
+                               FontSize="12"
+                               TextColor="{StaticResource White}" />
+                    </HorizontalStackLayout>
+                </Grid>
+
+                <Grid Grid.Column="1"
+                      Grid.Row="3"
+                      ColumnSpacing="0"
+                      ColumnDefinitions="*,*,*,*,*,*,*,*,*"
+                      VerticalOptions="Center"
+                      HeightRequest="34">
+                    <Border Grid.ColumnSpan="9"
+                            VerticalOptions="Center"
+                            HeightRequest="4"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 999">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0"
+                                                 EndPoint="1,0">
+                                <GradientStop Color="#F97316"
+                                              Offset="0" />
+                                <GradientStop Color="#DC2626"
+                                              Offset="0.25" />
+                                <GradientStop Color="#9333EA"
+                                              Offset="0.5" />
+                                <GradientStop Color="#2563EB"
+                                              Offset="1" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                    </Border>
+
+                    <Border x:Name="AlignNode0"
+                            Grid.Column="0"
+                            WidthRequest="14"
+                            HeightRequest="14"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            StrokeThickness="0"
+                            BackgroundColor="{StaticResource White}"
+                            StrokeShape="RoundRectangle 999" />
+                    <Border x:Name="AlignNode1"
+                            Grid.Column="1"
+                            WidthRequest="14"
+                            HeightRequest="14"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            StrokeThickness="0"
+                            BackgroundColor="{StaticResource White}"
+                            StrokeShape="RoundRectangle 999" />
+                    <Border x:Name="AlignNode2"
+                            Grid.Column="2"
+                            WidthRequest="14"
+                            HeightRequest="14"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            StrokeThickness="0"
+                            BackgroundColor="{StaticResource White}"
+                            StrokeShape="RoundRectangle 999" />
+                    <Border x:Name="AlignNode3"
+                            Grid.Column="3"
+                            WidthRequest="14"
+                            HeightRequest="14"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            StrokeThickness="0"
+                            BackgroundColor="{StaticResource White}"
+                            StrokeShape="RoundRectangle 999" />
+                    <Border x:Name="AlignNode4"
+                            Grid.Column="4"
+                            WidthRequest="14"
+                            HeightRequest="14"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            StrokeThickness="0"
+                            BackgroundColor="{StaticResource White}"
+                            StrokeShape="RoundRectangle 999" />
+                    <Border x:Name="AlignNode5"
+                            Grid.Column="5"
+                            WidthRequest="14"
+                            HeightRequest="14"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            StrokeThickness="0"
+                            BackgroundColor="{StaticResource White}"
+                            StrokeShape="RoundRectangle 999" />
+                    <Border x:Name="AlignNode6"
+                            Grid.Column="6"
+                            WidthRequest="14"
+                            HeightRequest="14"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            StrokeThickness="0"
+                            BackgroundColor="{StaticResource White}"
+                            StrokeShape="RoundRectangle 999" />
+                    <Border x:Name="AlignNode7"
+                            Grid.Column="7"
+                            WidthRequest="14"
+                            HeightRequest="14"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            StrokeThickness="0"
+                            BackgroundColor="{StaticResource White}"
+                            StrokeShape="RoundRectangle 999" />
+                    <Border x:Name="AlignNode8"
+                            Grid.Column="8"
+                            WidthRequest="14"
+                            HeightRequest="14"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            StrokeThickness="0"
+                            BackgroundColor="{StaticResource White}"
+                            StrokeShape="RoundRectangle 999" />
+                </Grid>
+
+                <Grid Grid.Column="1"
+                      Grid.Row="4"
+                      ColumnDefinitions="*,*,*"
+                      ColumnSpacing="4">
+                    <Label Grid.Column="0"
+                           Text="Chaotic Evil"
+                           FontSize="10"
+                           TextColor="#FCA5A5"
+                           HorizontalTextAlignment="Start" />
+                    <Label Grid.Column="1"
+                           Text="Neutral"
+                           FontSize="10"
+                           TextColor="{StaticResource White}"
+                           HorizontalTextAlignment="Center" />
+                    <Label Grid.Column="2"
+                           Text="Lawful Good"
+                           FontSize="10"
+                           TextColor="#BFDBFE"
+                           HorizontalTextAlignment="End" />
+                </Grid>
+
+                  <Grid Grid.ColumnSpan="2"
+                     Grid.Row="5"
+                     ColumnDefinitions="Auto,*,Auto"
+                     ColumnSpacing="8"
+                     Margin="0,4,0,0">
+                      <Label x:Name="CurrentTableLabel"
+                          FontAttributes="Bold"
+                          FontSize="12"
+                          TextColor="{StaticResource White}"
+                          VerticalTextAlignment="Center" />
+                      <ProgressBar x:Name="TableProgressBar"
+                             Grid.Column="1"
+                             Progress="0"
+                             HeightRequest="8"
+                             VerticalOptions="Center"
+                             BackgroundColor="#2CD30909"
+                             ProgressColor="{StaticResource White}" />
+                      <Label x:Name="TableProgressTextLabel"
+                          Grid.Column="2"
+                          FontSize="11"
+                          LineBreakMode="NoWrap"
+                          MaxLines="1"
+                          TextColor="{StaticResource White}"
+                          VerticalTextAlignment="Center" />
+                  </Grid>
             </Grid>
 
             <VerticalStackLayout x:Name="ExpandedActionsPanel"
-                                 Grid.Row="1"
                                  IsVisible="False"
                                  Opacity="0"
                                  Spacing="0"
-                                 Padding="0,8,0,4">
+                                 Padding="8,0,8,8"
+                                 BackgroundColor="#19000000">
+                <controls:GlyphActionRowView AutomationProperties.Name="Back to wallet"
+                                             Text="Back to wallet"
+                                             Glyph="&#xF060;"
+                                             BorderColor="White"
+                                             NormalTextColor="White"
+                                             ChevronColor="White"
+                                             Clicked="OnBackToWalletClicked" />
+
                 <controls:GlyphActionRowView AutomationProperties.Name="Edit character"
                                              StyleId="{x:Static helpers:CharacterActionOrderHelper.EditStyleId}"
                                              Text="Edit character"
                                              Glyph="{x:Static helpers:FontAwesomeGlyphs.Edit}"
+                                             BorderColor="White"
+                                             NormalTextColor="White"
+                                             ChevronColor="White"
                                              Clicked="OnEditClicked" />
 
                 <controls:GlyphActionRowView AutomationProperties.Name="Advance character"
                                              StyleId="{x:Static helpers:CharacterActionOrderHelper.AdvanceStyleId}"
                                              Text="Advance character"
                                              Glyph="{x:Static helpers:FontAwesomeGlyphs.Advance}"
+                                             BorderColor="White"
+                                             NormalTextColor="White"
+                                             ChevronColor="White"
                                              Clicked="OnAdvanceClicked" />
 
                 <controls:GlyphActionRowView AutomationProperties.Name="View battleboard"
@@ -131,27 +337,389 @@
                                              Text="View battleboard"
                                              Glyph="{x:Static helpers:FontAwesomeGlyphs.Battleboard}"
                                              GlyphFontFamily=""
+                                             BorderColor="White"
+                                             NormalTextColor="White"
+                                             ChevronColor="White"
                                              Clicked="OnBattleboardClicked" />
 
                 <controls:GlyphActionRowView AutomationProperties.Name="Export battleboard"
                                              StyleId="{x:Static helpers:CharacterActionOrderHelper.ExportStyleId}"
                                              Text="Export battleboard"
                                              Glyph="{x:Static helpers:FontAwesomeGlyphs.ExportBattleboard}"
+                                             BorderColor="White"
+                                             NormalTextColor="White"
+                                             ChevronColor="White"
                                              Clicked="OnExportExcelClicked" />
 
                 <controls:GlyphActionRowView AutomationProperties.Name="Open makes sheet"
                                              StyleId="{x:Static helpers:CharacterActionOrderHelper.MakeSheetStyleId}"
                                              Text="Open makes sheet"
                                              Glyph="{x:Static helpers:FontAwesomeGlyphs.Crafting}"
+                                             BorderColor="White"
+                                             NormalTextColor="White"
+                                             ChevronColor="White"
                                              Clicked="OnManufacturingClicked" />
 
                 <controls:GlyphActionRowView AutomationProperties.Name="Delete character"
                                              StyleId="{x:Static helpers:CharacterActionOrderHelper.DeleteStyleId}"
                                              Text="Delete character"
                                              Glyph="{x:Static helpers:FontAwesomeGlyphs.Delete}"
+                                             BorderColor="White"
+                                             NormalTextColor="White"
+                                             DestructiveTextColor="#DC2626"
+                                             ChevronColor="#DC2626"
                                              IsDestructive="True"
                                              Clicked="OnDeleteClicked" />
             </VerticalStackLayout>
+        </VerticalStackLayout>
+
+        <Grid Grid.Row="1"
+              BindingContext="{x:Reference RootPage}"
+              RowDefinitions="Auto,*">
+            <ScrollView Grid.Row="0"
+                        Orientation="Horizontal"
+                        HorizontalScrollBarVisibility="Never"
+                        VerticalScrollBarVisibility="Never"
+                        BackgroundColor="{StaticResource White}">
+                <HorizontalStackLayout Padding="16,12,16,8"
+                                     Spacing="10"
+                                     BindableLayout.ItemsSource="{Binding AvailableReviewSections}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="12,6"
+                                    StrokeShape="RoundRectangle 999"
+                                    StrokeThickness="1"
+                                    BackgroundColor="{Binding BackgroundColor}"
+                                    Stroke="{Binding BorderColor}">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnReviewSectionTapped"
+                                                          CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                <Label Text="{Binding Title}"
+                                       FontSize="12"
+                                       FontAttributes="Bold"
+                                       TextColor="{Binding TextColor}"
+                                       LineBreakMode="NoWrap" />
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </HorizontalStackLayout>
+            </ScrollView>
+
+            <Grid Grid.Row="1"
+                  x:Name="ReviewSectionHost">
+                <local:CharacterReviewView x:Name="DetailsSectionView"
+                                           ShowSaveButton="False"
+                                           IsVisible="True" />
+
+                <ScrollView x:Name="SpellsSectionView"
+                            IsVisible="False">
+                    <VerticalStackLayout Padding="16"
+                                         Spacing="14">
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding SpellReviewGroups}"
+                                             Spacing="12">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame Style="{StaticResource SectionCardFrameStyle}">
+                                        <VerticalStackLayout Spacing="8">
+                                            <Label Text="{Binding Title}"
+                                                   FontAttributes="Bold" />
+                                            <Label Text="{Binding Subtitle}"
+                                                   FontSize="12"
+                                                   TextColor="{StaticResource MutedTextColor}"
+                                                   IsVisible="{Binding HasSubtitle}" />
+                                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Entries}"
+                                                                 Spacing="6">
+                                                <BindableLayout.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid ColumnDefinitions="*,Auto"
+                                                              ColumnSpacing="8">
+                                                            <VerticalStackLayout Spacing="2">
+                                                                <Label Text="{Binding PrimaryText}"
+                                                                       LineBreakMode="WordWrap" />
+                                                                <Label Text="{Binding SecondaryText}"
+                                                                       FontSize="11"
+                                                                       TextColor="{StaticResource MutedTextColor}"
+                                                                       IsVisible="{Binding HasSecondaryText}" />
+                                                            </VerticalStackLayout>
+                                                            <Button Grid.Column="1"
+                                                                    Text="&#xF05A;"
+                                                                    FontFamily="FASolid"
+                                                                    FontSize="12"
+                                                                    Padding="0"
+                                                                    BackgroundColor="Transparent"
+                                                                    TextColor="{StaticResource SubtleTextColor}"
+                                                                    HeightRequest="18"
+                                                                    WidthRequest="18"
+                                                                    MinimumHeightRequest="0"
+                                                                    MinimumWidthRequest="0"
+                                                                    Clicked="OnReviewEntryInfoClicked"
+                                                                    CommandParameter="{Binding .}" />
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </BindableLayout.ItemTemplate>
+                                            </VerticalStackLayout>
+                                        </VerticalStackLayout>
+                                    </Frame>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                        <Label Text="No Spells Selected Yet&#10;&#10;Spells are selected during advancement."
+                               HorizontalTextAlignment="Center"
+                               TextColor="{StaticResource MutedTextColor}"
+                               IsVisible="{Binding HasSpellReviewGroups, Converter={StaticResource InverseBoolConverter}}" />
+                    </VerticalStackLayout>
+                </ScrollView>
+
+                <ScrollView x:Name="MiraclesSectionView"
+                            IsVisible="False">
+                    <VerticalStackLayout Padding="16"
+                                         Spacing="14">
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding MiracleReviewGroups}"
+                                             Spacing="12">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame Style="{StaticResource SectionCardFrameStyle}">
+                                        <VerticalStackLayout Spacing="8">
+                                            <Label Text="{Binding Title}"
+                                                   FontAttributes="Bold" />
+                                            <Label Text="{Binding Subtitle}"
+                                                   FontSize="12"
+                                                   TextColor="{StaticResource MutedTextColor}"
+                                                   IsVisible="{Binding HasSubtitle}" />
+                                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Entries}"
+                                                                 Spacing="6">
+                                                <BindableLayout.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid ColumnDefinitions="*,Auto"
+                                                              ColumnSpacing="8">
+                                                            <VerticalStackLayout Spacing="2">
+                                                                <Label Text="{Binding PrimaryText}"
+                                                                       LineBreakMode="WordWrap" />
+                                                                <Label Text="{Binding SecondaryText}"
+                                                                       FontSize="11"
+                                                                       TextColor="{StaticResource MutedTextColor}"
+                                                                       IsVisible="{Binding HasSecondaryText}" />
+                                                            </VerticalStackLayout>
+                                                            <Button Grid.Column="1"
+                                                                    Text="&#xF05A;"
+                                                                    FontFamily="FASolid"
+                                                                    FontSize="12"
+                                                                    Padding="0"
+                                                                    BackgroundColor="Transparent"
+                                                                    TextColor="{StaticResource SubtleTextColor}"
+                                                                    HeightRequest="18"
+                                                                    WidthRequest="18"
+                                                                    MinimumHeightRequest="0"
+                                                                    MinimumWidthRequest="0"
+                                                                    Clicked="OnReviewEntryInfoClicked"
+                                                                    CommandParameter="{Binding .}" />
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </BindableLayout.ItemTemplate>
+                                            </VerticalStackLayout>
+                                        </VerticalStackLayout>
+                                    </Frame>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                        <Label Text="No Miracles Selected Yet&#10;&#10;Miracles are selected during advancement."
+                               HorizontalTextAlignment="Center"
+                               TextColor="{StaticResource MutedTextColor}"
+                               IsVisible="{Binding HasMiracleReviewGroups, Converter={StaticResource InverseBoolConverter}}" />
+                    </VerticalStackLayout>
+                </ScrollView>
+
+                <ScrollView x:Name="EvocationsSectionView"
+                            IsVisible="False">
+                    <VerticalStackLayout Padding="16"
+                                         Spacing="14">
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding EvocationReviewGroups}"
+                                             Spacing="12">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame Style="{StaticResource SectionCardFrameStyle}">
+                                        <VerticalStackLayout Spacing="8">
+                                            <Label Text="{Binding Title}"
+                                                   FontAttributes="Bold" />
+                                            <Label Text="{Binding Subtitle}"
+                                                   FontSize="12"
+                                                   TextColor="{StaticResource MutedTextColor}"
+                                                   IsVisible="{Binding HasSubtitle}" />
+                                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Entries}"
+                                                                 Spacing="6">
+                                                <BindableLayout.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid ColumnDefinitions="*,Auto"
+                                                              ColumnSpacing="8">
+                                                            <VerticalStackLayout Spacing="2">
+                                                                <Label Text="{Binding PrimaryText}"
+                                                                       LineBreakMode="WordWrap" />
+                                                                <Label Text="{Binding SecondaryText}"
+                                                                       FontSize="11"
+                                                                       TextColor="{StaticResource MutedTextColor}"
+                                                                       IsVisible="{Binding HasSecondaryText}" />
+                                                            </VerticalStackLayout>
+                                                            <Button Grid.Column="1"
+                                                                    Text="&#xF05A;"
+                                                                    FontFamily="FASolid"
+                                                                    FontSize="12"
+                                                                    Padding="0"
+                                                                    BackgroundColor="Transparent"
+                                                                    TextColor="{StaticResource SubtleTextColor}"
+                                                                    HeightRequest="18"
+                                                                    WidthRequest="18"
+                                                                    MinimumHeightRequest="0"
+                                                                    MinimumWidthRequest="0"
+                                                                    Clicked="OnReviewEntryInfoClicked"
+                                                                    CommandParameter="{Binding .}" />
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </BindableLayout.ItemTemplate>
+                                            </VerticalStackLayout>
+                                        </VerticalStackLayout>
+                                    </Frame>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                        <Label Text="No Evocations Selected Yet&#10;&#10;Evocations are selected during advancement."
+                               HorizontalTextAlignment="Center"
+                               TextColor="{StaticResource MutedTextColor}"
+                               IsVisible="{Binding HasEvocationReviewGroups, Converter={StaticResource InverseBoolConverter}}" />
+                    </VerticalStackLayout>
+                </ScrollView>
+
+                <ScrollView x:Name="NeuronicsSectionView"
+                            IsVisible="False">
+                    <VerticalStackLayout Padding="16"
+                                         Spacing="14">
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding NeuronicReviewGroups}"
+                                             Spacing="12">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame Style="{StaticResource SectionCardFrameStyle}">
+                                        <VerticalStackLayout Spacing="8">
+                                            <Label Text="{Binding Title}"
+                                                   FontAttributes="Bold" />
+                                            <Label Text="{Binding Subtitle}"
+                                                   FontSize="12"
+                                                   TextColor="{StaticResource MutedTextColor}"
+                                                   IsVisible="{Binding HasSubtitle}" />
+                                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Entries}"
+                                                                 Spacing="6">
+                                                <BindableLayout.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid ColumnDefinitions="*,Auto"
+                                                              ColumnSpacing="8">
+                                                            <VerticalStackLayout Spacing="2">
+                                                                <Label Text="{Binding PrimaryText}"
+                                                                       LineBreakMode="WordWrap" />
+                                                                <Label Text="{Binding SecondaryText}"
+                                                                       FontSize="11"
+                                                                       TextColor="{StaticResource MutedTextColor}"
+                                                                       IsVisible="{Binding HasSecondaryText}" />
+                                                            </VerticalStackLayout>
+                                                            <Button Grid.Column="1"
+                                                                    Text="&#xF05A;"
+                                                                    FontFamily="FASolid"
+                                                                    FontSize="12"
+                                                                    Padding="0"
+                                                                    BackgroundColor="Transparent"
+                                                                    TextColor="{StaticResource SubtleTextColor}"
+                                                                    HeightRequest="18"
+                                                                    WidthRequest="18"
+                                                                    MinimumHeightRequest="0"
+                                                                    MinimumWidthRequest="0"
+                                                                    Clicked="OnReviewEntryInfoClicked"
+                                                                    CommandParameter="{Binding .}" />
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </BindableLayout.ItemTemplate>
+                                            </VerticalStackLayout>
+                                        </VerticalStackLayout>
+                                    </Frame>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                        <Label Text="No Neuronics Selected Yet&#10;&#10;Neuronics are selected during advancement."
+                               HorizontalTextAlignment="Center"
+                               TextColor="{StaticResource MutedTextColor}"
+                               IsVisible="{Binding HasNeuronicReviewGroups, Converter={StaticResource InverseBoolConverter}}" />
+                    </VerticalStackLayout>
+                </ScrollView>
+
+                <ScrollView x:Name="ItemsSectionView"
+                            IsVisible="False">
+                    <VerticalStackLayout Padding="16"
+                                         Spacing="14">
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Items"
+                                       FontAttributes="Bold" />
+                                <Grid ColumnDefinitions="*,*"
+                                      ColumnSpacing="8">
+                                    <Button Text="Add MP Item"
+                                            FontSize="12"
+                                            BackgroundColor="{StaticResource Primary}"
+                                            TextColor="White"
+                                            CornerRadius="10"
+                                            Clicked="OnAddMpItemClicked" />
+                                    <Button Grid.Column="1"
+                                            Text="Add ISP Item"
+                                            FontSize="12"
+                                            BackgroundColor="{StaticResource White}"
+                                            TextColor="{StaticResource Primary}"
+                                            BorderColor="{StaticResource Primary}"
+                                            BorderWidth="1"
+                                            CornerRadius="10"
+                                            Clicked="OnAddIspItemClicked" />
+                                </Grid>
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding ItemReviewEntries}"
+                                                     Spacing="6">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnDefinitions="*,Auto"
+                                                  ColumnSpacing="8">
+                                                <Label Text="{Binding PrimaryText}"
+                                                       LineBreakMode="WordWrap" />
+                                                <Button Grid.Column="1"
+                                                        Text="&#xF05A;"
+                                                        FontFamily="FASolid"
+                                                        FontSize="12"
+                                                        Padding="0"
+                                                        BackgroundColor="Transparent"
+                                                        TextColor="{StaticResource SubtleTextColor}"
+                                                        HeightRequest="18"
+                                                        WidthRequest="18"
+                                                        MinimumHeightRequest="0"
+                                                        MinimumWidthRequest="0"
+                                                        Clicked="OnReviewEntryInfoClicked"
+                                                        CommandParameter="{Binding .}" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                                <Label Text="No Items Recorded Yet&#10;&#10;Items are managed during advancement."
+                                       HorizontalTextAlignment="Center"
+                                       TextColor="{StaticResource MutedTextColor}"
+                                       IsVisible="{Binding HasItemReviewEntries, Converter={StaticResource InverseBoolConverter}}" />
+                            </VerticalStackLayout>
+                        </Frame>
+                    </VerticalStackLayout>
+                </ScrollView>
+            </Grid>
         </Grid>
+
+        <BoxView x:Name="ActionBackdrop"
+                 Grid.RowSpan="2"
+                 ZIndex="10"
+                 BackgroundColor="#66000000"
+                 IsVisible="False"
+                 InputTransparent="True"
+                 Opacity="0">
+            <BoxView.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnActionBackdropTapped" />
+            </BoxView.GestureRecognizers>
+        </BoxView>
     </Grid>
 </ContentPage>

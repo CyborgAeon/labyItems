@@ -683,12 +683,17 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
             var status = hasChoices
                 ? hasMissingChoices
-                    ? $"{missingChoices}/{totalChoices} choice{(totalChoices == 1 ? string.Empty : "s")} still required."
-                    : "All guild choices set."
+                    ? $"{missingChoices} choice{(missingChoices == 1 ? string.Empty : "s")} required"
+                    : "Complete"
+                : "No choices required";
+
+            var guildType = _guildRecords.TryGetValue(guildName, out var record)
+                ? (record?.Type ?? string.Empty).Trim()
                 : string.Empty;
 
             rows.Add(new GuildReviewSummaryRowVm(
                 guildName: guildName,
+                guildType: guildType,
                 hasChoices: hasChoices,
                 hasMissingChoices: hasMissingChoices,
                 statusText: status));
@@ -2842,21 +2847,26 @@ public sealed class GuildReviewSummaryRowVm
 {
     public GuildReviewSummaryRowVm(
         string guildName,
+        string guildType,
         bool hasChoices,
         bool hasMissingChoices,
         string statusText)
     {
         GuildName = (guildName ?? string.Empty).Trim();
+        GuildType = (guildType ?? string.Empty).Trim();
         HasChoices = hasChoices;
         HasMissingChoices = hasMissingChoices;
         StatusText = (statusText ?? string.Empty).Trim();
     }
 
     public string GuildName { get; }
+    public string GuildType { get; }
     public bool HasChoices { get; }
     public bool HasMissingChoices { get; }
     public string StatusText { get; }
     public bool HasStatusText => StatusText.Length > 0;
+    public string RowBackgroundColor => HasMissingChoices ? "#FFF8E1" : "Transparent";
+    public string StatusTextColor => HasMissingChoices ? "#D97706" : "#15803D";
 }
 
 public sealed class GuildBenefitRowVm

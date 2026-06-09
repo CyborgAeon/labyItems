@@ -6,17 +6,14 @@
     x:Name="Root">
 
     <ImageButton AutomationProperties.Name="Back"
+                 Style="{StaticResource BackArrowImageButtonStyle}"
                  BackgroundColor="Transparent"
                  Command="{Binding Source={x:Reference Root}, Path=Command}"
-                 Padding="0"
-                 HeightRequest="48"
-                 WidthRequest="48"
-                 MinimumHeightRequest="44"
-                 MinimumWidthRequest="44">
+                 Padding="0">
         <ImageButton.Source>
             <FontImageSource FontFamily="FASolid"
                              Glyph="&#xf060;"
-                             Size="24"
+                             Size="18"
                              Color="{StaticResource Gray300}"/>
         </ImageButton.Source>
     </ImageButton>

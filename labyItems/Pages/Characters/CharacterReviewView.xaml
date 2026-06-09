@@ -13,152 +13,35 @@
                             CornerRadius="12"
                             Padding="12"
                             BorderColor="{StaticResource SurfaceBorderColor}">
-                            <VerticalStackLayout Spacing="6">
-                                   <Label Text="Identity"
-                                          FontAttributes="Bold"/>
-                                   <Grid ColumnDefinitions="*,Auto"
-                                         ColumnSpacing="8">
-                                          <Label Text="{Binding PlayerNameSummary}"
-                                                 VerticalTextAlignment="Center"/>
-                                          <Button Grid.Column="1"
-                                                  Text="&#xF1FC;"
-                                                  FontFamily="FASolid"
-                                                  FontSize="12"
-                                                  Padding="0"
-                                                  BackgroundColor="Transparent"
-                                                  TextColor="{StaticResource SubtleTextColor}"
-                                                  HeightRequest="18"
-                                                  WidthRequest="18"
-                                                  MinimumHeightRequest="0"
-                                                  MinimumWidthRequest="0"
-                                                  VerticalOptions="Center"
-                                                  Clicked="OnEditIdentityClicked"/>
-                                   </Grid>
-                                   <Grid ColumnDefinitions="*,Auto"
-                                         ColumnSpacing="8">
-                                          <Label Text="{Binding CharacterNameSummary}"
-                                                 VerticalTextAlignment="Center"/>
-                                          <Button Grid.Column="1"
-                                                  Text="&#xF1FC;"
-                                                  FontFamily="FASolid"
-                                                  FontSize="12"
-                                                  Padding="0"
-                                                  BackgroundColor="Transparent"
-                                                  TextColor="{StaticResource SubtleTextColor}"
-                                                  HeightRequest="18"
-                                                  WidthRequest="18"
-                                                  MinimumHeightRequest="0"
-                                                  MinimumWidthRequest="0"
-                                                  VerticalOptions="Center"
-                                                  Clicked="OnEditIdentityClicked"/>
-                                   </Grid>
-                            </VerticalStackLayout>
-                     </Frame>
-
-                     <Frame HasShadow="False"
-                            CornerRadius="12"
-                            Padding="12"
-                            IsVisible="{Binding Source={x:Reference Root}, Path=ShowSaveButton}"
-                            BorderColor="{StaticResource SurfaceBorderColor}">
                             <VerticalStackLayout Spacing="8">
-                                   <Label Text="Battleboard"
-                                          FontAttributes="Bold"/>
-                                   <Button Text="Get battleboard"
-                                           Style="{StaticResource ExpandedActionButtonStyle}"
-                                           Clicked="OnGetBattleboardClicked"/>
-                            </VerticalStackLayout>
-                     </Frame>
-
-                     <Frame HasShadow="False"
-                            CornerRadius="12"
-                            Padding="12"
-                            BorderColor="{StaticResource SurfaceBorderColor}">
-                            <VerticalStackLayout Spacing="6">
-                                   <Label Text="Race and class"
-                                          FontAttributes="Bold"/>
-                                   <Grid ColumnDefinitions="*,Auto"
+                                   <Grid ColumnDefinitions="Auto,*,Auto"
                                          ColumnSpacing="8">
-                                          <Label Text="{Binding RaceSummary}"
+                                          <Label Text="&#xF6DE;"
+                                                 FontFamily="FASolid"
+                                                 FontSize="14"
                                                  VerticalTextAlignment="Center"/>
-                                          <Button Grid.Column="1"
-                                                  Text="&#xF1FC;"
-                                                  FontFamily="FASolid"
-                                                  FontSize="12"
-                                                  Padding="0"
-                                                  BackgroundColor="Transparent"
-                                                  TextColor="{StaticResource SubtleTextColor}"
-                                                  HeightRequest="18"
-                                                  WidthRequest="18"
-                                                  MinimumHeightRequest="0"
-                                                  MinimumWidthRequest="0"
-                                                  VerticalOptions="Center"
-                                                  Clicked="OnEditRaceClicked"/>
-                                   </Grid>
-                                   <Label Text="{Binding RaceSubtypeSummary}"/>
-                                   <Grid ColumnDefinitions="*,Auto"
-                                         ColumnSpacing="8">
-                                          <Label Text="{Binding ClassSummary}"
+                                          <Label Grid.Column="1"
+                                                 Text="Level Progression"
+                                                 FontAttributes="Bold"
                                                  VerticalTextAlignment="Center"/>
-                                          <Button Grid.Column="1"
-                                                  Text="&#xF1FC;"
-                                                  FontFamily="FASolid"
-                                                  FontSize="12"
-                                                  Padding="0"
-                                                  BackgroundColor="Transparent"
-                                                  TextColor="{StaticResource SubtleTextColor}"
-                                                  HeightRequest="18"
-                                                  WidthRequest="18"
-                                                  MinimumHeightRequest="0"
-                                                  MinimumWidthRequest="0"
-                                                  VerticalOptions="Center"
-                                                  Clicked="OnEditClassClicked"/>
+                                          <controls:ChevronIconView x:Name="LevelProgressionChevron"
+                                                                    Grid.Column="2"
+                                                                    GlyphSize="18"
+                                                                    GlyphColor="{StaticResource MutedTextColor}">
+                                                 <controls:ChevronIconView.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnLevelProgressionChevronTapped" />
+                                                 </controls:ChevronIconView.GestureRecognizers>
+                                          </controls:ChevronIconView>
                                    </Grid>
-                                   <Grid ColumnDefinitions="*,Auto"
-                                         ColumnSpacing="8">
-                                          <Label Text="{Binding AlignmentSummary}"
-                                                 VerticalTextAlignment="Center"/>
-                                          <Button Grid.Column="1"
-                                                  Text="&#xF1FC;"
-                                                  FontFamily="FASolid"
-                                                  FontSize="12"
-                                                  Padding="0"
-                                                  BackgroundColor="Transparent"
-                                                  TextColor="{StaticResource SubtleTextColor}"
-                                                  HeightRequest="18"
-                                                  WidthRequest="18"
-                                                  MinimumHeightRequest="0"
-                                                  MinimumWidthRequest="0"
-                                                  VerticalOptions="Center"
-                                                  Clicked="OnEditDetailsClicked"/>
-                                   </Grid>
-                            </VerticalStackLayout>
-                     </Frame>
 
-                     <Frame HasShadow="False"
-                            CornerRadius="12"
-                            Padding="12"
-                            IsVisible="{Binding HasClassLevelAbilityRows}"
-                            BorderColor="{StaticResource SurfaceBorderColor}">
-                            <VerticalStackLayout Spacing="8">
-                                   <Label Text="{Binding ClassLevelAbilityHeader}"
-                                          FontAttributes="Bold"/>
-                                   <controls:LevelAbilityTableView ItemsSource="{Binding ClassLevelAbilityRows}"
-                                                                   ShowBodyAndLoc="True"
-                                                                   AbilitiesHeaderText="Skills/Abilities"/>
-                            </VerticalStackLayout>
-                     </Frame>
-
-                     <Frame HasShadow="False"
-                            CornerRadius="12"
-                            Padding="12"
-                            IsVisible="{Binding HasRaceLevelAbilityRows}"
-                            BorderColor="{StaticResource SurfaceBorderColor}">
-                            <VerticalStackLayout Spacing="8">
-                                   <Label Text="{Binding RaceLevelAbilityHeader}"
-                                          FontAttributes="Bold"/>
-                                   <controls:LevelAbilityTableView ItemsSource="{Binding RaceLevelAbilityRows}"
-                                                                   ShowBodyAndLoc="False"
-                                                                   AbilitiesHeaderText="Abilities"/>
+                                   <VerticalStackLayout x:Name="LevelProgressionExpandedContent"
+                                                        Spacing="8">
+                                          <ScrollView Orientation="Horizontal"
+                                                      HorizontalScrollBarVisibility="Always"
+                                                      VerticalScrollBarVisibility="Never">
+                                                 <Grid x:Name="LevelProgressionTableHost" />
+                                          </ScrollView>
+                                   </VerticalStackLayout>
                             </VerticalStackLayout>
                      </Frame>
 
@@ -166,72 +49,81 @@
                             CornerRadius="12"
                             Padding="12"
                             BorderColor="{StaticResource SurfaceBorderColor}">
-                            <Frame.Triggers>
-                                   <DataTrigger TargetType="Frame"
-                                                Binding="{Binding HasGuildChoiceWarning}"
-                                                Value="True">
-                                          <Setter Property="BorderColor"
-                                                  Value="#D97706"/>
-                                          <Setter Property="BackgroundColor"
-                                                  Value="#FFF8E1"/>
-                                   </DataTrigger>
-                            </Frame.Triggers>
                             <VerticalStackLayout Spacing="4">
                                    <Label Text="Guilds"
                                           FontAttributes="Bold"/>
+                                   <Grid IsVisible="{Binding HasGuildReviewRows}"
+                                         ColumnDefinitions="96,*,64"
+                                         ColumnSpacing="8">
+                                          <Label Grid.Column="0"
+                                                 Text="Guild Type"
+                                                 FontSize="11"
+                                                 FontAttributes="Bold"
+                                                 TextColor="{StaticResource MutedTextColor}"/>
+                                          <Label Grid.Column="1"
+                                                 Text="Guild"
+                                                 FontSize="11"
+                                                 FontAttributes="Bold"
+                                                 TextColor="{StaticResource MutedTextColor}"/>
+                                          <Label Grid.Column="2"
+                                                 Text="Actions"
+                                                 FontSize="11"
+                                                 FontAttributes="Bold"
+                                                 TextColor="{StaticResource MutedTextColor}"
+                                                 HorizontalTextAlignment="Center"/>
+                                   </Grid>
+
                                    <VerticalStackLayout IsVisible="{Binding HasGuildReviewRows}"
                                                         Spacing="6"
                                                         BindableLayout.ItemsSource="{Binding GuildReviewRows}">
                                           <BindableLayout.ItemTemplate>
                                                  <DataTemplate>
-                                                        <Grid ColumnDefinitions="*,Auto,Auto"
-                                                              RowDefinitions="Auto,Auto"
+                                                                 <Grid ColumnDefinitions="96,*,64"
                                                               ColumnSpacing="8"
-                                                              RowSpacing="2">
-                                                               <Label Text="{Binding GuildName}"
+                                                                        RowDefinitions="Auto"
+                                                                        BackgroundColor="{Binding RowBackgroundColor}">
+                                                               <Label Grid.Column="0"
+                                                                      Text="{Binding GuildType}"
+                                                                      FontSize="11"
+                                                                      LineBreakMode="TailTruncation"/>
+                                                               <Label Grid.Column="1"
+                                                                      Text="{Binding GuildName}"
                                                                       LineBreakMode="WordWrap"
                                                                       VerticalTextAlignment="Center"/>
-                                                               <Button Grid.Column="1"
-                                                                       Text="&#xF1FC;"
-                                                                       FontFamily="FASolid"
-                                                                       FontSize="12"
-                                                                       Padding="0"
-                                                                       BackgroundColor="Transparent"
-                                                                       TextColor="{StaticResource SubtleTextColor}"
-                                                                       HeightRequest="18"
-                                                                       WidthRequest="18"
-                                                                       MinimumHeightRequest="0"
-                                                                       MinimumWidthRequest="0"
-                                                                       VerticalOptions="Center"
-                                                                       IsVisible="{Binding HasChoices}"
-                                                                       Clicked="OnEditGuildChoicesClicked"
-                                                                       CommandParameter="{Binding .}"/>
-                                                               <Button Grid.Column="2"
-                                                                       Text="&#xF05A;"
-                                                                       FontFamily="FASolid"
-                                                                       FontSize="12"
-                                                                       Padding="0"
-                                                                       BackgroundColor="Transparent"
-                                                                       TextColor="{StaticResource SubtleTextColor}"
-                                                                       HeightRequest="18"
-                                                                       WidthRequest="18"
-                                                                       MinimumHeightRequest="0"
-                                                                       MinimumWidthRequest="0"
-                                                                       VerticalOptions="Center"
-                                                                       Clicked="OnViewGuildDetailsClicked"
-                                                                       CommandParameter="{Binding .}"/>
-                                                               <Label Grid.Row="1"
-                                                                      Grid.Column="0"
-                                                                      Grid.ColumnSpan="3"
-                                                                      Text="{Binding StatusText}"
-                                                                      FontSize="11"
-                                                                      FontAttributes="Bold"
-                                                                      TextColor="{StaticResource AccentMaroonColor}"
-                                                                      IsVisible="{Binding HasStatusText}"/>
+                                                               <HorizontalStackLayout Grid.Column="2"
+                                                                                    Spacing="4"
+                                                                                    HorizontalOptions="Center">
+                                                                      <Button Text="&#xF05A;"
+                                                                              FontFamily="FASolid"
+                                                                              FontSize="12"
+                                                                              Padding="0"
+                                                                              BackgroundColor="Transparent"
+                                                                              TextColor="{StaticResource SubtleTextColor}"
+                                                                              HeightRequest="18"
+                                                                              WidthRequest="18"
+                                                                              MinimumHeightRequest="0"
+                                                                              MinimumWidthRequest="0"
+                                                                              Clicked="OnViewGuildDetailsClicked"
+                                                                              CommandParameter="{Binding .}"/>
+                                                                      <Button Text="&#xF1FC;"
+                                                                              FontFamily="FASolid"
+                                                                              FontSize="12"
+                                                                              Padding="0"
+                                                                              BackgroundColor="Transparent"
+                                                                              TextColor="{StaticResource SubtleTextColor}"
+                                                                              HeightRequest="18"
+                                                                              WidthRequest="18"
+                                                                              MinimumHeightRequest="0"
+                                                                              MinimumWidthRequest="0"
+                                                                              IsVisible="{Binding HasChoices}"
+                                                                              Clicked="OnEditGuildChoicesClicked"
+                                                                              CommandParameter="{Binding .}"/>
+                                                               </HorizontalStackLayout>
                                                         </Grid>
                                                  </DataTemplate>
                                           </BindableLayout.ItemTemplate>
                                    </VerticalStackLayout>
+
                                    <Label Text="{Binding GuildSummary}"
                                           IsVisible="{Binding HasGuildReviewRows, Converter={StaticResource InverseBoolConverter}}"
                                           LineBreakMode="WordWrap"/>
@@ -256,61 +148,6 @@
                             </VerticalStackLayout>
                      </Frame>
 
-                     <Frame HasShadow="False"
-                            CornerRadius="12"
-                            Padding="12"
-                            BorderColor="{StaticResource SurfaceBorderColor}">
-                            <VerticalStackLayout Spacing="8">
-                                   <Label Text="Specialisations"
-                                          FontAttributes="Bold"/>
-                                   <Label Text="{Binding SpecialisationSummaryHeader}"
-                                          Opacity="0.7"/>
-
-                                   <VerticalStackLayout BindableLayout.ItemsSource="{Binding SpecialisationSummaryLines}"
-                                                        Spacing="6">
-                                          <BindableLayout.ItemTemplate>
-                                                 <DataTemplate>
-                                                        <Grid ColumnDefinitions="*,Auto,Auto"
-                                                              ColumnSpacing="8">
-                                                               <Label Text="{Binding Text}"
-                                                                      LineBreakMode="WordWrap"
-                                                                      VerticalTextAlignment="Center"/>
-                                                               <Button Grid.Column="1"
-                                                                       Text="&#xF1FC;"
-                                                                       FontFamily="FASolid"
-                                                                       FontSize="12"
-                                                                       Padding="0"
-                                                                       BackgroundColor="Transparent"
-                                                                       TextColor="{StaticResource SubtleTextColor}"
-                                                                       HeightRequest="18"
-                                                                       WidthRequest="18"
-                                                                       MinimumHeightRequest="0"
-                                                                       MinimumWidthRequest="0"
-                                                                       VerticalOptions="Center"
-                                                                       Clicked="OnEditSpecialisationClicked"
-                                                                       CommandParameter="{Binding .}"/>
-                                                               <Button Grid.Column="2"
-                                                                       Text="&#xF05A;"
-                                                                       FontFamily="FASolid"
-                                                                       FontSize="12"
-                                                                       Padding="0"
-                                                                       BackgroundColor="Transparent"
-                                                                       TextColor="{StaticResource SubtleTextColor}"
-                                                                       HeightRequest="18"
-                                                                       WidthRequest="18"
-                                                                       MinimumHeightRequest="0"
-                                                                       MinimumWidthRequest="0"
-                                                                       VerticalOptions="Center"
-                                                                       IsVisible="{Binding HasDetails}"
-                                                                       Clicked="OnViewSpecialisationAbilityDetailsClicked"
-                                                                       CommandParameter="{Binding .}"/>
-                                                        </Grid>
-                                                 </DataTemplate>
-                                          </BindableLayout.ItemTemplate>
-                                   </VerticalStackLayout>
-                            </VerticalStackLayout>
-                     </Frame>
-
                      <Frame x:Name="Post8CardFrame"
                             HasShadow="False"
                             CornerRadius="12"
@@ -319,9 +156,15 @@
                             BorderColor="{StaticResource SurfaceBorderColor}">
                             <VerticalStackLayout Spacing="6">
                                    <Grid ColumnDefinitions="*,Auto">
-                                          <Label Text="Post 8th"
-                                                 FontAttributes="Bold"
-                                                 VerticalTextAlignment="Center"/>
+                                          <HorizontalStackLayout Spacing="6">
+                                                 <Label Text="&#xF6DE;"
+                                                        FontFamily="FASolid"
+                                                        FontSize="14"
+                                                        VerticalTextAlignment="Center"/>
+                                                 <Label Text="Post-8th Advancement"
+                                                        FontAttributes="Bold"
+                                                        VerticalTextAlignment="Center"/>
+                                          </HorizontalStackLayout>
                                            <controls:ChevronIconView Grid.Column="1"
                                                                      IsExpanded="{Binding IsAdvancementExpanded}"
                                                                      AnimateRotation="True"
@@ -337,42 +180,38 @@
 
                                    <VerticalStackLayout x:Name="Post8ExpandedContent"
                                                         IsVisible="False"
-                                                        Spacing="6">
-                                          <Grid ColumnDefinitions="*,*">
-
-                                                 <Label Grid.Column="0"
-                                                        Text="{Binding AdvancementAbilitiesHeader}"
-                                                        FontAttributes="Bold"
-                                                        HorizontalTextAlignment="Start"/>
-
-                                                 <Label Grid.Column="1"
-                                                        Text="{Binding AdvancementPointsSummary}"
-                                                        HorizontalTextAlignment="End"/>
-                                          </Grid>
-
-
+                                                        Spacing="8">
                                           <VerticalStackLayout BindableLayout.ItemsSource="{Binding AdvancementAbilityLines}"
                                                                Spacing="4">
 
                                                  <BindableLayout.ItemTemplate>
                                                         <DataTemplate>
-                                                               <Grid ColumnDefinitions="*,Auto"
-                                                                     ColumnSpacing="8">
-                                                                      <Label Text="{Binding NameWithCost}"
-                                                                             LineBreakMode="WordWrap"/>
+                                                               <Grid ColumnDefinitions="*,Auto,Auto"
+                                                                     ColumnSpacing="8"
+                                                                     Padding="0,2">
+                                                                      <Label Text="{Binding Name}"
+                                                                             LineBreakMode="WordWrap"
+                                                                             VerticalTextAlignment="Center"/>
                                                                       <Label Grid.Column="1"
-                                                                             Text="{Binding RunningTotalText}"
+                                                                             Text="{Binding CostText}"
+                                                                             FontSize="12"
+                                                                             VerticalTextAlignment="Center"/>
+                                                                      <Label Grid.Column="2"
+                                                                             Text="{Binding OrderText}"
                                                                              FontSize="12"
                                                                              Opacity="0.7"
                                                                              VerticalTextAlignment="Center"/>
-                                                                      <!--todo, fit these in. <Label Text="{Binding AdvancementItemsSummary}"
-                                                                             LineBreakMode="WordWrap"/>
-                                                                      <Label Text="{Binding AdvancementNotesSummary}"
-                                                                             LineBreakMode="WordWrap"/> -->
                                                                </Grid>
                                                         </DataTemplate>
                                                  </BindableLayout.ItemTemplate>
                                           </VerticalStackLayout>
+                                          <Button Text="Open Advancement"
+                                                  FontSize="12"
+                                                  FontAttributes="Bold"
+                                                  BackgroundColor="{StaticResource Primary}"
+                                                  TextColor="White"
+                                                  CornerRadius="10"
+                                                  Clicked="OnOpenAdvancementClicked" />
                                    </VerticalStackLayout>
                             </VerticalStackLayout>
                      </Frame>
@@ -381,10 +220,38 @@
                             CornerRadius="12"
                             Padding="12"
                             BorderColor="{StaticResource SurfaceBorderColor}">
-                            <VerticalStackLayout Spacing="4">
-                                   <Label Text="Notes"
-                                          FontAttributes="Bold"/>
-                                   <Label Text="{Binding NotesSummary}"
+                            <VerticalStackLayout Spacing="6">
+                                   <Grid ColumnDefinitions="*,Auto,Auto"
+                                         ColumnSpacing="8">
+                                          <Label Text="Notes"
+                                                 FontAttributes="Bold"
+                                                 VerticalTextAlignment="Center"/>
+                                          <Button Grid.Column="1"
+                                                  Text="&#xF1FC;"
+                                                  FontFamily="FASolid"
+                                                  FontSize="12"
+                                                  Padding="0"
+                                                  BackgroundColor="Transparent"
+                                                  TextColor="{StaticResource SubtleTextColor}"
+                                                  HeightRequest="18"
+                                                  WidthRequest="18"
+                                                  MinimumHeightRequest="0"
+                                                  MinimumWidthRequest="0"
+                                                  VerticalOptions="Center"
+                                                  Clicked="OnEditNotesClicked"/>
+                                          <controls:ChevronIconView x:Name="NotesChevron"
+                                                                    Grid.Column="2"
+                                                                    GlyphSize="18"
+                                                                    GlyphColor="{StaticResource MutedTextColor}">
+                                                 <controls:ChevronIconView.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnNotesChevronTapped" />
+                                                 </controls:ChevronIconView.GestureRecognizers>
+                                          </controls:ChevronIconView>
+                                   </Grid>
+
+                                   <Label x:Name="NotesContentLabel"
+                                          IsVisible="False"
+                                          Text="{Binding NotesSummary}"
                                           LineBreakMode="WordWrap"/>
                             </VerticalStackLayout>
                      </Frame>

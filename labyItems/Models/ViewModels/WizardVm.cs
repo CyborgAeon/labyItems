@@ -26,6 +26,48 @@ public enum WizardEditTarget
     Specialisation = 3
 }
 
+public static class ReviewSectionKeys
+{
+    public const string Details = "Details";
+    public const string Spells = "Spells";
+    public const string Miracles = "Miracles";
+    public const string Evocations = "Evocations";
+    public const string Neuronics = "Neuronics";
+    public const string Items = "Items";
+}
+
+public sealed class ReviewSectionOptionVm : INotifyPropertyChanged
+{
+    private bool _isSelected;
+
+    public ReviewSectionOptionVm(string key, string title)
+    {
+        Key = (key ?? string.Empty).Trim();
+        Title = (title ?? string.Empty).Trim();
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public string Key { get; }
+    public string Title { get; }
+
+    public bool IsSelected
+    {
+        get => _isSelected;
+        private set
+        {
+            if (_isSelected == value)
+                return;
+
+            _isSelected = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSelected)));
+        }
+    }
+
+    internal void SetSelected(bool isSelected)
+        => IsSelected = isSelected;
+}
+
 public sealed class WizardVm : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -121,6 +163,7 @@ public sealed class WizardVm : INotifyPropertyChanged
     public Command SaveToWalletCommand { get; }
     public ICommand ContinueToAdvancementCommand { get; }
     public ICommand ToggleAdvancementExpandedCommand { get; }
+    public Command<ReviewSectionOptionVm> SelectReviewSectionCommand { get; }
     public CharacterBuilderVm CharacterBuilderVm { get; }
     public GuildsVm GuildsVm { get; }
     private int _armourMaxBasePac;
@@ -145,6 +188,8 @@ public sealed class WizardVm : INotifyPropertyChanged
     private string _guildChoiceWarningText = string.Empty;
     private IReadOnlyList<string> _guildStackingWarnings = Array.Empty<string>();
     private IReadOnlyList<GuildReviewSummaryRowVm> _guildReviewRows = Array.Empty<GuildReviewSummaryRowVm>();
+    private IReadOnlyList<ReviewSectionOptionVm> _availableReviewSections = Array.Empty<ReviewSectionOptionVm>();
+    private string _selectedReviewSection = ReviewSectionKeys.Details;
 
     public ObservableCollection<AbilitySpendLine> AdvancementAbilityLines { get; } = new();
 
@@ -161,6 +206,36 @@ public sealed class WizardVm : INotifyPropertyChanged
         get => _advancementPointsSpent;
         private set => Set(ref _advancementPointsSpent, value);
     }
+
+    public IReadOnlyList<ReviewSectionOptionVm> AvailableReviewSections => _availableReviewSections;
+
+    public string SelectedReviewSection
+    {
+        get => _selectedReviewSection;
+        set
+        {
+            var normalized = string.IsNullOrWhiteSpace(value)
+                ? ReviewSectionKeys.Details
+                : value.Trim();
+            if (!Set(ref _selectedReviewSection, normalized))
+                return;
+
+            UpdateReviewSectionSelectionState();
+            Raise(nameof(IsDetailsReviewSectionSelected));
+            Raise(nameof(IsSpellsReviewSectionSelected));
+            Raise(nameof(IsMiraclesReviewSectionSelected));
+            Raise(nameof(IsEvocationsReviewSectionSelected));
+            Raise(nameof(IsNeuronicsReviewSectionSelected));
+            Raise(nameof(IsItemsReviewSectionSelected));
+        }
+    }
+
+    public bool IsDetailsReviewSectionSelected => SelectedReviewSection == ReviewSectionKeys.Details;
+    public bool IsSpellsReviewSectionSelected => SelectedReviewSection == ReviewSectionKeys.Spells;
+    public bool IsMiraclesReviewSectionSelected => SelectedReviewSection == ReviewSectionKeys.Miracles;
+    public bool IsEvocationsReviewSectionSelected => SelectedReviewSection == ReviewSectionKeys.Evocations;
+    public bool IsNeuronicsReviewSectionSelected => SelectedReviewSection == ReviewSectionKeys.Neuronics;
+    public bool IsItemsReviewSectionSelected => SelectedReviewSection == ReviewSectionKeys.Items;
 
     public WizardVm(
         CharacterDraft? draft = null,
@@ -204,6 +279,13 @@ public sealed class WizardVm : INotifyPropertyChanged
         SaveToWalletCommand = new Command(() => _ = SaveToWallet(), () => Draft.IsRaceAndClassSelected);
         ContinueToAdvancementCommand = new Command(async () => await ContinueToAdvancementAsync());
         ToggleAdvancementExpandedCommand = new Command(() => IsAdvancementExpanded = !IsAdvancementExpanded);
+        SelectReviewSectionCommand = new Command<ReviewSectionOptionVm>(section =>
+        {
+            if (section == null || string.IsNullOrWhiteSpace(section.Key))
+                return;
+
+            SelectedReviewSection = section.Key;
+        });
         CharacterBuilderVm = new CharacterBuilderVm(
             Draft,
             NotifyGatingChanged,
@@ -291,6 +373,8 @@ public sealed class WizardVm : INotifyPropertyChanged
             cancellationToken.ThrowIfCancellationRequested();
 
             await SyncDraftStateAsync(cancellationToken).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+            await RefreshReviewSectionsAsync(cancellationToken).ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
             await MainThread.InvokeOnMainThreadAsync(RaiseReviewProperties);
             cancellationToken.ThrowIfCancellationRequested();
@@ -430,6 +514,39 @@ public sealed class WizardVm : INotifyPropertyChanged
     public string AlignmentSummary => Draft.Alignment.HasValue
         ? $"Alignment: {Draft.Alignment}"
         : "Alignment: not selected";
+
+    public async Task<SpellService.SpellRaw?> FindSpellByNameAsync(string? spellName)
+    {
+        var name = (spellName ?? string.Empty).Trim();
+        if (name.Length == 0)
+            return null;
+
+        var all = await SpellService.GetAllAsync();
+        return all.FirstOrDefault(s =>
+            string.Equals((s?.name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public async Task<MiracleService.MiracRaw?> FindMiracleByNameAsync(string? miracleName)
+    {
+        var name = (miracleName ?? string.Empty).Trim();
+        if (name.Length == 0)
+            return null;
+
+        var all = await MiracleService.GetAllAsync();
+        return all.FirstOrDefault(m =>
+            string.Equals((m?.name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public async Task<DruidEvocationService.EvocRaw?> FindEvocationByNameAsync(string? evocationName)
+    {
+        var name = (evocationName ?? string.Empty).Trim();
+        if (name.Length == 0)
+            return null;
+
+        var all = await DruidEvocationService.GetAllAsync();
+        return all.FirstOrDefault(e =>
+            string.Equals((e?.name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase));
+    }
     public int ArmourMaxBasePac
     {
         get => _armourMaxBasePac;
@@ -1244,6 +1361,14 @@ public sealed class WizardVm : INotifyPropertyChanged
         Raise(nameof(GuildSummary));
         Raise(nameof(GuildReviewRows));
         Raise(nameof(HasGuildReviewRows));
+        Raise(nameof(AvailableReviewSections));
+        Raise(nameof(SelectedReviewSection));
+        Raise(nameof(IsDetailsReviewSectionSelected));
+        Raise(nameof(IsSpellsReviewSectionSelected));
+        Raise(nameof(IsMiraclesReviewSectionSelected));
+        Raise(nameof(IsEvocationsReviewSectionSelected));
+        Raise(nameof(IsNeuronicsReviewSectionSelected));
+        Raise(nameof(IsItemsReviewSectionSelected));
         RefreshSpecialisationSummaryLines();
         _ = EnsureSpecialisationAbilityLookupLoadedAsync();
         Raise(nameof(NotesSummary));
@@ -1255,6 +1380,100 @@ public sealed class WizardVm : INotifyPropertyChanged
         Raise(nameof(AdvancementNotesSummary));
         Raise(nameof(AdvancementAbilitiesHeader));
         RefreshGuildStackingWarnings();
+    }
+
+    private async Task RefreshReviewSectionsAsync(CancellationToken cancellationToken)
+    {
+        var hasAssignedItems = LiteDbService.GetItemsAssignedToCharacter(
+                Draft.CharacterRecordId,
+                Draft.Name,
+                Draft.PlayerName)
+            .Any();
+
+        var hasSpells = Draft.SpellLists?.Any(list => (list?.Entries?.Count ?? 0) > 0) == true;
+        var hasMiracles = (Draft.MiracleLists?.Any(list => (list?.Entries?.Count ?? 0) > 0) == true)
+                          || (Draft.EvilStairwayList?.Entries?.Count ?? 0) > 0;
+        var hasEvocations = Draft.EvocationLists?.Any(list => (list?.Entries?.Count ?? 0) > 0) == true;
+        var hasNeuronics = HasNeuronicAccessFromDraft(hasAssignedItems);
+
+        var className = (Draft.Class ?? string.Empty).Trim();
+        var classes = await _creationDataService.GetClassesAsync();
+        cancellationToken.ThrowIfCancellationRequested();
+
+        CharacterClassRecord? classRecord = null;
+        var classKey = ResolveRecordKey(classes, className ?? string.Empty);
+        if (!string.IsNullOrWhiteSpace(classKey))
+            classes.TryGetValue(classKey, out classRecord);
+
+        var tabState = new AdvancementTabVisibilityService().Resolve(className, classRecord);
+        tabState = new AdvancementTabVisibilityService().ApplyNameFallback(className, tabState);
+
+        var sections = new List<ReviewSectionOptionVm>
+        {
+            new(ReviewSectionKeys.Details, ReviewSectionKeys.Details)
+        };
+
+        if (tabState.ShowSpellsTab || hasSpells)
+            sections.Add(new ReviewSectionOptionVm(ReviewSectionKeys.Spells, ReviewSectionKeys.Spells));
+
+        if (tabState.ShowMiraclesTab || hasMiracles)
+            sections.Add(new ReviewSectionOptionVm(ReviewSectionKeys.Miracles, ReviewSectionKeys.Miracles));
+
+        if (tabState.ShowEvocationsTab || hasEvocations)
+            sections.Add(new ReviewSectionOptionVm(ReviewSectionKeys.Evocations, ReviewSectionKeys.Evocations));
+
+        if (hasNeuronics)
+            sections.Add(new ReviewSectionOptionVm(ReviewSectionKeys.Neuronics, ReviewSectionKeys.Neuronics));
+
+        sections.Add(new ReviewSectionOptionVm(ReviewSectionKeys.Items, ReviewSectionKeys.Items));
+
+        var selectedKey = sections.Any(section => section.Key == SelectedReviewSection)
+            ? SelectedReviewSection
+            : ReviewSectionKeys.Details;
+
+        _availableReviewSections = sections;
+        if (!string.Equals(_selectedReviewSection, selectedKey, StringComparison.Ordinal))
+            _selectedReviewSection = selectedKey;
+
+        UpdateReviewSectionSelectionState();
+    }
+
+    private void UpdateReviewSectionSelectionState()
+    {
+        foreach (var section in _availableReviewSections)
+            section.SetSelected(string.Equals(section.Key, SelectedReviewSection, StringComparison.Ordinal));
+    }
+
+    private bool HasNeuronicAccessFromDraft(bool hasAssignedItems)
+    {
+        if (hasAssignedItems && LiteDbService.GetItemsAssignedToCharacter(Draft.CharacterRecordId, Draft.Name, Draft.PlayerName)
+                .Any(item => item.ItemType == global::labyItems.Models.ItemTypeEnum.Neuronic))
+        {
+            return true;
+        }
+
+        var className = (Draft.Class ?? string.Empty).Trim();
+        if (className.Contains("Neuro", StringComparison.OrdinalIgnoreCase)
+            || className.Contains("Monk", StringComparison.OrdinalIgnoreCase)
+            || className.Contains("Mind", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return (Draft.Abilities ?? new List<AbilityDraft>())
+            .Any(ability =>
+            {
+                var name = (ability?.Name ?? string.Empty).Trim();
+                var key = (ability?.AbilityKey ?? string.Empty).Trim();
+                var source = (ability?.Source ?? string.Empty).Trim();
+
+                return name.Contains("neuro", StringComparison.OrdinalIgnoreCase)
+                       || name.Contains("neuronic", StringComparison.OrdinalIgnoreCase)
+                       || key.Contains("neuro", StringComparison.OrdinalIgnoreCase)
+                       || key.Contains("neuronic", StringComparison.OrdinalIgnoreCase)
+                       || source.Contains("neuro", StringComparison.OrdinalIgnoreCase)
+                       || source.Contains("neuronic", StringComparison.OrdinalIgnoreCase);
+            });
     }
 
     private async Task RefreshGuildWarningsAsync(CancellationToken cancellationToken = default)
@@ -1280,6 +1499,7 @@ public sealed class WizardVm : INotifyPropertyChanged
                 .Where(name => !string.IsNullOrWhiteSpace(name))
                 .Select(name => new GuildReviewSummaryRowVm(
                     guildName: name.Trim(),
+                    guildType: string.Empty,
                     hasChoices: false,
                     hasMissingChoices: false,
                     statusText: string.Empty))
@@ -1554,12 +1774,15 @@ public sealed class WizardVm : INotifyPropertyChanged
         var lines = _domainService.BuildAbilityPointSpendLines(
             Draft.AdvancementAbilities ?? new List<string>(),
             _abilityCostIndex);
+        var order = 1;
         foreach (var line in lines)
         {
             AdvancementAbilityLines.Add(new AbilitySpendLine(
                 ResolveAdvancementAbilityDisplayName(line.Name),
                 line.Cost,
-                line.RunningTotal));
+                line.RunningTotal,
+                order));
+            order++;
         }
 
         AdvancementPointsSpent = _domainService.ComputeAbilityPointsSpent(
@@ -1621,14 +1844,18 @@ public sealed class WizardVm : INotifyPropertyChanged
         public string Name { get; }
         public int Cost { get; }
         public int RunningTotal { get; }
+        public int Order { get; }
         public string NameWithCost => $"{Name} ({Cost})";
         public string RunningTotalText => $"{RunningTotal}";
+        public string CostText => $"{Cost} XP";
+        public string OrderText => $"#{Order}";
 
-        public AbilitySpendLine(string name, int cost, int runningTotal)
+        public AbilitySpendLine(string name, int cost, int runningTotal, int order)
         {
             Name = name;
             Cost = cost;
             RunningTotal = runningTotal;
+            Order = order;
         }
     }
 
