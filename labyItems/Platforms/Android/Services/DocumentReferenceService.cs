@@ -29,6 +29,23 @@ public sealed partial class DocumentReferenceService
             return BuildCapture(activity, uri, DocumentReferenceKinds.AndroidDocumentUri, "persisted-read");
         });
 
+    private partial Task<DocumentReferenceCapture?> PickImagePlatformAsync()
+        => MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            var activity = Platform.CurrentActivity ?? throw new InvalidOperationException("Android activity is unavailable.");
+            var intent = new Intent(Intent.ActionOpenDocument);
+            intent.AddCategory(Intent.CategoryOpenable);
+            intent.SetType("image/*");
+            intent.AddFlags(ActivityFlags.GrantReadUriPermission | ActivityFlags.GrantPersistableUriPermission);
+
+            var result = await StartIntentAsync(activity, intent);
+            if (result.ResultCode != Result.Ok || result.Data?.Data is not { } uri)
+                return null;
+
+            PersistUriPermission(activity, result.Data, uri);
+            return BuildCapture(activity, uri, DocumentReferenceKinds.AndroidDocumentUri, "persisted-read");
+        });
+
     private partial Task<DocumentReferenceCapture?> CapturePhotoPlatformAsync()
         => MainThread.InvokeOnMainThreadAsync(async () =>
         {

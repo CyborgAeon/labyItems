@@ -3,7 +3,8 @@
     x:Class="labyItems.Pages.SpellCard.SpellDetailCardView"
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls">
 
     <Frame Style="{StaticResource DetailCardFrameStyle}">
         <VerticalStackLayout Spacing="12">
@@ -44,12 +45,15 @@
                 <Label Text="DESCRIPTION"
                        Style="{StaticResource SectionHeaderLabelStyle}"
                        VerticalTextAlignment="Center"/>
-                <Label Grid.Column="1"
-                       Text="{Binding DescriptionChevronText, Source={x:Reference Root}}"
-                       IsVisible="{Binding ShowDescriptionChevron, Source={x:Reference Root}}"
-                       TextColor="{StaticResource MutedTextColor}"
-                       VerticalTextAlignment="Center"
-                       HorizontalTextAlignment="End"/>
+                <controls:ChevronIconView Grid.Column="1"
+                                          IsExpanded="{Binding IsDescriptionExpanded, Source={x:Reference Root}}"
+                                          AnimateRotation="True"
+                                          GlyphSize="14"
+                                          GlyphColor="{StaticResource MutedTextColor}"
+                                          InputTransparent="True"
+                                          IsVisible="{Binding ShowDescriptionChevron, Source={x:Reference Root}}"
+                                          HorizontalOptions="End"
+                                          VerticalOptions="Center"/>
             </Grid>
 
             <ContentView x:Name="DescriptionTextContainer">
@@ -75,12 +79,15 @@
                 <Label Text="VERBAL"
                        Style="{StaticResource SectionHeaderLabelStyle}"
                        VerticalTextAlignment="Center"/>
-                <Label Grid.Column="1"
-                       Text="{Binding VerbalChevronText, Source={x:Reference Root}}"
-                       IsVisible="{Binding ShowVerbalChevron, Source={x:Reference Root}}"
-                       TextColor="{StaticResource MutedTextColor}"
-                       VerticalTextAlignment="Center"
-                       HorizontalTextAlignment="End"/>
+                <controls:ChevronIconView Grid.Column="1"
+                                          IsExpanded="{Binding IsVerbalExpanded, Source={x:Reference Root}}"
+                                          AnimateRotation="True"
+                                          GlyphSize="14"
+                                          GlyphColor="{StaticResource MutedTextColor}"
+                                          InputTransparent="True"
+                                          IsVisible="{Binding ShowVerbalChevron, Source={x:Reference Root}}"
+                                          HorizontalOptions="End"
+                                          VerticalOptions="Center"/>
             </Grid>
 
             <ContentView x:Name="VerbalTextContainer">
@@ -107,12 +114,15 @@
                     </Grid.GestureRecognizers>
                     <Label Text="NOTES"
                            Style="{StaticResource SectionHeaderLabelStyle}"/>
-                    <Label Grid.Column="1"
-                           Text="{Binding IsNotesExpanded, Source={x:Reference Root}, Converter={StaticResource ChevronConverter}}"
-                           IsVisible="{Binding CanExpandNotes, Source={x:Reference Root}}"
-                           TextColor="{StaticResource MutedTextColor}"
-                           VerticalTextAlignment="Center"
-                           HorizontalTextAlignment="End"/>
+                    <controls:ChevronIconView Grid.Column="1"
+                                              IsExpanded="{Binding IsNotesExpanded, Source={x:Reference Root}}"
+                                              AnimateRotation="True"
+                                              GlyphSize="14"
+                                              GlyphColor="{StaticResource MutedTextColor}"
+                                              InputTransparent="True"
+                                              IsVisible="{Binding CanExpandNotes, Source={x:Reference Root}}"
+                                              HorizontalOptions="End"
+                                              VerticalOptions="Center"/>
                 </Grid>
 
                 <VerticalStackLayout Spacing="2">

@@ -166,7 +166,7 @@ public partial class ItemFormPage : ContentPage
             var emailDraft = ItemEmailService.BuildItemEmailDraft(
                 item,
                 payload,
-                to: "items@labyrinthe.com",
+                to: "brbar@netcompany.com",
                 subject: subject);
 
             try

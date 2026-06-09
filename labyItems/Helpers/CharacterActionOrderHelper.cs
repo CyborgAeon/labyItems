@@ -11,8 +11,8 @@ public enum CharacterActionKind
     EditCharacter,
     AdvanceCharacter,
     ViewBattleboard,
+    ExportBattleboard,
     ViewMakeSheet,
-    ExportCharacter,
     DeleteCharacter
 }
 
@@ -32,8 +32,8 @@ public static class CharacterActionOrderHelper
         CharacterActionKind.EditCharacter,
         CharacterActionKind.AdvanceCharacter,
         CharacterActionKind.ViewBattleboard,
+        CharacterActionKind.ExportBattleboard,
         CharacterActionKind.ViewMakeSheet,
-        CharacterActionKind.ExportCharacter,
         CharacterActionKind.DeleteCharacter
     ];
 
@@ -49,8 +49,8 @@ public static class CharacterActionOrderHelper
             [EditStyleId] = CharacterActionKind.EditCharacter,
             [AdvanceStyleId] = CharacterActionKind.AdvanceCharacter,
             [BattleboardStyleId] = CharacterActionKind.ViewBattleboard,
+            [ExportStyleId] = CharacterActionKind.ExportBattleboard,
             [MakeSheetStyleId] = CharacterActionKind.ViewMakeSheet,
-            [ExportStyleId] = CharacterActionKind.ExportCharacter,
             [DeleteStyleId] = CharacterActionKind.DeleteCharacter
         };
 

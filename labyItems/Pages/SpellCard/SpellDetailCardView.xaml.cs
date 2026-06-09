@@ -116,8 +116,8 @@ public partial class SpellDetailCardView : ContentView
     public int DescriptionMaxLines => IsDescriptionExpanded ? -1 : DescriptionCollapsedLines;
     public int VerbalMaxLines => IsVerbalExpanded ? -1 : VerbalCollapsedLines;
     public int NotesMaxLines => IsNotesExpanded ? -1 : NotesCollapsedLines;
-    public string DescriptionChevronText => IsDescriptionExpanded ? "▴" : "▾";
-    public string VerbalChevronText => IsVerbalExpanded ? "▴" : "▾";
+    public string DescriptionChevronText => FontAwesomeGlyphs.Chevron;
+    public string VerbalChevronText => FontAwesomeGlyphs.Chevron;
 
     private bool _isDescriptionAnimating;
     private bool _isVerbalAnimating;

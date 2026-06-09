@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.ApplicationModel;
 
 namespace labyItems.Services;
 
@@ -31,9 +32,24 @@ public sealed class CharacterReferenceDataSynchronizer : ICharacterReferenceData
         if (string.IsNullOrWhiteSpace(dbPath) || !File.Exists(dbPath))
             return;
 
-        var classesJson = await TryReadAssetTextAsync("people/classes.json");
-        var racesJson = await TryReadAssetTextAsync("people/people.json");
-        var lifeScalesJson = await TryReadAssetTextAsync("people/lifescales.json");
+        var buildId = GetPackagedDataBuildId();
+
+        using var conn = new SqliteConnection($"Data Source={dbPath}");
+        await conn.OpenAsync(cancellationToken).ConfigureAwait(false);
+        EnsureSeedMetadataTable(conn);
+
+        var existingChecksum = GetExistingChecksum(conn);
+        var existingBuildId = GetExistingBuildId(conn);
+        if (!string.IsNullOrWhiteSpace(existingChecksum)
+            && string.Equals(existingBuildId, buildId, StringComparison.OrdinalIgnoreCase))
+        {
+            _logger.LogInformation("Skipped character reference sync: packaged build id '{BuildId}' already applied.", buildId);
+            return;
+        }
+
+        var classesJson = await TryReadAssetTextAsync("people/classes.json").ConfigureAwait(false);
+        var racesJson = await TryReadAssetTextAsync("people/people.json").ConfigureAwait(false);
+        var lifeScalesJson = await TryReadAssetTextAsync("people/lifescales.json").ConfigureAwait(false);
 
         if (string.IsNullOrWhiteSpace(classesJson)
             || string.IsNullOrWhiteSpace(racesJson)
@@ -55,19 +71,17 @@ public sealed class CharacterReferenceDataSynchronizer : ICharacterReferenceData
 
         var checksum = ComputeChecksum($"{classesJson}\n{racesJson}\n{lifeScalesJson}");
 
-        using var conn = new SqliteConnection($"Data Source={dbPath}");
-        await conn.OpenAsync(cancellationToken);
-        EnsureSeedMetadataTable(conn);
-
-        var existingChecksum = GetExistingChecksum(conn);
         if (string.Equals(existingChecksum, checksum, StringComparison.OrdinalIgnoreCase))
+        {
+            SaveChecksum(conn, tx: null, checksum, buildId);
             return;
+        }
 
         using var tx = conn.BeginTransaction();
         SyncNamedJsonTable(conn, tx, "classes", "class", classes);
         SyncNamedJsonTable(conn, tx, "races", "race", races);
         SyncLifeScales(conn, tx, lifeScaleRows, classes.Keys, races.Keys);
-        SaveChecksum(conn, tx, checksum);
+        SaveChecksum(conn, tx, checksum, buildId);
         tx.Commit();
 
         ClassService.InvalidateCache();
@@ -270,7 +284,7 @@ WHERE lower(race) IN ({string.Join(", ", raceParams)})
         using var insert = conn.CreateCommand();
         insert.Transaction = tx;
         insert.CommandText = @"
-INSERT INTO lifescales (race, ""class"", idx, body, loc)
+    INSERT OR REPLACE INTO lifescales (race, ""class"", idx, body, loc)
 VALUES ($race, $class, $idx, $body, $loc);";
 
         var raceParam = insert.Parameters.Add("$race", SqliteType.Text);
@@ -279,7 +293,15 @@ VALUES ($race, $class, $idx, $body, $loc);";
         var bodyParam = insert.Parameters.Add("$body", SqliteType.Integer);
         var locParam = insert.Parameters.Add("$loc", SqliteType.Integer);
 
-        foreach (var row in packagedRows)
+        var dedupedRows = packagedRows
+            .Where(row => row.Index > 0)
+            .GroupBy(
+                row => $"{NormalizeName(row.Race)}|{NormalizeName(row.Class)}|{row.Index}",
+                StringComparer.OrdinalIgnoreCase)
+            .Select(group => group.First())
+            .ToList();
+
+        foreach (var row in dedupedRows)
         {
             raceParam.Value = row.Race;
             classParam.Value = row.Class;
@@ -432,28 +454,46 @@ LIMIT 1;";
         return cmd.ExecuteScalar()?.ToString();
     }
 
-    private static void SaveChecksum(SqliteConnection conn, SqliteTransaction tx, string checksum)
+    private static void SaveChecksum(SqliteConnection conn, SqliteTransaction? tx, string checksum, string buildId)
     {
         using (var delete = conn.CreateCommand())
         {
-            delete.Transaction = tx;
+            if (tx != null)
+                delete.Transaction = tx;
             delete.CommandText = "DELETE FROM seed_metadata WHERE seed_version = $seedVersion;";
             delete.Parameters.AddWithValue("$seedVersion", SeedVersion);
             delete.ExecuteNonQuery();
         }
 
         using var insert = conn.CreateCommand();
-        insert.Transaction = tx;
+        if (tx != null)
+            insert.Transaction = tx;
         insert.CommandText = @"
 INSERT INTO seed_metadata (seed_version, schema_version, build_id, checksum, created_at)
 VALUES ($seedVersion, $schemaVersion, $buildId, $checksum, $createdAt);";
         insert.Parameters.AddWithValue("$seedVersion", SeedVersion);
         insert.Parameters.AddWithValue("$schemaVersion", 1);
-        insert.Parameters.AddWithValue("$buildId", "character-reference-sync");
+        insert.Parameters.AddWithValue("$buildId", buildId);
         insert.Parameters.AddWithValue("$checksum", checksum);
         insert.Parameters.AddWithValue("$createdAt", DateTime.UtcNow.ToString("o"));
         insert.ExecuteNonQuery();
     }
+
+    private static string? GetExistingBuildId(SqliteConnection conn)
+    {
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = @"
+SELECT build_id
+FROM seed_metadata
+WHERE seed_version = $seedVersion
+ORDER BY rowid DESC
+LIMIT 1;";
+        cmd.Parameters.AddWithValue("$seedVersion", SeedVersion);
+        return cmd.ExecuteScalar()?.ToString();
+    }
+
+    private static string GetPackagedDataBuildId()
+        => $"{AppInfo.Current.VersionString}+{AppInfo.Current.BuildString}";
 
     private static string ComputeChecksum(string text)
     {

@@ -130,4 +130,7 @@ public static class CardExpandAnimationHelper
 
     public static Task TranslateYAsync(VisualElement target, double to)
         => target.TranslateTo(0, to, UnifiedDurationMs, UnifiedEasing);
+
+    public static Task RotateAsync(VisualElement target, double to)
+        => target.RotateTo(to, UnifiedDurationMs, UnifiedEasing);
 }

@@ -500,14 +500,16 @@
                                                    FontAttributes="Bold"
                                                    VerticalTextAlignment="Center"
                                                    IsVisible="True"/>
-                                            <Button Grid.Column="1"
-                                                    Text="{Binding IsExpanded, Converter={StaticResource ChevronConverter}}"
-                                                    BackgroundColor="Transparent"
-                                                    TextColor="{StaticResource MutedTextColor}"
-                                                    Padding="0"
-                                                    WidthRequest="32"
-                                                    HeightRequest="32"
-                                                    Command="{Binding ToggleExpandedCommand}"/>
+                                            <controls:ChevronIconView Grid.Column="1"
+                                                                      IsExpanded="{Binding IsExpanded}"
+                                                                      AnimateRotation="True"
+                                                                      IconSize="32"
+                                                                      GlyphSize="14"
+                                                                      GlyphColor="{StaticResource MutedTextColor}">
+                                                <controls:ChevronIconView.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding ToggleExpandedCommand}" />
+                                                </controls:ChevronIconView.GestureRecognizers>
+                                            </controls:ChevronIconView>
                                         </Grid>
                                         <controls:AnimatedExpandView IsExpanded="{Binding IsExpanded}"
                                                                      AnimationName="AdvanceSpellListExpand">
@@ -878,14 +880,16 @@
                                                                          Color="Black"/>
                                                     </ImageButton.Source>
                                                 </ImageButton>
-                                                <Button Grid.Column="2"
-                                                        Text="{Binding IsExpanded, Converter={StaticResource ChevronConverter}}"
-                                                        BackgroundColor="Transparent"
-                                                        TextColor="{StaticResource MutedTextColor}"
-                                                        Padding="0"
-                                                        WidthRequest="32"
-                                                        HeightRequest="32"
-                                                        Command="{Binding ToggleExpandedCommand}"/>
+                                                <controls:ChevronIconView Grid.Column="2"
+                                                                          IsExpanded="{Binding IsExpanded}"
+                                                                          AnimateRotation="True"
+                                                                          IconSize="32"
+                                                                          GlyphSize="14"
+                                                                          GlyphColor="{StaticResource MutedTextColor}">
+                                                    <controls:ChevronIconView.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding ToggleExpandedCommand}" />
+                                                    </controls:ChevronIconView.GestureRecognizers>
+                                                </controls:ChevronIconView>
                                             </Grid>
 
                                             <controls:AnimatedExpandView IsExpanded="{Binding IsExpanded}"
@@ -1209,14 +1213,16 @@
                                             <Label Text="{Binding HeaderTitle}"
                                                    FontAttributes="Bold"
                                                    FontSize="16"/>
-                                            <Button Grid.Column="1"
-                                                    Text="{Binding IsExpanded, Converter={StaticResource ChevronConverter}}"
-                                                    BackgroundColor="Transparent"
-                                                    TextColor="{StaticResource MutedTextColor}"
-                                                    Padding="0"
-                                                    WidthRequest="32"
-                                                    HeightRequest="32"
-                                                    Command="{Binding ToggleExpandedCommand}"/>
+                                            <controls:ChevronIconView Grid.Column="1"
+                                                                      IsExpanded="{Binding IsExpanded}"
+                                                                      AnimateRotation="True"
+                                                                      IconSize="32"
+                                                                      GlyphSize="14"
+                                                                      GlyphColor="{StaticResource MutedTextColor}">
+                                                <controls:ChevronIconView.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding ToggleExpandedCommand}" />
+                                                </controls:ChevronIconView.GestureRecognizers>
+                                            </controls:ChevronIconView>
                                         </Grid>
 
                                         <controls:AnimatedExpandView IsExpanded="{Binding IsExpanded}"
@@ -1331,14 +1337,16 @@
                                                         <Label Text="Field split"
                                                                FontSize="12"
                                                                Opacity="0.7"/>
-                                                        <Button Grid.Column="1"
-                                                                Text="{Binding FieldLegendChevronText}"
-                                                                BackgroundColor="Transparent"
-                                                                TextColor="{StaticResource MutedTextColor}"
-                                                                Padding="0"
-                                                                WidthRequest="28"
-                                                                HeightRequest="28"
-                                                                Command="{Binding ToggleFieldLegendCommand}"/>
+                                                        <controls:ChevronIconView Grid.Column="1"
+                                                                                  IsExpanded="{Binding ShowFieldLegend}"
+                                                                                  AnimateRotation="True"
+                                                                                  IconSize="28"
+                                                                                  GlyphSize="14"
+                                                                                  GlyphColor="{StaticResource MutedTextColor}">
+                                                            <controls:ChevronIconView.GestureRecognizers>
+                                                                <TapGestureRecognizer Command="{Binding ToggleFieldLegendCommand}" />
+                                                            </controls:ChevronIconView.GestureRecognizers>
+                                                        </controls:ChevronIconView>
                                                     </Grid>
 
                                                     <FlexLayout Direction="Row"

@@ -1,4 +1,5 @@
 using System.Text.Json;
+using labyItems.Helpers;
 using labyItems.Models;
 using labyItems.Pages.Calculator;
 using labyItems.Services;
@@ -82,6 +83,33 @@ public sealed class ItemEmailServiceTests
         });
 
         Assert.Equal("Stormwand - Grants Fireblade 3/day and Magebolt 2/day", payload.Description);
+    }
+
+    [Fact]
+    public void BuildGrantSummary_DoesNotPluralizeArmourAndShieldAcronyms()
+    {
+        var summary = NotationHelper.BuildGrantSummary(new[]
+        {
+            new CalcResult
+            {
+                AbilityType = "Shield",
+                AbilityName = "No Shield",
+                TotalIsp = 48,
+                Details = new()
+                {
+                    ["MAC"] = 5,
+                    ["enhancementBonuses"] = new[]
+                    {
+                        new { type = "PAC", value = 2, isp = 12 }
+                    }
+                }
+            }
+        });
+
+        Assert.Contains("5 MAC", summary);
+        Assert.Contains("2 PAC", summary);
+        Assert.DoesNotContain("MACs", summary);
+        Assert.DoesNotContain("PACs", summary);
     }
 
     [Fact]

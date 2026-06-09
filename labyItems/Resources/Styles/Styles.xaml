@@ -281,6 +281,7 @@
     <Style TargetType="Button" x:Key="ChevronButtonStyle">
         <Setter Property="BackgroundColor" Value="Transparent"/>
         <Setter Property="TextColor" Value="{StaticResource MutedTextColor}"/>
+        <Setter Property="FontFamily" Value="FASolid"/>
         <Setter Property="FontSize" Value="18"/>
         <Setter Property="Padding" Value="0"/>
         <Setter Property="WidthRequest" Value="32"/>

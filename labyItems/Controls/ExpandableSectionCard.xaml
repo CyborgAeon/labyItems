@@ -22,14 +22,14 @@
                        TextColor="{StaticResource Gray950}"
                        VerticalTextAlignment="Center" />
 
-                <Label Grid.Column="1"
-                       FontFamily="FASolid"
-                       FontSize="16"
-                       HorizontalTextAlignment="End"
-                       InputTransparent="True"
-                       Text="{Binding Source={x:Reference Root}, Path=ChevronText}"
-                       TextColor="{StaticResource Gray500}"
-                       VerticalTextAlignment="Center" />
+                <controls:ChevronIconView Grid.Column="1"
+                                          IsExpanded="{Binding Source={x:Reference Root}, Path=IsExpanded}"
+                                          AnimateRotation="True"
+                                          GlyphSize="16"
+                                          GlyphColor="{StaticResource Gray500}"
+                                          InputTransparent="True"
+                                          HorizontalOptions="End"
+                                          VerticalOptions="Center" />
             </Grid>
 
             <BoxView HeightRequest="1"

@@ -359,10 +359,14 @@
                                                  <VerticalStackLayout Spacing="8">
                                                         <Grid ColumnDefinitions="Auto,*"
                                                               ColumnSpacing="8">
-                                                               <Button Grid.Column="0"
-                                                                       Text="{Binding RaceAlignmentChevronText}"
-                                                                       Style="{StaticResource ChevronButtonStyle}"
-                                                                       Clicked="OnToggleRaceAlignmentClicked"/>
+                                                                <controls:ChevronIconView Grid.Column="0"
+                                                                                          IsExpanded="{Binding IsRaceAlignmentCardExpanded}"
+                                                                                          AnimateRotation="True"
+                                                                                          GlyphColor="{StaticResource MutedTextColor}">
+                                                                       <controls:ChevronIconView.GestureRecognizers>
+                                                                              <TapGestureRecognizer Tapped="OnToggleRaceAlignmentClicked" />
+                                                                       </controls:ChevronIconView.GestureRecognizers>
+                                                                </controls:ChevronIconView>
                                                                <Label Grid.Column="1"
                                                                       Text="Alignment rule"
                                                                       Style="{StaticResource SectionHeaderLabelStyle}"
@@ -521,10 +525,14 @@
                                    <Grid ColumnDefinitions="Auto,*"
                                          ColumnSpacing="8"
                                          IsVisible="{Binding ShowClassLifeScaleSelectors}">
-                                          <Button Grid.Column="0"
-                                                  Text="{Binding LifeScaleChevronText}"
-                                                  Style="{StaticResource ChevronButtonStyle}"
-                                                  Clicked="OnToggleLifeScaleClicked"/>
+                                           <controls:ChevronIconView Grid.Column="0"
+                                                                     IsExpanded="{Binding IsLifeScaleExpanded}"
+                                                                     AnimateRotation="True"
+                                                                     GlyphColor="{StaticResource MutedTextColor}">
+                                                  <controls:ChevronIconView.GestureRecognizers>
+                                                         <TapGestureRecognizer Tapped="OnToggleLifeScaleClicked" />
+                                                  </controls:ChevronIconView.GestureRecognizers>
+                                           </controls:ChevronIconView>
                                           <Label Grid.Column="1"
                                                  Text="{Binding LifeScaleCollapsedSummary}"
                                                  VerticalTextAlignment="Center"

@@ -6,6 +6,7 @@ using labyItems.Models.Characters;
 using labyItems.Services.AbilityEffects;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Storage;
 
 namespace labyItems.Services;
@@ -35,7 +36,22 @@ public sealed class AbilityDefinitionDataSynchronizer : IAbilityDefinitionDataSy
         if (string.IsNullOrWhiteSpace(dbPath) || !File.Exists(dbPath))
             return;
 
-        var abilitiesJson = await ReadAssetTextAsync("specialisation/abilities.json", cancellationToken);
+        var buildId = GetPackagedDataBuildId();
+
+        using var conn = new SqliteConnection($"Data Source={dbPath}");
+        await conn.OpenAsync(cancellationToken).ConfigureAwait(false);
+        EnsureTablesExist(conn);
+
+        var existingChecksum = GetExistingChecksum(conn);
+        var existingBuildId = GetExistingBuildId(conn);
+        if (!string.IsNullOrWhiteSpace(existingChecksum)
+            && string.Equals(existingBuildId, buildId, StringComparison.OrdinalIgnoreCase))
+        {
+            _logger.LogInformation("Skipped ability definition sync: packaged build id '{BuildId}' already applied.", buildId);
+            return;
+        }
+
+        var abilitiesJson = await ReadAssetTextAsync("specialisation/abilities.json", cancellationToken).ConfigureAwait(false);
         if (string.IsNullOrWhiteSpace(abilitiesJson))
         {
             _logger.LogWarning("Skipped ability definition sync: could not load packaged specialisation/abilities.json.");
@@ -50,13 +66,11 @@ public sealed class AbilityDefinitionDataSynchronizer : IAbilityDefinitionDataSy
             return;
         }
 
-        using var conn = new SqliteConnection($"Data Source={dbPath}");
-        await conn.OpenAsync(cancellationToken);
-        EnsureTablesExist(conn);
-
-        var existingChecksum = GetExistingChecksum(conn);
         if (string.Equals(existingChecksum, checksum, StringComparison.OrdinalIgnoreCase))
+        {
+            SaveChecksum(conn, tx: null, checksum, buildId);
             return;
+        }
 
         using var tx = conn.BeginTransaction();
         DeleteExistingDefaults(conn, tx);
@@ -67,7 +81,7 @@ public sealed class AbilityDefinitionDataSynchronizer : IAbilityDefinitionDataSy
             ReplaceInstructions(conn, tx, row.AbilityKey, row.Instructions);
         }
 
-        SaveChecksum(conn, tx, checksum);
+        SaveChecksum(conn, tx, checksum, buildId);
         tx.Commit();
 
         AbilityDefinitionLookupService.InvalidateCache();
@@ -295,27 +309,42 @@ VALUES ($id, $abilityKey, $instructionJson, 1, $createdAt, $updatedAt);";
         }
     }
 
-    private static void SaveChecksum(SqliteConnection conn, SqliteTransaction tx, string checksum)
+    private static void SaveChecksum(SqliteConnection conn, SqliteTransaction? tx, string checksum, string buildId)
     {
         using (var delete = conn.CreateCommand())
         {
-            delete.Transaction = tx;
+            if (tx != null)
+                delete.Transaction = tx;
             delete.CommandText = "DELETE FROM seed_metadata WHERE seed_version = $seedVersion;";
             delete.Parameters.AddWithValue("$seedVersion", SeedVersion);
             delete.ExecuteNonQuery();
         }
 
         using var insert = conn.CreateCommand();
-        insert.Transaction = tx;
+        if (tx != null)
+            insert.Transaction = tx;
         insert.CommandText = @"
 INSERT INTO seed_metadata (seed_version, schema_version, build_id, checksum, created_at)
 VALUES ($seedVersion, $schemaVersion, $buildId, $checksum, $createdAt);";
         insert.Parameters.AddWithValue("$seedVersion", SeedVersion);
         insert.Parameters.AddWithValue("$schemaVersion", 1);
-        insert.Parameters.AddWithValue("$buildId", "ability-definition-sync");
+        insert.Parameters.AddWithValue("$buildId", buildId);
         insert.Parameters.AddWithValue("$checksum", checksum);
         insert.Parameters.AddWithValue("$createdAt", DateTime.UtcNow.ToString("o"));
         insert.ExecuteNonQuery();
+    }
+
+    private static string? GetExistingBuildId(SqliteConnection conn)
+    {
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = @"
+SELECT build_id
+FROM seed_metadata
+WHERE seed_version = $seedVersion
+ORDER BY rowid DESC
+LIMIT 1;";
+        cmd.Parameters.AddWithValue("$seedVersion", SeedVersion);
+        return cmd.ExecuteScalar()?.ToString();
     }
 
     private static string? GetExistingChecksum(SqliteConnection conn)
@@ -434,6 +463,9 @@ CREATE TABLE IF NOT EXISTS seed_metadata (
         hash.AsSpan(0, 16).CopyTo(guidBytes);
         return new Guid(guidBytes).ToString();
     }
+
+    private static string GetPackagedDataBuildId()
+        => $"{AppInfo.Current.VersionString}+{AppInfo.Current.BuildString}";
 
     private sealed record AbilityDefinitionRow(
         string Id,

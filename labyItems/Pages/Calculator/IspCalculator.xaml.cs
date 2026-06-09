@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using labyItems.Controls;
+using labyItems.Helpers;
 using labyItems.Models;
 using labyItems.Pages;
 using labyItems.Pages.Configs;
@@ -72,7 +73,7 @@ public partial class IspCalculator : ContentPage
         }
     }
 
-    public string BreakdownChevronGlyph => IsBreakdownExpanded ? "\uf077" : "\uf078";
+    public string BreakdownChevronGlyph => FontAwesomeGlyphs.Chevron;
 
     public int Total
     {
@@ -498,7 +499,7 @@ public partial class IspCalculator : ContentPage
         if (result.TotalIsp != 0)
             return true;
 
-        return ItemEmailService.BuildHumanReadableAbilityLines(new[] { result }).Count > 0;
+        return NotationHelper.BuildHumanReadableAbilityLines(new[] { result }).Count > 0;
     }
 
     private void RemoveContributionById(string? id)
@@ -760,7 +761,7 @@ public partial class IspCalculator : ContentPage
         {
             get
             {
-                var grantText = ItemEmailService.BuildGrantSummary(new[] { _result });
+                var grantText = NotationHelper.BuildGrantSummary(new[] { _result });
                 if (!string.IsNullOrWhiteSpace(grantText))
                     return grantText;
 

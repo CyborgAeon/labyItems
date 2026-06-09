@@ -65,12 +65,17 @@
                         </VerticalStackLayout>
 
 
-                        <Button
-                            Grid.Column="2"
-                            Text="{Binding IsExpanded, Converter={StaticResource ChevronConverter}}"
-                            Style="{StaticResource CardChevronButtonStyle}"
-                            Command="{Binding ToggleRaceExpandedCommand, Source={x:Reference Self}}"
-                            CommandParameter="{Binding .}"/>
+                        <controls:ChevronIconView Grid.Column="2"
+                                                  IsExpanded="{Binding IsExpanded}"
+                                                  AnimateRotation="True"
+                                                  GlyphColor="{StaticResource Gray500}"
+                                                  HorizontalOptions="Center"
+                                                  VerticalOptions="Center">
+                            <controls:ChevronIconView.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ToggleRaceExpandedCommand, Source={x:Reference Self}}"
+                                                      CommandParameter="{Binding .}" />
+                            </controls:ChevronIconView.GestureRecognizers>
+                        </controls:ChevronIconView>
                     </Grid>
 
                     <Label Grid.Row="1"

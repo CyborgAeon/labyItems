@@ -124,10 +124,16 @@
                                            Text="Lifescale Search"
                                            Style="{StaticResource SectionHeaderLabelStyle}"
                                            VerticalTextAlignment="Center"/>
-                                    <Button Grid.Column="1"
-                                            Text="{Binding IsLifeScaleSearchExpanded, Converter={StaticResource ChevronConverter}}"
-                                            Style="{StaticResource CardChevronButtonStyle}"
-                                            Clicked="OnToggleLifeScaleSearchClicked"/>
+                                    <controls:ChevronIconView Grid.Column="1"
+                                                              IsExpanded="{Binding IsLifeScaleSearchExpanded}"
+                                                              AnimateRotation="True"
+                                                              GlyphColor="{StaticResource MutedTextColor}"
+                                                              HorizontalOptions="End"
+                                                              VerticalOptions="Center">
+                                        <controls:ChevronIconView.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnToggleLifeScaleSearchClicked" />
+                                        </controls:ChevronIconView.GestureRecognizers>
+                                    </controls:ChevronIconView>
                                 </Grid>
 
                                 <VerticalStackLayout Spacing="8"
@@ -225,10 +231,16 @@
                                            Text="Advanced override table"
                                            Style="{StaticResource SectionHeaderLabelStyle}"
                                            VerticalTextAlignment="Center"/>
-                                    <Button Grid.Column="1"
-                                            Text="{Binding IsLifeScaleAdvancedExpanded, Converter={StaticResource ChevronConverter}}"
-                                            Style="{StaticResource CardChevronButtonStyle}"
-                                            Clicked="OnToggleLifeScaleAdvancedClicked"/>
+                                    <controls:ChevronIconView Grid.Column="1"
+                                                              IsExpanded="{Binding IsLifeScaleAdvancedExpanded}"
+                                                              AnimateRotation="True"
+                                                              GlyphColor="{StaticResource MutedTextColor}"
+                                                              HorizontalOptions="End"
+                                                              VerticalOptions="Center">
+                                        <controls:ChevronIconView.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnToggleLifeScaleAdvancedClicked" />
+                                        </controls:ChevronIconView.GestureRecognizers>
+                                    </controls:ChevronIconView>
                                 </Grid>
 
                                 <VerticalStackLayout Spacing="8"
@@ -377,10 +389,16 @@
                                            Text="Post 8th progression"
                                            Style="{StaticResource SectionHeaderLabelStyle}"
                                            VerticalTextAlignment="Center"/>
-                                    <Button Grid.Column="1"
-                                            Text="{Binding IsPostEighthExpanded, Converter={StaticResource ChevronConverter}}"
-                                            Style="{StaticResource CardChevronButtonStyle}"
-                                            Clicked="OnTogglePostEighthClicked"/>
+                                    <controls:ChevronIconView Grid.Column="1"
+                                                              IsExpanded="{Binding IsPostEighthExpanded}"
+                                                              AnimateRotation="True"
+                                                              GlyphColor="{StaticResource MutedTextColor}"
+                                                              HorizontalOptions="End"
+                                                              VerticalOptions="Center">
+                                        <controls:ChevronIconView.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnTogglePostEighthClicked" />
+                                        </controls:ChevronIconView.GestureRecognizers>
+                                    </controls:ChevronIconView>
                                 </Grid>
 
                                 <VerticalStackLayout IsVisible="{Binding IsPostEighthExpanded}"

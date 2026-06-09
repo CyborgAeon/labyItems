@@ -49,20 +49,13 @@ public partial class ToolsetNavigationMenu : ContentView
         nameof(ItemsExpanded),
         typeof(bool),
         typeof(ToolsetNavigationMenu),
-        false,
-        propertyChanged: static (bindable, _, _) =>
-        {
-            if (bindable is ToolsetNavigationMenu menu)
-                menu.OnPropertyChanged(nameof(ItemsChevronGlyph));
-        });
+        false);
 
     public bool ItemsExpanded
     {
         get => (bool)GetValue(ItemsExpandedProperty);
         set => SetValue(ItemsExpandedProperty, value);
     }
-
-    public string ItemsChevronGlyph => ItemsExpanded ? "\uf077" : "\uf078";
 
     private async void OnLoaded(object? sender, EventArgs e)
     {
@@ -118,6 +111,9 @@ public partial class ToolsetNavigationMenu : ContentView
     private async void OnScrollBuilderTapped(object sender, TappedEventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new ScrollBuilderPage()));
 
+    private async void OnCraftingTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new MakeSheetPage()));
+
     private async void OnSearchClicked(object sender, EventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage()));
 
@@ -147,9 +143,6 @@ public partial class ToolsetNavigationMenu : ContentView
 
     private async void OnInitiateTradeTapped(object sender, TappedEventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new TradePage()));
-
-    private void OnItemsGroupClicked(object sender, EventArgs e)
-        => ItemsExpanded = !ItemsExpanded;
 
     private void OnItemsGroupTapped(object sender, TappedEventArgs e)
         => ItemsExpanded = !ItemsExpanded;
@@ -248,6 +241,7 @@ public partial class ToolsetNavigationMenu : ContentView
         ApplyRowState(CalculateIspRow, ToolsetRouteKeys.ItemsIsp);
         ApplyRowState(CreateMpRow, ToolsetRouteKeys.ItemsMp);
         ApplyRowState(ScrollBuilderRow, ToolsetRouteKeys.ScrollBuilder);
+        ApplyRowState(CraftingRow, ToolsetRouteKeys.ItemsCrafting);
         ApplyRowState(ItemWalletRow, ToolsetRouteKeys.ItemsWallet);
         ApplyRowState(CreationsRow, ToolsetRouteKeys.NonStandard);
         ApplyRowState(CalendarRow, ToolsetRouteKeys.Calendar);
@@ -278,6 +272,7 @@ public partial class ToolsetNavigationMenu : ContentView
     private static bool IsItemsRoute(string? route)
         => string.Equals(route, ToolsetRouteKeys.ItemsIsp, StringComparison.OrdinalIgnoreCase)
            || string.Equals(route, ToolsetRouteKeys.ItemsMp, StringComparison.OrdinalIgnoreCase)
+           || string.Equals(route, ToolsetRouteKeys.ItemsCrafting, StringComparison.OrdinalIgnoreCase)
            || string.Equals(route, ToolsetRouteKeys.ScrollBuilder, StringComparison.OrdinalIgnoreCase)
            || string.Equals(route, ToolsetRouteKeys.ItemsWallet, StringComparison.OrdinalIgnoreCase);
 

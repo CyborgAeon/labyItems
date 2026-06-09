@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using labyItems.Helpers;
 using labyItems.Services;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Shapes;
@@ -37,7 +38,7 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
         MonthButton.Text = _visibleMonth.ToString("MMMM");
         YearButton.Text = _visibleMonth.ToString("yyyy");
         PageContent.Opacity = 0;
-        ToggleCalendarButton.Rotation = 0;
+        ToggleCalendarChevron.IsExpanded = _isCalendarExpanded;
         _ = RefreshMonthAsync();
     }
 
@@ -107,7 +108,7 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
         await ChangeVisibleMonthAsync(targetMonth, direction == 0 ? 1 : direction);
     }
 
-    private async void OnToggleCalendarClicked(object sender, EventArgs e)
+    private async void OnToggleCalendarTapped(object sender, TappedEventArgs e)
     {
         if (_isAnimatingCalendarCollapse)
             return;
@@ -115,10 +116,11 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
         _isAnimatingCalendarCollapse = true;
         _isCalendarExpanded = !_isCalendarExpanded;
         CalendarBodyHost.IsExpanded = _isCalendarExpanded;
+        ToggleCalendarChevron.IsExpanded = _isCalendarExpanded;
 
         try
         {
-            await ToggleCalendarButton.RotateTo(_isCalendarExpanded ? 0 : 180, 140, Easing.CubicOut);
+            await Task.Delay((int)CardExpandAnimationHelper.UnifiedDurationMs);
         }
         finally
         {
@@ -205,7 +207,7 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
         var monthEvents = await Task.Run(() => _eventStore.GetEventsForMonth(_visibleMonth));
         RefreshMonthContent(monthEvents);
         CalendarBodyHost.IsExpanded = _isCalendarExpanded;
-        ToggleCalendarButton.Rotation = _isCalendarExpanded ? 0 : 180;
+        ToggleCalendarChevron.IsExpanded = _isCalendarExpanded;
         Raise(nameof(VisibleEvents));
     }
 

@@ -14,6 +14,15 @@ public sealed partial class DocumentReferenceService : IDocumentReferenceService
         [DevicePlatform.Tizen] = ["image/*", "application/pdf"]
     });
 
+    private static readonly FilePickerFileType AllowedImageTypes = new(new Dictionary<DevicePlatform, IEnumerable<string>>
+    {
+        [DevicePlatform.iOS] = ["public.image"],
+        [DevicePlatform.MacCatalyst] = ["public.image"],
+        [DevicePlatform.Android] = ["image/*"],
+        [DevicePlatform.WinUI] = [".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp"],
+        [DevicePlatform.Tizen] = ["image/*"]
+    });
+
     public async Task<DocumentReferenceCapture?> PickDocumentAsync()
     {
 #if ANDROID || IOS
@@ -23,6 +32,21 @@ public sealed partial class DocumentReferenceService : IDocumentReferenceService
         {
             PickerTitle = "Select an image or PDF",
             FileTypes = AllowedDocumentTypes
+        });
+
+        return file == null ? null : CreatePathCapture(file);
+#endif
+    }
+
+    public async Task<DocumentReferenceCapture?> PickImageAsync()
+    {
+#if ANDROID || IOS
+        return await PickImagePlatformAsync();
+#else
+        var file = await FilePicker.Default.PickAsync(new PickOptions
+        {
+            PickerTitle = "Select an image",
+            FileTypes = AllowedImageTypes
         });
 
         return file == null ? null : CreatePathCapture(file);
@@ -71,6 +95,7 @@ public sealed partial class DocumentReferenceService : IDocumentReferenceService
 
 #if ANDROID || IOS
     private partial Task<DocumentReferenceCapture?> PickDocumentPlatformAsync();
+    private partial Task<DocumentReferenceCapture?> PickImagePlatformAsync();
     private partial Task<DocumentReferenceCapture?> CapturePhotoPlatformAsync();
     private partial Task<bool> IsAvailablePlatformAsync(NonStandardDocumentLink document);
     private partial Task OpenPlatformAsync(NonStandardDocumentLink document);

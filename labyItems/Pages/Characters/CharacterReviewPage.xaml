@@ -3,6 +3,8 @@
     x:Class="labyItems.Pages.Characters.CharacterReviewPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
     xmlns:local="clr-namespace:labyItems.Pages.Characters"
     Title="Character"
     NavigationPage.HasNavigationBar="False"
@@ -11,7 +13,7 @@
     <Grid Padding="0">
         <local:CharacterReviewView x:Name="Review"
                                    Margin="0,60,0,0"
-                                   ShowSaveButton="False"/>
+                                   ShowSaveButton="False" />
 
         <BoxView x:Name="ActionBackdrop"
                  BackgroundColor="#88000000"
@@ -19,7 +21,7 @@
                  InputTransparent="True"
                  Opacity="0">
             <BoxView.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnActionBackdropTapped"/>
+                <TapGestureRecognizer Tapped="OnActionBackdropTapped" />
             </BoxView.GestureRecognizers>
         </BoxView>
 
@@ -39,7 +41,7 @@
                         <FontImageSource FontFamily="FASolid"
                                          Glyph="&#xf060;"
                                          Size="24"
-                                         Color="{StaticResource Gray300}"/>
+                                         Color="{StaticResource Gray300}" />
                     </ImageButton.Source>
                 </ImageButton>
 
@@ -47,75 +49,109 @@
                                        Grid.Column="1"
                                        HorizontalOptions="Start"
                                        VerticalOptions="Center"
-                                       Spacing="4">
-                    <ImageButton AutomationProperties.Name="Battleboard"
-                                 StyleId="character-action-battleboard"
-                                 Style="{StaticResource EmojiActionIconButtonStyle}"
-                                 Clicked="OnBattleboardClicked">
-                        <ImageButton.Source>
-                            <FontImageSource Glyph="⚔️" Size="20" Color="Black"/>
-                        </ImageButton.Source>
-                    </ImageButton>
+                                       Spacing="2">
+                    <controls:GlyphIconButtonView AutomationProperties.Name="Edit character"
+                                                  StyleId="{x:Static helpers:CharacterActionOrderHelper.EditStyleId}"
+                                                  ButtonSize="34"
+                                                  GlyphSize="16"
+                                                  Glyph="{x:Static helpers:FontAwesomeGlyphs.Edit}"
+                                                  Clicked="OnEditClicked" />
 
-                    <ImageButton AutomationProperties.Name="Manufacturing"
-                                 StyleId="character-action-makesheet"
-                                 Style="{StaticResource EmojiActionIconButtonStyle}"
-                                 Clicked="OnManufacturingClicked">
-                        <ImageButton.Source>
-                            <FontImageSource Glyph="🛠️" Size="20" Color="Black"/>
-                        </ImageButton.Source>
-                    </ImageButton>
+                    <controls:GlyphIconButtonView AutomationProperties.Name="Advance character"
+                                                  StyleId="{x:Static helpers:CharacterActionOrderHelper.AdvanceStyleId}"
+                                                  ButtonSize="34"
+                                                  GlyphSize="16"
+                                                  Glyph="{x:Static helpers:FontAwesomeGlyphs.Advance}"
+                                                  Clicked="OnAdvanceClicked" />
 
-                    <ImageButton AutomationProperties.Name="Export battleboard"
-                                 StyleId="character-action-export"
-                                 Style="{StaticResource EmojiActionIconButtonStyle}"
-                                 Clicked="OnExportExcelClicked">
-                        <ImageButton.Source>
-                            <FontImageSource Glyph="🖨️" Size="20" Color="Black"/>
-                        </ImageButton.Source>
-                    </ImageButton>
+                    <controls:GlyphIconButtonView AutomationProperties.Name="Battleboard"
+                                                  StyleId="{x:Static helpers:CharacterActionOrderHelper.BattleboardStyleId}"
+                                                  ButtonSize="34"
+                                                  GlyphSize="16"
+                                                  Glyph="{x:Static helpers:FontAwesomeGlyphs.Battleboard}"
+                                                  GlyphFontFamily=""
+                                                  Clicked="OnBattleboardClicked" />
 
-                    <ImageButton AutomationProperties.Name="Advance character"
-                                 StyleId="character-action-advance"
-                                 Style="{StaticResource EmojiActionIconButtonStyle}"
-                                 Clicked="OnAdvanceClicked">
-                        <ImageButton.Source>
-                            <FontImageSource Glyph="⬆️" Size="20" Color="Black"/>
-                        </ImageButton.Source>
-                    </ImageButton>
+                    <controls:GlyphIconButtonView AutomationProperties.Name="Export battleboard"
+                                                  StyleId="{x:Static helpers:CharacterActionOrderHelper.ExportStyleId}"
+                                                  ButtonSize="34"
+                                                  GlyphSize="16"
+                                                  Glyph="{x:Static helpers:FontAwesomeGlyphs.ExportBattleboard}"
+                                                  Clicked="OnExportExcelClicked" />
+
+                    <controls:GlyphIconButtonView AutomationProperties.Name="Open makes sheet"
+                                                  StyleId="{x:Static helpers:CharacterActionOrderHelper.MakeSheetStyleId}"
+                                                  ButtonSize="34"
+                                                  GlyphSize="16"
+                                                  Glyph="{x:Static helpers:FontAwesomeGlyphs.Crafting}"
+                                                  Clicked="OnManufacturingClicked" />
+
+                    <controls:GlyphIconButtonView AutomationProperties.Name="Delete character"
+                                                  StyleId="{x:Static helpers:CharacterActionOrderHelper.DeleteStyleId}"
+                                                  ButtonSize="34"
+                                                  GlyphSize="16"
+                                                  Glyph="{x:Static helpers:FontAwesomeGlyphs.Delete}"
+                                                  GlyphColor="#B91C1C"
+                                                  Clicked="OnDeleteClicked" />
                 </HorizontalStackLayout>
 
-                <Button x:Name="ActionsChevronButton"
-                        Grid.Column="2"
-                        Text="▾"
-                        Style="{StaticResource HeaderChevronButtonStyle}"
-                        Clicked="OnActionsChevronClicked"/>
+                <controls:ChevronIconView x:Name="ActionsChevron"
+                                          Grid.Column="2"
+                                          AnimateRotation="True"
+                                          GlyphSize="18"
+                                          GlyphColor="{StaticResource Gray950}"
+                                          HorizontalOptions="Center"
+                                          VerticalOptions="Center">
+                    <controls:ChevronIconView.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnActionsChevronTapped" />
+                    </controls:ChevronIconView.GestureRecognizers>
+                </controls:ChevronIconView>
             </Grid>
 
             <VerticalStackLayout x:Name="ExpandedActionsPanel"
                                  Grid.Row="1"
                                  IsVisible="False"
                                  Opacity="0"
-                                 Spacing="8"
-                                 Padding="8,8,8,4">
-                <Button Text="Export battleboard 🖨️"
-                        StyleId="character-action-export"
-                        Style="{StaticResource ExpandedActionButtonStyle}"
-                        Clicked="OnExportExcelClicked"/>
-                <Button Text="Advance character ⬆️"
-                        StyleId="character-action-advance"
-                        Style="{StaticResource ExpandedActionButtonStyle}"
-                        Clicked="OnAdvanceClicked"/>
-                <Button Text="View battleboard ⚔️"
-                        StyleId="character-action-battleboard"
-                        Style="{StaticResource ExpandedActionButtonStyle}"
-                        Clicked="OnBattleboardClicked"/>
-                <Button Text="View make sheet 🛠️"
-                        StyleId="character-action-makesheet"
-                        Style="{StaticResource ExpandedActionButtonStyle}"
-                        Clicked="OnManufacturingClicked"/>
+                                 Spacing="0"
+                                 Padding="0,8,0,4">
+                <controls:GlyphActionRowView AutomationProperties.Name="Edit character"
+                                             StyleId="{x:Static helpers:CharacterActionOrderHelper.EditStyleId}"
+                                             Text="Edit character"
+                                             Glyph="{x:Static helpers:FontAwesomeGlyphs.Edit}"
+                                             Clicked="OnEditClicked" />
+
+                <controls:GlyphActionRowView AutomationProperties.Name="Advance character"
+                                             StyleId="{x:Static helpers:CharacterActionOrderHelper.AdvanceStyleId}"
+                                             Text="Advance character"
+                                             Glyph="{x:Static helpers:FontAwesomeGlyphs.Advance}"
+                                             Clicked="OnAdvanceClicked" />
+
+                <controls:GlyphActionRowView AutomationProperties.Name="View battleboard"
+                                             StyleId="{x:Static helpers:CharacterActionOrderHelper.BattleboardStyleId}"
+                                             Text="View battleboard"
+                                             Glyph="{x:Static helpers:FontAwesomeGlyphs.Battleboard}"
+                                             GlyphFontFamily=""
+                                             Clicked="OnBattleboardClicked" />
+
+                <controls:GlyphActionRowView AutomationProperties.Name="Export battleboard"
+                                             StyleId="{x:Static helpers:CharacterActionOrderHelper.ExportStyleId}"
+                                             Text="Export battleboard"
+                                             Glyph="{x:Static helpers:FontAwesomeGlyphs.ExportBattleboard}"
+                                             Clicked="OnExportExcelClicked" />
+
+                <controls:GlyphActionRowView AutomationProperties.Name="Open makes sheet"
+                                             StyleId="{x:Static helpers:CharacterActionOrderHelper.MakeSheetStyleId}"
+                                             Text="Open makes sheet"
+                                             Glyph="{x:Static helpers:FontAwesomeGlyphs.Crafting}"
+                                             Clicked="OnManufacturingClicked" />
+
+                <controls:GlyphActionRowView AutomationProperties.Name="Delete character"
+                                             StyleId="{x:Static helpers:CharacterActionOrderHelper.DeleteStyleId}"
+                                             Text="Delete character"
+                                             Glyph="{x:Static helpers:FontAwesomeGlyphs.Delete}"
+                                             IsDestructive="True"
+                                             Clicked="OnDeleteClicked" />
             </VerticalStackLayout>
         </Grid>
     </Grid>
-
 </ContentPage>

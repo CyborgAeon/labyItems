@@ -42,10 +42,19 @@
               ColumnSpacing="8">
                 <ContentView x:Name="HeaderLeadingHost"
                              Grid.Column="0" />
-                <Entry Grid.Column="1"
-                       Placeholder="Search guilds..."
-                       ClearButtonVisibility="WhileEditing"
-                       Text="{Binding SearchText}"/>
+                <Grid Grid.Column="1">
+                    <Entry Placeholder="Search guilds..."
+                           ClearButtonVisibility="WhileEditing"
+                           Text="{Binding SearchText}"/>
+                    <ActivityIndicator IsRunning="{Binding IsSearchInProgress}"
+                                       IsVisible="{Binding IsSearchInProgress}"
+                                       WidthRequest="18"
+                                       HeightRequest="18"
+                                       HorizontalOptions="End"
+                                       VerticalOptions="Center"
+                                       Margin="0,0,12,0"
+                                       InputTransparent="True"/>
+                </Grid>
         </Grid>
 
         <Grid Grid.Row="2">
@@ -95,16 +104,8 @@
                     BackgroundColor="#CCFFFFFF"
                     StrokeThickness="0"
                     InputTransparent="True">
-                <VerticalStackLayout Spacing="10"
-                                     HorizontalOptions="Center"
-                                     VerticalOptions="Center">
-                    <ActivityIndicator IsRunning="{Binding IsLoading}"
-                                       WidthRequest="32"
-                                       HeightRequest="32"/>
-                    <Label Text="Loading guilds..."
-                           FontAttributes="Bold"
-                           HorizontalTextAlignment="Center"/>
-                </VerticalStackLayout>
+                <controls:LoadingIndicator IsRunning="{Binding IsLoading}"
+                                           Message="Loading guilds..."/>
             </Border>
         </Grid>
 

@@ -47,13 +47,18 @@
                                                Opacity="0.75"/>
                                     </VerticalStackLayout>
 
-                                    <Button Grid.Column="1"
-                                            Text="{Binding ChevronText}"
-                                            Style="{StaticResource ChevronButtonStyle}"
-                                            WidthRequest="28"
-                                            HeightRequest="28"
-                                            Padding="0"
-                                            Command="{Binding ToggleExpandedCommand}"/>
+                                    <controls:ChevronIconView Grid.Column="1"
+                                                              IsExpanded="{Binding IsExpanded}"
+                                                              AnimateRotation="True"
+                                                              GlyphSize="14"
+                                                              IconSize="28"
+                                                              GlyphColor="{StaticResource MutedTextColor}"
+                                                              HorizontalOptions="End"
+                                                              VerticalOptions="Center">
+                                        <controls:ChevronIconView.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding ToggleExpandedCommand}" />
+                                        </controls:ChevronIconView.GestureRecognizers>
+                                    </controls:ChevronIconView>
                                 </Grid>
 
                                 <controls:AnimatedExpandView IsExpanded="{Binding IsExpanded}"

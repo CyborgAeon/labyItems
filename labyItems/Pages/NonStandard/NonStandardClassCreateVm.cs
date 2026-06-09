@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using labyItems.Helpers;
 using labyItems.Models.Characters;
 using labyItems.Models.Enums;
 using labyItems.Services;
@@ -311,7 +312,7 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
         set => Set(ref _isLifescaleExpanded, value);
     }
 
-    public string LifescaleChevronText => IsLifescaleExpanded ? "▴" : "▾";
+    public string LifescaleChevronText => FontAwesomeGlyphs.Chevron;
 
     public bool UseCustomLifeScale
     {
@@ -368,7 +369,7 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
         }
     }
 
-    public string LifeScaleSearchChevronText => IsLifeScaleSearchExpanded ? "▴" : "▾";
+    public string LifeScaleSearchChevronText => FontAwesomeGlyphs.Chevron;
 
     public bool IsLifeScaleAdvancedExpanded
     {
@@ -386,7 +387,7 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
         }
     }
 
-    public string LifeScaleAdvancedChevronText => IsLifeScaleAdvancedExpanded ? "▴" : "▾";
+    public string LifeScaleAdvancedChevronText => FontAwesomeGlyphs.Chevron;
 
     public bool IsPostEighthExpanded
     {
@@ -400,7 +401,7 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
         }
     }
 
-    public string PostEighthChevronText => IsPostEighthExpanded ? "▴" : "▾";
+    public string PostEighthChevronText => FontAwesomeGlyphs.Chevron;
 
     public string PostEighthSummary
     {

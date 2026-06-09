@@ -1086,13 +1086,16 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
 
     private void QueuePlatformTabLayoutRefresh()
     {
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            await Task.Delay(10);
-            ApplyPlatformTabLayoutTweaks();
-            await Task.Delay(60);
-            ApplyPlatformTabLayoutTweaks();
-        });
+        UiDispatchHelper.BeginOnMainThread(() =>
+            UiDispatchHelper.RunFireAndForget(
+                async () =>
+                {
+                    await Task.Delay(10);
+                    ApplyPlatformTabLayoutTweaks();
+                    await Task.Delay(60);
+                    ApplyPlatformTabLayoutTweaks();
+                },
+                "ADVANCE_CHARACTER_TAB_LAYOUT_REFRESH"));
     }
 
     partial void ApplyPlatformTabLayoutTweaks();

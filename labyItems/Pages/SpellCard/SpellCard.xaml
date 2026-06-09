@@ -6,22 +6,9 @@
     xmlns:spellCard="clr-namespace:labyItems.Pages.SpellCard"
     x:Name="Root"
     Title="Spell">
-    <Grid RowDefinitions="Auto,*"
-          Padding="12,8,12,12">
-        <Grid ColumnDefinitions="Auto,*"
-              ColumnSpacing="8">
-            <Button Text="Close"
-                    Clicked="OnCloseClicked"
-                    HeightRequest="32"
-                    MinimumHeightRequest="0"
-                    Padding="10,0"
-                    BackgroundColor="Transparent"
-                    TextColor="{StaticResource SubtleTextColor}" />
-        </Grid>
-        <ScrollView Grid.Row="1">
-            <VerticalStackLayout Padding="4">
-                <spellCard:SpellDetailCardView x:Name="SpellDetails" />
-            </VerticalStackLayout>
-        </ScrollView>
-    </Grid>
+    <ScrollView>
+        <VerticalStackLayout Padding="16">
+            <spellCard:SpellDetailCardView x:Name="SpellDetails" />
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

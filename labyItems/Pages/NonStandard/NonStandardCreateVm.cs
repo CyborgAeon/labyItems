@@ -387,7 +387,7 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
             || RaceSubtypeOptions.Count > 0
             || RaceSubtypeCopies.Count > 0;
 
-    public string RaceAlignmentChevronText => IsRaceAlignmentCardExpanded ? "▴" : "▾";
+    public string RaceAlignmentChevronText => FontAwesomeGlyphs.Chevron;
 
     public bool IsRaceAlignmentCardExpanded
     {
@@ -588,7 +588,7 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         }
     }
 
-    public string LifeScaleChevronText => IsLifeScaleExpanded ? "▴" : "▾";
+    public string LifeScaleChevronText => FontAwesomeGlyphs.Chevron;
 
     public string LifeScaleCollapsedSummary
     {

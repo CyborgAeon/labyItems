@@ -574,17 +574,18 @@
                                                                       <Label Text="Search"
                                                                              Opacity="0.7"
                                                                              VerticalTextAlignment="Center"/>
-                                                                      <Button Grid.Column="1"
-                                                                              Text="{Binding IsExpanded, Converter={StaticResource ChevronConverter}}"
-                                                                              BackgroundColor="Transparent"
-                                                                              TextColor="{StaticResource MutedTextColor}"
-                                                                              FontSize="18"
-                                                                              Padding="0"
-                                                                              WidthRequest="40"
-                                                                              HeightRequest="40"
-                                                                              HorizontalOptions="End"
-                                                                              VerticalOptions="Center"
-                                                                              Command="{Binding ToggleCommand}"/>
+                                                                       <controls:ChevronIconView Grid.Column="1"
+                                                                                                  IsExpanded="{Binding IsExpanded}"
+                                                                                                  AnimateRotation="True"
+                                                                                                  GlyphSize="18"
+                                                                                                  IconSize="40"
+                                                                                                  GlyphColor="{StaticResource MutedTextColor}"
+                                                                                                  HorizontalOptions="End"
+                                                                                                  VerticalOptions="Center">
+                                                                           <controls:ChevronIconView.GestureRecognizers>
+                                                                               <TapGestureRecognizer Command="{Binding ToggleCommand}" />
+                                                                           </controls:ChevronIconView.GestureRecognizers>
+                                                                       </controls:ChevronIconView>
                                                                </Grid>
 
                                                                <VerticalStackLayout IsVisible="{Binding IsExpanded}"

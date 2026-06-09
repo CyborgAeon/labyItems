@@ -43,12 +43,8 @@ public partial class ExpandableSectionCard : ContentView
         set => SetValue(BodyContentProperty, value);
     }
 
-    public string ChevronText => IsExpanded ? "\uF077" : "\uF078";
-
     private static void OnIsExpandedChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        var control = (ExpandableSectionCard)bindable;
-        control.OnPropertyChanged(nameof(ChevronText));
     }
 
     private void OnHeaderTapped(object? sender, TappedEventArgs e)

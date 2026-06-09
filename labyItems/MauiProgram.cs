@@ -120,6 +120,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<Services.IPackagedDatabaseSynchronizer, Services.PackagedDatabaseSynchronizer>();
 		builder.Services.AddSingleton<Services.ICacheMaintenanceService, Services.CacheMaintenanceService>();
 		builder.Services.AddSingleton<Services.IDatabaseInitializer, Services.DatabaseInitializer>();
+		builder.Services.AddSingleton<Services.IStartupInitializationService, Services.StartupInitializationService>();
 		builder.Services.AddSingleton<IBattleboardExportService, BattleboardExportService>();
 		builder.Services.AddSingleton<IBattleboardDocumentService, BattleboardDocumentService>();
 		builder.Services.AddSingleton<IFileService, MauiFileService>();

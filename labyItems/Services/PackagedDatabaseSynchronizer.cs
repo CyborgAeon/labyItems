@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Storage;
 
 namespace labyItems.Services;
@@ -26,6 +27,21 @@ public sealed class PackagedDatabaseSynchronizer : IPackagedDatabaseSynchronizer
         if (string.IsNullOrWhiteSpace(dbPath) || !File.Exists(dbPath))
             return;
 
+        var buildId = GetPackagedDataBuildId();
+
+        using var conn = new SqliteConnection($"Data Source={dbPath}");
+        await conn.OpenAsync(cancellationToken).ConfigureAwait(false);
+        EnsureSeedMetadataTable(conn);
+
+        var existingChecksum = GetExistingChecksum(conn);
+        var existingBuildId = GetExistingBuildId(conn);
+        if (!string.IsNullOrWhiteSpace(existingChecksum)
+            && string.Equals(existingBuildId, buildId, StringComparison.OrdinalIgnoreCase))
+        {
+            _logger.LogInformation("Skipped packaged DB sync: packaged build id '{BuildId}' already applied.", buildId);
+            return;
+        }
+
         var tempPath = Path.Combine(FileSystem.CacheDirectory, $"laby.pkg.{Guid.NewGuid():N}.db");
         Directory.CreateDirectory(Path.GetDirectoryName(tempPath) ?? FileSystem.CacheDirectory);
 
@@ -45,18 +61,16 @@ public sealed class PackagedDatabaseSynchronizer : IPackagedDatabaseSynchronizer
                 tables = GetTablesWithIsDefault(packagedConn).ToList();
             }
 
-            using var conn = new SqliteConnection($"Data Source={dbPath}");
-            await conn.OpenAsync(cancellationToken);
-            EnsureSeedMetadataTable(conn);
-
-            var existingChecksum = GetExistingChecksum(conn);
             if (string.Equals(existingChecksum, packagedChecksum, StringComparison.OrdinalIgnoreCase))
+            {
+                SaveChecksum(conn, tx: null, packagedChecksum, buildId);
                 return;
+            }
 
             if (tables.Count == 0)
             {
                 _logger.LogWarning("Skipped packaged DB sync: packaged DB contains no tables with is_default.");
-                SaveChecksum(conn, tx: null, packagedChecksum);
+                SaveChecksum(conn, tx: null, packagedChecksum, buildId);
                 return;
             }
 
@@ -73,7 +87,7 @@ public sealed class PackagedDatabaseSynchronizer : IPackagedDatabaseSynchronizer
                     CopyDefaultRows(conn, tx, tableName);
                 }
 
-                SaveChecksum(conn, tx, packagedChecksum);
+                SaveChecksum(conn, tx, packagedChecksum, buildId);
                 tx.Commit();
             }
             finally
@@ -238,7 +252,7 @@ CREATE TABLE IF NOT EXISTS seed_metadata (
         cmd.ExecuteNonQuery();
     }
 
-    private static void SaveChecksum(SqliteConnection conn, SqliteTransaction? tx, string checksum)
+    private static void SaveChecksum(SqliteConnection conn, SqliteTransaction? tx, string checksum, string buildId)
     {
         using var delete = conn.CreateCommand();
         if (tx != null)
@@ -255,10 +269,23 @@ INSERT INTO seed_metadata (seed_version, schema_version, build_id, checksum, cre
 VALUES ($seedVersion, $schemaVersion, $buildId, $checksum, $createdAt);";
         insert.Parameters.AddWithValue("$seedVersion", SeedVersion);
         insert.Parameters.AddWithValue("$schemaVersion", 1);
-        insert.Parameters.AddWithValue("$buildId", "packaged-db-sync");
+        insert.Parameters.AddWithValue("$buildId", buildId);
         insert.Parameters.AddWithValue("$checksum", checksum);
         insert.Parameters.AddWithValue("$createdAt", DateTime.UtcNow.ToString("o"));
         insert.ExecuteNonQuery();
+    }
+
+    private static string? GetExistingBuildId(SqliteConnection conn)
+    {
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = @"
+SELECT build_id
+FROM seed_metadata
+WHERE seed_version = $seedVersion
+ORDER BY rowid DESC
+LIMIT 1;";
+        cmd.Parameters.AddWithValue("$seedVersion", SeedVersion);
+        return cmd.ExecuteScalar()?.ToString();
     }
 
     private static string? GetExistingChecksum(SqliteConnection conn)
@@ -295,4 +322,7 @@ LIMIT 1;";
 
         return '"' + identifier.Replace("\"", "\"\"") + '"';
     }
+
+    private static string GetPackagedDataBuildId()
+        => $"{AppInfo.Current.VersionString}+{AppInfo.Current.BuildString}";
 }

@@ -42,9 +42,6 @@ public partial class RecipientPage : ContentPage
     public string BreakdownTitle => ResolveSubmissionSourceFlow(_submission) == "isp"
         ? "ISP Item Breakdown"
         : "MP Item Breakdown";
-    public string SaveButtonText => ResolveSubmissionSourceFlow(_submission) == "isp"
-        ? "Save item"
-        : "Save";
 
     public RecipientPage(RecipientInfo? existing = null, MpSubmissionPayload? submission = null)
     {

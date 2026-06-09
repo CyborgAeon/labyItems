@@ -72,15 +72,16 @@
                                FontSize="18"
                                Text="Calendar" />
 
-                        <Button Grid.Column="1"
-                                x:Name="ToggleCalendarButton"
-                                Clicked="OnToggleCalendarClicked"
-                                FontSize="18"
-                                Padding="6"
-                                Text="^"
-                                TextColor="{StaticResource Gray950}">
-                            <Button.BackgroundColor>Transparent</Button.BackgroundColor>
-                        </Button>
+                        <controls:ChevronIconView Grid.Column="1"
+                                                  x:Name="ToggleCalendarChevron"
+                                                  IsExpanded="True"
+                                                  AnimateRotation="True"
+                                                  GlyphSize="18"
+                                                  GlyphColor="{StaticResource Gray950}">
+                            <controls:ChevronIconView.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnToggleCalendarTapped" />
+                            </controls:ChevronIconView.GestureRecognizers>
+                        </controls:ChevronIconView>
                     </Grid>
 
                     <controls:AnimatedExpandView x:Name="CalendarBodyHost"

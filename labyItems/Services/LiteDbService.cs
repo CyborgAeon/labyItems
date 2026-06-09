@@ -316,6 +316,13 @@ SELECT
     notes,
     draft_snapshot,
     updated_utc,
+    avatar_storage_kind,
+    avatar_persistent_reference,
+    avatar_source_uri,
+    avatar_access_reference,
+    avatar_display_path,
+    avatar_file_name,
+    avatar_content_type,
     points,
     guilds_json,
     points_apps_json,
@@ -351,6 +358,13 @@ SELECT
     notes,
     draft_snapshot,
     updated_utc,
+    avatar_storage_kind,
+    avatar_persistent_reference,
+    avatar_source_uri,
+    avatar_access_reference,
+    avatar_display_path,
+    avatar_file_name,
+    avatar_content_type,
     points,
     guilds_json,
     points_apps_json,
@@ -417,6 +431,13 @@ LIMIT 1;";
             RaceSubtype = draft.RaceSubtype ?? string.Empty,
             RaceSubtypeKey = draft.RaceSubtypeKey ?? string.Empty,
             Notes = draft.Notes ?? string.Empty,
+            AvatarStorageKind = draft.AvatarStorageKind ?? string.Empty,
+            AvatarPersistentReference = draft.AvatarPersistentReference ?? string.Empty,
+            AvatarSourceUri = draft.AvatarSourceUri ?? string.Empty,
+            AvatarAccessReference = draft.AvatarAccessReference ?? string.Empty,
+            AvatarDisplayPath = draft.AvatarDisplayPath ?? string.Empty,
+            AvatarFileName = draft.AvatarFileName ?? string.Empty,
+            AvatarContentType = draft.AvatarContentType ?? string.Empty,
             Guilds = new List<string>(draft.Guilds ?? new List<string>()),
             Specialisations = new Dictionary<string, string>(draft.SpecialisationSelections, StringComparer.OrdinalIgnoreCase),
             Points = draft.Points,
@@ -438,6 +459,7 @@ LIMIT 1;";
                 if (draft != null)
                 {
                     draft.CharacterRecordId = character.Id;
+                    ApplyAvatarToDraft(character, draft);
                     foreach (var kvp in character.Specialisations ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase))
                         draft.SpecialisationSelections[kvp.Key] = kvp.Value;
                     return draft;
@@ -459,6 +481,13 @@ LIMIT 1;";
             RaceSubtype = character.RaceSubtype ?? string.Empty,
             RaceSubtypeKey = character.RaceSubtypeKey ?? string.Empty,
             Notes = character.Notes ?? string.Empty,
+            AvatarStorageKind = character.AvatarStorageKind ?? string.Empty,
+            AvatarPersistentReference = character.AvatarPersistentReference ?? string.Empty,
+            AvatarSourceUri = character.AvatarSourceUri ?? string.Empty,
+            AvatarAccessReference = character.AvatarAccessReference ?? string.Empty,
+            AvatarDisplayPath = character.AvatarDisplayPath ?? string.Empty,
+            AvatarFileName = character.AvatarFileName ?? string.Empty,
+            AvatarContentType = character.AvatarContentType ?? string.Empty,
             Points = (int)character.Points
         };
 
@@ -467,6 +496,17 @@ LIMIT 1;";
             reconstructed.SpecialisationSelections[kvp.Key] = kvp.Value;
 
         return reconstructed;
+    }
+
+    private static void ApplyAvatarToDraft(Character character, CharacterDraft draft)
+    {
+        draft.AvatarStorageKind = character.AvatarStorageKind ?? string.Empty;
+        draft.AvatarPersistentReference = character.AvatarPersistentReference ?? string.Empty;
+        draft.AvatarSourceUri = character.AvatarSourceUri ?? string.Empty;
+        draft.AvatarAccessReference = character.AvatarAccessReference ?? string.Empty;
+        draft.AvatarDisplayPath = character.AvatarDisplayPath ?? string.Empty;
+        draft.AvatarFileName = character.AvatarFileName ?? string.Empty;
+        draft.AvatarContentType = character.AvatarContentType ?? string.Empty;
     }
 
     private static void BindItemParameters(SqliteCommand cmd, Item item)
@@ -515,6 +555,13 @@ LIMIT 1;";
             Notes = ReadString(reader, "notes"),
             DraftSnapshot = ReadString(reader, "draft_snapshot"),
             UpdatedUtc = ParseStorageDate(ReadString(reader, "updated_utc"), DateTime.UtcNow),
+            AvatarStorageKind = ReadString(reader, "avatar_storage_kind"),
+            AvatarPersistentReference = ReadString(reader, "avatar_persistent_reference"),
+            AvatarSourceUri = ReadString(reader, "avatar_source_uri"),
+            AvatarAccessReference = ReadString(reader, "avatar_access_reference"),
+            AvatarDisplayPath = ReadString(reader, "avatar_display_path"),
+            AvatarFileName = ReadString(reader, "avatar_file_name"),
+            AvatarContentType = ReadString(reader, "avatar_content_type"),
             Points = ReadInt64(reader, "points"),
             Guilds = DeserializeStringList(ReadString(reader, "guilds_json")),
             PointsApps = DeserializeStringList(ReadString(reader, "points_apps_json")),
@@ -582,6 +629,13 @@ INSERT INTO {CharactersTableName}
     notes,
     draft_snapshot,
     updated_utc,
+    avatar_storage_kind,
+    avatar_persistent_reference,
+    avatar_source_uri,
+    avatar_access_reference,
+    avatar_display_path,
+    avatar_file_name,
+    avatar_content_type,
     points,
     guilds_json,
     points_apps_json,
@@ -599,6 +653,13 @@ VALUES
     @notes,
     @draft_snapshot,
     @updated_utc,
+    @avatar_storage_kind,
+    @avatar_persistent_reference,
+    @avatar_source_uri,
+    @avatar_access_reference,
+    @avatar_display_path,
+    @avatar_file_name,
+    @avatar_content_type,
     @points,
     @guilds_json,
     @points_apps_json,
@@ -614,6 +675,13 @@ ON CONFLICT(id) DO UPDATE SET
     notes = excluded.notes,
     draft_snapshot = excluded.draft_snapshot,
     updated_utc = excluded.updated_utc,
+    avatar_storage_kind = excluded.avatar_storage_kind,
+    avatar_persistent_reference = excluded.avatar_persistent_reference,
+    avatar_source_uri = excluded.avatar_source_uri,
+    avatar_access_reference = excluded.avatar_access_reference,
+    avatar_display_path = excluded.avatar_display_path,
+    avatar_file_name = excluded.avatar_file_name,
+    avatar_content_type = excluded.avatar_content_type,
     points = excluded.points,
     guilds_json = excluded.guilds_json,
     points_apps_json = excluded.points_apps_json,
@@ -629,6 +697,13 @@ ON CONFLICT(id) DO UPDATE SET
         cmd.Parameters.AddWithValue("@notes", c.Notes ?? string.Empty);
         cmd.Parameters.AddWithValue("@draft_snapshot", c.DraftSnapshot ?? string.Empty);
         cmd.Parameters.AddWithValue("@updated_utc", ToStorageDate(c.UpdatedUtc));
+        cmd.Parameters.AddWithValue("@avatar_storage_kind", c.AvatarStorageKind ?? string.Empty);
+        cmd.Parameters.AddWithValue("@avatar_persistent_reference", c.AvatarPersistentReference ?? string.Empty);
+        cmd.Parameters.AddWithValue("@avatar_source_uri", c.AvatarSourceUri ?? string.Empty);
+        cmd.Parameters.AddWithValue("@avatar_access_reference", c.AvatarAccessReference ?? string.Empty);
+        cmd.Parameters.AddWithValue("@avatar_display_path", c.AvatarDisplayPath ?? string.Empty);
+        cmd.Parameters.AddWithValue("@avatar_file_name", c.AvatarFileName ?? string.Empty);
+        cmd.Parameters.AddWithValue("@avatar_content_type", c.AvatarContentType ?? string.Empty);
         cmd.Parameters.AddWithValue("@points", c.Points);
         cmd.Parameters.AddWithValue("@guilds_json", SerializeStringList(c.Guilds));
         cmd.Parameters.AddWithValue("@points_apps_json", SerializeStringList(c.PointsApps));
@@ -802,6 +877,13 @@ CREATE TABLE IF NOT EXISTS {CharactersTableName}
     notes TEXT NOT NULL DEFAULT '',
     draft_snapshot TEXT NOT NULL DEFAULT '',
     updated_utc TEXT NOT NULL DEFAULT '',
+    avatar_storage_kind TEXT NOT NULL DEFAULT '',
+    avatar_persistent_reference TEXT NOT NULL DEFAULT '',
+    avatar_source_uri TEXT NOT NULL DEFAULT '',
+    avatar_access_reference TEXT NOT NULL DEFAULT '',
+    avatar_display_path TEXT NOT NULL DEFAULT '',
+    avatar_file_name TEXT NOT NULL DEFAULT '',
+    avatar_content_type TEXT NOT NULL DEFAULT '',
     points INTEGER NOT NULL DEFAULT 0,
     guilds_json TEXT NOT NULL DEFAULT '[]',
     points_apps_json TEXT NOT NULL DEFAULT '[]',
@@ -854,8 +936,37 @@ CREATE INDEX IF NOT EXISTS idx_wallet_items_maker_id
     ON {ItemsTableName}(maker_id);";
 
             cmd.ExecuteNonQuery();
+            EnsureColumn(conn, CharactersTableName, "avatar_storage_kind", "TEXT NOT NULL DEFAULT ''");
+            EnsureColumn(conn, CharactersTableName, "avatar_persistent_reference", "TEXT NOT NULL DEFAULT ''");
+            EnsureColumn(conn, CharactersTableName, "avatar_source_uri", "TEXT NOT NULL DEFAULT ''");
+            EnsureColumn(conn, CharactersTableName, "avatar_access_reference", "TEXT NOT NULL DEFAULT ''");
+            EnsureColumn(conn, CharactersTableName, "avatar_display_path", "TEXT NOT NULL DEFAULT ''");
+            EnsureColumn(conn, CharactersTableName, "avatar_file_name", "TEXT NOT NULL DEFAULT ''");
+            EnsureColumn(conn, CharactersTableName, "avatar_content_type", "TEXT NOT NULL DEFAULT ''");
             _schemaEnsured = true;
         }
+    }
+
+    private static void EnsureColumn(SqliteConnection conn, string tableName, string columnName, string sqlDefinition)
+    {
+        using (var info = conn.CreateCommand())
+        {
+            info.CommandText = $"PRAGMA table_info({tableName});";
+            using var reader = info.ExecuteReader();
+            while (reader.Read())
+            {
+                var existing = reader.FieldCount > 1 && !reader.IsDBNull(1)
+                    ? reader.GetString(1)
+                    : string.Empty;
+
+                if (existing.Equals(columnName, StringComparison.OrdinalIgnoreCase))
+                    return;
+            }
+        }
+
+        using var alter = conn.CreateCommand();
+        alter.CommandText = $"ALTER TABLE {tableName} ADD COLUMN {columnName} {sqlDefinition};";
+        alter.ExecuteNonQuery();
     }
 
     private static string EnsureId(string? raw)

@@ -23,6 +23,9 @@ public enum GuildCardDetailMode
 public sealed class GuildsVm : INotifyPropertyChanged
 {
     private const string AllTypeFilterValue = "All";
+    private const int SearchDebounceMs = 250;
+    private const int InitialResultLimit = 100;
+    private const int UiBatchSize = 40;
     private static readonly IReadOnlyDictionary<string, GuildMiracleDefinition> EmptyMiracleLookup =
         new Dictionary<string, GuildMiracleDefinition>(StringComparer.OrdinalIgnoreCase);
     private static readonly Regex MiracleListLoreBlockRegex = new(
@@ -55,6 +58,13 @@ public sealed class GuildsVm : INotifyPropertyChanged
     private readonly Dictionary<string, Task> _detailLoadTasks = new(StringComparer.OrdinalIgnoreCase);
     private readonly object _detailLoadGate = new();
     private CancellationTokenSource? _searchDebounceCts;
+    private CancellationTokenSource? _searchWorkCts;
+    private List<GuildSearchIndexEntry> _searchIndex = new();
+    private int _searchVersion;
+    private int _appliedSearchVersion;
+    private int _loadVersion;
+    private bool _isSearchInProgress;
+    private string _searchStatus = string.Empty;
     private readonly Func<Task>? _refreshDraftAbilitiesAsync;
     private readonly bool _applyCharacterAvailabilityFilters;
     private readonly bool _allowGuildSelection;
@@ -72,6 +82,18 @@ public sealed class GuildsVm : INotifyPropertyChanged
         Raise(name);
         return true;
     }
+
+    private static Task RunOnMainThreadAsync(Action action)
+    {
+        if (MainThread.IsMainThread)
+        {
+            action();
+            return Task.CompletedTask;
+        }
+
+        return MainThread.InvokeOnMainThreadAsync(action);
+    }
+
     private void RaiseSelectedGuildsChanged()
     {
         Raise(nameof(SelectedGuilds));
@@ -151,7 +173,13 @@ public sealed class GuildsVm : INotifyPropertyChanged
     public string? SelectedTypeFilter
     {
         get => _selectedTypeFilter;
-        set { if (Set(ref _selectedTypeFilter, value)) Refilter(); }
+        set
+        {
+            if (!Set(ref _selectedTypeFilter, value))
+                return;
+
+            ScheduleRefilter(debounce: false);
+        }
     }
 
     private string _searchText = "";
@@ -163,47 +191,332 @@ public sealed class GuildsVm : INotifyPropertyChanged
             if (!Set(ref _searchText, value))
                 return;
 
-            ScheduleRefilter();
+            ScheduleRefilter(debounce: true);
         }
     }
 
-    private void ScheduleRefilter()
+    public bool IsSearchInProgress
     {
-        var previousCts = _searchDebounceCts;
-        previousCts?.Cancel();
+        get => _isSearchInProgress;
+        private set
+        {
+            if (!Set(ref _isSearchInProgress, value))
+                return;
+
+            Raise(nameof(IsBusy));
+        }
+    }
+
+    public string SearchStatus
+    {
+        get => _searchStatus;
+        private set => Set(ref _searchStatus, value);
+    }
+
+    public bool IsBusy => IsLoading || IsSearchInProgress;
+
+    public void BeginLoadingState()
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            IsLoading = true;
+            IsSearchInProgress = false;
+            SearchStatus = string.Empty;
+            FilteredGuilds.Clear();
+        });
+    }
+
+    public async Task ReleaseScreenCacheAsync()
+    {
+        Interlocked.Increment(ref _loadVersion);
+        Interlocked.Increment(ref _searchVersion);
+        Volatile.Write(ref _appliedSearchVersion, 0);
+
+        var debounce = Interlocked.Exchange(ref _searchDebounceCts, null);
+        debounce?.Cancel();
+        debounce?.Dispose();
+
+        var searchWork = Interlocked.Exchange(ref _searchWorkCts, null);
+        searchWork?.Cancel();
+        searchWork?.Dispose();
+
+        _searchIndex = new List<GuildSearchIndexEntry>();
+        _selectedTypeFilters.Clear();
+
+        lock (_detailLoadGate)
+            _detailLoadTasks.Clear();
+
+        await RunOnMainThreadAsync(() =>
+        {
+            AllGuilds.Clear();
+            FilteredGuilds.Clear();
+            TypeFilterChips.Clear();
+            TypeFilters.Clear();
+            TypeFilters.Add(AllTypeFilterValue);
+            _selectedTypeFilter = AllTypeFilterValue;
+            _searchText = string.Empty;
+            SearchStatus = string.Empty;
+            IsSearchInProgress = false;
+            IsLoading = false;
+            Raise(nameof(SelectedTypeFilter));
+            Raise(nameof(SearchText));
+            Raise(nameof(SelectedCount));
+            RaiseSelectedGuildsChanged();
+        }).ConfigureAwait(false);
+    }
+
+    private void ScheduleRefilter(bool debounce)
+    {
+        var version = Interlocked.Increment(ref _searchVersion);
+
+        var previousDebounce = _searchDebounceCts;
+        previousDebounce?.Cancel();
         _searchDebounceCts = new CancellationTokenSource();
-        previousCts?.Dispose();
-        var token = _searchDebounceCts.Token;
+        previousDebounce?.Dispose();
+        var debounceToken = _searchDebounceCts.Token;
+
+        var criteria = CaptureSearchCriteriaSnapshot(version);
+
+        var previousWork = Interlocked.Exchange(ref _searchWorkCts, new CancellationTokenSource());
+        previousWork?.Cancel();
+        previousWork?.Dispose();
+        var searchWorkToken = _searchWorkCts.Token;
 
         _ = Task.Run(async () =>
         {
             try
             {
-                await Task.Delay(180, token).ConfigureAwait(false);
-                if (token.IsCancellationRequested)
+                if (debounce)
+                    await Task.Delay(SearchDebounceMs, debounceToken).ConfigureAwait(false);
+
+                if (debounceToken.IsCancellationRequested || searchWorkToken.IsCancellationRequested)
                     return;
 
-                if (MainThread.IsMainThread)
-                {
-                    Refilter();
-                }
-                else
-                {
-                    await MainThread.InvokeOnMainThreadAsync(Refilter).ConfigureAwait(false);
-                }
+                await ExecuteSearchAsync(criteria, searchWorkToken).ConfigureAwait(false);
             }
             catch (TaskCanceledException)
             {
                 // Ignore cancelled debounce.
             }
+            catch (OperationCanceledException)
+            {
+                // Ignore cancelled search operations.
+            }
             catch (Exception ex)
             {
                 RuntimeLog.Write(
-                    "GUILD_REFILTER",
-                    "Guild search refilter failed.",
+                    "GUILD_SEARCH",
+                    $"Guild search failed for version={version}.",
                     ex);
+
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    SearchStatus = "Search failed. Try again.";
+                    IsSearchInProgress = false;
+                }).ConfigureAwait(false);
             }
-        }, token);
+        });
+    }
+
+    private GuildSearchCriteria CaptureSearchCriteriaSnapshot(int version)
+    {
+        var text = (SearchText ?? string.Empty).Trim();
+        var selectedTypeFilter = (SelectedTypeFilter ?? AllTypeFilterValue).Trim();
+        var typeFilters = _selectedTypeFilters.ToHashSet(StringComparer.OrdinalIgnoreCase);
+        return new GuildSearchCriteria(
+            Version: version,
+            Text: text,
+            SelectedTypeFilter: selectedTypeFilter,
+            MultiTypeFilters: typeFilters,
+            UseMultiTypeFilters: _useMultiTypeFilters,
+            SearchByNameOnly: _searchByNameOnly,
+            HideUnavailable: _hideUnavailableGuilds);
+    }
+
+    private async Task ExecuteSearchAsync(GuildSearchCriteria criteria, CancellationToken cancellationToken)
+    {
+        var searchTimer = System.Diagnostics.Stopwatch.StartNew();
+        RuntimeLog.Write(
+            "GUILD_SEARCH",
+            $"Query started version={criteria.Version} text='{criteria.Text}' type='{criteria.SelectedTypeFilter}'. " +
+            $"threadId={Environment.CurrentManagedThreadId} mainThread={MainThread.IsMainThread}.");
+
+        await MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            IsSearchInProgress = true;
+            SearchStatus = "Searching guilds...";
+        }).ConfigureAwait(false);
+
+        try
+        {
+            var indexSnapshot = _searchIndex;
+            var results = await Task.Run(
+                    () => SearchIndex(indexSnapshot, criteria, cancellationToken),
+                    cancellationToken)
+                .ConfigureAwait(false);
+
+            cancellationToken.ThrowIfCancellationRequested();
+            if (criteria.Version != Volatile.Read(ref _searchVersion))
+            {
+                RuntimeLog.Write(
+                    "GUILD_SEARCH",
+                    $"Query superseded before UI apply version={criteria.Version}. " +
+                    $"latestVersion={Volatile.Read(ref _searchVersion)}.");
+                return;
+            }
+
+            await ApplySearchResultsAsync(criteria, results, cancellationToken).ConfigureAwait(false);
+
+            searchTimer.Stop();
+            RuntimeLog.Write(
+                "GUILD_SEARCH",
+                $"Query completed version={criteria.Version} results={results.Count} elapsedMs={searchTimer.ElapsedMilliseconds}. " +
+                $"threadId={Environment.CurrentManagedThreadId} mainThread={MainThread.IsMainThread}.");
+        }
+        catch (OperationCanceledException)
+        {
+            searchTimer.Stop();
+            RuntimeLog.Write(
+                "GUILD_SEARCH",
+                $"Query cancelled version={criteria.Version} elapsedMs={searchTimer.ElapsedMilliseconds}. " +
+                $"threadId={Environment.CurrentManagedThreadId} mainThread={MainThread.IsMainThread}.");
+            throw;
+        }
+        finally
+        {
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                if (criteria.Version < Volatile.Read(ref _searchVersion))
+                    return;
+
+                IsSearchInProgress = false;
+            }).ConfigureAwait(false);
+        }
+    }
+
+    private static List<GuildCardVm> SearchIndex(
+        IReadOnlyList<GuildSearchIndexEntry> index,
+        GuildSearchCriteria criteria,
+        CancellationToken cancellationToken)
+    {
+        var normalizedQuery = NormalizeSearchText(criteria.Text);
+        var results = new List<GuildCardVm>(Math.Min(index.Count, 256));
+
+        foreach (var entry in index)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (criteria.HideUnavailable
+                && !entry.Card.IsSelected
+                && entry.EnforceAvailability
+                && !entry.Card.IsSelectable)
+            {
+                continue;
+            }
+
+            if (criteria.UseMultiTypeFilters)
+            {
+                if (criteria.MultiTypeFilters.Count > 0
+                    && !criteria.MultiTypeFilters.Contains(entry.Type))
+                {
+                    continue;
+                }
+            }
+            else if (!string.Equals(criteria.SelectedTypeFilter, AllTypeFilterValue, StringComparison.OrdinalIgnoreCase)
+                     && !string.Equals(entry.Type, criteria.SelectedTypeFilter, StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            if (normalizedQuery.Length > 0)
+            {
+                if (criteria.SearchByNameOnly)
+                {
+                    if (!entry.NameNormalized.Contains(normalizedQuery, StringComparison.Ordinal))
+                        continue;
+                }
+                else if (!entry.SearchCorpusNormalized.Contains(normalizedQuery, StringComparison.Ordinal))
+                {
+                    continue;
+                }
+            }
+
+            results.Add(entry.Card);
+        }
+
+        results.Sort(static (left, right) => string.Compare(left.Name, right.Name, StringComparison.OrdinalIgnoreCase));
+        return results;
+    }
+
+    private async Task ApplySearchResultsAsync(
+        GuildSearchCriteria criteria,
+        IReadOnlyList<GuildCardVm> results,
+        CancellationToken cancellationToken)
+    {
+        var uiApplyTimer = System.Diagnostics.Stopwatch.StartNew();
+
+        var initialCount = Math.Min(results.Count, InitialResultLimit);
+        var initialSlice = initialCount == 0
+            ? Array.Empty<GuildCardVm>()
+            : results.Take(initialCount).ToArray();
+
+        await MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            if (criteria.Version != Volatile.Read(ref _searchVersion))
+                return;
+
+            FilteredGuilds.Clear();
+            foreach (var guild in initialSlice)
+                FilteredGuilds.Add(guild);
+
+            SearchStatus = results.Count > initialCount
+                ? $"Showing {initialCount} of {results.Count} guilds..."
+                : $"{results.Count} guilds";
+            Raise(nameof(SelectedCount));
+            Volatile.Write(ref _appliedSearchVersion, criteria.Version);
+        }).ConfigureAwait(false);
+
+        uiApplyTimer.Stop();
+        RuntimeLog.Write(
+            "GUILD_SEARCH",
+            $"UI batch apply completed version={criteria.Version} initialCount={initialCount} totalResults={results.Count} " +
+            $"uiBatchMs={uiApplyTimer.ElapsedMilliseconds} threadId={Environment.CurrentManagedThreadId} mainThread={MainThread.IsMainThread}.");
+
+        if (results.Count <= initialCount)
+            return;
+
+        for (var offset = initialCount; offset < results.Count; offset += UiBatchSize)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (criteria.Version != Volatile.Read(ref _searchVersion))
+                return;
+
+            var batch = results.Skip(offset).Take(UiBatchSize).ToArray();
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                if (criteria.Version != Volatile.Read(ref _searchVersion)
+                    || criteria.Version != Volatile.Read(ref _appliedSearchVersion))
+                {
+                    return;
+                }
+
+                foreach (var guild in batch)
+                    FilteredGuilds.Add(guild);
+
+                SearchStatus = $"Showing {FilteredGuilds.Count} of {results.Count} guilds...";
+            }).ConfigureAwait(false);
+
+            // Yield between UI batches so typing and gestures remain responsive.
+            await Task.Delay(16, cancellationToken).ConfigureAwait(false);
+        }
+
+        await MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            if (criteria.Version != Volatile.Read(ref _searchVersion))
+                return;
+
+            SearchStatus = $"{results.Count} guilds";
+        }).ConfigureAwait(false);
     }
 
     public ObservableCollection<GuildCardVm> AllGuilds { get; }
@@ -212,7 +525,13 @@ public sealed class GuildsVm : INotifyPropertyChanged
     public bool IsLoading
     {
         get => _isLoading;
-        private set => Set(ref _isLoading, value);
+        private set
+        {
+            if (!Set(ref _isLoading, value))
+                return;
+
+            Raise(nameof(IsBusy));
+        }
     }
 
     public IEnumerable<GuildCardVm> SelectedGuilds =>
@@ -436,17 +755,32 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
     public async Task ReloadAsync()
     {
-        IsLoading = true;
+        var loadVersion = Interlocked.Increment(ref _loadVersion);
+        var loadTimer = System.Diagnostics.Stopwatch.StartNew();
+        RuntimeLog.Write(
+            "GUILD_SEARCH",
+            $"GuildSearch load started. threadId={Environment.CurrentManagedThreadId} mainThread={MainThread.IsMainThread}.");
+
+        bool IsLatestLoad() => loadVersion == Volatile.Read(ref _loadVersion);
+
+        await RunOnMainThreadAsync(() =>
+        {
+            IsLoading = true;
+            SearchStatus = string.Empty;
+        }).ConfigureAwait(false);
         try
         {
             _guildRecords = _detailMode == GuildCardDetailMode.MiracleOnly
-                ? await _creationDataService.GetGuildsForMiracleSearchAsync()
-                : await _creationDataService.GetGuildsAsync();
+                ? await _creationDataService.GetGuildsForMiracleSearchAsync().ConfigureAwait(false)
+                : await _creationDataService.GetGuildsAsync().ConfigureAwait(false);
             _guildRecords ??= new Dictionary<string, GuildRecord>(StringComparer.OrdinalIgnoreCase);
             lock (_detailLoadGate)
                 _detailLoadTasks.Clear();
 
-            await RefreshContextAsync();
+            if (!IsLatestLoad())
+                return;
+
+            await RefreshContextAsync().ConfigureAwait(false);
 
             ApplyAvailabilityToCurrentSelection();
 
@@ -471,71 +805,150 @@ public sealed class GuildsVm : INotifyPropertyChanged
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .OrderBy(type => type, StringComparer.OrdinalIgnoreCase)
                     .ToList()
-                : await _creationDataService.GetGuildTypesAsync();
-            TypeFilters.Clear();
-            TypeFilters.Add(AllTypeFilterValue);
-            foreach (var t in types)
-                TypeFilters.Add(t);
+                : await _creationDataService.GetGuildTypesAsync().ConfigureAwait(false);
 
-            if (string.IsNullOrWhiteSpace(SelectedTypeFilter) || !TypeFilters.Contains(SelectedTypeFilter))
-                SelectedTypeFilter = AllTypeFilterValue;
+            if (!IsLatestLoad())
+                return;
 
-            if (_useMultiTypeFilters)
-                RebuildTypeFilterChips();
-            else
-                TypeFilterChips.Clear();
+            await RunOnMainThreadAsync(() =>
+            {
+                if (!IsLatestLoad())
+                    return;
+
+                TypeFilters.Clear();
+                TypeFilters.Add(AllTypeFilterValue);
+                foreach (var t in types)
+                    TypeFilters.Add(t);
+
+                if (string.IsNullOrWhiteSpace(SelectedTypeFilter) || !TypeFilters.Contains(SelectedTypeFilter))
+                    SelectedTypeFilter = AllTypeFilterValue;
+
+                if (_useMultiTypeFilters)
+                    RebuildTypeFilterChips();
+                else
+                    TypeFilterChips.Clear();
+            }).ConfigureAwait(false);
 
             var ordered = _guildRecords
                 .OrderBy(kv => kv.Key, StringComparer.OrdinalIgnoreCase)
                 .ToList();
-            AllGuilds.Clear();
-            var preloadDetails = new List<Task>();
-            for (var i = 0; i < ordered.Count; i++)
+
+            var prepared = await Task.Run(() =>
             {
-                var name = ordered[i].Key;
-                var rec = ordered[i].Value ?? new GuildRecord();
+                var cards = new List<GuildCardVm>(ordered.Count);
+                var index = new List<GuildSearchIndexEntry>(ordered.Count);
 
-                var isSelected = _draft.Guilds.Contains(name, StringComparer.OrdinalIgnoreCase);
-                var availability = EvaluateAvailabilityForCurrentContext(rec, name);
-                var selectable = availability.Allowed;
-                var reason = availability.Reason;
-                var cardSelectable = !_allowGuildSelection
-                    || (!_enforceAvailabilityForSelection)
-                    || (selectable || isSelected);
-
-                var vm = new GuildCardVm
+                for (var i = 0; i < ordered.Count; i++)
                 {
-                    Id = i + 1,
-                    Name = name,
-                    Type = rec.Type ?? "",
-                    Logo = NormalizeLogoPath(rec.Logo),
-                    IsSelected = isSelected,
-                    IsExpanded = false,
-                    IsSelectable = cardSelectable,
-                    NotSelectableReason = cardSelectable
-                        ? ""
-                        : (_allowGuildSelection && _enforceAvailabilityForSelection ? reason : ""),
-                    IsLocked = _slotRules.IsGuildLocked(rec.Type ?? string.Empty, name),
-                    HasAnyChoiceOptions = HasAvailableChoiceOptions(rec),
-                };
+                    var name = ordered[i].Key;
+                    var rec = ordered[i].Value ?? new GuildRecord();
 
-                vm.Icon = IconForType(vm.Type);
-                AllGuilds.Add(vm);
+                    var isSelected = _draft.Guilds.Contains(name, StringComparer.OrdinalIgnoreCase);
+                    var availability = EvaluateAvailabilityForCurrentContext(rec, name);
+                    var selectable = availability.Allowed;
+                    var reason = availability.Reason;
+                    var cardSelectable = !_allowGuildSelection
+                        || (!_enforceAvailabilityForSelection)
+                        || (selectable || isSelected);
 
-                if (isSelected)
-                    preloadDetails.Add(EnsureCardDetailsLoadedAsync(vm, rec));
-            }
+                    var vm = new GuildCardVm
+                    {
+                        Id = i + 1,
+                        Name = name,
+                        Type = rec.Type ?? string.Empty,
+                        Logo = NormalizeLogoPath(rec.Logo),
+                        IsSelected = isSelected,
+                        IsExpanded = false,
+                        IsSelectable = cardSelectable,
+                        NotSelectableReason = cardSelectable
+                            ? string.Empty
+                            : (_allowGuildSelection && _enforceAvailabilityForSelection ? reason : string.Empty),
+                        IsLocked = _slotRules.IsGuildLocked(rec.Type ?? string.Empty, name),
+                        HasAnyChoiceOptions = HasAvailableChoiceOptions(rec),
+                        Icon = IconForType(rec.Type ?? string.Empty)
+                    };
+
+                    cards.Add(vm);
+                    index.Add(new GuildSearchIndexEntry(
+                        Card: vm,
+                        Type: vm.Type,
+                        NameNormalized: NormalizeSearchText(vm.Name),
+                        SearchCorpusNormalized: BuildSearchCorpus(name, rec),
+                        IsSelected: vm.IsSelected,
+                        IsSelectable: vm.IsSelectable,
+                        EnforceAvailability: _allowGuildSelection && _enforceAvailabilityForSelection));
+                }
+
+                return (Cards: cards, SearchIndex: index);
+            }).ConfigureAwait(false);
+
+            if (!IsLatestLoad())
+                return;
+
+            var preloadDetails = new List<Task>();
+            await RunOnMainThreadAsync(() =>
+            {
+                if (!IsLatestLoad())
+                    return;
+
+                AllGuilds.Clear();
+                for (var i = 0; i < prepared.Cards.Count; i++)
+                {
+                    var vm = prepared.Cards[i];
+                    AllGuilds.Add(vm);
+
+                    if (vm.IsSelected && _guildRecords.TryGetValue(vm.Name, out var rec))
+                        preloadDetails.Add(EnsureCardDetailsLoadedAsync(vm, rec));
+                }
+
+                _searchIndex = prepared.SearchIndex;
+            }).ConfigureAwait(false);
 
             if (preloadDetails.Count > 0)
-                await Task.WhenAll(preloadDetails);
+                await Task.WhenAll(preloadDetails).ConfigureAwait(false);
 
-            Refilter();
-            RecomputeDraftAlignments();
-            _notifyWizardGatingChanged();
+            if (!IsLatestLoad())
+                return;
+
+            ScheduleRefilter(debounce: false);
+            await RunOnMainThreadAsync(() =>
+            {
+                if (!IsLatestLoad())
+                    return;
+
+                RecomputeDraftAlignmentOptionsOnly();
+                _notifyWizardGatingChanged();
+            }).ConfigureAwait(false);
+
+            loadTimer.Stop();
+            RuntimeLog.Write(
+                "GUILD_SEARCH",
+                $"GuildSearch load completed. guildCount={_searchIndex.Count} elapsedMs={loadTimer.ElapsedMilliseconds} " +
+                $"threadId={Environment.CurrentManagedThreadId} mainThread={MainThread.IsMainThread}.");
+        }
+        catch (OperationCanceledException)
+        {
+            loadTimer.Stop();
+            RuntimeLog.Write(
+                "GUILD_SEARCH",
+                $"GuildSearch load cancelled elapsedMs={loadTimer.ElapsedMilliseconds}. " +
+                $"threadId={Environment.CurrentManagedThreadId} mainThread={MainThread.IsMainThread}.");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            loadTimer.Stop();
+            RuntimeLog.Write(
+                "GUILD_SEARCH",
+                $"GuildSearch load failed elapsedMs={loadTimer.ElapsedMilliseconds}.",
+                ex);
+            await RunOnMainThreadAsync(() => SearchStatus = "Guild load failed. Retry by reopening this screen.").ConfigureAwait(false);
+            throw;
         }
         finally
         {
-            IsLoading = false;
+            if (loadVersion == Volatile.Read(ref _loadVersion))
+                await RunOnMainThreadAsync(() => IsLoading = false).ConfigureAwait(false);
         }
     }
 
@@ -1300,58 +1713,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
         }
 
         RebuildTypeFilterChips();
-        Refilter();
-    }
-
-    private void Refilter()
-    {
-        var text = (SearchText ?? "").Trim();
-        var type = (SelectedTypeFilter ?? AllTypeFilterValue).Trim();
-
-        bool Matches(GuildCardVm g)
-        {
-            if (_hideUnavailableGuilds
-                && !g.IsSelected
-                && _allowGuildSelection
-                && _enforceAvailabilityForSelection
-                && !EvaluateAvailabilityForCurrentContext(g.Name).Allowed)
-            {
-                return false;
-            }
-
-            if (_useMultiTypeFilters)
-            {
-                if (_selectedTypeFilters.Count > 0 && !_selectedTypeFilters.Contains(g.Type))
-                    return false;
-            }
-            else
-            {
-                if (!string.Equals(type, AllTypeFilterValue, StringComparison.OrdinalIgnoreCase)
-                    && !string.Equals(g.Type, type, StringComparison.OrdinalIgnoreCase))
-                    return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(text))
-                return true;
-
-            if (_searchByNameOnly)
-                return g.Name?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false;
-
-            if (_guildRecords.TryGetValue(g.Name, out var rec) && rec != null)
-                return RecordMatchesSearch(g.Name, rec, text);
-
-            return g.Name?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false;
-        }
-
-        var list = AllGuilds.Where(Matches)
-            .OrderBy(g => g.Name, StringComparer.OrdinalIgnoreCase)
-            .ToList();
-
-        FilteredGuilds.Clear();
-        foreach (var g in list)
-            FilteredGuilds.Add(g);
-
-        Raise(nameof(SelectedCount));
+        ScheduleRefilter(debounce: false);
     }
     public int SelectedCount => _draft.Guilds.Count;
 
@@ -1387,7 +1749,16 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
         RaiseSelectedGuildsChanged();
         if (_hideUnavailableGuilds)
-            Refilter();
+            ScheduleRefilter(debounce: false);
+    }
+
+    private void RecomputeDraftAlignmentOptionsOnly()
+    {
+        RecomputeSlotRules();
+        _draft.SetAvailableAlignmentsFromRules(_getNonGuildRules());
+        RaiseSelectedGuildsChanged();
+        if (_hideUnavailableGuilds)
+            ScheduleRefilter(debounce: false);
     }
 
     private async Task ToggleExpandedAsync(GuildCardVm? item)
@@ -1444,6 +1815,84 @@ public sealed class GuildsVm : INotifyPropertyChanged
                || BenefitEntriesContainText(benefits.Intermediate, text)
                || BenefitEntriesContainText(benefits.Advanced, text);
     }
+
+    private static string BuildSearchCorpus(string guildName, GuildRecord record)
+    {
+        var builder = new StringBuilder(512);
+        builder.Append(guildName).Append('|');
+
+        var rec = record ?? new GuildRecord();
+        AppendCorpus(builder, rec.PreRequisites);
+        AppendCorpus(builder, rec.Restrictions);
+        AppendCorpus(builder, rec.Ethos);
+        AppendCorpus(builder, rec.Background);
+        AppendCorpus(builder, rec.DenominationalMiracle?.Ref);
+        AppendCorpus(builder, rec.DenominationalMiracleNote);
+
+        foreach (var pair in rec.MiracleList ?? new Dictionary<string, List<string>>())
+        {
+            AppendCorpus(builder, pair.Key);
+            foreach (var value in pair.Value ?? new List<string>())
+                AppendCorpus(builder, value);
+        }
+
+        foreach (var cityBenefit in rec.CityBenefits ?? Enumerable.Empty<GuildCityBenefit>())
+        {
+            AppendCorpus(builder, cityBenefit?.Name);
+            foreach (var effect in cityBenefit?.Effects ?? new List<string>())
+                AppendCorpus(builder, effect);
+        }
+
+        var benefits = rec.Benefits ?? new GuildBenefits();
+        AppendBenefitCorpus(builder, benefits.Basic);
+        AppendBenefitCorpus(builder, benefits.Intermediate);
+        AppendBenefitCorpus(builder, benefits.Advanced);
+
+        return NormalizeSearchText(builder.ToString());
+    }
+
+    private static void AppendBenefitCorpus(StringBuilder builder, IEnumerable<GuildBenefitEntry>? entries)
+    {
+        foreach (var entry in entries ?? Enumerable.Empty<GuildBenefitEntry>())
+        {
+            AppendCorpus(builder, FormatBenefit(entry?.Ability));
+            foreach (var option in entry?.Options ?? new List<GuildBenefitOption>())
+            {
+                foreach (var ability in option.Abilities ?? new List<AbilityDefinition>())
+                    AppendCorpus(builder, FormatBenefit(ability));
+            }
+        }
+    }
+
+    private static void AppendCorpus(StringBuilder builder, string? value)
+    {
+        var text = (value ?? string.Empty).Trim();
+        if (text.Length == 0)
+            return;
+
+        builder.Append(text).Append('|');
+    }
+
+    private static string NormalizeSearchText(string value)
+        => (value ?? string.Empty).Trim().ToLowerInvariant();
+
+    private sealed record GuildSearchIndexEntry(
+        GuildCardVm Card,
+        string Type,
+        string NameNormalized,
+        string SearchCorpusNormalized,
+        bool IsSelected,
+        bool IsSelectable,
+        bool EnforceAvailability);
+
+    private sealed record GuildSearchCriteria(
+        int Version,
+        string Text,
+        string SelectedTypeFilter,
+        HashSet<string> MultiTypeFilters,
+        bool UseMultiTypeFilters,
+        bool SearchByNameOnly,
+        bool HideUnavailable);
 
     private static bool MiracleListContainsText(Dictionary<string, List<string>>? miracleList, string text)
     {

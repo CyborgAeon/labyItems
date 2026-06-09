@@ -40,11 +40,13 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     private string? _allowedClassKeysForRace;
     private readonly HashSet<string> _selectedClassFilterKeys = new(StringComparer.OrdinalIgnoreCase);
     private readonly SemaphoreSlim _abilityRefreshLock = new(1, 1);
+    private readonly SemaphoreSlim _referenceLoadLock = new(1, 1);
     private CancellationTokenSource? _selectionPipelineCts;
     private LifeScalePoint? _humanLifeForSelectedClass;
     private ArmourTier _armourTier = ArmourTier.None;
     private AlignmentRule? _raceAlignmentRule;
     private AlignmentRule? _classAlignmentRule;
+    private bool _referenceCardsLoaded;
 
     private static readonly Regex _armourValueRegex = new(
         @"([+-]?\d+)\s*(PAC|DAC|MAC|SAC)",
@@ -75,7 +77,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     public CharacterBuilderVm(
         CharacterDraft draft,
         Action notifyWizardGatingChanged,
-        ICharacterCreationDataService? creationDataService = null)
+        ICharacterCreationDataService? creationDataService = null,
+        bool runStartupPipeline = true)
     {
         _draft = draft;
         _notifyWizardGatingChanged = notifyWizardGatingChanged;
@@ -108,23 +111,17 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         RefilterClasses();
         RefilterRaces();
 
-        Task.Run(async () => await RunStartupPipelineAsync());
+        if (runStartupPipeline)
+            UiDispatchHelper.RunFireAndForget(
+                RunStartupPipelineAsync,
+                "CHARACTER_BUILDER_STARTUP");
     }
 
     private async Task RunStartupPipelineAsync()
     {
         try
         {
-            await LoadRacesAsync();
-            await LoadClassesAsync();
-
-            await RefreshAllowedRacesForSelectedClassAsync();
-            RefilterRaces();
-
-            await RefreshAllowedClassesForSelectedRaceAsync();
-            RefilterClasses();
-
-            await ApplyRaceToClassesAsync(_draft.Race);
+            await EnsureReferenceCardsLoadedAsync();
 
             await CaptureHumanLifeForSelectedClassAsync();
             await UpdateDraftLifeAsync(expandIfChanged: false);
@@ -139,8 +136,80 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         }
     }
 
+    public async Task EnsureReferenceCardsLoadedAsync()
+    {
+        await _referenceLoadLock.WaitAsync();
+        try
+        {
+            if (_referenceCardsLoaded && AllClasses.Count > 0 && AllRaces.Count > 0)
+                return;
+
+            await LoadRacesAsync();
+            await LoadClassesAsync();
+
+            await RefreshAllowedRacesForSelectedClassAsync();
+            await RefreshAllowedClassesForSelectedRaceAsync();
+
+            await RunOnMainThreadAsync(() =>
+            {
+                RefilterRaces();
+                RefilterClasses();
+            });
+
+            await ApplyRaceToClassesAsync(_draft.Race);
+            _referenceCardsLoaded = true;
+        }
+        finally
+        {
+            _referenceLoadLock.Release();
+        }
+    }
+
+    public async Task ReleaseScreenCacheAsync()
+    {
+        _selectionPipelineCts?.Cancel();
+        SpecialisationVm.CancelReloads();
+        _referenceCardsLoaded = false;
+        _allowedRaceKeysForSelectedClass = null;
+        _allowedRaceKeysForClass = null;
+        _allowedClassKeysForSelectedRace = null;
+        _allowedClassKeysForRace = null;
+        _humanLifeForSelectedClass = null;
+
+        await RunOnMainThreadAsync(() =>
+        {
+            _classSearchText = string.Empty;
+            _raceSearchText = string.Empty;
+            _selectedClassFilterKeys.Clear();
+            _selectedRaceFilter = "All";
+
+            AllClasses.Clear();
+            AllRaces.Clear();
+            FilteredClasses.Clear();
+            FilteredRaces.Clear();
+            ClassFilterChips.Clear();
+            RaceFilterChips.Clear();
+            RaceFilterChips.Add(new RaceFilterChipVm("All", true));
+
+            Raise(nameof(ClassSearchText));
+            Raise(nameof(RaceSearchText));
+            Raise(nameof(SelectedRaceFilter));
+        });
+    }
+
     private static void RunOnMainThread(Action action)
         => UiDispatchHelper.BeginOnMainThread(action);
+
+    private static Task RunOnMainThreadAsync(Action action)
+    {
+        if (MainThread.IsMainThread)
+        {
+            action();
+            return Task.CompletedTask;
+        }
+
+        return MainThread.InvokeOnMainThreadAsync(action);
+    }
 
     public ICommand ToggleRaceExpandedCommand { get; }
 
@@ -195,7 +264,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             list.Add(vm);
         }
 
-        RunOnMainThread(() =>
+        await RunOnMainThreadAsync(() =>
         {
             AllRaces.Clear();
             foreach (var vm in list)
@@ -630,6 +699,12 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     private void SyncClassSelectionFromDraft()
     {
+        if (!MainThread.IsMainThread)
+        {
+            MainThread.BeginInvokeOnMainThread(SyncClassSelectionFromDraft);
+            return;
+        }
+
         var selected = (_draft.Class ?? string.Empty).Trim();
         foreach (var classVm in AllClasses)
             classVm.IsSelected = selected.Length > 0 && classVm.Name.Equals(selected, StringComparison.OrdinalIgnoreCase);
@@ -637,6 +712,12 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     private void SyncRaceSelectionFromDraft()
     {
+        if (!MainThread.IsMainThread)
+        {
+            MainThread.BeginInvokeOnMainThread(SyncRaceSelectionFromDraft);
+            return;
+        }
+
         var selected = (_draft.Race ?? string.Empty).Trim();
         foreach (var raceVm in AllRaces)
             raceVm.IsSelected = selected.Length > 0 && raceVm.Name.Equals(selected, StringComparison.OrdinalIgnoreCase);
@@ -681,7 +762,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             });
         }
 
-        RunOnMainThread(() =>
+        await RunOnMainThreadAsync(() =>
         {
             AllClasses.Clear();
             foreach (var vm in list)
@@ -777,18 +858,23 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     {
         var race = string.IsNullOrWhiteSpace(raceName) ? "" : raceName;
 
-        var tasks = new List<Task>();
-        foreach (var c in AllClasses)
+        var expandedCards = await MainThread.InvokeOnMainThreadAsync(() =>
         {
-            c.RaceName = race;
-            c.MarkProgressionDirty();
+            var expanded = new List<ClassCardVm>();
+            foreach (var c in AllClasses)
+            {
+                c.RaceName = race;
+                c.MarkProgressionDirty();
 
-            if (c.IsExpanded)
-                tasks.Add(c.EnsureProgressionLoadedAsync());
-        }
+                if (c.IsExpanded)
+                    expanded.Add(c);
+            }
 
-        if (tasks.Count > 0)
-            await Task.WhenAll(tasks);
+            return expanded;
+        });
+
+        if (expandedCards.Count > 0)
+            await Task.WhenAll(expandedCards.Select(c => c.EnsureProgressionLoadedAsync()));
     }
 
     private async Task CaptureHumanLifeForSelectedClassAsync()
@@ -870,6 +956,12 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     private void ExpandSelectedClassCard()
     {
+        if (!MainThread.IsMainThread)
+        {
+            MainThread.BeginInvokeOnMainThread(ExpandSelectedClassCard);
+            return;
+        }
+
         var selected = AllClasses.FirstOrDefault(c => c.IsSelected);
         if (selected == null) return;
 
@@ -906,12 +998,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     public async Task RefreshDraftAbilitiesAsync(CancellationToken cancellationToken = default)
     {
-        if (!MainThread.IsMainThread)
-        {
-            await MainThread.InvokeOnMainThreadAsync(() => RefreshDraftAbilitiesAsync(cancellationToken));
-            return;
-        }
-
         var lockTaken = false;
         try
         {
@@ -919,52 +1005,58 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             lockTaken = true;
             cancellationToken.ThrowIfCancellationRequested();
 
-            var abilities = new List<AbilityDraft>();
+            await Task.Run(async () =>
+            {
+                cancellationToken.ThrowIfCancellationRequested();
 
-            var (raceAbilities, raceGuildRules) = await BuildRaceAbilitiesAsync();
+                var abilities = new List<AbilityDraft>();
+
+                var (raceAbilities, raceGuildRules) = await BuildRaceAbilitiesAsync().ConfigureAwait(false);
+                cancellationToken.ThrowIfCancellationRequested();
+                var (classAbilities, classRecord, classGuildRules) = await BuildClassAbilitiesAsync().ConfigureAwait(false);
+                cancellationToken.ThrowIfCancellationRequested();
+                var (specAbilities, specGuildRules) = await SpecialisationVm.BuildSelectedAbilityDraftsWithRulesAsync().ConfigureAwait(false);
+                var specAlignmentRules = await SpecialisationVm.BuildSelectedAlignmentRulesAsync().ConfigureAwait(false);
+                var guildAbilities = await BuildGuildAbilitiesAsync().ConfigureAwait(false);
+                cancellationToken.ThrowIfCancellationRequested();
+
+                abilities.AddRange(raceAbilities);
+                abilities.AddRange(classAbilities);
+                abilities.AddRange(specAbilities);
+                abilities.AddRange(guildAbilities);
+
+                abilities = ConsolidateAbilities(abilities);
+
+                await UpdateDraftLifeAsync(expandIfChanged: false).ConfigureAwait(false);
+                cancellationToken.ThrowIfCancellationRequested();
+                ApplyLifeBonuses(abilities);
+
+                await UpdateArmourStatsAsync(classRecord, classAbilities, raceAbilities, specAbilities, abilities).ConfigureAwait(false);
+                cancellationToken.ThrowIfCancellationRequested();
+                UpdatePowerPools(classRecord, abilities);
+                UpdateResistanceLevels(abilities, classRecord);
+                _draft.GuildOverrideRules = GuildOverrideRules.Merge(
+                    raceGuildRules,
+                    classGuildRules,
+                    specGuildRules,
+                    GuildOverrideRules.FromLegacyStrings(abilities.SelectMany(a => a?.GuildOverrides ?? Enumerable.Empty<string>())));
+
+                Draft.Innates = abilities
+                    .Where(a => a.AbilityType == AbilityType.Innate)
+                    .Select(BuildInnateDraft)
+                    .Where(d => d != null)
+                    .Cast<InnateAbilityDraft>()
+                    .ToList();
+
+                Draft.Abilities = abilities
+                    .OrderBy(a => a.LevelGained ?? int.MaxValue)
+                    .ThenBy(a => a.Name, StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+
+                await UpdateAvailableAlignmentsAsync(specAlignmentRules).ConfigureAwait(false);
+            }, cancellationToken).ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
-            var (classAbilities, classRecord, classGuildRules) = await BuildClassAbilitiesAsync();
-            cancellationToken.ThrowIfCancellationRequested();
-            var (specAbilities, specGuildRules) = SpecialisationVm.BuildSelectedAbilityDraftsWithRules();
-            var guildAbilities = await BuildGuildAbilitiesAsync();
-            cancellationToken.ThrowIfCancellationRequested();
-
-            abilities.AddRange(raceAbilities);
-            abilities.AddRange(classAbilities);
-            abilities.AddRange(specAbilities);
-            abilities.AddRange(guildAbilities);
-
-            abilities = ConsolidateAbilities(abilities);
-
-            await UpdateDraftLifeAsync(expandIfChanged: false);
-            cancellationToken.ThrowIfCancellationRequested();
-            ApplyLifeBonuses(abilities);
-
-            await UpdateArmourStatsAsync(classRecord, classAbilities, raceAbilities, specAbilities, abilities);
-            cancellationToken.ThrowIfCancellationRequested();
-            UpdatePowerPools(classRecord, abilities);
-            UpdateResistanceLevels(abilities, classRecord);
-            _draft.GuildOverrideRules = GuildOverrideRules.Merge(
-                raceGuildRules,
-                classGuildRules,
-                specGuildRules,
-                GuildOverrideRules.FromLegacyStrings(abilities.SelectMany(a => a?.GuildOverrides ?? Enumerable.Empty<string>())));
-
-            Draft.Innates = abilities
-                .Where(a => a.AbilityType == AbilityType.Innate)
-                .Select(BuildInnateDraft)
-                .Where(d => d != null)
-                .Cast<InnateAbilityDraft>()
-                .ToList();
-
-            Draft.Abilities = abilities
-                .OrderBy(a => a.LevelGained ?? int.MaxValue)
-                .ThenBy(a => a.Name, StringComparer.OrdinalIgnoreCase)
-                .ToList();
-
-            await UpdateAvailableAlignmentsAsync();
-            cancellationToken.ThrowIfCancellationRequested();
-            await SpecialisationVm.RefreshPrereqOptionsAsync();
+            await SpecialisationVm.RefreshPrereqOptionsAsync().ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
 
             MainThread.BeginInvokeOnMainThread(_notifyWizardGatingChanged);
@@ -1706,9 +1798,18 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         };
     }
 
-    private async Task UpdateAvailableAlignmentsAsync()
+    private async Task UpdateAvailableAlignmentsAsync(IReadOnlyList<AlignmentRule>? specialisationRules = null)
     {
-        var rules = GetNonGuildAlignmentRules()
+        var rules = new List<AlignmentRule?>();
+        rules.Add(_raceAlignmentRule);
+        rules.Add(_classAlignmentRule);
+
+        if (specialisationRules != null)
+            rules.AddRange(specialisationRules);
+        else
+            rules.AddRange(SpecialisationVm.BuildSelectedAlignmentRules());
+
+        rules = rules
             .Where(r => r != null)
             .ToList();
 

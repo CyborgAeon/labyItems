@@ -22,7 +22,7 @@
 
             <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
                 <Button Grid.Column="0" Clicked="OnBuildTabClicked" Text="Build" />
-                <Button Grid.Column="1" Clicked="OnConsequencesTabClicked" Text="Consequences" />
+                <Button Grid.Column="1" Clicked="OnConsequencesTabClicked" Text="Failure" />
                 <Button Grid.Column="2" Clicked="OnCriticalTabClicked" Text="Critical" />
             </Grid>
 

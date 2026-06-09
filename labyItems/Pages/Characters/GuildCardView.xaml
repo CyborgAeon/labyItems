@@ -78,15 +78,17 @@
                            IsVisible="{Binding HasNotSelectableReason}"/>
                 </VerticalStackLayout>
 
-                <Button Grid.Column="3"
-                        Text="⌄"
-                        FontSize="18"
-                        Rotation="{Binding ChevronRotation}"
-                        Style="{StaticResource ChevronButtonStyle}"
-                        VerticalOptions="Center"
-                        HorizontalOptions="End"
-                        Command="{Binding Source={RelativeSource AncestorType={x:Type local:GuildCardView}}, Path=ToggleExpandedCommand}"
-                        CommandParameter="{Binding .}"/>
+                <controls:ChevronIconView Grid.Column="3"
+                                          IsExpanded="{Binding IsExpanded}"
+                                          AnimateRotation="True"
+                                          GlyphColor="{StaticResource MutedTextColor}"
+                                          VerticalOptions="Center"
+                                          HorizontalOptions="End">
+                    <controls:ChevronIconView.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type local:GuildCardView}}, Path=ToggleExpandedCommand}"
+                                              CommandParameter="{Binding .}" />
+                    </controls:ChevronIconView.GestureRecognizers>
+                </controls:ChevronIconView>
 
                 <BoxView Grid.Column="0"
                          Grid.ColumnSpan="3"
@@ -166,15 +168,18 @@
                                FontSize="12"
                                Opacity="0.85"
                                VerticalOptions="Center"/>
-                        <Button Grid.Column="1"
-                                Text="⌄"
-                                FontSize="18"
-                                Rotation="{Binding MiracleListChevronRotation}"
-                                Style="{StaticResource ChevronButtonStyle}"
-                                Padding="0"
-                                WidthRequest="28"
-                                HeightRequest="28"
-                                Command="{Binding ToggleMiracleListCommand}"/>
+                        <controls:ChevronIconView Grid.Column="1"
+                                                  IsExpanded="{Binding IsMiracleListExpanded}"
+                                                  AnimateRotation="True"
+                                                  GlyphSize="14"
+                                                  IconSize="28"
+                                                  GlyphColor="{StaticResource MutedTextColor}"
+                                                  HorizontalOptions="End"
+                                                  VerticalOptions="Center">
+                            <controls:ChevronIconView.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ToggleMiracleListCommand}" />
+                            </controls:ChevronIconView.GestureRecognizers>
+                        </controls:ChevronIconView>
                     </Grid>
                     <controls:AnimatedExpandView IsExpanded="{Binding IsMiracleListExpanded}"
                                                  AnimationName="GuildMiracleListExpand">
@@ -257,15 +262,18 @@
                                FontSize="12"
                                Opacity="0.85"
                                VerticalOptions="Center"/>
-                        <Button Grid.Column="1"
-                                Text="⌄"
-                                FontSize="18"
-                                Rotation="{Binding DenominationalMiracleChevronRotation}"
-                                Style="{StaticResource ChevronButtonStyle}"
-                                Padding="0"
-                                WidthRequest="28"
-                                HeightRequest="28"
-                                Command="{Binding ToggleDenominationalMiracleCommand}"/>
+                        <controls:ChevronIconView Grid.Column="1"
+                                                  IsExpanded="{Binding IsDenominationalMiracleExpanded}"
+                                                  AnimateRotation="True"
+                                                  GlyphSize="14"
+                                                  IconSize="28"
+                                                  GlyphColor="{StaticResource MutedTextColor}"
+                                                  HorizontalOptions="End"
+                                                  VerticalOptions="Center">
+                            <controls:ChevronIconView.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ToggleDenominationalMiracleCommand}" />
+                            </controls:ChevronIconView.GestureRecognizers>
+                        </controls:ChevronIconView>
                     </Grid>
                     <controls:AnimatedExpandView IsExpanded="{Binding IsDenominationalMiracleExpanded}"
                                                  AnimationName="GuildDenominationalMiracleExpand">
@@ -407,15 +415,18 @@
                                FontSize="12"
                                Opacity="0.85"
                                VerticalOptions="Center"/>
-                        <Button Grid.Column="1"
-                                Text="⌄"
-                                FontSize="18"
-                                Rotation="{Binding BenefitsChevronRotation}"
-                                Style="{StaticResource ChevronButtonStyle}"
-                                Padding="0"
-                                WidthRequest="28"
-                                HeightRequest="28"
-                                Command="{Binding ToggleBenefitsCommand}"/>
+                        <controls:ChevronIconView Grid.Column="1"
+                                                  IsExpanded="{Binding IsBenefitsExpanded}"
+                                                  AnimateRotation="True"
+                                                  GlyphSize="14"
+                                                  IconSize="28"
+                                                  GlyphColor="{StaticResource MutedTextColor}"
+                                                  HorizontalOptions="End"
+                                                  VerticalOptions="Center">
+                            <controls:ChevronIconView.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ToggleBenefitsCommand}" />
+                            </controls:ChevronIconView.GestureRecognizers>
+                        </controls:ChevronIconView>
                     </Grid>
                     <controls:AnimatedExpandView IsExpanded="{Binding IsBenefitsExpanded}"
                                                  AnimationName="GuildBenefitsExpand">
@@ -655,15 +666,18 @@
                                FontSize="12"
                                Opacity="0.85"
                                VerticalOptions="Center"/>
-                        <Button Grid.Column="1"
-                                Text="⌄"
-                                FontSize="18"
-                                Rotation="{Binding CityBenefitsChevronRotation}"
-                                Style="{StaticResource ChevronButtonStyle}"
-                                Padding="0"
-                                WidthRequest="28"
-                                HeightRequest="28"
-                                Command="{Binding ToggleCityBenefitsCommand}"/>
+                        <controls:ChevronIconView Grid.Column="1"
+                                                  IsExpanded="{Binding IsCityBenefitsExpanded}"
+                                                  AnimateRotation="True"
+                                                  GlyphSize="14"
+                                                  IconSize="28"
+                                                  GlyphColor="{StaticResource MutedTextColor}"
+                                                  HorizontalOptions="End"
+                                                  VerticalOptions="Center">
+                            <controls:ChevronIconView.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ToggleCityBenefitsCommand}" />
+                            </controls:ChevronIconView.GestureRecognizers>
+                        </controls:ChevronIconView>
                     </Grid>
                     <controls:AnimatedExpandView IsExpanded="{Binding IsCityBenefitsExpanded}"
                                                  AnimationName="GuildCityBenefitsExpand">

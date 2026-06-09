@@ -3,7 +3,18 @@ namespace labyItems.Helpers;
 public static class FontAwesomeGlyphs
 {
     public const string SolidFamily = "FASolid";
+    public const string Chevron = "\uf054";
+    public const string ChevronRight = Chevron;
+    public const string ChevronUp = Chevron;
+    public const string ChevronDown = Chevron;
     public const string InfoCircle = "\uf05a";
+    public const string Review = "\uf15c";
+    public const string Edit = "\uf1fc";
+    public const string Advance = "\uf6de";
+    public const string Battleboard = "\u2694";
+    public const string ExportBattleboard = "\uf56e";
+    public const string Crafting = "\uf7d9";
+    public const string Delete = "\uf2ed";
 
     public static string GetSphereIcon(string? sphere)
     {

@@ -119,15 +119,17 @@
                                         <TapGestureRecognizer Tapped="OnItemsGroupTapped" />
                                     </Label.GestureRecognizers>
                                 </Label>
-                                <Button Grid.Column="2"
-                                        Clicked="OnItemsGroupClicked"
-                                        FontFamily="FASolid"
-                                        FontSize="14"
-                                        HorizontalOptions="End"
-                                        Padding="6"
-                                        Text="{Binding Source={x:Reference Root}, Path=ItemsChevronGlyph}">
-                                    <Button.BackgroundColor>Transparent</Button.BackgroundColor>
-                                </Button>
+                                <controls:ChevronIconView Grid.Column="2"
+                                                          IsExpanded="{Binding Source={x:Reference Root}, Path=ItemsExpanded}"
+                                                          AnimateRotation="True"
+                                                          GlyphSize="14"
+                                                          GlyphColor="{StaticResource Gray950}"
+                                                          HorizontalOptions="End"
+                                                          VerticalOptions="Center">
+                                    <controls:ChevronIconView.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnItemsGroupTapped" />
+                                    </controls:ChevronIconView.GestureRecognizers>
+                                </controls:ChevronIconView>
                             </Grid>
 
                             <controls:AnimatedExpandView IsExpanded="{Binding Source={x:Reference Root}, Path=ItemsExpanded}">
@@ -140,10 +142,19 @@
                                         <Border.GestureRecognizers>
                                             <TapGestureRecognizer Tapped="OnCalculateIspTapped" />
                                         </Border.GestureRecognizers>
-                                        <Label HorizontalOptions="Fill"
-                                               HorizontalTextAlignment="Start"
-                                               Text="Calculate ISP"
-                                               VerticalTextAlignment="Center" />
+                                        <Grid ColumnDefinitions="28,*"
+                                              ColumnSpacing="8">
+                                            <Label FontFamily="FASolid"
+                                                   FontSize="16"
+                                                   HorizontalTextAlignment="Center"
+                                                   Text="&#xF1EC;"
+                                                   VerticalTextAlignment="Center" />
+                                            <Label Grid.Column="1"
+                                                   HorizontalOptions="Fill"
+                                                   HorizontalTextAlignment="Start"
+                                                   Text="Calculate ISP"
+                                                   VerticalTextAlignment="Center" />
+                                        </Grid>
                                     </Border>
                                     <Border x:Name="CreateMpRow"
                                             Padding="10,8"
@@ -152,10 +163,19 @@
                                         <Border.GestureRecognizers>
                                             <TapGestureRecognizer Tapped="OnCreateMpTapped" />
                                         </Border.GestureRecognizers>
-                                        <Label HorizontalOptions="Fill"
-                                               HorizontalTextAlignment="Start"
-                                               Text="Create MP Item"
-                                               VerticalTextAlignment="Center" />
+                                        <Grid ColumnDefinitions="28,*"
+                                              ColumnSpacing="8">
+                                            <Label FontFamily="FASolid"
+                                                   FontSize="16"
+                                                   HorizontalTextAlignment="Center"
+                                                   Text="&#xF6D5;"
+                                                   VerticalTextAlignment="Center" />
+                                            <Label Grid.Column="1"
+                                                   HorizontalOptions="Fill"
+                                                   HorizontalTextAlignment="Start"
+                                                   Text="Create MP Item"
+                                                   VerticalTextAlignment="Center" />
+                                        </Grid>
                                     </Border>
                                     <Border x:Name="ScrollBuilderRow"
                                             Padding="10,8"
@@ -164,10 +184,40 @@
                                         <Border.GestureRecognizers>
                                             <TapGestureRecognizer Tapped="OnScrollBuilderTapped" />
                                         </Border.GestureRecognizers>
-                                        <Label HorizontalOptions="Fill"
-                                               HorizontalTextAlignment="Start"
-                                               Text="scroll builder"
-                                               VerticalTextAlignment="Center" />
+                                        <Grid ColumnDefinitions="28,*"
+                                              ColumnSpacing="8">
+                                            <Label FontFamily="FASolid"
+                                                   FontSize="16"
+                                                   HorizontalTextAlignment="Center"
+                                                   Text="&#xF70E;"
+                                                   VerticalTextAlignment="Center" />
+                                            <Label Grid.Column="1"
+                                                   HorizontalOptions="Fill"
+                                                   HorizontalTextAlignment="Start"
+                                                   Text="scroll builder"
+                                                   VerticalTextAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+                                    <Border x:Name="CraftingRow"
+                                            Padding="10,8"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 14">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnCraftingTapped" />
+                                        </Border.GestureRecognizers>
+                                        <Grid ColumnDefinitions="28,*"
+                                              ColumnSpacing="8">
+                                            <Label FontFamily="FASolid"
+                                                   FontSize="16"
+                                                   HorizontalTextAlignment="Center"
+                                                   Text="&#xF7D9;"
+                                                   VerticalTextAlignment="Center" />
+                                            <Label Grid.Column="1"
+                                                   HorizontalOptions="Fill"
+                                                   HorizontalTextAlignment="Start"
+                                                   Text="Crafting"
+                                                   VerticalTextAlignment="Center" />
+                                        </Grid>
                                     </Border>
                                     <Border x:Name="ItemWalletRow"
                                             Padding="10,8"
@@ -176,10 +226,19 @@
                                         <Border.GestureRecognizers>
                                             <TapGestureRecognizer Tapped="OnItemWalletTapped" />
                                         </Border.GestureRecognizers>
-                                        <Label HorizontalOptions="Fill"
-                                               HorizontalTextAlignment="Start"
-                                               Text="Item Wallet"
-                                               VerticalTextAlignment="Center" />
+                                        <Grid ColumnDefinitions="28,*"
+                                              ColumnSpacing="8">
+                                            <Label FontFamily="FASolid"
+                                                   FontSize="16"
+                                                   HorizontalTextAlignment="Center"
+                                                   Text="&#xF555;"
+                                                   VerticalTextAlignment="Center" />
+                                            <Label Grid.Column="1"
+                                                   HorizontalOptions="Fill"
+                                                   HorizontalTextAlignment="Start"
+                                                   Text="Item Wallet"
+                                                   VerticalTextAlignment="Center" />
+                                        </Grid>
                                     </Border>
                                 </VerticalStackLayout>
                             </controls:AnimatedExpandView>

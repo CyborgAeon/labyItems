@@ -83,7 +83,7 @@ public partial class AbilityDetailCardView : ContentView
     }
 
     public int DescriptionMaxLines => IsDescriptionExpanded ? -1 : DescriptionCollapsedLines;
-    public string DescriptionChevronText => IsDescriptionExpanded ? "▴" : "▾";
+    public string DescriptionChevronText => FontAwesomeGlyphs.Chevron;
     public bool ShowDescriptionSeeMore => CanExpandDescription && !IsDescriptionExpanded;
 
     private bool _isDescriptionAnimating;

@@ -59,7 +59,7 @@ curl -L https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh \
   && dotnet workload install maui \
   && dotnet workload install maui-android \
   && dotnet workload install ios \
-  && dotnet build -t:InstallAndroidDependencies -f net10.0-android \
+  && dotnet build labyItems/labyItems.csproj -t:InstallAndroidDependencies -f net10.0-android \
   && brew install --cask temurin@17
 ```
 

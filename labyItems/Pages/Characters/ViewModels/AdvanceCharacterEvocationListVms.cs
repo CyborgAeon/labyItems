@@ -96,7 +96,7 @@ public sealed class EvocationListVm : INotifyPropertyChanged
         }
     }
 
-    public string FieldLegendChevronText => ShowFieldLegend ? "▴" : "▾";
+    public string FieldLegendChevronText => FontAwesomeGlyphs.Chevron;
 
     private Dictionary<string, EvocationOption> _filteredOptions = new();
     public Dictionary<string, EvocationOption> FilteredOptions

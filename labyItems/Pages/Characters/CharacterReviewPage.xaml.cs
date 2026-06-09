@@ -1,3 +1,4 @@
+using System.Threading;
 using labyItems.Models;
 using labyItems.Models.Characters;
 using labyItems.Pages;
@@ -5,7 +6,6 @@ using labyItems.Pages.Battleboard;
 using labyItems.Pages.Characters.ViewModels;
 using labyItems.Helpers;
 using labyItems.Services;
-using Microsoft.Maui.ApplicationModel;
 
 namespace labyItems.Pages.Characters;
 
@@ -14,6 +14,8 @@ public partial class CharacterReviewPage : ContentPage
     private readonly WizardVm _vm;
     private readonly CharacterDraft _draft;
     private readonly Character _character;
+    private readonly SemaphoreSlim _refreshGate = new(1, 1);
+    private CancellationTokenSource? _refreshCts;
     private bool _isNavigatingBack;
     private bool _isActionMenuExpanded;
     private bool _isActionMenuAnimating;
@@ -25,20 +27,25 @@ public partial class CharacterReviewPage : ContentPage
 
         _character = character;
         _draft = LiteDbService.ToDraft(character) ?? new CharacterDraft();
-        _vm = new WizardVm(_draft);
+        _vm = new WizardVm(
+            _draft,
+            runBuilderStartupPipeline: false,
+            runInitialSync: false);
 
         Title = string.IsNullOrWhiteSpace(_draft.Name) ? "Character" : _draft.Name;
         Review.BindingContext = _vm;
-
-        UiDispatchHelper.RunFireAndForget(
-            () => _vm.RefreshReviewAsync(),
-            "CHARACTER_REVIEW_INITIAL_REFRESH");
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await _vm.RefreshReviewAsync();
+        await RefreshReviewSafelyAsync();
+    }
+
+    protected override void OnDisappearing()
+    {
+        CancelRefresh();
+        base.OnDisappearing();
     }
 
     protected override bool OnBackButtonPressed()
@@ -77,7 +84,7 @@ public partial class CharacterReviewPage : ContentPage
         }
     }
 
-    private async void OnActionsChevronClicked(object sender, EventArgs e)
+    private async void OnActionsChevronTapped(object sender, TappedEventArgs e)
     {
         if (_isActionMenuExpanded)
             await CollapseActionMenuAsync();
@@ -95,11 +102,11 @@ public partial class CharacterReviewPage : ContentPage
         if (_isActionMenuAnimating || _isActionMenuExpanded)
             return;
 
-        _isActionMenuAnimating = true;
+            _isActionMenuAnimating = true;
         try
         {
             _isActionMenuExpanded = true;
-            ActionsChevronButton.Text = "▴";
+            ActionsChevron.IsExpanded = true;
 
             ActionBackdrop.IsVisible = true;
             ActionBackdrop.InputTransparent = false;
@@ -125,11 +132,11 @@ public partial class CharacterReviewPage : ContentPage
         if (_isActionMenuAnimating || !_isActionMenuExpanded)
             return;
 
-        _isActionMenuAnimating = true;
+            _isActionMenuAnimating = true;
         try
         {
             _isActionMenuExpanded = false;
-            ActionsChevronButton.Text = "▾";
+            ActionsChevron.IsExpanded = false;
 
             await Task.WhenAll(
                 CardExpandAnimationHelper.FadeAsync(ActionBackdrop, 0),
@@ -155,6 +162,47 @@ public partial class CharacterReviewPage : ContentPage
             await CollapseActionMenuAsync();
     }
 
+    private async Task RefreshReviewSafelyAsync()
+    {
+        var cts = new CancellationTokenSource();
+        var previous = Interlocked.Exchange(ref _refreshCts, cts);
+        previous?.Cancel();
+
+        var lockTaken = false;
+        try
+        {
+            await _refreshGate.WaitAsync(cts.Token);
+            lockTaken = true;
+            cts.Token.ThrowIfCancellationRequested();
+
+            await _vm.RefreshReviewAsync(cts.Token);
+        }
+        catch (OperationCanceledException) when (cts.IsCancellationRequested)
+        {
+        }
+        catch (Exception ex)
+        {
+            RuntimeLog.Write("CHARACTER_REVIEW_REFRESH", "Character review refresh failed.", ex);
+            await DisplayAlert("Review failed", ex.Message, "OK");
+        }
+        finally
+        {
+            if (lockTaken)
+                _refreshGate.Release();
+
+            if (ReferenceEquals(_refreshCts, cts))
+                _refreshCts = null;
+
+            cts.Dispose();
+        }
+    }
+
+    private void CancelRefresh()
+    {
+        var cts = Interlocked.Exchange(ref _refreshCts, null);
+        cts?.Cancel();
+    }
+
     private async void OnExportExcelClicked(object sender, EventArgs e)
     {
         await CloseActionMenuIfOpenAsync();
@@ -162,12 +210,18 @@ public partial class CharacterReviewPage : ContentPage
         var choicesComplete = await GuildBenefitChoicePromptHelper.EnsureChoicesCompletedAsync(
             this,
             _vm.GuildsVm,
-            refreshAfterSelection: _vm.RefreshReviewAsync,
+            refreshAfterSelection: () => _vm.RefreshReviewAsync(),
             actionLabel: "exporting the battleboard");
         if (!choicesComplete)
             return;
 
         await _vm.DownloadBattleboardAsExcelAsync();
+    }
+
+    private async void OnEditClicked(object sender, EventArgs e)
+    {
+        await CloseActionMenuIfOpenAsync();
+        await Navigation.PushAsync(new Wizard(_draft, async () => await Navigation.PopAsync()));
     }
 
     private async void OnAdvanceClicked(object sender, EventArgs e)
@@ -183,7 +237,7 @@ public partial class CharacterReviewPage : ContentPage
         var choicesComplete = await GuildBenefitChoicePromptHelper.EnsureChoicesCompletedAsync(
             this,
             _vm.GuildsVm,
-            refreshAfterSelection: _vm.RefreshReviewAsync,
+            refreshAfterSelection: () => _vm.RefreshReviewAsync(),
             actionLabel: "opening the battleboard");
         if (!choicesComplete)
             return;
@@ -197,11 +251,40 @@ public partial class CharacterReviewPage : ContentPage
         await NavigateAwayFromSummaryAsync(new MakeSheetPage(_character));
     }
 
+    private async void OnDeleteClicked(object sender, EventArgs e)
+    {
+        await CloseActionMenuIfOpenAsync();
+
+        var name = string.IsNullOrWhiteSpace(_character.Name) ? "this character" : _character.Name;
+        var confirmed = await DisplayAlert(
+            "Delete character",
+            $"Delete {name}?",
+            "Delete",
+            "Cancel");
+        if (!confirmed)
+            return;
+
+        await Task.Run(() => LiteDbService.DeleteChar(_character.Id));
+        await NavigateBackAfterDeleteAsync();
+    }
+
     private async Task NavigateAwayFromSummaryAsync(Page destination)
     {
         await Navigation.PushAsync(destination);
         if (Navigation.NavigationStack.Contains(this))
             Navigation.RemovePage(this);
+    }
+
+    private async Task NavigateBackAfterDeleteAsync()
+    {
+        if (Navigation.NavigationStack.Contains(this) && Navigation.NavigationStack.Count > 1)
+        {
+            await Navigation.PopAsync();
+            return;
+        }
+
+        if (Shell.Current != null)
+            await Shell.Current.GoToAsync("..");
     }
 
     private void ApplyActionButtonOrdering()

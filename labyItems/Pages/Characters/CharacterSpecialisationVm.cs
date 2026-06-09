@@ -39,6 +39,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
     private bool _isApplyingState;
     private bool _isRefreshingPrereqs;
     private bool _isRefreshingSpellOptions;
+    private bool _isLoading;
     private bool _spellCacheLoaded;
     private List<SpellService.SpellRaw> _spellCache = new();
 
@@ -76,7 +77,19 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
     }
 
     public bool HasChoices => Sections.Any(section => section.IsVisible);
-    public bool HasNoChoices => !HasChoices;
+    public bool HasNoChoices => !IsLoading && !HasChoices;
+
+    public bool IsLoading
+    {
+        get => _isLoading;
+        private set
+        {
+            if (!Set(ref _isLoading, value))
+                return;
+
+            Raise(nameof(HasNoChoices));
+        }
+    }
 
     private bool _isComplete;
     public bool IsComplete
@@ -108,6 +121,19 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         CancelPendingSelectionRecalculation();
     }
 
+    public void BeginLoadingState()
+    {
+        MainThread.BeginInvokeOnMainThread(() => IsLoading = true);
+    }
+
+    public async Task ReleaseSearchCacheAsync()
+    {
+        CancelPendingSelectionRecalculation();
+        _spellCacheLoaded = false;
+        _spellCache.Clear();
+        await MainThread.InvokeOnMainThreadAsync(() => IsLoading = false);
+    }
+
     public void Dispose()
     {
         _reloadGate.Dispose();
@@ -117,12 +143,6 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
     public async Task ReloadAsync(CancellationToken cancellationToken = default)
     {
-        if (!MainThread.IsMainThread)
-        {
-            await MainThread.InvokeOnMainThreadAsync(() => ReloadAsync(cancellationToken));
-            return;
-        }
-
         CancelPendingSelectionRecalculation();
         var reload = _reloadGate.Begin(cancellationToken);
 
@@ -131,16 +151,20 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             void EnsureActive() => reload.ThrowIfCancelledOrStale();
 
             EnsureActive();
-            Sections.Clear();
-            _specBySectionId.Clear();
-            _spellCustomisationSectionIds.Clear();
-            _screenState = null;
-            IsComplete = false;
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                IsLoading = true;
+                Sections.Clear();
+                _specBySectionId.Clear();
+                _spellCustomisationSectionIds.Clear();
+                _screenState = null;
+                IsComplete = false;
+            });
 
             var specialisationIndexTask = SpecialisationDefinitionRepository.GetIndexAsync();
             var classesTask = ClassService.GetAllAsync();
             var racesTask = PeopleService.GetAllAsync();
-            await Task.WhenAll(specialisationIndexTask, classesTask, racesTask);
+            await Task.WhenAll(specialisationIndexTask, classesTask, racesTask).ConfigureAwait(false);
             _specialisationIndex = specialisationIndexTask.Result;
             _allClasses = classesTask.Result;
             _allRaces = racesTask.Result;
@@ -160,7 +184,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                 var initialScreen = CharacterSpecialisationScreenCalculator.ApplySavedSelections(context, sectionSpecs);
 
                 return (context, requiredChoices, sectionSpecs, initialScreen);
-            });
+            }).ConfigureAwait(false);
 
             _context = loaded.context;
             _requiredChoices = loaded.requiredChoices;
@@ -173,11 +197,19 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             await RefreshPrereqOptionsAsync();
             EnsureActive();
 
-            RecomputeCompletion();
-            _builder.NotifyGatingChanged();
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                RecomputeCompletion();
+                _builder.NotifyGatingChanged();
+            });
         }
         catch (OperationCanceledException) when (reload.IsCanceledOrStale)
         {
+        }
+        finally
+        {
+            if (reload.IsCurrent)
+                await MainThread.InvokeOnMainThreadAsync(() => IsLoading = false);
         }
     }
 
@@ -870,6 +902,14 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         return (abilities, selectedGuildOverrides);
     }
 
+    public Task<(List<AbilityDraft> Abilities, GuildOverrideRules? GuildOverrides)> BuildSelectedAbilityDraftsWithRulesAsync()
+    {
+        if (MainThread.IsMainThread)
+            return Task.FromResult(BuildSelectedAbilityDraftsWithRules());
+
+        return MainThread.InvokeOnMainThreadAsync(BuildSelectedAbilityDraftsWithRules);
+    }
+
     public IReadOnlyList<AlignmentRule> BuildSelectedAlignmentRules()
     {
         var rules = new List<AlignmentRule>();
@@ -909,6 +949,14 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         }
 
         return rules;
+    }
+
+    public Task<IReadOnlyList<AlignmentRule>> BuildSelectedAlignmentRulesAsync()
+    {
+        if (MainThread.IsMainThread)
+            return Task.FromResult((IReadOnlyList<AlignmentRule>)BuildSelectedAlignmentRules());
+
+        return MainThread.InvokeOnMainThreadAsync(() => BuildSelectedAlignmentRules());
     }
 
     private static ChoiceOption? FindOptionBySelectionToken(SpecialisationSectionSpec spec, string? token)
@@ -1105,12 +1153,6 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
     public async Task RefreshPrereqOptionsAsync()
     {
-        if (!MainThread.IsMainThread)
-        {
-            await MainThread.InvokeOnMainThreadAsync(RefreshPrereqOptionsAsync);
-            return;
-        }
-
         if (_isRefreshingPrereqs)
             return;
 
@@ -1123,44 +1165,47 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
             var className = (Draft.Class ?? string.Empty).Trim();
-            var peopleTypes = await GetCurrentPeopleTypesAsync();
+            var peopleTypes = await GetCurrentPeopleTypesAsync().ConfigureAwait(false);
 
-            foreach (var group in Sections.OfType<SpecialisationGroupVm>())
+            await MainThread.InvokeOnMainThreadAsync(() =>
             {
-                if (!_specBySectionId.TryGetValue(group.SectionId, out var spec))
+                foreach (var group in Sections.OfType<SpecialisationGroupVm>())
                 {
-                    group.SetIssueMessage(string.Empty);
-                    continue;
+                    if (!_specBySectionId.TryGetValue(group.SectionId, out var spec))
+                    {
+                        group.SetIssueMessage(string.Empty);
+                        continue;
+                    }
+
+                    group.UpdateOptionNames(spec.Options.Select(option => option.Label));
+
+                    var issueLines = new List<string>();
+                    foreach (var slot in group.Slots)
+                    {
+                        var selectedName = (slot.SelectedOption ?? string.Empty).Trim();
+                        if (selectedName.Length == 0)
+                            continue;
+
+                        var option = spec.Options.FirstOrDefault(o =>
+                            string.Equals(o.Key, selectedName, StringComparison.OrdinalIgnoreCase)
+                            || string.Equals(o.Label, selectedName, StringComparison.OrdinalIgnoreCase));
+
+                        var ability = option?.Grants.FirstOrDefault()?.Ability;
+                        if (ability == null)
+                            continue;
+
+                        var unmet = GetUnmetPrerequisites(ability, abilityNames, peopleTypes, className);
+                        if (unmet.Count == 0)
+                            continue;
+
+                        issueLines.Add($"'{selectedName}' requires {string.Join(", ", unmet)}.");
+                    }
+
+                    group.SetIssueMessage(issueLines.Count == 0
+                        ? string.Empty
+                        : $"Issue: {string.Join(" ", issueLines)}");
                 }
-
-                group.UpdateOptionNames(spec.Options.Select(option => option.Label));
-
-                var issueLines = new List<string>();
-                foreach (var slot in group.Slots)
-                {
-                    var selectedName = (slot.SelectedOption ?? string.Empty).Trim();
-                    if (selectedName.Length == 0)
-                        continue;
-
-                    var option = spec.Options.FirstOrDefault(o =>
-                        string.Equals(o.Key, selectedName, StringComparison.OrdinalIgnoreCase)
-                        || string.Equals(o.Label, selectedName, StringComparison.OrdinalIgnoreCase));
-
-                    var ability = option?.Grants.FirstOrDefault()?.Ability;
-                    if (ability == null)
-                        continue;
-
-                    var unmet = GetUnmetPrerequisites(ability, abilityNames, peopleTypes, className);
-                    if (unmet.Count == 0)
-                        continue;
-
-                    issueLines.Add($"'{selectedName}' requires {string.Join(", ", unmet)}.");
-                }
-
-                group.SetIssueMessage(issueLines.Count == 0
-                    ? string.Empty
-                    : $"Issue: {string.Join(" ", issueLines)}");
-            }
+            });
         }
         finally
         {
@@ -1323,17 +1368,20 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         _isRefreshingSpellOptions = true;
         try
         {
-            await EnsureSpellCacheAsync();
+            await EnsureSpellCacheAsync().ConfigureAwait(false);
 
-            foreach (var group in Sections.OfType<SpecialisationGroupVm>())
+            await MainThread.InvokeOnMainThreadAsync(() =>
             {
-                if (!_spellCustomisationSectionIds.Contains(group.SectionId))
-                    continue;
+                foreach (var group in Sections.OfType<SpecialisationGroupVm>())
+                {
+                    if (!_spellCustomisationSectionIds.Contains(group.SectionId))
+                        continue;
 
-                group.RefreshCustomisationOptions();
-            }
+                    group.RefreshCustomisationOptions();
+                }
 
-            UpdateSpellCustomisationVisibility();
+                UpdateSpellCustomisationVisibility();
+            });
         }
         finally
         {

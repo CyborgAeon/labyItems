@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView x:Class="labyItems.Controls.ChipGroup"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    VerticalOptions="Start">
-    <FlexLayout x:Name="Container" Direction="Row" Wrap="Wrap" JustifyContent="Start" AlignItems="Start" HorizontalOptions="Fill" VerticalOptions="Start" />
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             VerticalOptions="Start">
+    <FlexLayout x:Name="Container"
+            Direction="Row"
+            Wrap="Wrap"
+            JustifyContent="Start"
+            AlignItems="Start"
+            HorizontalOptions="Fill"
+            VerticalOptions="Start"/>
 </ContentView>

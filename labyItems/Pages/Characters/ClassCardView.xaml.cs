@@ -28,6 +28,7 @@ public partial class ClassCardView : ContentView
     public ClassCardView()
     {
         InitializeComponent();
+        Unloaded += OnUnloaded;
     }
 
     private INotifyPropertyChanged? _boundVm;
@@ -58,15 +59,20 @@ public partial class ClassCardView : ContentView
     {
         if (e.PropertyName == nameof(ClassCardVm.IsSelected))
         {
-            if (MainThread.IsMainThread)
-                _ = AnimateSelectionAsync();
-            else
-                Dispatcher.Dispatch(async () => await AnimateSelectionAsync());
+            UiDispatchHelper.BeginOnMainThread(() =>
+                UiDispatchHelper.RunFireAndForget(
+                    AnimateSelectionAsync,
+                    "CLASS_CARD_SELECTION_ANIMATION"));
         }
 
 
         if (e.PropertyName == nameof(ClassCardVm.IsExpanded))
-            Dispatcher.Dispatch(async () => await HandleExpandedChangedAsync());
+        {
+            UiDispatchHelper.BeginOnMainThread(() =>
+                UiDispatchHelper.RunFireAndForget(
+                    HandleExpandedChangedAsync,
+                    "CLASS_CARD_EXPAND_ANIMATION"));
+        }
     }
 
     private async Task AnimateSelectionAsync()
@@ -83,8 +89,10 @@ public partial class ClassCardView : ContentView
     private async Task HandleExpandedChangedAsync()
     {
         if (BindingContext is not ClassCardVm vm) return;
-        _expandCts?.Cancel();
+        var previousCts = _expandCts;
+        previousCts?.Cancel();
         _expandCts = new CancellationTokenSource();
+        previousCts?.Dispose();
         var token = _expandCts.Token;
 
         try
@@ -186,4 +194,15 @@ public partial class ClassCardView : ContentView
         ExpandedContent.Opacity = 1;
     }
 
+    private void OnUnloaded(object? sender, EventArgs e)
+    {
+        if (_boundVm != null)
+            _boundVm.PropertyChanged -= OnVmPropertyChanged;
+
+        _boundVm = null;
+        _expandCts?.Cancel();
+        _expandCts?.Dispose();
+        _expandCts = null;
+        ExpandedContent?.AbortAnimation("expand");
+    }
 }

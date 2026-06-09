@@ -1,10 +1,12 @@
 using Microsoft.Maui.Controls.Shapes;
+using System.Windows.Input;
 
 namespace labyItems.Pages.Calculator;
 
 public partial class IspComponentTypePage : ContentPage
 {
     private readonly IspCalculator _calculator;
+    public ICommand BackNavigationCommand { get; }
 
     private static readonly ComponentOptionDefinition[] ComponentOptions =
     {
@@ -14,6 +16,7 @@ public partial class IspComponentTypePage : ContentPage
         new(IspComponentKind.Miracle, "Miracle", "Add miracles and spiritual effects", "✦", Color.FromArgb("#F3E8FF")),
         new(IspComponentKind.Spell, "Spell", "Add spells and magical utility", "✧", Color.FromArgb("#EDE9FE")),
         new(IspComponentKind.Evocation, "Evocation", "Add evocations and field effects", "🔥", Color.FromArgb("#FFE8E0")),
+        new(IspComponentKind.Abilities, "Abilities", "Add general charm abilities", "🦂", Color.FromArgb("#EAF4EA")),
         new(IspComponentKind.Neuronic, "Neuronic", "Add neuronic or standard abilities", "🧠", Color.FromArgb("#E7F0FF")),
         new(IspComponentKind.Life, "Life", "Add life to the item", "❤", Color.FromArgb("#FFE4EC")),
         new(IspComponentKind.Utility, "Utility (More)", "Set status immunities, usage rules and more", "⚙", Color.FromArgb("#ECEFF3"))
@@ -22,6 +25,7 @@ public partial class IspComponentTypePage : ContentPage
     public IspComponentTypePage(IspCalculator calculator)
     {
         _calculator = calculator;
+        BackNavigationCommand = new Command(async () => await Navigation.PopAsync());
         InitializeComponent();
         BuildComponentButtons();
     }
@@ -33,23 +37,30 @@ public partial class IspComponentTypePage : ContentPage
         for (var index = 0; index < ComponentOptions.Length; index++)
         {
             var option = ComponentOptions[index];
+            var isConfigured = _calculator.HasComponentKind(option.Kind);
+            var isAvailable = _calculator.IsComponentKindAvailable(option.Kind);
+            var description = ResolveDescription(option, isConfigured, isAvailable);
             var border = new Border
             {
                 Padding = new Thickness(14),
                 Stroke = Application.Current?.Resources.TryGetValue("SurfaceBorderColor", out var stroke) == true
                     ? (Color)stroke
                     : Color.FromArgb("#E5E7EB"),
-                StrokeShape = new RoundRectangle { CornerRadius = 18 }
+                StrokeShape = new RoundRectangle { CornerRadius = 18 },
+                Opacity = isAvailable ? 1.0 : 0.45
             };
 
-            border.GestureRecognizers.Add(new TapGestureRecognizer
+            if (isAvailable)
             {
-                Command = new Command(async () =>
+                border.GestureRecognizers.Add(new TapGestureRecognizer
                 {
-                    await Navigation.PopAsync();
-                    await _calculator.BeginAddComponentAsync(option.Kind);
-                })
-            });
+                    Command = new Command(async () =>
+                    {
+                        await Navigation.PopAsync();
+                        await _calculator.BeginAddComponentAsync(option.Kind);
+                    })
+                });
+            }
 
             var content = new Grid
             {
@@ -89,11 +100,16 @@ public partial class IspComponentTypePage : ContentPage
                         Text = option.Title,
                         FontAttributes = FontAttributes.Bold,
                         FontSize = 17,
+                        TextColor = isAvailable
+                            ? Colors.Black
+                            : (Application.Current?.Resources.TryGetValue("Gray500", out var titleText) == true
+                                ? (Color)titleText
+                                : Color.FromArgb("#6B7280")),
                         LineBreakMode = LineBreakMode.TailTruncation
                     },
                     new Label
                     {
-                        Text = option.Description,
+                        Text = description,
                         FontSize = 13,
                         TextColor = Application.Current?.Resources.TryGetValue("Gray500", out var text) == true
                             ? (Color)text
@@ -106,7 +122,7 @@ public partial class IspComponentTypePage : ContentPage
 
             var chevron = new Label
             {
-                Text = "\uF054",
+                Text = isAvailable ? "\uF054" : "\uF023",
                 FontFamily = "FASolid",
                 FontSize = 16,
                 TextColor = Application.Current?.Resources.TryGetValue("Gray500", out var chevronText) == true
@@ -122,6 +138,22 @@ public partial class IspComponentTypePage : ContentPage
             border.Content = content;
             ComponentList.Add(border, 0, index);
         }
+    }
+
+    private string ResolveDescription(ComponentOptionDefinition option, bool isConfigured, bool isAvailable)
+    {
+        if (isConfigured)
+            return $"Edit existing {option.Title.ToLowerInvariant()} settings";
+
+        if (!isAvailable)
+        {
+            var selected = _calculator.SelectedBodyComponentTitle;
+            return string.IsNullOrWhiteSpace(selected)
+                ? option.Description
+                : $"Unavailable while {selected.ToLowerInvariant()} is selected";
+        }
+
+        return option.Description;
     }
 
     private sealed record ComponentOptionDefinition(

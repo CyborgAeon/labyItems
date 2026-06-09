@@ -15,182 +15,137 @@
         <VerticalStackLayout Grid.Row="0"
                              Spacing="8"
                              Margin="0,0,0,8">
-                <Grid ColumnDefinitions="Auto,*,Auto"
-                      ColumnSpacing="8">
-                    <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
-                    <Label Grid.Column="1"
-                           Text="Characters"
-                           FontAttributes="Bold"
-                           FontSize="24"
-                           VerticalTextAlignment="Center" />
-                    <Button Grid.Column="2"
-                            Text="+"
-                            Clicked="OnAddCharacterClicked"
-                            WidthRequest="44"
-                            HeightRequest="44"
-                            Padding="0" />
-                </Grid>
-
-                <Label x:Name="EmptyStateLabel"
-                       Text="No characters saved yet."
-                       Opacity="0.7"
-                       IsVisible="False"/>
-                <Button x:Name="CreateCharacterButton"
-                        Text="Create a character"
+            <Grid ColumnDefinitions="Auto,*,Auto"
+                  ColumnSpacing="8">
+                <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
+                <Label Grid.Column="1"
+                       Text="Characters"
+                       FontAttributes="Bold"
+                       FontSize="24"
+                       VerticalTextAlignment="Center" />
+                <Button Grid.Column="2"
+                        Text="+"
                         Clicked="OnAddCharacterClicked"
-                        IsVisible="False"/>
+                        WidthRequest="44"
+                        HeightRequest="44"
+                        Padding="0" />
+            </Grid>
+
+            <Label x:Name="EmptyStateLabel"
+                   Text="No characters saved yet."
+                   Opacity="0.7"
+                   IsVisible="False" />
+            <Button x:Name="CreateCharacterButton"
+                    Text="Create a character"
+                    Clicked="OnAddCharacterClicked"
+                    IsVisible="False" />
         </VerticalStackLayout>
 
         <CollectionView x:Name="WalletView"
-                Grid.Row="1"
+                        Grid.Row="1"
                         SelectionMode="None"
                         ItemsSource="{Binding CharacterRows}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Frame Margin="0,0,0,12"
-                               Padding="12"
-                               CornerRadius="12"
-                               HasShadow="False"
-                               BorderColor="{StaticResource SurfaceBorderColor}"
-                               BindingContextChanged="OnWalletCardBindingContextChanged">
-                            <Grid RowDefinitions="Auto,Auto,Auto"
-                                  RowSpacing="8">
-                                <Grid Grid.Row="0"
-                                      ColumnDefinitions="*,Auto"
-                                      ColumnSpacing="8">
-                                    <Label Grid.Column="0"
-                                       Grid.Row="0"
-                                       Text="{Binding Name}"
-                                       FontAttributes="Bold"
-                                       FontSize="17"/>
-                                    <Button Grid.Column="1"
-                                            Grid.Row="0"
-                                            Text="{Binding IsExpanded, Converter={StaticResource ChevronConverter}}"
-                                            Style="{StaticResource CardChevronButtonStyle}"
-                                            Clicked="OnToggleExpandedClicked"/>
-                                </Grid>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,0,0,12"
+                           Padding="0"
+                           CornerRadius="8"
+                           HasShadow="False"
+                           BorderColor="{StaticResource SurfaceBorderColor}"
+                           BindingContextChanged="OnWalletCardBindingContextChanged">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnWalletCardTapped" />
+                        </Frame.GestureRecognizers>
 
-                                <Grid Grid.Row="1"
-                                      ColumnDefinitions="*,*">
-                                    <Label Text="{Binding Class}"
-                                       Grid.Row="1"
-                                       FontSize="13"
-                                       Opacity="0.8"/>
-                                    <Label Text="{Binding PlayerName, StringFormat='{0}'}"
-                                       FontSize="13"
-                                       Grid.Column="1"
-                                       Grid.Row="1"
-                                       Opacity="0.8"
-                                       HorizontalTextAlignment="End"/>
-                                </Grid>
+                        <Grid RowDefinitions="Auto,Auto"
+                              RowSpacing="0">
+                            <Grid Grid.Row="0"
+                                  Padding="12"
+                                  ColumnDefinitions="Auto,*,40"
+                                  ColumnSpacing="12"
+                                  MinimumHeightRequest="76">
+                                <controls:ClassBracketIconView Grid.Column="0"
+                                                               IconSize="52"
+                                                               AvatarImageSource="{Binding AvatarImageSource}"
+                                                               HasSplitIcon="{Binding HasSplitIcon}"
+                                                               SingleGlyph="{Binding SingleGlyph}"
+                                                               SingleIconFontFamily="{Binding SingleIconFontFamily}"
+                                                               SingleBackground="{Binding SingleBackground}"
+                                                               SplitLeftGlyph="{Binding SplitLeftGlyph}"
+                                                               SplitRightGlyph="{Binding SplitRightGlyph}"
+                                                               SplitLeftBackground="{Binding SplitLeftBackground}"
+                                                               SplitRightBackground="{Binding SplitRightBackground}"
+                                                               BorderColor="{StaticResource SurfaceBorderColor}"
+                                                               VerticalOptions="Center">
+                                    <controls:ClassBracketIconView.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnAvatarTapped" />
+                                    </controls:ClassBracketIconView.GestureRecognizers>
+                                </controls:ClassBracketIconView>
 
-                                <Grid Grid.Row="2"
-                                      Margin="0,4,0,0">
-                                    <HorizontalStackLayout StyleId="wallet-collapsed-icons"
-                                                           Spacing="4"
-                                                           HorizontalOptions="Start">
-                                        <ImageButton AutomationProperties.Name="Review full details"
-                                                     StyleId="character-action-review"
-                                                     Style="{StaticResource EmojiActionIconButtonStyle}"
-                                                     Clicked="OnSummaryClicked"
-                                                     CommandParameter="{Binding Character}">
-                                            <ImageButton.Source>
-                                                <FontImageSource Glyph="📄" Size="20" Color="Black"/>
-                                            </ImageButton.Source>
-                                        </ImageButton>
+                                <VerticalStackLayout Grid.Column="1"
+                                                     Spacing="3"
+                                                     VerticalOptions="Center">
+                                    <Label Text="{Binding Name}"
+                                           FontAttributes="Bold"
+                                           FontSize="17"
+                                           LineBreakMode="TailTruncation" />
 
-                                        <ImageButton AutomationProperties.Name="Edit character"
-                                                     StyleId="character-action-edit"
-                                                     Style="{StaticResource EmojiActionIconButtonStyle}"
-                                                     Clicked="OnWizardClicked"
-                                                     CommandParameter="{Binding Character}">
-                                            <ImageButton.Source>
-                                                <FontImageSource Glyph="🪄" Size="20" Color="Black"/>
-                                            </ImageButton.Source>
-                                        </ImageButton>
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Label Text="{Binding BracketSubtitle}"
+                                               FontSize="12"
+                                               TextColor="{StaticResource MutedTextColor}"
+                                               VerticalTextAlignment="Center"
+                                               LineBreakMode="TailTruncation" />
 
-                                        <ImageButton AutomationProperties.Name="Advance character"
-                                                     StyleId="character-action-advance"
-                                                     Style="{StaticResource EmojiActionIconButtonStyle}"
-                                                     Clicked="OnAdvanceClicked"
-                                                     CommandParameter="{Binding Character}">
-                                            <ImageButton.Source>
-                                                <FontImageSource Glyph="⬆️" Size="20" Color="Black"/>
-                                            </ImageButton.Source>
-                                        </ImageButton>
-
-                                        <ImageButton AutomationProperties.Name="View battleboard"
-                                                     StyleId="character-action-battleboard"
-                                                     Style="{StaticResource EmojiActionIconButtonStyle}"
-                                                     Clicked="OnBattleboardClicked"
-                                                     CommandParameter="{Binding Character}">
-                                            <ImageButton.Source>
-                                                <FontImageSource Glyph="⚔️" Size="20" Color="Black"/>
-                                            </ImageButton.Source>
-                                        </ImageButton>
-
-                                        <ImageButton AutomationProperties.Name="View make sheet"
-                                                     StyleId="character-action-makesheet"
-                                                     Style="{StaticResource EmojiActionIconButtonStyle}"
-                                                     Clicked="OnManufacturingClicked"
-                                                     CommandParameter="{Binding Character}">
-                                            <ImageButton.Source>
-                                                <FontImageSource Glyph="🛠️" Size="20" Color="Black"/>
-                                            </ImageButton.Source>
-                                        </ImageButton>
-
-                                        <ImageButton AutomationProperties.Name="Delete character"
-                                                     StyleId="character-action-delete"
-                                                     Style="{StaticResource EmojiActionIconButtonStyle}"
-                                                     Clicked="OnDeleteClicked"
-                                                     CommandParameter="{Binding Character}">
-                                            <ImageButton.Source>
-                                                <FontImageSource Glyph="🗑️" Size="20" Color="Black"/>
-                                            </ImageButton.Source>
-                                        </ImageButton>
+                                        <Border Stroke="{StaticResource SurfaceBorderColor}"
+                                                StrokeThickness="1"
+                                                StrokeShape="RoundRectangle 999"
+                                                BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}"
+                                                Padding="8,2"
+                                                VerticalOptions="Center">
+                                            <Label Text="{Binding PointsChipText}"
+                                                   FontSize="12"
+                                                   TextColor="{StaticResource Gray900}"
+                                                   VerticalTextAlignment="Center" />
+                                        </Border>
                                     </HorizontalStackLayout>
 
-                                    <VerticalStackLayout StyleId="wallet-expanded-actions"
-                                                         IsVisible="False"
-                                                         Opacity="0"
-                                                         Spacing="8">
-                                        <Button Text="Review full details 📄"
-                                                StyleId="character-action-review"
-                                                Style="{StaticResource ExpandedActionButtonStyle}"
-                                                Clicked="OnSummaryClicked"
-                                                CommandParameter="{Binding Character}"/>
-                                        <Button Text="Edit character 🪄"
-                                                StyleId="character-action-edit"
-                                                Style="{StaticResource ExpandedActionButtonStyle}"
-                                                Clicked="OnWizardClicked"
-                                                CommandParameter="{Binding Character}"/>
-                                        <Button Text="Advance character ⬆️"
-                                                StyleId="character-action-advance"
-                                                Style="{StaticResource ExpandedActionButtonStyle}"
-                                                Clicked="OnAdvanceClicked"
-                                                CommandParameter="{Binding Character}"/>
-                                        <Button Text="View battleboard ⚔️"
-                                                StyleId="character-action-battleboard"
-                                                Style="{StaticResource ExpandedActionButtonStyle}"
-                                                Clicked="OnBattleboardClicked"
-                                                CommandParameter="{Binding Character}"/>
-                                        <Button Text="View make sheet 🛠️"
-                                                StyleId="character-action-makesheet"
-                                                Style="{StaticResource ExpandedActionButtonStyle}"
-                                                Clicked="OnManufacturingClicked"
-                                                CommandParameter="{Binding Character}"/>
-                                        <Button Text="Delete character 🗑️"
-                                                StyleId="character-action-delete"
-                                                Style="{StaticResource ExpandedActionButtonStyle}"
-                                                TextColor="{StaticResource White}"
-                                                Clicked="OnDeleteClicked"
-                                                CommandParameter="{Binding Character}"/>
-                                    </VerticalStackLayout>
-                                </Grid>
+                                    <Label Text="{Binding LastPlayedText}"
+                                           FontSize="12"
+                                           TextColor="{StaticResource MutedTextColor}"
+                                           LineBreakMode="TailTruncation" />
+                                </VerticalStackLayout>
+
+                                <controls:ChevronIconView Grid.Column="2"
+                                                          IsExpanded="{Binding IsExpanded}"
+                                                          AnimateRotation="True"
+                                                          GlyphSize="16"
+                                                          GlyphColor="{StaticResource MutedTextColor}"
+                                                          InputTransparent="True"
+                                                          HorizontalOptions="Center"
+                                                          VerticalOptions="Center" />
                             </Grid>
-                        </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
+
+                            <VerticalStackLayout Grid.Row="1"
+                                                 StyleId="wallet-expanded-actions"
+                                                 IsVisible="False"
+                                                 Opacity="0"
+                                                 Spacing="0"
+                                                 BindableLayout.ItemsSource="{Binding ActionRows}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <controls:GlyphActionRowView Glyph="{Binding IconGlyph}"
+                                                                     GlyphFontFamily="{Binding IconFontFamily}"
+                                                                     Text="{Binding Title}"
+                                                                     IsDestructive="{Binding IsDestructive}"
+                                                                     Clicked="OnActionRowClicked" />
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
         </CollectionView>
 
         <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"

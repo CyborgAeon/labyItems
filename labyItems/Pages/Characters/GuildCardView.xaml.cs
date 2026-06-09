@@ -69,7 +69,12 @@ public partial class GuildCardView : ContentView
     private void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(GuildCardVm.IsSelected))
-            Dispatcher.Dispatch(async () => await AnimateSelectionAsync());
+        {
+            UiDispatchHelper.BeginOnMainThread(() =>
+                UiDispatchHelper.RunFireAndForget(
+                    AnimateSelectionAsync,
+                    "GUILD_CARD_SELECTION_ANIMATION"));
+        }
 
         if (e.PropertyName == nameof(GuildCardVm.IsExpanded))
             Dispatcher.Dispatch(() =>

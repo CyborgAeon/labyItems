@@ -45,6 +45,43 @@ public sealed partial class DocumentReferenceService
         }
     }
 
+    private partial Task<DocumentReferenceCapture?> PickImagePlatformAsync()
+    {
+        var presenter = GetPresenter();
+        var tcs = new TaskCompletionSource<DocumentReferenceCapture?>();
+
+        var supportedTypes = new[]
+        {
+            UTType.CreateFromIdentifier("public.image")
+        }
+        .Where(type => type != null)
+        .Cast<UTType>()
+        .ToArray();
+
+        if (supportedTypes.Length == 0)
+            throw new InvalidOperationException("Unable to configure supported image types for iOS image picking.");
+
+        var picker = new UIDocumentPickerViewController(
+            supportedTypes,
+            asCopy: false)
+        {
+            AllowsMultipleSelection = false,
+            ModalPresentationStyle = UIModalPresentationStyle.FormSheet
+        };
+
+        var pickerDelegate = new BookmarkDocumentPickerDelegate(tcs);
+        picker.Delegate = pickerDelegate;
+        picker.WasCancelled += HandleCancelled;
+        presenter.PresentViewController(picker, true, null);
+        return tcs.Task;
+
+        void HandleCancelled(object? sender, EventArgs args)
+        {
+            picker.WasCancelled -= HandleCancelled;
+            tcs.TrySetResult(null);
+        }
+    }
+
     private partial async Task<DocumentReferenceCapture?> CapturePhotoPlatformAsync()
     {
         if (!MediaPicker.Default.IsCaptureSupported)

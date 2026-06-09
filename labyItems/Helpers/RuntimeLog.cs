@@ -1,4 +1,5 @@
 using System.Text;
+using System.Collections.Concurrent;
 using Microsoft.Maui.Storage;
 
 namespace labyItems.Helpers;
@@ -6,8 +7,10 @@ namespace labyItems.Helpers;
 public static class RuntimeLog
 {
     private static readonly object Sync = new();
+    private static readonly ConcurrentQueue<string> PendingLines = new();
     private const long MaxLogBytes = 1_024 * 1_024;
     private static string? _logPath;
+    private static int _isDrainScheduled;
 
     public static string LogPath
     {
@@ -53,17 +56,43 @@ public static class RuntimeLog
             // Ignore logging transport issues.
         }
 
+        PendingLines.Enqueue(line + Environment.NewLine + Environment.NewLine);
+        ScheduleDrain();
+    }
+
+    private static void ScheduleDrain()
+    {
+        if (Interlocked.CompareExchange(ref _isDrainScheduled, 1, 0) != 0)
+            return;
+
+        ThreadPool.QueueUserWorkItem(_ => DrainQueue());
+    }
+
+    private static void DrainQueue()
+    {
         try
         {
-            lock (Sync)
+            while (PendingLines.TryDequeue(out var line))
             {
-                RotateIfNeeded(LogPath);
-                File.AppendAllText(LogPath, line + Environment.NewLine + Environment.NewLine);
+                try
+                {
+                    lock (Sync)
+                    {
+                        RotateIfNeeded(LogPath);
+                        File.AppendAllText(LogPath, line);
+                    }
+                }
+                catch
+                {
+                    // Ignore file I/O logging failures.
+                }
             }
         }
-        catch
+        finally
         {
-            // Ignore file I/O logging failures.
+            Interlocked.Exchange(ref _isDrainScheduled, 0);
+            if (!PendingLines.IsEmpty)
+                ScheduleDrain();
         }
     }
 

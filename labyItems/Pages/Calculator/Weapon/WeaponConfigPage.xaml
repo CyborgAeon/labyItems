@@ -20,6 +20,7 @@
 
         <VerticalStackLayout IsVisible="{Binding ShowMagicBaseOptions}" Spacing="6">
           <Label FontAttributes="Bold" Text="Magic power profile" />
+          <RadioButton Content="None" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.None}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.None}}" />
           <RadioButton Content="+0 Magic" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.Magic0}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.Magic0}}" />
           <RadioButton Content="+0 Magic, +1 vs one type" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.Magic0Plus1VsType}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.Magic0Plus1VsType}}" />
           <RadioButton Content="+0 Magic, +1 vs one group" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.Magic0Plus1VsGroup}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.Magic0Plus1VsGroup}}" />
@@ -30,6 +31,7 @@
 
         <VerticalStackLayout IsVisible="{Binding ShowSpiritBaseOptions}" Spacing="6">
           <Label FontAttributes="Bold" Text="Spirit power profile" />
+          <RadioButton Content="None" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.None}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.None}}" />
           <RadioButton Content="+0 Spirit" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.Spirit0}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.Spirit0}}" />
           <RadioButton Content="+0 Spirit, +1 vs one type" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.Spirit0Plus1VsType}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.Spirit0Plus1VsType}}" />
           <RadioButton Content="+0 Spirit, +1 vs one group" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.Spirit0Plus1VsGroup}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.Spirit0Plus1VsGroup}}" />
@@ -40,6 +42,7 @@
 
         <VerticalStackLayout IsVisible="{Binding ShowManticBaseOptions}" Spacing="6">
           <Label FontAttributes="Bold" Text="Mantic power profile" />
+          <RadioButton Content="None" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.None}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.None}}" />
           <RadioButton Content="+0 Mantic" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.Mantic0}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.Mantic0}}" />
           <RadioButton Content="+1 Mantic" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.ManticPlus1}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.ManticPlus1}}" />
           <RadioButton Content="+0 Pure Mantic" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.PureMantic0}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.PureMantic0}}" />
@@ -47,6 +50,7 @@
 
         <VerticalStackLayout IsVisible="{Binding ShowPhysicalBaseOptions}" Spacing="6">
           <Label FontAttributes="Bold" Text="Physical power profile" />
+          <RadioButton Content="None" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.None}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.None}}" />
           <RadioButton Content="+1 Physical" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.PhysicalPlus1}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.PhysicalPlus1}}" />
         </VerticalStackLayout>
 

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using labyItems.Helpers;
 using Microsoft.Maui.Controls;
 
 namespace labyItems.Pages.Characters;
@@ -147,7 +148,7 @@ public partial class GuildBenefitSelectionPage : ContentPage
             }
         }
 
-        public string ChevronText => IsExpanded ? "⌃" : "⌄";
+        public string ChevronText => FontAwesomeGlyphs.Chevron;
 
         private bool Set<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
         {

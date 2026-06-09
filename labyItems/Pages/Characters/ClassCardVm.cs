@@ -7,8 +7,10 @@ using System.Windows.Input;
 using System.Text.RegularExpressions;
 using labyItems.Models.Characters;
 using labyItems.Models.ViewModels;
+using labyItems.Helpers;
 using labyItems.Services;
 using labyItems.Models.Enums;
+using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Graphics;
 
 namespace labyItems.Pages.Characters;
@@ -73,54 +75,39 @@ public sealed class ClassCardVm : INotifyPropertyChanged
         .Distinct(StringComparer.OrdinalIgnoreCase)
         .ToList();
 
-    public IReadOnlyList<string> BracketLabels => Brackets
-        .Select(GetBracketLabel)
-        .Where(t => !string.IsNullOrWhiteSpace(t))
-        .Distinct(StringComparer.OrdinalIgnoreCase)
-        .ToList();
+    public IReadOnlyList<string> BracketLabels => ClassBracketIconHelper.BuildBracketLabels(Brackets);
 
-    public string BracketSubheading => BracketLabels.Count == 0
-        ? Category
-        : string.Join(" / ", BracketLabels);
+    public string BracketSubheading => ClassBracketIconHelper.BuildBracketSubheading(Brackets, Category);
 
     public bool HasFontIcon => !string.IsNullOrWhiteSpace(IconGlyph);
     public bool HasSplitIcon => !HasFontIcon && Brackets.Count >= 2;
 
     public string SingleEmoji => HasFontIcon
         ? IconGlyph
-        : Brackets.Count == 0 ? Icon : GetBracketEmoji(Brackets[0]);
+        : Brackets.Count == 0 ? Icon : ClassBracketIconHelper.GetBracketGlyph(Brackets[0]);
 
     public string SingleIconFontFamily => HasFontIcon ? "FASolid" : string.Empty;
 
-    public string SingleBg => !string.IsNullOrWhiteSpace(IconBackground)
-        ? IconBackground
-        : GetBracketColor(Brackets.Count == 0 ? Category : Brackets[0]);
+    public Color SingleBg
+    {
+        get
+        {
+            var fallback = ClassBracketIconHelper.GetBracketColor(Brackets.Count == 0 ? Category : Brackets[0]);
+            return ClassBracketIconHelper.GetColorOrDefault(IconBackground, fallback);
+        }
+    }
 
-    public string SplitLeftEmoji => GetBracketEmoji(GetBracketAt(0, Category));
-    public string SplitRightEmoji => GetBracketEmoji(GetBracketAt(1, GetBracketAt(0, Category)));
+    public string SplitLeftEmoji => ClassBracketIconHelper.GetBracketGlyph(GetBracketAt(0, Category));
+    public string SplitRightEmoji => ClassBracketIconHelper.GetBracketGlyph(GetBracketAt(1, GetBracketAt(0, Category)));
 
-    public string SplitLeftBg => GetBracketColor(GetBracketAt(0, Category));
-    public string SplitRightBg => GetBracketColor(GetBracketAt(1, GetBracketAt(0, Category)));
+    public Color SplitLeftBg => ClassBracketIconHelper.GetBracketColor(GetBracketAt(0, Category));
+    public Color SplitRightBg => ClassBracketIconHelper.GetBracketColor(GetBracketAt(1, GetBracketAt(0, Category)));
 
     private string GetBracketAt(int index, string fallback)
     {
         if (index >= 0 && index < Brackets.Count)
             return Brackets[index];
         return fallback;
-    }
-
-    private static string GetBracketColor(string? bracket)
-    {
-        var b = GetBracketLabel(bracket);
-
-        if (b.Equals("Neuro", StringComparison.OrdinalIgnoreCase)) return "#E9D5FF";
-        if (b.Equals("Wizard", StringComparison.OrdinalIgnoreCase)) return "#D8E2DC";
-        if (b.Equals("Warrior", StringComparison.OrdinalIgnoreCase)) return "#FEC5BB";
-        if (b.Equals("Priest", StringComparison.OrdinalIgnoreCase)) return "#FAE1DD";
-        if (b.Equals("Druid", StringComparison.OrdinalIgnoreCase)) return "#DED6CE";
-        if (b.Equals("Scout", StringComparison.OrdinalIgnoreCase)) return "#F5EBE0";
-
-        return "#F3F4F6";
     }
 
     private static string GetBracketEmoji(string? bracket)
@@ -173,6 +160,8 @@ public sealed class ClassCardVm : INotifyPropertyChanged
 
     public static (string Icon, string Category, IReadOnlyList<string> Tags) ParseBrackets(IReadOnlyList<string>? brackets)
     {
+        return ClassBracketIconHelper.ParseBrackets(brackets);
+
         if (brackets == null || brackets.Count == 0)
             return ("🛡️", "warrior", Array.Empty<string>());
 
@@ -244,23 +233,35 @@ public sealed class ClassCardVm : INotifyPropertyChanged
         if (_progressionLoaded) return;
         _progressionLoaded = true;
 
-        var abilitiesByLevel = await GetAbilitiesByLevelAsync();
-        var lifeByLevel = await GetLifeByLevelAsync();
-
-        LevelRows.Clear();
-        for (var level = 1; level <= 8; level++)
+        var rows = await Task.Run(async () =>
         {
-            var hasLife = lifeByLevel.TryGetValue(level, out var p);
-            var abilities = abilitiesByLevel.TryGetValue(level, out var defs)
-                ? defs
-                : Array.Empty<AbilityDefinition>();
+            var abilitiesByLevel = await GetAbilitiesByLevelAsync().ConfigureAwait(false);
+            var lifeByLevel = await GetLifeByLevelAsync().ConfigureAwait(false);
+            var builtRows = new List<LevelAbilityRowVm>(8);
 
-            LevelRows.Add(LevelAbilityRowBuilder.Build(
-                level: level,
-                abilityDefinitions: abilities,
-                body: hasLife ? p.Body.ToString() : string.Empty,
-                loc: hasLife ? p.Loc.ToString() : string.Empty));
-        }
+            for (var level = 1; level <= 8; level++)
+            {
+                var hasLife = lifeByLevel.TryGetValue(level, out var p);
+                var abilities = abilitiesByLevel.TryGetValue(level, out var defs)
+                    ? defs
+                    : Array.Empty<AbilityDefinition>();
+
+                builtRows.Add(LevelAbilityRowBuilder.Build(
+                    level: level,
+                    abilityDefinitions: abilities,
+                    body: hasLife ? p.Body.ToString() : string.Empty,
+                    loc: hasLife ? p.Loc.ToString() : string.Empty));
+            }
+
+            return builtRows;
+        }).ConfigureAwait(false);
+
+        await MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            LevelRows.Clear();
+            foreach (var row in rows)
+                LevelRows.Add(row);
+        });
     }
 
     public Task ReloadProgressionAsync()

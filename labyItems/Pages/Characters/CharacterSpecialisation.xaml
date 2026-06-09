@@ -518,6 +518,11 @@
 
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Spacing="12">
+                <controls:LoadingIndicator IsVisible="{Binding IsLoading}"
+                                           IsRunning="{Binding IsLoading}"
+                                           Message="Loading specialisations..."
+                                           Margin="0,18,0,0"/>
+
                 <Frame Padding="12"
                        CornerRadius="12"
                        HasShadow="False"

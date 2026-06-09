@@ -322,17 +322,17 @@
                                           <Label Text="Post 8th"
                                                  FontAttributes="Bold"
                                                  VerticalTextAlignment="Center"/>
-                                          <Button Grid.Column="1"
-                                                  Text="{Binding IsAdvancementExpanded, Converter={StaticResource ChevronConverter}}"
-                                                  BackgroundColor="Transparent"
-                                                  TextColor="{StaticResource MutedTextColor}"
-                                                  FontSize="18"
-                                                  Padding="0"
-                                                  WidthRequest="40"
-                                                  HeightRequest="40"
-                                                  HorizontalOptions="End"
-                                                  VerticalOptions="Center"
-                                                  Command="{Binding ToggleAdvancementExpandedCommand}"/>
+                                           <controls:ChevronIconView Grid.Column="1"
+                                                                     IsExpanded="{Binding IsAdvancementExpanded}"
+                                                                     AnimateRotation="True"
+                                                                     GlyphSize="18"
+                                                                     GlyphColor="{StaticResource MutedTextColor}"
+                                                                     HorizontalOptions="End"
+                                                                     VerticalOptions="Center">
+                                                  <controls:ChevronIconView.GestureRecognizers>
+                                                         <TapGestureRecognizer Command="{Binding ToggleAdvancementExpandedCommand}" />
+                                                  </controls:ChevronIconView.GestureRecognizers>
+                                           </controls:ChevronIconView>
                                    </Grid>
 
                                    <VerticalStackLayout x:Name="Post8ExpandedContent"

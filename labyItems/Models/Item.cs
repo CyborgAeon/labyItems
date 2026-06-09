@@ -14,6 +14,13 @@ public class Character
     public string Notes { get; set; } = string.Empty;
     public string DraftSnapshot { get; set; } = string.Empty;
     public DateTime UpdatedUtc { get; set; } = DateTime.UtcNow;
+    public string AvatarStorageKind { get; set; } = string.Empty;
+    public string AvatarPersistentReference { get; set; } = string.Empty;
+    public string AvatarSourceUri { get; set; } = string.Empty;
+    public string AvatarAccessReference { get; set; } = string.Empty;
+    public string AvatarDisplayPath { get; set; } = string.Empty;
+    public string AvatarFileName { get; set; } = string.Empty;
+    public string AvatarContentType { get; set; } = string.Empty;
     public List<string> Guilds { get; set; } = new();
     public Dictionary<string, string> Specialisations { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     public long Points { get; set; } = 0;

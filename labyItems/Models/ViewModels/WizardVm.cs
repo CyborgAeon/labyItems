@@ -50,6 +50,7 @@ public sealed class WizardVm : INotifyPropertyChanged
     private readonly ICharacterCreationDataService _creationDataService;
     private readonly Func<Task>? _onFinished;
     private readonly WizardFlowStateMachine _flow;
+    private readonly SemaphoreSlim _reviewRefreshLock = new(1, 1);
 
     public ObservableCollection<StepItem> StepSteps { get; } = new();
 
@@ -169,7 +170,9 @@ public sealed class WizardVm : INotifyPropertyChanged
         IExportService? exportService = null,
         ICharacterDraftStore? draftStore = null,
         ICharacterAdvancementDomainService? domainService = null,
-        ICharacterCreationDataService? creationDataService = null)
+        ICharacterCreationDataService? creationDataService = null,
+        bool runBuilderStartupPipeline = true,
+        bool runInitialSync = true)
     {
         var resolvedDraft = draftStore?.Draft ?? draft ?? new CharacterDraft();
         _draftStore = draftStore ?? new CharacterDraftStore(resolvedDraft);
@@ -201,7 +204,11 @@ public sealed class WizardVm : INotifyPropertyChanged
         SaveToWalletCommand = new Command(() => _ = SaveToWallet(), () => Draft.IsRaceAndClassSelected);
         ContinueToAdvancementCommand = new Command(async () => await ContinueToAdvancementAsync());
         ToggleAdvancementExpandedCommand = new Command(() => IsAdvancementExpanded = !IsAdvancementExpanded);
-        CharacterBuilderVm = new CharacterBuilderVm(Draft, NotifyGatingChanged, _creationDataService);
+        CharacterBuilderVm = new CharacterBuilderVm(
+            Draft,
+            NotifyGatingChanged,
+            _creationDataService,
+            runBuilderStartupPipeline);
 
         GuildsVm = new GuildsVm(
             Draft,
@@ -224,18 +231,10 @@ public sealed class WizardVm : INotifyPropertyChanged
         RefreshSpecialisationSummaryLines();
         _ = EnsureSpecialisationAbilityLookupLoadedAsync();
 
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            try
-            {
-                await SyncDraftStateAsync(allowBackground: true);
-                await RefreshGuildWarningsAsync();
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Wizard initial sync failed: {ex}");
-            }
-        });
+        if (runInitialSync)
+            UiDispatchHelper.RunFireAndForget(
+                () => RefreshReviewAsync(),
+                "WIZARD_INITIAL_REVIEW_SYNC");
     }
 
     private IReadOnlyList<WizardStepDefinition> BuildSteps()
@@ -245,12 +244,16 @@ public sealed class WizardVm : INotifyPropertyChanged
                 index: 0,
                 label: "Race/Class",
                 canEnter: () => true,
-                createView: () => new CharacterBuilder(CharacterBuilderVm)),
+                createView: () => new CharacterBuilder(CharacterBuilderVm),
+                onEnterAsync: async () => await CharacterBuilderVm.EnsureReferenceCardsLoadedAsync(),
+                onExitAsync: async () => await CharacterBuilderVm.ReleaseScreenCacheAsync()),
             new(
                 index: 1,
-                label: "Specialise",
+                label: "Skills",
                 canEnter: () => WizardStepRules.CanEnterSpecialisation(Draft),
-                createView: () => new CharacterSpecialisation(CharacterBuilderVm)),
+                createView: () => new CharacterSpecialisation(CharacterBuilderVm),
+                onEnterAsync: async () => await CharacterBuilderVm.SpecialisationVm.ReloadAsync(),
+                onExitAsync: async () => await CharacterBuilderVm.SpecialisationVm.ReleaseSearchCacheAsync()),
             new(
                 index: 2,
                 label: "Guilds",
@@ -259,17 +262,14 @@ public sealed class WizardVm : INotifyPropertyChanged
                 {
                     UseTypePills = true
                 },
-                onEnterAsync: async () => await GuildsVm.ReloadAsync()),
+                onEnterAsync: async () => await GuildsVm.ReloadAsync(),
+                onExitAsync: async () => await GuildsVm.ReleaseScreenCacheAsync()),
             new(
                 index: 3,
                 label: "Details",
                 canEnter: () => WizardStepRules.CanEnterDetails(Draft, CharacterBuilderVm.SpecialisationVm, GuildsVm),
                 createView: () => new CharacterInfoView(this),
-                onEnterAsync: () =>
-                {
-                    UpdateArmourUiFromDraft();
-                    return Task.CompletedTask;
-                }),
+                onEnterAsync: async () => await MainThread.InvokeOnMainThreadAsync(UpdateArmourUiFromDraft)),
             new(
                 index: 4,
                 label: "Review",
@@ -281,11 +281,29 @@ public sealed class WizardVm : INotifyPropertyChanged
                 onEnterAsync: async () => await RefreshReviewAsync())
         };
 
-    public async Task RefreshReviewAsync()
+    public async Task RefreshReviewAsync(CancellationToken cancellationToken = default)
     {
-        await SyncDraftStateAsync();
-        RaiseReviewProperties();
-        await RefreshGuildWarningsAsync();
+        var lockTaken = false;
+        try
+        {
+            await _reviewRefreshLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+            lockTaken = true;
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await SyncDraftStateAsync(cancellationToken).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+            await MainThread.InvokeOnMainThreadAsync(RaiseReviewProperties);
+            cancellationToken.ThrowIfCancellationRequested();
+            await RefreshGuildWarningsAsync(cancellationToken).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        finally
+        {
+            if (lockTaken)
+                _reviewRefreshLock.Release();
+        }
     }
 
     public string PlayerName
@@ -524,15 +542,12 @@ public sealed class WizardVm : INotifyPropertyChanged
 
     private async Task WaitForBuilderLoadAsync(CancellationToken cancellationToken)
     {
-        const int maxAttempts = 30;
-        for (var attempt = 0; attempt < maxAttempts; attempt++)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (CharacterBuilderVm.AllClasses.Count > 0 && CharacterBuilderVm.AllRaces.Count > 0)
-                return;
+        cancellationToken.ThrowIfCancellationRequested();
+        if (CharacterBuilderVm.AllClasses.Count > 0 && CharacterBuilderVm.AllRaces.Count > 0)
+            return;
 
-            await Task.Delay(80, cancellationToken);
-        }
+        await CharacterBuilderVm.EnsureReferenceCardsLoadedAsync();
+        cancellationToken.ThrowIfCancellationRequested();
     }
 
     private async Task EnsureSpecialisationReadyAsync(CancellationToken cancellationToken)
@@ -706,65 +721,30 @@ public sealed class WizardVm : INotifyPropertyChanged
         });
     }
 
-    private async Task SyncDraftStateAsync(bool allowBackground = false)
+    private async Task SyncDraftStateAsync(CancellationToken cancellationToken = default)
     {
-        ClampWornArmourPac();
-        Draft.WornArmour = ClampWornArmour(WornArmourPac);
-
-        if (allowBackground)
+        cancellationToken.ThrowIfCancellationRequested();
+        await MainThread.InvokeOnMainThreadAsync(() =>
         {
-            (IReadOnlyList<LevelAbilityRowVm> classRows, IReadOnlyList<LevelAbilityRowVm> raceRows) =
-                (Array.Empty<LevelAbilityRowVm>(), Array.Empty<LevelAbilityRowVm>());
+            ClampWornArmourPac();
+            Draft.WornArmour = ClampWornArmour(WornArmourPac);
+        }).ConfigureAwait(false);
 
-            await RefreshBuilderStateOnMainThreadAsync().ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+        await CharacterBuilderVm.SyncDraftLifeAsync().ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+        await CharacterBuilderVm.RefreshDraftAbilitiesAsync(cancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+        await EnsureAbilityCostIndexAsync().ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+        var (freshClassRows, freshRaceRows) = await BuildReviewLevelAbilityRowsAsync().ConfigureAwait(false);
 
-            await Task.Run(async () =>
-            {
-                await EnsureAbilityCostIndexAsync().ConfigureAwait(false);
-                (classRows, raceRows) = await BuildReviewLevelAbilityRowsAsync().ConfigureAwait(false);
-            }).ConfigureAwait(false);
-
-            await MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                ApplyReviewLevelAbilityRows(classRows, raceRows);
-                ApplyAdvancementSummary();
-            });
-            return;
-        }
-
-        await CharacterBuilderVm.SyncDraftLifeAsync();
-        await CharacterBuilderVm.RefreshDraftAbilitiesAsync();
-        await EnsureAbilityCostIndexAsync();
-        var (freshClassRows, freshRaceRows) = await BuildReviewLevelAbilityRowsAsync();
-        if (MainThread.IsMainThread)
+        cancellationToken.ThrowIfCancellationRequested();
+        await MainThread.InvokeOnMainThreadAsync(() =>
         {
             ApplyReviewLevelAbilityRows(freshClassRows, freshRaceRows);
             ApplyAdvancementSummary();
-        }
-        else
-        {
-            await MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                ApplyReviewLevelAbilityRows(freshClassRows, freshRaceRows);
-                ApplyAdvancementSummary();
-            });
-        }
-    }
-
-    private async Task RefreshBuilderStateOnMainThreadAsync()
-    {
-        if (MainThread.IsMainThread)
-        {
-            await CharacterBuilderVm.SyncDraftLifeAsync();
-            await CharacterBuilderVm.RefreshDraftAbilitiesAsync();
-            return;
-        }
-
-        await MainThread.InvokeOnMainThreadAsync(async () =>
-        {
-            await CharacterBuilderVm.SyncDraftLifeAsync();
-            await CharacterBuilderVm.RefreshDraftAbilitiesAsync();
-        });
+        }).ConfigureAwait(false);
     }
 
     private async Task<(IReadOnlyList<LevelAbilityRowVm> ClassRows, IReadOnlyList<LevelAbilityRowVm> RaceRows)>
@@ -877,7 +857,22 @@ public sealed class WizardVm : INotifyPropertyChanged
         if (movingForward)
         {
             var deferredEnter = _flow.ConsumePendingEnter();
+            if (deferredEnter != null)
+                BeginDeferredLoadingState(CurrentStep);
             _ = RunPostTransitionSyncAsync(deferredEnter);
+        }
+    }
+
+    private void BeginDeferredLoadingState(int stepIndex)
+    {
+        switch (stepIndex)
+        {
+            case 1:
+                CharacterBuilderVm.SpecialisationVm.BeginLoadingState();
+                break;
+            case 2:
+                GuildsVm.BeginLoadingState();
+                break;
         }
     }
 
@@ -887,7 +882,7 @@ public sealed class WizardVm : INotifyPropertyChanged
         {
             await Task.Yield();
             await Task.Delay(220);
-            await SyncDraftStateAsync(allowBackground: true);
+            await SyncDraftStateAsync();
             if (deferredEnter != null)
                 await deferredEnter();
         }
@@ -1262,17 +1257,23 @@ public sealed class WizardVm : INotifyPropertyChanged
         RefreshGuildStackingWarnings();
     }
 
-    private async Task RefreshGuildWarningsAsync()
+    private async Task RefreshGuildWarningsAsync(CancellationToken cancellationToken = default)
     {
         IReadOnlyList<string> warnings;
         IReadOnlyList<GuildReviewSummaryRowVm> reviewRows;
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             warnings = await GuildsVm.BuildIncompleteChoiceWarningsAsync();
+            cancellationToken.ThrowIfCancellationRequested();
             reviewRows = await GuildsVm.BuildSelectedGuildReviewRowsAsync();
+            cancellationToken.ThrowIfCancellationRequested();
         }
         catch (Exception ex)
         {
+            if (ex is OperationCanceledException && cancellationToken.IsCancellationRequested)
+                return;
+
             RuntimeLog.Write("GUILD_WARNING_REFRESH", "Failed refreshing guild warning state.", ex);
             warnings = Array.Empty<string>();
             reviewRows = Draft.Guilds

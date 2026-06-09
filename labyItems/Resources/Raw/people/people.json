@@ -70,6 +70,10 @@
   },
   "Dwarf": {
     "PeopleType": ["Standard"],
+    "Armour": {
+      "Wearable": ["medium", "heavy"],
+      "Restrictions": ["Only metal armour"]
+    },
     "Description": "Dwarves are a hardy race, suited to underground life. They are stubborn and proud and have a strong sense of kin and tradition. Dwarves are renowned for their resilience and toughness.",
     "levelledAbilities": {
       "1": [
@@ -104,7 +108,6 @@
       "8": []
     },
     "Restrictions": [
-      "Can only wear metal armour",
       "Cannot use two-handed weapons",
       "Can only use 3 magic items unless in the wizard bracket",
       "dies if any location is severed"

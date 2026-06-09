@@ -29,6 +29,7 @@
     <Compile Include="../../labyItems/Helpers/WizardAbilityProgressionHelper.cs" Link="Source/WizardAbilityProgressionHelper.cs" />
     <Compile Include="../../labyItems/Helpers/CharacterDraftExtensions.cs" Link="Source/CharacterDraftExtensions.cs" />
     <Compile Include="../../labyItems/Helpers/PeopleTypeFormatting.cs" Link="Source/PeopleTypeFormatting.cs" />
+    <Compile Include="../../labyItems/Helpers/NotationHelper.cs" Link="Source/NotationHelper.cs" />
     <Compile Include="../../labyItems/Helpers/IconPalette.cs" Link="Source/IconPalette.cs" />
     <Compile Include="../../labyItems/Helpers/CharacterDisplayNameHelper.cs" Link="Source/CharacterDisplayNameHelper.cs" />
     <Compile Include="../../labyItems/Helpers/MagicColourOppositionRules.cs" Link="Source/MagicColourOppositionRules.cs" />

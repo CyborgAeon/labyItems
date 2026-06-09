@@ -170,11 +170,11 @@ public partial class MiracleDetailCardView : ContentView
     public int DamageMaxLines => IsDamageExpanded ? -1 : CollapsedLines;
     public int HealMaxLines => IsHealExpanded ? -1 : CollapsedLines;
 
-    public string DescriptionChevronText => IsDescriptionExpanded ? "▴" : "▾";
-    public string VerbalChevronText => IsVerbalExpanded ? "▴" : "▾";
-    public string PrereqChevronText => IsPrereqExpanded ? "▴" : "▾";
-    public string DamageChevronText => IsDamageExpanded ? "▴" : "▾";
-    public string HealChevronText => IsHealExpanded ? "▴" : "▾";
+    public string DescriptionChevronText => FontAwesomeGlyphs.Chevron;
+    public string VerbalChevronText => FontAwesomeGlyphs.Chevron;
+    public string PrereqChevronText => FontAwesomeGlyphs.Chevron;
+    public string DamageChevronText => FontAwesomeGlyphs.Chevron;
+    public string HealChevronText => FontAwesomeGlyphs.Chevron;
     public bool ShowDescriptionSeeMore => CanExpandDescription && !IsDescriptionExpanded;
     public bool ShowVerbalSeeMore => CanExpandVerbal && !IsVerbalExpanded;
     public bool ShowPrereqSeeMore => CanExpandPrereqs && !IsPrereqExpanded;

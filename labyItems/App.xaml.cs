@@ -7,6 +7,7 @@ using labyItems.Models;
 using labyItems.Pages;
 using labyItems.Services;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Devices;
 using Microsoft.Maui.Graphics;
 
@@ -14,26 +15,25 @@ namespace labyItems;
 
 public partial class App : Application
 {
-    private readonly IDatabaseInitializer _dbInitializer;
-    private readonly ICacheMaintenanceService _cacheMaintenanceService;
-    private readonly NavigationPage _mainNavPage;
+    private readonly IStartupInitializationService _startupInitializationService;
+    private readonly Pages.StartupDataRefreshPage _startupPage;
+    private CancellationTokenSource? _startupCts;
+    private bool _startupInProgress;
+    private bool _startupCompleted;
     private static readonly object FirstChanceSync = new();
     private static readonly HashSet<string> FirstChanceSignatures = new(StringComparer.Ordinal);
     private const int FirstChanceSignatureCap = 64;
 
-    public App(IDatabaseInitializer dbInitializer, ICacheMaintenanceService cacheMaintenanceService)
+    public App(IStartupInitializationService startupInitializationService)
     {
-        _dbInitializer = dbInitializer;
-        _cacheMaintenanceService = cacheMaintenanceService;
+        _startupInitializationService = startupInitializationService;
         InitializeComponent();
         UserAppTheme = AppTheme.Light;
 
-        _mainNavPage = new NavigationPage(new LoginPage())
-        {
-            BarTextColor = Colors.White
-        };
+        _startupPage = new Pages.StartupDataRefreshPage();
+        _startupPage.RetryRequested += OnRetryRequested;
 
-        MainPage = new NavigationPage(new Pages.StartupDataRefreshPage())
+        MainPage = new NavigationPage(_startupPage)
         {
             BarTextColor = Colors.White
         };
@@ -67,22 +67,95 @@ public partial class App : Application
             page.Appearing -= OnMainPageAppearing;
         }
 
-        _ = Task.Run(async () =>
+        _ = RunStartupInitializationAsync();
+    }
+
+    private void OnRetryRequested(object? sender, EventArgs e)
+    {
+        _ = RunStartupInitializationAsync(forceRestart: true);
+    }
+
+    private async Task RunStartupInitializationAsync(bool forceRestart = false)
+    {
+        if (_startupCompleted)
+            return;
+
+        if (_startupInProgress)
+            return;
+
+        _startupInProgress = true;
+        _startupCts?.Cancel();
+        _startupCts?.Dispose();
+        _startupCts = new CancellationTokenSource();
+
+        var cancellationToken = _startupCts.Token;
+        var startupStopwatch = System.Diagnostics.Stopwatch.StartNew();
+
+        try
         {
-            try
+            await MainThread.InvokeOnMainThreadAsync(() =>
             {
-                await _cacheMaintenanceService.RunStartupCleanupAsync();
-                await _dbInitializer.InitializeAsync();
-            }
-            catch (Exception ex)
+                _startupPage.SetWorking("Starting app", "Preparing startup tasks...");
+            });
+
+            var progress = new Progress<StartupProgressInfo>(info =>
             {
-                RuntimeLog.Write("DB_INIT", "Database initialization failed.", ex);
-            }
-            finally
+                MainThread.BeginInvokeOnMainThread(() => _startupPage.SetWorking(info.Phase, info.Message));
+            });
+
+            var result = await _startupInitializationService.InitializeAsync(progress, cancellationToken);
+            startupStopwatch.Stop();
+
+            RuntimeLog.Write(
+                "STARTUP",
+                $"Startup sequence finished in {startupStopwatch.ElapsedMilliseconds} ms. " +
+                $"PhaseCount={result.Phases.Count}.");
+
+            var navigationTimer = System.Diagnostics.Stopwatch.StartNew();
+            RuntimeLog.Write("STARTUP", "First navigation phase started.");
+            await MainThread.InvokeOnMainThreadAsync(() =>
             {
-                MainPage.Dispatcher.Dispatch(() => MainPage = _mainNavPage);
+                MainPage = new NavigationPage(new LoginPage())
+                {
+                    BarTextColor = Colors.White
+                };
+            });
+            navigationTimer.Stop();
+            RuntimeLog.Write("STARTUP", $"First navigation phase completed in {navigationTimer.ElapsedMilliseconds} ms.");
+
+            _startupCompleted = true;
+        }
+        catch (OperationCanceledException)
+        {
+            startupStopwatch.Stop();
+            RuntimeLog.Write("STARTUP", "Startup sequence was canceled.");
+
+            if (!forceRestart)
+            {
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    _startupPage.SetError(
+                        "Startup canceled",
+                        "Initialization was canceled. Tap Retry to continue.");
+                });
             }
-        });
+        }
+        catch (Exception ex)
+        {
+            startupStopwatch.Stop();
+            RuntimeLog.Write("STARTUP", "Startup sequence failed.", ex);
+
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                _startupPage.SetError(
+                    "Startup failed",
+                    "The app could not finish initialization. You can retry.");
+            });
+        }
+        finally
+        {
+            _startupInProgress = false;
+        }
     }
 
     private static void TryLogFirstChance(FirstChanceExceptionEventArgs args)
@@ -91,8 +164,7 @@ public partial class App : Application
         if (ex == null)
             return;
 
-        var text = ex.ToString();
-        if (!ShouldCaptureFirstChance(text))
+        if (!ShouldCaptureFirstChance(ex))
             return;
 
         if (!TryTrackFirstChanceSignature($"{ex.GetType().FullName}|{ex.Message}"))
@@ -101,12 +173,20 @@ public partial class App : Application
         RuntimeLog.Write("FIRST_CHANCE", "Captured first-chance exception matching AOT/persistence filters.", ex);
     }
 
-    private static bool ShouldCaptureFirstChance(string text)
+    private static bool ShouldCaptureFirstChance(Exception ex)
     {
-        return text.Contains("sqlite", StringComparison.OrdinalIgnoreCase)
-               || text.Contains("database", StringComparison.OrdinalIgnoreCase)
-               || text.Contains("attempting to jit compile method", StringComparison.OrdinalIgnoreCase)
-               || text.Contains("aot-only mode", StringComparison.OrdinalIgnoreCase);
+        var message = ex.Message ?? string.Empty;
+        if (message.Contains("sqlite", StringComparison.OrdinalIgnoreCase)
+            || message.Contains("database", StringComparison.OrdinalIgnoreCase)
+            || message.Contains("attempting to jit compile method", StringComparison.OrdinalIgnoreCase)
+            || message.Contains("aot-only mode", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        var typeName = ex.GetType().FullName ?? string.Empty;
+        return typeName.Contains("Sqlite", StringComparison.OrdinalIgnoreCase)
+               || typeName.Contains("Database", StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool TryTrackFirstChanceSignature(string signature)

@@ -46,12 +46,14 @@ public partial class CharacterReviewView : ContentView
     public CharacterReviewView(object bindingContext)
     {
         InitializeComponent();
+        AttachLifecycleHandlers();
         BindingContext = bindingContext;
     }
 
     public CharacterReviewView()
     {
         InitializeComponent();
+        AttachLifecycleHandlers();
     }
 
     private INotifyPropertyChanged? _boundVm;
@@ -88,15 +90,22 @@ public partial class CharacterReviewView : ContentView
     private void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(WizardVm.IsAdvancementExpanded))
-            Dispatcher.Dispatch(async () => await HandleAdvancementExpandedChangedAsync());
+        {
+            UiDispatchHelper.BeginOnMainThread(() =>
+                UiDispatchHelper.RunFireAndForget(
+                    HandleAdvancementExpandedChangedAsync,
+                    "CHARACTER_REVIEW_ADVANCEMENT_EXPAND_ANIMATION"));
+        }
     }
 
     private async Task HandleAdvancementExpandedChangedAsync()
     {
         if (BindingContext is not WizardVm vm) return;
 
-        _post8ExpandCts?.Cancel();
+        var previousCts = _post8ExpandCts;
+        previousCts?.Cancel();
         _post8ExpandCts = new CancellationTokenSource();
+        previousCts?.Dispose();
         var token = _post8ExpandCts.Token;
 
         try
@@ -110,6 +119,13 @@ public partial class CharacterReviewView : ContentView
         catch (OperationCanceledException)
         {
             // Ignore rapid expand/collapse interactions.
+        }
+        catch (Exception ex)
+        {
+            RuntimeLog.Write(
+                "CHARACTER_REVIEW_ADVANCEMENT_EXPAND_ANIMATION",
+                "Post-8 advancement expand animation failed.",
+                ex);
         }
     }
 
@@ -274,7 +290,7 @@ public partial class CharacterReviewView : ContentView
             hostPage,
             vm.GuildsVm,
             row.GuildName,
-            refreshAfterSelection: vm.RefreshReviewAsync);
+            refreshAfterSelection: () => vm.RefreshReviewAsync());
     }
 
     private async void OnViewGuildDetailsClicked(object sender, EventArgs e)
@@ -333,7 +349,7 @@ public partial class CharacterReviewView : ContentView
         var choicesComplete = await GuildBenefitChoicePromptHelper.EnsureChoicesCompletedAsync(
             page,
             vm.GuildsVm,
-            refreshAfterSelection: vm.RefreshReviewAsync,
+            refreshAfterSelection: () => vm.RefreshReviewAsync(),
             actionLabel: "getting battleboard output");
         if (!choicesComplete)
             return;
@@ -483,5 +499,34 @@ public partial class CharacterReviewView : ContentView
 
         var combined = string.Join("\n\n", parts.Distinct(StringComparer.Ordinal));
         return $"{combined}\n\nLog: {RuntimeLog.LogPath}";
+    }
+
+    private void AttachLifecycleHandlers()
+    {
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
+    }
+
+    private void OnLoaded(object? sender, EventArgs e)
+    {
+        if (_boundVm != null)
+            return;
+
+        _boundVm = BindingContext as INotifyPropertyChanged;
+        if (_boundVm != null)
+            _boundVm.PropertyChanged += OnVmPropertyChanged;
+    }
+
+    private void OnUnloaded(object? sender, EventArgs e)
+    {
+        if (_boundVm != null)
+            _boundVm.PropertyChanged -= OnVmPropertyChanged;
+
+        _boundVm = null;
+        _post8ExpandCts?.Cancel();
+        _post8ExpandCts?.Dispose();
+        _post8ExpandCts = null;
+
+        Post8ExpandedContent?.AbortAnimation("post8-expand");
     }
 }

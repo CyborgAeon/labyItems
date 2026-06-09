@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="labyItems.Controls.GlyphActionRowView"
+    x:Name="Root"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls">
+
+    <Grid RowDefinitions="Auto,Auto,Auto"
+          RowSpacing="0"
+          BackgroundColor="Transparent">
+        <BoxView Grid.Row="0"
+                 HeightRequest="{Binding BorderThickness, Source={x:Reference Root}}"
+                 Color="{Binding BorderColor, Source={x:Reference Root}}" />
+
+        <Grid Grid.Row="1"
+              ColumnDefinitions="36,*,Auto"
+              ColumnSpacing="0"
+              Padding="{Binding ContentPadding, Source={x:Reference Root}}"
+              MinimumHeightRequest="{Binding RowHeight, Source={x:Reference Root}}">
+            <Label Grid.Column="0"
+                   Text="{Binding Glyph, Source={x:Reference Root}}"
+                   FontFamily="{Binding GlyphFontFamily, Source={x:Reference Root}}"
+                   FontSize="{Binding GlyphSize, Source={x:Reference Root}}"
+                   TextColor="{Binding EffectiveTextColor, Source={x:Reference Root}}"
+                   HorizontalOptions="Start"
+                   VerticalOptions="Center"
+                   HorizontalTextAlignment="Start"
+                   VerticalTextAlignment="Center" />
+
+            <Label Grid.Column="1"
+                   Text="{Binding Text, Source={x:Reference Root}}"
+                   FontAttributes="Bold"
+                   FontSize="{Binding TextSize, Source={x:Reference Root}}"
+                   TextColor="{Binding EffectiveTextColor, Source={x:Reference Root}}"
+                   VerticalOptions="Center"
+                   VerticalTextAlignment="Center"
+                   LineBreakMode="TailTruncation" />
+
+            <controls:ChevronIconView Grid.Column="2"
+                                      GlyphSize="{Binding ChevronSize, Source={x:Reference Root}}"
+                                      GlyphColor="{Binding ChevronColor, Source={x:Reference Root}}"
+                                      IconSize="18"
+                                      IsVisible="{Binding ShowChevron, Source={x:Reference Root}}"
+                                      HorizontalOptions="End"
+                                      VerticalOptions="Center" />
+        </Grid>
+
+        <BoxView Grid.Row="2"
+                 HeightRequest="{Binding BorderThickness, Source={x:Reference Root}}"
+                 Color="{Binding BorderColor, Source={x:Reference Root}}" />
+    </Grid>
+</ContentView>

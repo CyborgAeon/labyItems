@@ -29,6 +29,7 @@ public partial class RaceCardView : ContentView
     public RaceCardView()
     {
         InitializeComponent();
+        Unloaded += OnUnloaded;
     }
 
     private INotifyPropertyChanged? _boundVm;
@@ -59,23 +60,30 @@ public partial class RaceCardView : ContentView
     {
         if (e.PropertyName == nameof(RaceCardVm.IsSelected))
         {
-            if (MainThread.IsMainThread)
-                _ = AnimateSelectionAsync();
-            else
-                Dispatcher.Dispatch(async () => await AnimateSelectionAsync());
+            UiDispatchHelper.BeginOnMainThread(() =>
+                UiDispatchHelper.RunFireAndForget(
+                    AnimateSelectionAsync,
+                    "RACE_CARD_SELECTION_ANIMATION"));
         }
 
 
         if (e.PropertyName == nameof(RaceCardVm.IsExpanded))
-            Dispatcher.Dispatch(async () => await HandleExpandedChangedAsync());
+        {
+            UiDispatchHelper.BeginOnMainThread(() =>
+                UiDispatchHelper.RunFireAndForget(
+                    HandleExpandedChangedAsync,
+                    "RACE_CARD_EXPAND_ANIMATION"));
+        }
     }
 
     private async Task HandleExpandedChangedAsync()
     {
         if (BindingContext is not RaceCardVm vm) return;
 
-        _expandCts?.Cancel();
+        var previousCts = _expandCts;
+        previousCts?.Cancel();
         _expandCts = new CancellationTokenSource();
+        previousCts?.Dispose();
         var token = _expandCts.Token;
 
         try
@@ -186,5 +194,17 @@ public partial class RaceCardView : ContentView
             await CardFrame.ScaleTo(1.02, 110, Easing.CubicOut);
             await CardFrame.ScaleTo(1.0, 110, Easing.CubicOut);
         }
+    }
+
+    private void OnUnloaded(object? sender, EventArgs e)
+    {
+        if (_boundVm != null)
+            _boundVm.PropertyChanged -= OnVmPropertyChanged;
+
+        _boundVm = null;
+        _expandCts?.Cancel();
+        _expandCts?.Dispose();
+        _expandCts = null;
+        ExpandedContent?.AbortAnimation("expand");
     }
 }

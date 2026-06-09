@@ -16,6 +16,13 @@ public sealed class CharacterDraft
     public string Name { get; set; } = "";
     public string PlayerName { get; set; } = "";
     public string Notes { get; set; } = "";
+    public string AvatarStorageKind { get; set; } = "";
+    public string AvatarPersistentReference { get; set; } = "";
+    public string AvatarSourceUri { get; set; } = "";
+    public string AvatarAccessReference { get; set; } = "";
+    public string AvatarDisplayPath { get; set; } = "";
+    public string AvatarFileName { get; set; } = "";
+    public string AvatarContentType { get; set; } = "";
     public string RaceSubtypeKey { get; set; } = "";
     public string RaceSubtypeValue { get; set; } = "";
     public string LifeScaleKeyOverride { get; set; } = "";
