@@ -67,6 +67,43 @@ public sealed class AdvanceAbilitySearchVmTests : ServiceTestBase
     }
 
     [Fact]
+    public async Task LoadAsync_DoesNotPreselectSourceBookFilters()
+    {
+        AddEvolutionAbility(
+            index: "Route Source Classes",
+            description: "Visible class source ability",
+            cost: 10,
+            table: 1,
+            available: "Any",
+            dataJson: "{\"sourceBook\":\"Classes\",\"abilityRef\":\"ability.test.route-source-classes\"}");
+
+        AddEvolutionAbility(
+            index: "Route Source Manufacturers",
+            description: "Visible manufacturer source ability",
+            cost: 10,
+            table: 1,
+            available: "Any",
+            dataJson: "{\"sourceBook\":\"Manufacturers Guide\",\"abilityRef\":\"ability.make.route-source-manufacturers\"}");
+
+        var root = new AdvanceCharacterVm(new CharacterDraft
+        {
+            Class = "Wizard",
+            Race = "Human"
+        });
+
+        using var vm = new AdvanceAbilitySearchVm(root);
+        await vm.LoadAsync();
+
+        Assert.All(vm.SourceBookFilters, filter => Assert.False(filter.IsSelected));
+
+        vm.SearchText = "Route Source";
+
+        await WaitForAsync(() => vm.FilteredAbilities.Count == 2);
+        Assert.Contains(vm.FilteredAbilities, item => item.Name.Equals("Route Source Classes", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(vm.FilteredAbilities, item => item.Name.Equals("Route Source Manufacturers", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
     public async Task GetSelectionPrerequisiteIssues_ReportsMissingPrereqs_ForSaveValidation()
     {
         var root = new AdvanceCharacterVm(new CharacterDraft

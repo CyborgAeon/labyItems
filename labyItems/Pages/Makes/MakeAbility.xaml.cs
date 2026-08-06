@@ -10,6 +10,8 @@ namespace labyItems.Pages
 
     public partial class MakeAbility : ContentPage
     {
+        private const string DefaultSourceBookFilter = "Manufacturers Guide";
+
         public record Result(
             string Name,
             int Cost,
@@ -21,7 +23,8 @@ namespace labyItems.Pages
             bool CanBuyMultiple,
             IReadOnlyList<string> PreReqs,
             IReadOnlyList<string> ChoiceSetRefs,
-            string AbilityRef)
+            string AbilityRef,
+            string SourceBook)
         {
             public EvolutionService.AbilityResult ToAbilityResult()
                 => new()
@@ -35,7 +38,8 @@ namespace labyItems.Pages
                     AvailabilityRules = AvailabilityRules ?? Array.Empty<RuleClause>(),
                     CanBuyMultiple = CanBuyMultiple,
                     PreReqs = PreReqs ?? Array.Empty<string>(),
-                    ChoiceSetRefs = ChoiceSetRefs ?? Array.Empty<string>()
+                    ChoiceSetRefs = ChoiceSetRefs ?? Array.Empty<string>(),
+                    SourceBook = SourceBook
                 };
         }
 
@@ -56,10 +60,11 @@ namespace labyItems.Pages
             public int Cost => AsResult.Cost;
             public int Table => AsResult.Table;
             public string Description => AsResult.Description;
+            public string SourceBook => AsResult.SourceBook;
             public bool IsAvailable => AsResult.IsAvailable;
             public string MetaText => IsAvailable
-                ? $"Cost: {Cost} · Table: {Table}"
-                : $"Cost: {Cost} · Table: {Table} · Unavailable";
+                ? $"Cost: {Cost} - Table: {Table} - {SourceBook}"
+                : $"Cost: {Cost} - Table: {Table} - {SourceBook} - Unavailable";
 
             public bool IsSelected
             {
@@ -81,7 +86,9 @@ namespace labyItems.Pages
         private bool _loaded;
         private bool _availabilityContextReady;
         private bool _showAvailableOnly = true;
+        private string? _selectedSourceBookFilter = DefaultSourceBookFilter;
         private string? _selectedBracketFilter;
+        private bool _suppressSourceBookFilterReload;
         private bool _suppressBracketFilterReload;
 
         public MakeAbility(
@@ -100,19 +107,39 @@ namespace labyItems.Pages
             InitializeComponent();
             BindingContext = this;
             Rows.CollectionChanged += (_, _) => RaiseStateProperties();
+            SourceBookFilterOptions.CollectionChanged += (_, _) => OnPropertyChanged(nameof(ShowSourceBookFilters));
             BracketFilterOptions.CollectionChanged += (_, _) => OnPropertyChanged(nameof(ShowBracketFilters));
         }
 
         public ObservableCollection<Row> Rows { get; } = new();
+        public ObservableCollection<string> SourceBookFilterOptions { get; } = new();
         public ObservableCollection<string> BracketFilterOptions { get; } = new();
 
         public bool HasRows => Rows.Count > 0;
         public bool HasSelectedRows => _selectedByKey.Count > 0;
         public string SelectionSummaryText => $"Selected: {_selectedByKey.Count}";
         public bool ShowAvailabilityFilter => !_draftingMode;
+        public bool ShowSourceBookFilters => SourceBookFilterOptions.Count > 0;
         public bool ShowBracketFilters => _draftingMode && BracketFilterOptions.Count > 0;
         public int SearchColumn => ShowAvailabilityFilter ? 2 : 0;
         public int SearchColumnSpan => ShowAvailabilityFilter ? 1 : 3;
+
+        public string? SelectedSourceBookFilter
+        {
+            get => _selectedSourceBookFilter;
+            set
+            {
+                var normalized = string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+                if (string.Equals(_selectedSourceBookFilter, normalized, StringComparison.OrdinalIgnoreCase))
+                    return;
+
+                _selectedSourceBookFilter = normalized;
+                OnPropertyChanged(nameof(SelectedSourceBookFilter));
+
+                if (!_suppressSourceBookFilterReload)
+                    _ = LoadAsync((Search?.Text ?? string.Empty).Trim());
+            }
+        }
 
         public string? SelectedBracketFilter
         {
@@ -191,8 +218,24 @@ namespace labyItems.Pages
 
         private async Task LoadAsync(string query)
         {
-            var list = await ManuAbilityService.SearchAsync(query);
-            var results = list
+            var catalog = await ManuAbilityService.GetMergedCatalogAsync();
+            RebuildSourceBookFilterOptions(catalog);
+
+            var list = string.IsNullOrWhiteSpace(query)
+                ? catalog
+                : await ManuAbilityService.SearchMergedCatalogAsync(query);
+
+            var selectedSourceBook = (SelectedSourceBookFilter ?? string.Empty).Trim();
+            var sourceFiltered = selectedSourceBook.Length == 0
+                ? list
+                : list
+                    .Where(entry => string.Equals(
+                        NormalizeSourceBook(entry.sourceBook),
+                        selectedSourceBook,
+                        StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+            var results = sourceFiltered
                 .Select(entry => new
                 {
                     Entry = entry,
@@ -242,7 +285,8 @@ namespace labyItems.Pages
                     entry.canBuyMultiple,
                     entry.preReqs,
                     entry.choiceSetRefs,
-                    entry.abilityRef);
+                    entry.abilityRef,
+                    NormalizeSourceBook(entry.sourceBook));
                 var key = BuildAbilityKey(entry);
                 var isSelected = _selectedByKey.ContainsKey(key);
                 if (isSelected)
@@ -377,9 +421,44 @@ namespace labyItems.Pages
             OnPropertyChanged(nameof(ShowAvailableOnly));
             OnPropertyChanged(nameof(AvailabilityToggleText));
             OnPropertyChanged(nameof(ShowAvailabilityFilter));
+            OnPropertyChanged(nameof(ShowSourceBookFilters));
             OnPropertyChanged(nameof(ShowBracketFilters));
             OnPropertyChanged(nameof(SearchColumn));
             OnPropertyChanged(nameof(SearchColumnSpan));
+        }
+
+        private void RebuildSourceBookFilterOptions(IEnumerable<ManuAbilityService.ManuAbilityEntry> entries)
+        {
+            var filters = entries
+                .Select(entry => NormalizeSourceBook(entry.sourceBook))
+                .Where(sourceBook => sourceBook.Length > 0)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(sourceBook => sourceBook, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            var current = SourceBookFilterOptions.ToList();
+            if (!current.SequenceEqual(filters, StringComparer.OrdinalIgnoreCase))
+            {
+                SourceBookFilterOptions.Clear();
+                foreach (var filter in filters)
+                    SourceBookFilterOptions.Add(filter);
+            }
+
+            if (!string.IsNullOrWhiteSpace(SelectedSourceBookFilter)
+                && !filters.Any(filter => string.Equals(filter, SelectedSourceBookFilter, StringComparison.OrdinalIgnoreCase)))
+            {
+                _suppressSourceBookFilterReload = true;
+                try
+                {
+                    SelectedSourceBookFilter = null;
+                }
+                finally
+                {
+                    _suppressSourceBookFilterReload = false;
+                }
+            }
+
+            OnPropertyChanged(nameof(ShowSourceBookFilters));
         }
 
         private void RebuildBracketFilterOptions(IEnumerable<ManuAbilityService.ManuAbilityEntry> entries)
@@ -450,6 +529,12 @@ namespace labyItems.Pages
                 .Where(char.IsLetterOrDigit)
                 .Select(char.ToLowerInvariant)
                 .ToArray());
+
+        private static string NormalizeSourceBook(string? sourceBook)
+        {
+            var value = (sourceBook ?? string.Empty).Trim();
+            return value.Length == 0 ? "Unknown" : value;
+        }
 
         private static string BuildAbilityKey(ManuAbilityService.ManuAbilityEntry entry)
         {

@@ -44,6 +44,8 @@
     <Compile Include="../../labyItems/Services/ArmourBonusResolver.cs" Link="Source/ArmourBonusResolver.cs" />
     <Compile Include="../../labyItems/Services/DruidEvocationService.cs" Link="Source/DruidEvocationService.cs" />
     <Compile Include="../../labyItems/Services/EvolutionService.cs" Link="Source/EvolutionService.cs" />
+    <Compile Include="../../labyItems/Services/EvolutionDataSynchronizer.cs" Link="Source/EvolutionDataSynchronizer.cs" />
+    <Compile Include="../../labyItems/Services/ManuAbilityService.cs" Link="Source/ManuAbilityService.cs" />
     <Compile Include="../../labyItems/Services/AbilityDetailsLookupService.cs" Link="Source/AbilityDetailsLookupService.cs" />
     <Compile Include="../../labyItems/Services/ClassService.cs" Link="Source/ClassService.cs" />
     <Compile Include="../../labyItems/Services/GuildsService.cs" Link="Source/GuildsService.cs" />

@@ -23,9 +23,13 @@ public partial class AbilityCard : ContentPage
             Description = ability.description ?? string.Empty,
             Cost = ability.cost,
             Table = ability.table,
+            AbilityRef = ability.abilityRef ?? string.Empty,
             Available = ability.availability ?? string.Empty,
+            AvailabilityRules = ability.availabilityRules ?? Array.Empty<Models.Rules.RuleClause>(),
+            SourceBook = ability.sourceBook ?? string.Empty,
             CanBuyMultiple = ability.canBuyMultiple,
             PreReqs = ability.preReqs ?? Array.Empty<string>(),
+            ChoiceSetRefs = ability.choiceSetRefs ?? Array.Empty<string>(),
             MaxAvailable = null
         })
     {

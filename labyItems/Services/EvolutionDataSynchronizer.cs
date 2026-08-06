@@ -42,12 +42,6 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
 
         var existingChecksum = GetExistingChecksum(conn);
         var existingBuildId = GetExistingBuildId(conn);
-        if (!string.IsNullOrWhiteSpace(existingChecksum)
-            && string.Equals(existingBuildId, buildId, StringComparison.OrdinalIgnoreCase))
-        {
-            _logger.LogInformation("Skipped evolution sync: packaged build id '{BuildId}' already applied.", buildId);
-            return;
-        }
 
         var mergedJson = await ReadAssetTextAsync("evolution_classes/merged.json", cancellationToken).ConfigureAwait(false);
         if (string.IsNullOrWhiteSpace(mergedJson))
@@ -78,7 +72,10 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
 
         if (string.Equals(existingChecksum, checksum, StringComparison.OrdinalIgnoreCase))
         {
-            SaveChecksum(conn, tx: null, checksum, buildId);
+            if (!string.Equals(existingBuildId, buildId, StringComparison.OrdinalIgnoreCase))
+                SaveChecksum(conn, tx: null, checksum, buildId);
+
+            _logger.LogInformation("Skipped evolution sync: packaged evolution checksum is already current.");
             return;
         }
 

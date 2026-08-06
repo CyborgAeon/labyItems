@@ -15,6 +15,8 @@ internal static class ServiceCacheResetter
         ResetField(typeof(DruidEvocationService), "_cache");
         ResetField(typeof(EvolutionService), "_cache");
         ResetField(typeof(EvolutionService), "_abilityCache");
+        ResetField(typeof(ManuAbilityService), "_manufacturingCache");
+        ResetField(typeof(ManuAbilityService), "_mergedCatalogCache");
         ResetField(typeof(ClassService), "_cache");
         ResetField(typeof(GuildsService), "_cache");
         ResetField(typeof(PeopleService), "_cache");

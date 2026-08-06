@@ -14,7 +14,19 @@ namespace Microsoft.Extensions.Logging
         {
         }
 
+        public static void LogWarning(this ILogger logger, Exception exception, string message, params object[] args)
+        {
+        }
+
         public static void LogInformation(this ILogger logger, string message, params object[] args)
+        {
+        }
+
+        public static void LogError(this ILogger logger, string message, params object[] args)
+        {
+        }
+
+        public static void LogError(this ILogger logger, Exception exception, string message, params object[] args)
         {
         }
     }
