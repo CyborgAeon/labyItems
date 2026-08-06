@@ -2341,6 +2341,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
         var list = AllClasses
             .Where(ClassIsAllowedForSelectedRace)
+            .Where(c => ClassMatchesSelectedBracketFilter(c, _selectedClassFilterKeys))
             .Where(c => q.Length == 0 || (c.Name ?? "").ToLowerInvariant().Contains(q))
             .ToList();
 

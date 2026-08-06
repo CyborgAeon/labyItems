@@ -648,17 +648,27 @@ public sealed class AbilityAvailabilityService : IAbilityAvailabilityService
 
     private static bool HasBarbarianPeopleType(CharacterDraft? draft)
     {
+        if (IsBarbarianSelection(draft?.RaceSubtypeValue) || IsBarbarianSelection(draft?.RaceSubtype))
+            return true;
+
         if (draft?.SpecialisationSelections == null || draft.SpecialisationSelections.Count == 0)
             return false;
 
         if (draft.SpecialisationSelections.TryGetValue("Barbarian", out var directSelection)
-            && string.Equals((directSelection ?? string.Empty).Trim(), "Barbarian", StringComparison.OrdinalIgnoreCase))
+            && IsBarbarianSelection(directSelection))
         {
             return true;
         }
 
-        return draft.SpecialisationSelections.Values.Any(selection =>
-            string.Equals((selection ?? string.Empty).Trim(), "Barbarian", StringComparison.OrdinalIgnoreCase));
+        return draft.SpecialisationSelections.Values.Any(IsBarbarianSelection);
+    }
+
+    private static bool IsBarbarianSelection(string? value)
+    {
+        var token = (value ?? string.Empty).Trim();
+        return token.Length > 0
+            && (token.Equals("Barbarian", StringComparison.OrdinalIgnoreCase)
+                || token.StartsWith("Barbarian", StringComparison.OrdinalIgnoreCase));
     }
 
     private static IEnumerable<string> ToSingleValue(string value)

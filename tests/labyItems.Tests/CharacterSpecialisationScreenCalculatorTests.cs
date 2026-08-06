@@ -419,7 +419,7 @@ public sealed class CharacterSpecialisationScreenCalculatorTests : ServiceTestBa
     }
 
     [Fact]
-    public async Task BuildScreenSections_HumanSubtypeOmitsLegacyBarbarianOption()
+    public async Task BuildScreenSections_HumanSubtypeIncludesBarbarianOption()
     {
         FileSystem.ClearPackageOverrides();
         ServiceCacheResetter.ResetAll();
@@ -463,7 +463,7 @@ public sealed class CharacterSpecialisationScreenCalculatorTests : ServiceTestBa
                 .Where(key => key.Length > 0)
                 .ToList();
 
-            Assert.DoesNotContain("Barbarian", keys, StringComparer.OrdinalIgnoreCase);
+            Assert.Contains("Barbarian", keys, StringComparer.OrdinalIgnoreCase);
             Assert.Contains("Baronial", keys, StringComparer.OrdinalIgnoreCase);
             Assert.Contains("Ishmaic", keys, StringComparer.OrdinalIgnoreCase);
             Assert.Contains("Amlesian", keys, StringComparer.OrdinalIgnoreCase);
@@ -489,7 +489,7 @@ public sealed class CharacterSpecialisationScreenCalculatorTests : ServiceTestBa
         {
             Race = "Human",
             Class = "Warrior",
-            RaceSubtypeValue = "Barbarian"
+            RaceSubtypeValue = "Unknown"
         };
 
         var context = CharacterSpecialisationScreenCalculator.LoadContext(
@@ -663,9 +663,9 @@ public sealed class CharacterSpecialisationScreenCalculatorTests : ServiceTestBa
         var draft = new CharacterDraft
         {
             Race = "Human",
-            Class = "Warrior"
+            Class = "Warrior",
+            RaceSubtypeValue = "Barbarian"
         };
-        draft.SpecialisationSelections["Barbarian"] = "Barbarian";
 
         var context = CharacterSpecialisationScreenCalculator.LoadContext(
             draft,
@@ -682,6 +682,49 @@ public sealed class CharacterSpecialisationScreenCalculatorTests : ServiceTestBa
 
         var sections = CharacterSpecialisationScreenCalculator.BuildScreenSections(context, Array.Empty<RequiredChoice>());
         Assert.Contains(sections, section => section.SectionId.Equals("mapped:tribal-test", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public async Task BuildScreenSections_HumanBarbarianSubtypeShowsFrozenTigerTribeForPriestClasses()
+    {
+        FileSystem.ClearPackageOverrides();
+        ServiceCacheResetter.ResetAll();
+
+        var classes = await ClassService.GetAllAsync();
+        var races = await PeopleService.GetAllAsync();
+        var index = await SpecialisationDefinitionRepository.GetIndexAsync();
+
+        var draft = new CharacterDraft
+        {
+            Race = "Human",
+            Class = "Paladin",
+            RaceSubtypeValue = "Barbarian"
+        };
+
+        var context = CharacterSpecialisationScreenCalculator.LoadContext(
+            draft,
+            classes,
+            races,
+            index.Definitions,
+            index.InjectionRules);
+
+        var required = CharacterSpecialisationScreenCalculator.ResolveRequiredChoices(context);
+        var sections = CharacterSpecialisationScreenCalculator.BuildScreenSections(context, required);
+
+        var tribeSection = Assert.Single(sections.Where(section =>
+            section.SectionId.Equals("mapped:Frozen Tiger Tribe", StringComparison.OrdinalIgnoreCase)));
+
+        var screen = CharacterSpecialisationScreenCalculator.Recalculate(
+            context,
+            sections,
+            new SpecialisationSelectionState());
+
+        var tribeState = Assert.Single(screen.Sections.Where(section =>
+            section.Spec.SectionId.Equals("mapped:Frozen Tiger Tribe", StringComparison.OrdinalIgnoreCase)));
+
+        Assert.True(tribeSection.Required);
+        Assert.Equal("FrozenTigerTribe", tribeState.SelectedOption, StringComparer.OrdinalIgnoreCase);
+        Assert.True(tribeState.IsComplete);
     }
 
     [Fact]

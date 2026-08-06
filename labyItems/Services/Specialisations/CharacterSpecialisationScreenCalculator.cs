@@ -358,9 +358,6 @@ public static class CharacterSpecialisationScreenCalculator
                 if (key.Length == 0)
                     return;
 
-                if (isHumanRace && key.Equals("Barbarian", StringComparison.OrdinalIgnoreCase))
-                    return;
-
                 if (sectionOptions.Any(existing => string.Equals(existing.Key, key, StringComparison.OrdinalIgnoreCase)))
                     return;
 
@@ -737,6 +734,13 @@ public static class CharacterSpecialisationScreenCalculator
                         var selectedToken = selectionState.MappedSelections.TryGetValue(spec.SectionId, out var mapped)
                             ? (mapped ?? string.Empty).Trim()
                             : string.Empty;
+
+                        if (string.IsNullOrWhiteSpace(selectedToken)
+                            && spec.Required
+                            && spec.Options.Count == 1)
+                        {
+                            selectedToken = (spec.Options[0].Key ?? string.Empty).Trim();
+                        }
 
                         var option = ResolveSelectedOption(spec.Options, selectedToken);
                         var selected = (option?.Key ?? string.Empty).Trim();
@@ -1540,17 +1544,27 @@ public static class CharacterSpecialisationScreenCalculator
 
     private static bool HasBarbarianPeopleType(CharacterDraft? draft)
     {
+        if (IsBarbarianSelection(draft?.RaceSubtypeValue) || IsBarbarianSelection(draft?.RaceSubtype))
+            return true;
+
         if (draft?.SpecialisationSelections == null || draft.SpecialisationSelections.Count == 0)
             return false;
 
         if (draft.SpecialisationSelections.TryGetValue("Barbarian", out var directSelection)
-            && string.Equals((directSelection ?? string.Empty).Trim(), "Barbarian", StringComparison.OrdinalIgnoreCase))
+            && IsBarbarianSelection(directSelection))
         {
             return true;
         }
 
-        return draft.SpecialisationSelections.Values.Any(selection =>
-            string.Equals((selection ?? string.Empty).Trim(), "Barbarian", StringComparison.OrdinalIgnoreCase));
+        return draft.SpecialisationSelections.Values.Any(IsBarbarianSelection);
+    }
+
+    private static bool IsBarbarianSelection(string? value)
+    {
+        var token = (value ?? string.Empty).Trim();
+        return token.Length > 0
+            && (token.Equals("Barbarian", StringComparison.OrdinalIgnoreCase)
+                || token.StartsWith("Barbarian", StringComparison.OrdinalIgnoreCase));
     }
 
     private static SpecialisationSectionSpec? BuildSectionFromRule(
