@@ -838,7 +838,7 @@ public partial class CharacterReviewPage : ContentPage
         var resolvedMoral = alignment.Value.Moral == MoralAxis.Neutral && alignment.Value.Order == OrderAxis.Neutral
             ? "True"
             : alignment.Value.Moral.ToString();
-        return $"{resolvedMoral} {alignment.Value.Order}".Trim(); 
+        return $"{alignment.Value.Order} {resolvedMoral}"; 
     }
 
     private static string ResolveMoralGlyph(Alignment? alignment)

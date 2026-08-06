@@ -16,10 +16,7 @@
                             <VerticalStackLayout Spacing="8">
                                    <Grid ColumnDefinitions="Auto,*,Auto"
                                          ColumnSpacing="8">
-                                          <Label Text="&#xF6DE;"
-                                                 FontFamily="FASolid"
-                                                 FontSize="14"
-                                                 VerticalTextAlignment="Center"/>
+                                         
                                           <Label Grid.Column="1"
                                                  Text="Level Progression"
                                                  FontAttributes="Bold"
@@ -157,10 +154,6 @@
                             <VerticalStackLayout Spacing="6">
                                    <Grid ColumnDefinitions="*,Auto">
                                           <HorizontalStackLayout Spacing="6">
-                                                 <Label Text="&#xF6DE;"
-                                                        FontFamily="FASolid"
-                                                        FontSize="14"
-                                                        VerticalTextAlignment="Center"/>
                                                  <Label Text="Post-8th Advancement"
                                                         FontAttributes="Bold"
                                                         VerticalTextAlignment="Center"/>
