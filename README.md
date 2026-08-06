@@ -233,6 +233,11 @@ If watch ever complains about launch profiles, ensure `Properties/launchSettings
 - The script uses `$HOME/.dotnet/dotnet` by default; override with `DOTNET=/path/to/dotnet ./tools/migrate-any-data.sh ...` if needed.
 - APK builds now keep all `Resources/Raw` JSON assets and the `Template.xlsx` so the app and migrations can load packaged data directly.
 
+## Skills index
+
+- `docs/skills/storage-caching-flows.md` - concise reference for database storage, caching strategy, startup/migrations, and create flows (character, ISP item, MP item, non-standard).
+- `docs/skills/token-goat-playbook.md` - token-goat-first command playbook for low-token code lookup in this repo.
+
 ## Android release signing (CI)
 
 1. Create a fresh keystore (default alias `labyItemsSigningKey` matches Directory.Build.props):

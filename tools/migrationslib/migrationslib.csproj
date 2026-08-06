@@ -12,6 +12,7 @@
         <EmbeddedResource Include="..\..\labyItems\Resources\Raw\druids_way\evocs.json" Link="Resources/Raw/druids_way/evocs.json" />
         <EmbeddedResource Include="..\..\labyItems\Resources\Raw\words_from_above\miracles.json" Link="Resources/Raw/words_from_above/miracles.json" />
         <EmbeddedResource Include="..\..\labyItems\Resources\Raw\grimoire\allSpells.json" Link="Resources/Raw/grimoire/allSpells.json" />
+        <EmbeddedResource Include="..\..\labyItems\Resources\Raw\o-insight\o_insight_neuronics.json" Link="Resources/Raw/o-insight/o_insight_neuronics.json" />
         <EmbeddedResource Include="..\..\labyItems\Resources\Raw\makes_abilities.json" Link="Resources/Raw/makes_abilities.json" />
         <EmbeddedResource Include="..\..\labyItems\Resources\Raw\evolution_classes\merged.json" Link="Resources/Raw/evolution_classes/merged.json" />
         <EmbeddedResource Include="..\..\labyItems\Resources\Raw\people\classes.json" Link="Resources/Raw/people/classes.json" />

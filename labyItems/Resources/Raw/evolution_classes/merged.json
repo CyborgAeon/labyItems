@@ -23049,35 +23049,5 @@
     "cost": 50,
     "asPer": ["Knights Armour", "Armoured Defence"],
     "sourceBook": "Engarde"
-  },
-  {
-    "available": [
-      {
-        "Field": "Bracket",
-        "Operator": "In",
-        "Value": ["🛡️ Warrior"]
-      }
-    ],
-    "index": "Art of Battle",
-    "desc": "Bracket-pure Warrior multiclass path. Requires Daring Deed. Additional progression costs are defined in multi-class levels.",
-    "table": 1,
-    "cost": 10,
-    "preReqs": ["Daring Deed"],
-    "sourceBook": "Multi-Classes"
-  },
-  {
-    "available": [
-      {
-        "Field": "Bracket",
-        "Operator": "In",
-        "Value": ["🛡️ Warrior"]
-      }
-    ],
-    "index": "Art of War",
-    "desc": "Bracket-pure Warrior multiclass path. Requires Flick of the Wrist. Additional progression costs are defined in multi-class levels.",
-    "table": 1,
-    "cost": 10,
-    "preReqs": ["Flick of the Wrist"],
-    "sourceBook": "Multi-Classes"
   }
 ]

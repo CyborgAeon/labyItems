@@ -86,7 +86,7 @@ namespace labyItems.Pages
         private bool _loaded;
         private bool _availabilityContextReady;
         private bool _showAvailableOnly = true;
-        private string? _selectedSourceBookFilter = DefaultSourceBookFilter;
+        private string? _selectedSourceBookFilter;
         private string? _selectedBracketFilter;
         private bool _suppressSourceBookFilterReload;
         private bool _suppressBracketFilterReload;
@@ -102,7 +102,10 @@ namespace labyItems.Pages
                 ?? new AbilityAvailabilityService();
             _draftingMode = draftingMode;
             if (_draftingMode)
+            {
                 _showAvailableOnly = false;
+                _selectedSourceBookFilter = DefaultSourceBookFilter;
+            }
 
             InitializeComponent();
             BindingContext = this;

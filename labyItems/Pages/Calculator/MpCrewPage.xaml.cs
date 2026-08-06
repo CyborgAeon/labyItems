@@ -326,6 +326,7 @@ AfterWeapon:
     protected override DictionarySearchBar<SpellOption> SpellSearchControl => SpellSearch;
     protected override DictionarySearchBar<MiracleOption> MiracleSearchControl => MiracleSearch;
     protected override DictionarySearchBar<EvocationOption> EvocationSearchControl => EvocationSearch;
+    protected override DictionarySearchBar<NeuroOption> NeuroSearchControl => NeuroSearch;
     protected override DictionarySlider LifeSliderControl => LifeSlider;
     protected override DictionarySearchBar<WeaponType> WeaponSearchControl => CrewWeaponSearch;
     protected override IEnumerable<ILoadableSearchBar> AdditionalSearchBars => new ILoadableSearchBar[]

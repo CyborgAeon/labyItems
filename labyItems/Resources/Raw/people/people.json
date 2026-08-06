@@ -17,7 +17,7 @@
       "DisplayName": "Human origin",
       "Description": "Select a lineage for your character.",
       "SelectionMode": "SingleRequired",
-      "OptionsSource": "Standard,Baronial,Ishmaic,Amlesian,Stormvale,Forgotten,Magefold,Mourat",
+      "OptionsSource": "Standard,Barbarian,Baronial,Ishmaic,Amlesian,Stormvale,Forgotten,Magefold,Mourat",
       "AbilityMapKey": "HumanSubtypeAbilities"
     },
     "AdditionalInfo": "",

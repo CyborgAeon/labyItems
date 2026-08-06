@@ -19,7 +19,7 @@
                                        Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
             <Entry Grid.Column="1"
                    ClearButtonVisibility="WhileEditing"
-                   Placeholder="Search abilities, spells, miracles, evocations..."
+                   Placeholder="Search abilities, spells, miracles, evocations, neuronics..."
                    Text="{Binding SearchText, Mode=TwoWay}"
                    VerticalOptions="Center"/>
         </Grid>

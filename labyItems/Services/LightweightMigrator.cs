@@ -66,6 +66,28 @@ CREATE TABLE IF NOT EXISTS spells (
   updated_at TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_spells_name_lower ON spells(name_lower);
+
+CREATE TABLE IF NOT EXISTS neuronics (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  name_lower TEXT,
+  power INTEGER,
+  type TEXT,
+  range TEXT,
+  duration TEXT,
+  immunities TEXT,
+  description TEXT,
+  notes TEXT,
+  as_per TEXT,
+  todo TEXT,
+  damage_json TEXT,
+  data_json TEXT,
+  is_default INTEGER,
+  created_at TEXT,
+  updated_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_neuronics_name_lower ON neuronics(name_lower);
+CREATE INDEX IF NOT EXISTS idx_neuronics_type ON neuronics(type);
 ";
 				cmd.ExecuteNonQuery();
 

@@ -264,7 +264,11 @@ public partial class IspCalculator : ContentPage
                 await OpenUtilityComponentAsync();
                 break;
             case IspComponentKind.Neuronic:
-                await DisplayAlert("Neuronic", "Neuronic item configuration is not wired yet.", "OK");
+                await OpenConfigComponentAsync(CreateConfigComponent(
+                    IspComponentKind.Neuronic,
+                    "Neuronic",
+                    new NeuronicConfigPage(),
+                    page => page.ResetConfig()));
                 break;
         }
     }

@@ -56,6 +56,13 @@
         "choice.humansubtypeabilities.mapped"
       ]
     },
+    "FrozenTigerTribe": {
+      "Key": "definition.frozentigertribe",
+      "DisplayName": "FrozenTigerTribe",
+      "ChoiceSetRefs": [
+        "choice.frozentigertribe.mapped"
+      ]
+    },
     "HumanBarbarianUpbringing": {
       "Key": "definition.humanbarbarianupbringing",
       "DisplayName": "HumanBarbarianUpbringing",

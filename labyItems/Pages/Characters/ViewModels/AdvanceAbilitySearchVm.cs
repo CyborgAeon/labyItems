@@ -29,23 +29,6 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
         "collated.pdf"
     };
 
-    private static readonly string[] AlwaysIncludedSourceBooks =
-    {
-        "Races",
-        "collated.pdf",
-        "classes",
-        "evolution-classes"
-    };
-
-    private static readonly (string Bracket, string SourceBook)[] BracketSpecificSourceBooks =
-    {
-        ("Scout", "At the sharp end"),
-        ("Wizard", "Wizard Grimoire"),
-        ("Druid", "Druids Way"),
-        ("Warrior", "Engarde"),
-        ("Priest", "words from above")
-    };
-
     private static readonly SemaphoreSlim AbilityCacheLock = new(1, 1);
     private static IReadOnlyList<CachedAbilityEntry>? _cachedAbilities;
     private static IReadOnlyDictionary<string, EvolutionService.AbilityResult>? _cachedAbilityLookup;
@@ -411,7 +394,7 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
     private void ApplyCharacterDefaultFilters()
     {
         _activeSourceBookFilters.Clear();
-        foreach (var sourceBook in ResolveDefaultSourceBooks())
+        foreach (var sourceBook in ResolveDefaultSourceBooks(_host.DefaultSourceBookFilters))
             _activeSourceBookFilters.Add(sourceBook);
 
         _activeTableFilters.Clear();
@@ -642,21 +625,12 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
         return value.Length == 0 ? "Unknown" : value;
     }
 
-    private IReadOnlyList<string> ResolveDefaultSourceBooks()
+    private IReadOnlyList<string> ResolveDefaultSourceBooks(IReadOnlyList<string>? requestedSourceBooks)
     {
         var resolved = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var sourceBook in AlwaysIncludedSourceBooks)
+        foreach (var sourceBook in requestedSourceBooks ?? Array.Empty<string>())
             AddResolvedSourceBook(resolved, sourceBook);
-
-        foreach (var bracket in ResolveActiveClassBrackets())
-        {
-            foreach (var (token, sourceBook) in BracketSpecificSourceBooks)
-            {
-                if (bracket.Contains(token, StringComparison.OrdinalIgnoreCase))
-                    AddResolvedSourceBook(resolved, sourceBook);
-            }
-        }
 
         return resolved
             .Where(sourceBook => !string.IsNullOrWhiteSpace(sourceBook))
@@ -669,70 +643,6 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
         var resolved = ResolveCachedSourceBook(token);
         if (!string.IsNullOrWhiteSpace(resolved))
             target.Add(resolved);
-    }
-
-    private IReadOnlyList<string> ResolveActiveClassBrackets()
-    {
-        var brackets = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-        AddClassBrackets(_draft.Class, brackets);
-
-        foreach (var pair in _draft.MultiClassLevels)
-        {
-            if (pair.Value > 0)
-                AddClassBrackets(pair.Key, brackets);
-        }
-
-        return brackets.ToList();
-    }
-
-    private void AddClassBrackets(string? className, HashSet<string> brackets)
-    {
-        var record = ResolveClassRecord(className);
-        if (record?.Brackets?.Count > 0)
-        {
-            foreach (var bracket in record.Brackets)
-            {
-                var trimmed = (bracket ?? string.Empty).Trim();
-                if (trimmed.Length > 0)
-                    brackets.Add(trimmed);
-            }
-        }
-
-        var raw = (className ?? string.Empty).Trim();
-        if (raw.Length == 0)
-            return;
-
-        if (raw.Contains("Scout", StringComparison.OrdinalIgnoreCase))
-            brackets.Add("Scout");
-        if (raw.Contains("Wizard", StringComparison.OrdinalIgnoreCase)
-            || raw.Contains("Warlock", StringComparison.OrdinalIgnoreCase)
-            || raw.Contains("Vivomancer", StringComparison.OrdinalIgnoreCase)
-            || raw.Contains("Sorc", StringComparison.OrdinalIgnoreCase))
-        {
-            brackets.Add("Wizard");
-        }
-        if (raw.Contains("Druid", StringComparison.OrdinalIgnoreCase))
-            brackets.Add("Druid");
-        if (raw.Contains("Warrior", StringComparison.OrdinalIgnoreCase))
-            brackets.Add("Warrior");
-        if (raw.Contains("Priest", StringComparison.OrdinalIgnoreCase))
-            brackets.Add("Priest");
-    }
-
-    private CharacterClassRecord? ResolveClassRecord(string? className)
-    {
-        var raw = (className ?? string.Empty).Trim();
-        if (raw.Length == 0 || _classes.Count == 0)
-            return null;
-
-        if (_classes.TryGetValue(raw, out var direct))
-            return direct;
-
-        return _classes
-            .FirstOrDefault(pair => string.Equals(pair.Key, raw, StringComparison.OrdinalIgnoreCase)
-                                   || string.Equals(pair.Value?.Path, raw, StringComparison.OrdinalIgnoreCase))
-            .Value;
     }
 
     private string ResolveCachedSourceBook(string token)

@@ -4316,9 +4316,16 @@
       ],
       "Options": [
         {
-          "Key": "Barbarian",
+          "Key": "BarbarianWarrior",
           "Label": "Barbarian",
           "Description": "Select if this character was raised as a barbarian.",
+          "Restrictions": {
+            "ClassRestriction": [
+              "Warrior",
+              "Archer",
+              "Ranger"
+            ]
+          },
           "Grants": [
             {
               "AbilityRef": "ability.skinning",
@@ -4327,17 +4334,73 @@
             {
               "AbilityRef": "ability.illiterate",
               "Level": 1
-            },
-            {
-              "Level": 1,
-              "Name": "Frozen Tiger Tribe",
-              "Type": "Static",
-              "Effect": "Human barbarians may be paladins or priest subtypes. They gain and retain membership in the Church of the Lady of the Stars.",
-              "GuildOverrides": [
-                "so:Church of the Lady of the Stars"
-              ]
             }
           ]
+        },
+        {
+          "Key": "BarbarianTribal",
+          "Label": "Barbarian",
+          "Description": "Select if this character was raised as a barbarian.",
+          "Restrictions": {
+            "ClassRestriction": [
+              "Pathfinder",
+              "Shaman",
+              "Witch Doctor",
+              "Druid"
+            ]
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.skinning",
+              "Level": 1
+            }
+          ]
+        },
+        {
+          "Key": "BarbarianPriest",
+          "Label": "Barbarian",
+          "Description": "Select if this character was raised as a barbarian.",
+          "Restrictions": {
+            "ClassRestriction": [
+              "Paladin",
+              "Spiritual Warrior",
+              "Crusading-Priest",
+              "Hospitaller",
+              "Witch",
+              "Friar",
+              "Battle-Priest",
+              "Armoured-Priest",
+              "Pure-Priest"
+            ]
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.skinning",
+              "Level": 1
+            }
+          ]
+        }
+      ]
+    },
+    "choice.frozentigertribe.mapped": {
+      "Key": "choice.frozentigertribe.mapped",
+      "Title": "FrozenTigerTribe",
+      "Required": false,
+      "Mode": "MappedSingle",
+      "StrategyIds": [
+        "section:mapped",
+        "dynamic:frozen-tiger-tribe"
+      ],
+      "Options": [
+        {
+          "Key": "FrozenTigerTribe",
+          "Label": "Frozen Tiger Tribe",
+          "Description": "Join the Frozen Tiger Tribe.",
+          "Effects": {
+            "GuildOverrides": [
+              "so:Church of the Lady of the Stars"
+            ]
+          }
         }
       ]
     },

@@ -87,6 +87,9 @@ public sealed class SearchFilterService
         if (selectedKind == GlobalSearchKind.Evocation)
             return results.Where(r => r.Evocation == null || PassesEvocationSubFilters(r.Evocation, selectedFilters));
 
+        if (selectedKind == GlobalSearchKind.Neuronic)
+            return results.Where(r => r.Neuronic == null || PassesNeuronicSubFilters(r.Neuronic, selectedFilters));
+
         return results;
     }
 
@@ -142,6 +145,16 @@ public sealed class SearchFilterService
 
         var fieldTokens = ExtractEvocationFieldTokens(evocation.fields);
         return fieldTokens.Overlaps(fieldFilters);
+    }
+
+    private bool PassesNeuronicSubFilters(NeuronicService.NeuronicRaw neuronic, IReadOnlySet<string> selectedFilters)
+    {
+        var typeFilters = ExtractFiltersForPrefix(selectedFilters, "neuro-type:");
+        if (typeFilters.Count == 0)
+            return true;
+
+        var typeToken = NormalizeForSearch(NeuronicService.FormatType(neuronic.Type));
+        return typeFilters.Contains(typeToken);
     }
 
     private static HashSet<string> ExtractFiltersForPrefix(IReadOnlySet<string> selectedFilters, string prefix)

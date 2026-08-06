@@ -2199,6 +2199,9 @@
   },
   "HumanSubtypeAbilities": {
     "Standard": {},
+    "Barbarian": {
+      "Description": "Human barbarians are raised in tribal societies."
+    },
     "Baronial": {
       "PeopleType": ["Baronial"],
       "GuildOverrides": ["po:Type-Baronial"],

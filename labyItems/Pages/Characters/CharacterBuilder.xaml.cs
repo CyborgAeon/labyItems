@@ -15,4 +15,17 @@ public partial class CharacterBuilder : ContentView
     {
         BindingContext = vm;
     }
+
+    private void OnClassFilterChipTapped(object? sender, TappedEventArgs e)
+    {
+        var chip = e.Parameter as CharacterBuilderVm.ClassFilterChipVm
+            ?? (sender as BindableObject)?.BindingContext as CharacterBuilderVm.ClassFilterChipVm;
+
+        if (chip == null || BindingContext is not CharacterBuilderVm vm)
+            return;
+
+        var command = vm.ToggleClassFilterChipCommand;
+        if (command.CanExecute(chip))
+            command.Execute(chip);
+    }
 }

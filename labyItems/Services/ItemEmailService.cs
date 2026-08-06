@@ -224,6 +224,8 @@ public static class ItemEmailService
             AddUnique(types, "spiritual");
         if (abilityList.Any(ability => HasAbilityType(ability, "Evocation", "EarthPower", "Earthpower")))
             AddUnique(types, "earthpower");
+        if (abilityList.Any(ability => HasAbilityType(ability, "Neuronic", "Neuro")))
+            AddUnique(types, "neuronic");
         if (types.Count == 0)
             types.Add("physical");
 
@@ -254,6 +256,8 @@ public static class ItemEmailService
             AddUnique(types, "spiritual");
         if (markers.Any(IsEvocationMarker))
             AddUnique(types, "earthpower");
+        if (markers.Any(IsNeuronicMarker))
+            AddUnique(types, "neuronic");
         if (types.Count == 0)
             types.Add("physical");
 
@@ -464,6 +468,9 @@ public static class ItemEmailService
 
     private static bool IsEvocationMarker(string value)
         => StartsWithTypeMarker(value, "evocation");
+
+    private static bool IsNeuronicMarker(string value)
+        => StartsWithTypeMarker(value, "neuronic") || StartsWithTypeMarker(value, "neuro");
 
     private static bool StartsWithTypeMarker(string value, string marker)
     {

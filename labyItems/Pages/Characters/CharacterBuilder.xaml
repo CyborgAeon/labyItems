@@ -46,7 +46,7 @@
                 <Border Style="{StaticResource SelectableFilterPillBorderStyle}"
                         Margin="0,0,8,0">
                   <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding BindingContext.ToggleClassFilterChipCommand, Source={x:Reference Root}}"
+                    <TapGestureRecognizer Tapped="OnClassFilterChipTapped"
                                           CommandParameter="{Binding .}"/>
                   </Border.GestureRecognizers>
                   <Label Text="{Binding Label}"

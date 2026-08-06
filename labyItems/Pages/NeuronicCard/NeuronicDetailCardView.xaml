@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="labyItems.Pages.NeuronicCard.NeuronicDetailCardView"
+    x:Name="Root"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Frame Style="{StaticResource DetailCardFrameStyle}">
+        <VerticalStackLayout Spacing="12">
+            <Label Text="{Binding NeuronicName, Source={x:Reference Root}}"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   LineBreakMode="WordWrap"/>
+
+            <Grid ColumnDefinitions="*,Auto"
+                  ColumnSpacing="8">
+                <Label Text="{Binding TypeDisplayText, Source={x:Reference Root}}"
+                       FontAttributes="Bold"
+                       VerticalTextAlignment="Center"/>
+                <Label Grid.Column="1"
+                       Text="{Binding PowerDisplayText, Source={x:Reference Root}}"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="End"/>
+            </Grid>
+
+            <BoxView Style="{StaticResource SectionDividerBoxStyle}"/>
+
+            <Label Text="DESCRIPTION"
+                   Style="{StaticResource SectionHeaderLabelStyle}"/>
+            <Label Text="{Binding DescriptionText, Source={x:Reference Root}}"
+                   LineBreakMode="WordWrap"/>
+
+            <VerticalStackLayout Spacing="6"
+                                 IsVisible="{Binding HasDamageSummary, Source={x:Reference Root}}">
+                <Label Text="DAMAGE"
+                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+                <Label Text="{Binding DamageSummaryText, Source={x:Reference Root}}"
+                       LineBreakMode="WordWrap"/>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="6"
+                                 IsVisible="{Binding HasAsPer, Source={x:Reference Root}}">
+                <Label Text="AS PER"
+                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+                <Label Text="{Binding AsPerText, Source={x:Reference Root}}"
+                       LineBreakMode="WordWrap"/>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="6"
+                                 IsVisible="{Binding HasNotes, Source={x:Reference Root}}">
+                <Label Text="NOTES"
+                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+                <Label Text="{Binding NotesText, Source={x:Reference Root}}"
+                       LineBreakMode="WordWrap"/>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="6"
+                                 IsVisible="{Binding HasTodo, Source={x:Reference Root}}">
+                <Label Text="TODO"
+                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+                <Label Text="{Binding TodoText, Source={x:Reference Root}}"
+                       LineBreakMode="WordWrap"/>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="8"
+                                 IsVisible="{Binding HasMetaChips, Source={x:Reference Root}}">
+                <BoxView Style="{StaticResource SectionDividerBoxStyle}"/>
+
+                <FlexLayout Direction="Row"
+                            Wrap="Wrap"
+                            BindableLayout.ItemsSource="{Binding MetaChips, Source={x:Reference Root}}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Style="{StaticResource MetaChipFrameStyle}">
+                                <Label Text="{Binding Text}"
+                                       FontSize="12"
+                                       VerticalTextAlignment="Center"/>
+                            </Frame>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </Frame>
+</ContentView>

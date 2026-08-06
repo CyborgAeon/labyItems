@@ -98,6 +98,9 @@ public sealed class OptimizedSearchService
             if (filterKind == null || filterKind == GlobalSearchKind.Evocation)
                 results.AddRange(SearchEvocations(conn, normalizedSearch, isEmptySearch));
 
+            if (filterKind == null || filterKind == GlobalSearchKind.Neuronic)
+                results.AddRange(SearchNeuronics(conn, normalizedSearch, isEmptySearch));
+
             // Sort and paginate
             var sorted = SortResults(results);
             var paged = Paginate(sorted, pageNumber, pageSize);
@@ -138,6 +141,7 @@ public sealed class OptimizedSearchService
                 GlobalSearchKind.Spell => SearchSpellsWithFilters(conn, normalizedSearch, isEmptySearch, subFilters),
                 GlobalSearchKind.Miracle => SearchMiraclesWithFilters(conn, normalizedSearch, isEmptySearch, subFilters),
                 GlobalSearchKind.Evocation => SearchEvocationsWithFilters(conn, normalizedSearch, isEmptySearch, subFilters),
+                GlobalSearchKind.Neuronic => SearchNeuronicsWithFilters(conn, normalizedSearch, isEmptySearch, subFilters),
                 _ => new List<SearchResultDto>()
             };
 
@@ -518,6 +522,91 @@ public sealed class OptimizedSearchService
         return results;
     }
 
+    // ===== NEURONIC SEARCHES =====
+
+    private List<SearchResultDto> SearchNeuronics(SQLiteConnection conn, string searchText, bool isEmptySearch)
+    {
+        if (!TableExists(conn, "neuronics"))
+            return new List<SearchResultDto>();
+
+        const string query = @"
+            SELECT id, name, description, power, type, data_json
+            FROM neuronics
+            WHERE (@empty = 1) OR
+                  LOWER(name) LIKE @search
+            ORDER BY name COLLATE NOCASE
+            LIMIT 5000";
+
+        var cmd = conn.CreateCommand(query, QueryTimeoutMs);
+        cmd.Bind("@empty", isEmptySearch ? 1 : 0);
+        cmd.Bind("@search", $"%{searchText}%");
+
+        var results = new List<SearchResultDto>();
+        foreach (var row in cmd.ExecuteQuery<(string id, string name, string description, int power, string type, string dataJson)>())
+        {
+            results.Add(new SearchResultDto
+            {
+                Id = row.id,
+                LookupKey = row.name,
+                Name = row.name,
+                Description = row.description ?? string.Empty,
+                Kind = (int)GlobalSearchKind.Neuronic,
+                ExtraInfo = BuildNeuronicExtraInfo(row.power, row.type),
+                DataJson = row.dataJson
+            });
+        }
+
+        return results;
+    }
+
+    private List<SearchResultDto> SearchNeuronicsWithFilters(
+        SQLiteConnection conn,
+        string searchText,
+        bool isEmptySearch,
+        IReadOnlySet<string> subFilters)
+    {
+        if (!TableExists(conn, "neuronics"))
+            return new List<SearchResultDto>();
+
+        var typeFilters = ExtractFilters(subFilters, "neuro-type:");
+        var whereClause = "1=1";
+
+        if (typeFilters.Count > 0)
+        {
+            var types = string.Join(',', typeFilters.Select(f => $"'{f.Replace("'", "''")}'"));
+            whereClause += $" AND LOWER(type) IN ({types})";
+        }
+
+        var query = $@"
+            SELECT id, name, description, power, type, data_json
+            FROM neuronics
+            WHERE ({whereClause}) AND
+                  ((@empty = 1) OR LOWER(name) LIKE @search)
+            ORDER BY name COLLATE NOCASE
+            LIMIT 5000";
+
+        var cmd = conn.CreateCommand(query, QueryTimeoutMs);
+        cmd.Bind("@empty", isEmptySearch ? 1 : 0);
+        cmd.Bind("@search", $"%{searchText}%");
+
+        var results = new List<SearchResultDto>();
+        foreach (var row in cmd.ExecuteQuery<(string id, string name, string description, int power, string type, string dataJson)>())
+        {
+            results.Add(new SearchResultDto
+            {
+                Id = row.id,
+                LookupKey = row.name,
+                Name = row.name,
+                Description = row.description ?? string.Empty,
+                Kind = (int)GlobalSearchKind.Neuronic,
+                ExtraInfo = BuildNeuronicExtraInfo(row.power, row.type),
+                DataJson = row.dataJson
+            });
+        }
+
+        return results;
+    }
+
     // ===== HELPER METHODS =====
 
     private static string NormalizeSearchText(string text)
@@ -561,6 +650,16 @@ public sealed class OptimizedSearchService
             parts.Add(string.Join(", ", fields));
         if (isAdvanced)
             parts.Add("Advanced");
+        return string.Join(" - ", parts);
+    }
+
+    private static string BuildNeuronicExtraInfo(int power, string? type)
+    {
+        var parts = new List<string> { $"{Math.Max(0, power)} TBLP" };
+        var typeText = (type ?? string.Empty).Trim();
+        if (typeText.Length > 0 && !typeText.Equals("None", StringComparison.OrdinalIgnoreCase))
+            parts.Add(typeText);
+
         return string.Join(" - ", parts);
     }
 
@@ -619,5 +718,15 @@ public sealed class OptimizedSearchService
             }
         }
         return result;
+    }
+
+    private static bool TableExists(SQLiteConnection conn, string tableName)
+    {
+        var cmd = conn.CreateCommand(
+            "SELECT COUNT(1) FROM sqlite_master WHERE type = 'table' AND name = @tableName",
+            QueryTimeoutMs);
+        cmd.Bind("@tableName", tableName);
+        var count = cmd.ExecuteScalar<int>();
+        return count > 0;
     }
 }

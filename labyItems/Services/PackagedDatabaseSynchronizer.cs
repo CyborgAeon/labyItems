@@ -310,6 +310,7 @@ LIMIT 1;";
         SpellService.InvalidateCache();
         MiracleService.InvalidateCache();
         DruidEvocationService.InvalidateCache();
+        NeuronicService.InvalidateCache();
         ClassService.InvalidateCache();
         PeopleService.InvalidateCache();
         LifeScalesService.InvalidateCache();

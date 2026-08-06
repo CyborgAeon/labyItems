@@ -181,6 +181,7 @@
       "Id": "human-barbarian-upbringing",
       "Conditions": {
         "Race": "Human",
+        "Subtype": "Barbarian",
         "ClassIn": [
           "Warrior",
           "Archer",
@@ -190,9 +191,14 @@
           "Druid",
           "Pathfinder",
           "Paladin",
+          "Spiritual Warrior",
+          "Crusading-Priest",
           "Armoured-Priest",
           "Hospitaller",
-          "Witch"
+          "Witch",
+          "Friar",
+          "Battle-Priest",
+          "Pure-Priest"
         ]
       },
       "Section": {
@@ -204,6 +210,58 @@
         "Required": false,
         "InsertIndex": 1,
         "Subtitle": "Optional: select if this human was raised as a barbarian."
+      }
+    },
+    {
+      "Id": "human-frozen-tiger-tribe",
+      "Conditions": {
+        "Race": "Human",
+        "Subtype": "Barbarian",
+        "ClassIn": [
+          "Warrior",
+          "Archer",
+          "Ranger",
+          "Pathfinder",
+          "Druid"
+        ]
+      },
+      "Section": {
+        "SectionType": "Mapped",
+        "DefinitionKey": "FrozenTigerTribe",
+        "Title": "Frozen Tiger Tribe",
+        "DetailKey": "FrozenTigerTribe",
+        "SectionId": "mapped:Frozen Tiger Tribe",
+        "Required": false,
+        "InsertIndex": 2,
+        "Subtitle": "Optional: join the Frozen Tiger Tribe."
+      }
+    },
+    {
+      "Id": "human-frozen-tiger-tribe-priest",
+      "Conditions": {
+        "Race": "Human",
+        "Subtype": "Barbarian",
+        "ClassIn": [
+          "Paladin",
+          "Spiritual Warrior",
+          "Crusading-Priest",
+          "Hospitaller",
+          "Witch",
+          "Friar",
+          "Battle-Priest",
+          "Armoured-Priest",
+          "Pure-Priest"
+        ]
+      },
+      "Section": {
+        "SectionType": "Mapped",
+        "DefinitionKey": "FrozenTigerTribe",
+        "Title": "Frozen Tiger Tribe",
+        "DetailKey": "FrozenTigerTribe",
+        "SectionId": "mapped:Frozen Tiger Tribe",
+        "Required": true,
+        "InsertIndex": 2,
+        "Subtitle": "Frozen Tiger Tribe membership is mandatory for this path."
       }
     },
     {

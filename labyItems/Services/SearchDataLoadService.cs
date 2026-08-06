@@ -16,9 +16,9 @@ public sealed class SearchDataLoadService
                 return _cachedResults;
         }
 
-        var (abilities, spells, miracles, evocations) = await LoadAllDataInParallelAsync(cancellationToken);
+        var (abilities, spells, miracles, evocations, neuronics) = await LoadAllDataInParallelAsync(cancellationToken);
         
-        var results = await BuildResultsOnBackgroundThreadAsync(abilities, spells, miracles, evocations, cancellationToken);
+        var results = await BuildResultsOnBackgroundThreadAsync(abilities, spells, miracles, evocations, neuronics, cancellationToken);
         
         lock (_cacheLock)
         {
@@ -32,21 +32,24 @@ public sealed class SearchDataLoadService
         IReadOnlyList<EvolutionService.AbilityResult>,
         IReadOnlyList<SpellService.SpellRaw>,
         IReadOnlyList<MiracleService.MiracRaw>,
-        IReadOnlyList<DruidEvocationService.EvocRaw>)>
+        IReadOnlyList<DruidEvocationService.EvocRaw>,
+        IReadOnlyList<NeuronicService.NeuronicRaw>)>
         LoadAllDataInParallelAsync(CancellationToken cancellationToken)
     {
         var abilityTask = SafeLoadAsync(EvolutionService.GetAllAbilitiesAsync, cancellationToken);
         var spellTask = SafeLoadAsync(() => SpellService.GetAllAsync().ContinueWith(t => (IReadOnlyList<SpellService.SpellRaw>)t.Result), cancellationToken);
         var miracleTask = SafeLoadAsync(MiracleService.GetAllAsync, cancellationToken);
         var evocationTask = SafeLoadEvocationsAsync(cancellationToken);
+        var neuronicTask = SafeLoadNeuronicsAsync(cancellationToken);
 
-        await Task.WhenAll(abilityTask, spellTask, miracleTask, evocationTask);
+        await Task.WhenAll(abilityTask, spellTask, miracleTask, evocationTask, neuronicTask);
 
         return (
             await abilityTask,
             await spellTask,
             await miracleTask,
-            await evocationTask
+            await evocationTask,
+            await neuronicTask
         );
     }
 
@@ -55,16 +58,18 @@ public sealed class SearchDataLoadService
         IReadOnlyList<SpellService.SpellRaw> spells,
         IReadOnlyList<MiracleService.MiracRaw> miracles,
         IReadOnlyList<DruidEvocationService.EvocRaw> evocations,
+        IReadOnlyList<NeuronicService.NeuronicRaw> neuronics,
         CancellationToken cancellationToken)
     {
-        return await Task.Run(() => BuildUnifiedResults(abilities, spells, miracles, evocations), cancellationToken);
+        return await Task.Run(() => BuildUnifiedResults(abilities, spells, miracles, evocations, neuronics), cancellationToken);
     }
 
     private static IReadOnlyList<GlobalSearchResultVm> BuildUnifiedResults(
         IReadOnlyList<EvolutionService.AbilityResult> abilities,
         IReadOnlyList<SpellService.SpellRaw> spells,
         IReadOnlyList<MiracleService.MiracRaw> miracles,
-        IReadOnlyList<DruidEvocationService.EvocRaw> evocations)
+        IReadOnlyList<DruidEvocationService.EvocRaw> evocations,
+        IReadOnlyList<NeuronicService.NeuronicRaw> neuronics)
     {
         var results = new List<GlobalSearchResultVm>();
 
@@ -95,6 +100,11 @@ public sealed class SearchDataLoadService
                 .Where(e => !string.IsNullOrWhiteSpace(e.name))
                 .Select(CreateEvocationResult));
 
+        results.AddRange(
+            neuronics
+                .Where(n => !string.IsNullOrWhiteSpace(n.name))
+                .Select(CreateNeuronicResult));
+
         return results;
     }
 
@@ -113,7 +123,8 @@ public sealed class SearchDataLoadService
             Ability: ability,
             Spell: null,
             Miracle: null,
-            Evocation: null);
+            Evocation: null,
+            Neuronic: null);
     }
 
     private static GlobalSearchResultVm CreateSpellResult(SpellService.SpellRaw spell)
@@ -134,7 +145,8 @@ public sealed class SearchDataLoadService
             Ability: null,
             Spell: spell,
             Miracle: null,
-            Evocation: null);
+            Evocation: null,
+            Neuronic: null);
     }
 
     private static GlobalSearchResultVm CreateMiracleResult(MiracleService.MiracRaw miracle)
@@ -155,7 +167,8 @@ public sealed class SearchDataLoadService
             Ability: null,
             Spell: null,
             Miracle: miracle,
-            Evocation: null);
+            Evocation: null,
+            Neuronic: null);
     }
 
     private static GlobalSearchResultVm CreateEvocationResult(DruidEvocationService.EvocRaw evocation)
@@ -177,7 +190,29 @@ public sealed class SearchDataLoadService
             Ability: null,
             Spell: null,
             Miracle: null,
-            Evocation: evocation);
+            Evocation: evocation,
+            Neuronic: null);
+    }
+
+    private static GlobalSearchResultVm CreateNeuronicResult(NeuronicService.NeuronicRaw neuronic)
+    {
+        var type = NeuronicService.FormatType(neuronic.Type);
+        var metaText = $"Neuronic - {Math.Max(0, neuronic.power)} TBLP";
+        if (!type.Equals("None", StringComparison.OrdinalIgnoreCase))
+            metaText += $" - {type}";
+
+        return new GlobalSearchResultVm(
+            Kind: GlobalSearchKind.Neuronic,
+            Name: (neuronic.name ?? string.Empty).Trim(),
+            GroupText: type,
+            IconGlyph: "\uf5dc",
+            MetaText: metaText,
+            DescriptionText: (neuronic.description ?? string.Empty).Trim(),
+            Ability: null,
+            Spell: null,
+            Miracle: null,
+            Evocation: null,
+            Neuronic: neuronic);
     }
 
     private static async Task<IReadOnlyList<T>> SafeLoadAsync<T>(
@@ -206,6 +241,20 @@ public sealed class SearchDataLoadService
         {
             ServiceHelper.LogDbError("Failed to load evocations", ex);
             return Array.Empty<DruidEvocationService.EvocRaw>();
+        }
+    }
+
+    private static async Task<IReadOnlyList<NeuronicService.NeuronicRaw>> SafeLoadNeuronicsAsync(
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            return await NeuronicService.GetAllAsync();
+        }
+        catch (Exception ex)
+        {
+            ServiceHelper.LogDbError("Failed to load neuronics", ex);
+            return Array.Empty<NeuronicService.NeuronicRaw>();
         }
     }
 

@@ -18,13 +18,14 @@ using Microsoft.Maui.Graphics;
 using SpellCardPage = labyItems.Pages.SpellCard.SpellCard;
 using MiracleCardPage = labyItems.Pages.MiracleCard.MiracleCard;
 using EvocationCardPage = labyItems.Pages.EvocationCard.EvocationCard;
+using NeuronicCardPage = labyItems.Pages.NeuronicCard.NeuronicCard;
 
 namespace labyItems.Pages.Calculator;
 
 public readonly record struct SpellOption(string Name, int Level, bool IsAdvanced);
 public readonly record struct MiracleOption(string Name, int Power, bool IsAdvanced);
 public readonly record struct EvocationOption(string Name, int Power, bool IsAdvanced);
-
+public readonly record struct NeuroOption(string Name, int Power, NeuroOptionType Type);
 public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropertyChanged
 {
     private bool _dataLoaded;
@@ -56,7 +57,9 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
 
     private static readonly ConcurrentDictionary<Type, Task<Dictionary<string, SpellOption>>> SpellLookupCache = new();
     private static readonly ConcurrentDictionary<Type, Task<Dictionary<string, MiracleOption>>> MiracleLookupCache = new();
+    private static readonly ConcurrentDictionary<Type, Task<Dictionary<string, NeuroOption>>> NeuroLookupCache = new();
     private static Task<IReadOnlyList<DruidEvocationService.EvocRaw>>? _evocationCatalogueTask;
+    private static Task<IReadOnlyList<NeuronicService.NeuronicRaw>>? _neuronicCatalogueTask;
 
     public ObservableCollection<ContributionRow> Breakdown => _breakdown;
 
@@ -76,23 +79,29 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     public ObservableCollection<SelectedItemUseVm<SpellOption>> SpellSelections { get; } = new();
     public ObservableCollection<SelectedItemUseVm<MiracleOption>> MiracleSelections { get; } = new();
     public ObservableCollection<SelectedItemUseVm<EvocationOption>> EvocationSelections { get; } = new();
+    public ObservableCollection<SelectedItemUseVm<NeuroOption>> NeuroSelections { get; } = new();
 
     public bool HasSpellSelections => SpellSelections.Count > 0;
     public bool HasMiracleSelections => MiracleSelections.Count > 0;
     public bool HasEvocationSelections => EvocationSelections.Count > 0;
+    public bool HasNeuroSelections => NeuroSelections.Count > 0;
 
     public ICommand AddSelectedSpellCommand { get; }
     public ICommand AddSelectedMiracleCommand { get; }
     public ICommand AddSelectedEvocationCommand { get; }
+    public ICommand AddSelectedNeuroCommand { get; }
     public ICommand EditSpellSelectionCommand { get; }
     public ICommand EditMiracleSelectionCommand { get; }
     public ICommand EditEvocationSelectionCommand { get; }
+    public ICommand EditNeuroSelectionCommand { get; }
     public ICommand ViewSpellInfoCommand { get; }
     public ICommand ViewMiracleInfoCommand { get; }
     public ICommand ViewEvocationInfoCommand { get; }
+    public ICommand ViewNeuroInfoCommand { get; }
     public ICommand DeleteSpellSelectionCommand { get; }
     public ICommand DeleteMiracleSelectionCommand { get; }
     public ICommand DeleteEvocationSelectionCommand { get; }
+    public ICommand DeleteNeuroSelectionCommand { get; }
 
     public int SpellCount { get => _spellCount; set { if (SetProperty(ref _spellCount, value)) Recalculate(); } }
     private int _spellCount;
@@ -159,10 +168,13 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     public EvocationOption? SelectedEvocationOption { get => _selectedEvocationOption; set { if (SetProperty(ref _selectedEvocationOption, value)) { OnPropertyChanged(nameof(SelectedEvocationText)); Recalculate(); } } }
     private EvocationOption? _selectedEvocationOption;
 
-    public string SelectedSpellText => SelectedSpellOption is SpellOption s ? FormatSpellLabel(s) : "No spell chosen";
-    public string SelectedMiracleText => SelectedMiracleOption is MiracleOption m ? FormatMiracleLabel(m) : "No miracle chosen";
-    public string SelectedEvocationText => SelectedEvocationOption is EvocationOption e ? $"{e.Name} ({e.Power}{(e.IsAdvanced ? " adv" : string.Empty)})" : "No evocation chosen";
+    public NeuroOption? SelectedNeuroOption { get => _selectedNeuroOption; set { if (SetProperty(ref _selectedNeuroOption, value)) { OnPropertyChanged(nameof(SelectedNeuroText)); Recalculate(); } } }
+    private NeuroOption? _selectedNeuroOption;
 
+    public string SelectedSpellText => SelectedSpellOption is SpellOption s ? FormatSpellLabel(s) : "No spell chosen";
+    public string SelectedMiracleText => SelectedMiracleOption is MiracleOption m ? $"{m.Name} ({m.Power})" : "No miracle chosen";
+    public string SelectedEvocationText => SelectedEvocationOption is EvocationOption e ? $"{e.Name} ({e.Power}{(e.IsAdvanced ? " adv" : string.Empty)})" : "No evocation chosen";
+    public string SelectedNeuroText => SelectedNeuroOption is NeuroOption n ? FormatNeuroLabel(n) : "No neuro chosen";
     public IEnumerable<string> ApprenticeTypeOptions => ApprenticeTypeChipOptions;
 
     public string? ApprenticeType
@@ -210,6 +222,7 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     protected abstract DictionarySearchBar<SpellOption> SpellSearchControl { get; }
     protected abstract DictionarySearchBar<MiracleOption> MiracleSearchControl { get; }
     protected abstract DictionarySearchBar<EvocationOption> EvocationSearchControl { get; }
+    protected abstract DictionarySearchBar<NeuroOption> NeuroSearchControl { get; }
     protected abstract DictionarySlider LifeSliderControl { get; }
     protected abstract DictionarySearchBar<WeaponType> WeaponSearchControl { get; }
     protected virtual IEnumerable<ILoadableSearchBar> AdditionalSearchBars => Array.Empty<ILoadableSearchBar>();
@@ -225,15 +238,19 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         AddSelectedSpellCommand = new Command<object?>(OnSpellResultSelected);
         AddSelectedMiracleCommand = new Command<object?>(OnMiracleResultSelected);
         AddSelectedEvocationCommand = new Command<object?>(OnEvocationResultSelected);
+        AddSelectedNeuroCommand = new Command<object?>(OnNeuroResultSelected);
         EditSpellSelectionCommand = new Command<object?>(OnEditSpellSelectionRequested);
         EditMiracleSelectionCommand = new Command<object?>(OnEditMiracleSelectionRequested);
         EditEvocationSelectionCommand = new Command<object?>(OnEditEvocationSelectionRequested);
+        EditNeuroSelectionCommand = new Command<object?>(OnEditNeuroSelectionRequested);
         ViewSpellInfoCommand = new Command<object?>(OnViewSpellInfoRequested);
         ViewMiracleInfoCommand = new Command<object?>(OnViewMiracleInfoRequested);
         ViewEvocationInfoCommand = new Command<object?>(OnViewEvocationInfoRequested);
+        ViewNeuroInfoCommand = new Command<object?>(OnViewNeuroInfoRequested);
         DeleteSpellSelectionCommand = new Command<object?>(OnDeleteSpellSelectionRequested);
         DeleteMiracleSelectionCommand = new Command<object?>(OnDeleteMiracleSelectionRequested);
         DeleteEvocationSelectionCommand = new Command<object?>(OnDeleteEvocationSelectionRequested);
+        DeleteNeuroSelectionCommand = new Command<object?>(OnDeleteNeuroSelectionRequested);
 
         SpellSelections.CollectionChanged += (_, __) =>
         {
@@ -253,6 +270,13 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         {
             OnPropertyChanged(nameof(HasEvocationSelections));
             RefreshSelectionRowStyles(EvocationSelections);
+            Recalculate();
+        };
+
+        NeuroSelections.CollectionChanged += (_, __) =>
+        {
+            OnPropertyChanged(nameof(HasNeuroSelections));
+            RefreshSelectionRowStyles(NeuroSelections);
             Recalculate();
         };
 
@@ -359,6 +383,7 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         yield return SpellSearchControl;
         yield return MiracleSearchControl;
         yield return EvocationSearchControl;
+        yield return NeuroSearchControl;
         yield return WeaponSearchControl;
 
         foreach (var searchBar in AdditionalSearchBars)
@@ -383,7 +408,8 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         await Task.WhenAll(
             LoadSpellsAsync(),
             LoadMiraclesAsync(),
-            LoadEvocationsAsync());
+            LoadEvocationsAsync(),
+            LoadNeuroAsync());
     }
 
     protected virtual async Task LoadSpellsAsync()
@@ -422,6 +448,18 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         }
     }
 
+    protected virtual async Task LoadNeuroAsync()
+    {
+        try
+        {
+            NeuroSearchControl.ItemsSource = await BuildNeuroLookupAsync();
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"Could not load neuronics: {ex.Message}", "OK");
+        }
+    }
+
     protected virtual async Task<Dictionary<string, SpellOption>> BuildSpellLookupAsync()
     {
         var pageType = GetType();
@@ -448,6 +486,21 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         catch
         {
             MiracleLookupCache.TryRemove(pageType, out _);
+            throw;
+        }
+    }
+
+    protected virtual async Task<Dictionary<string, NeuroOption>> BuildNeuroLookupAsync()
+    {
+        var pageType = GetType();
+        var lookupTask = NeuroLookupCache.GetOrAdd(pageType, _ => BuildNeuroLookupCoreAsync());
+        try
+        {
+            return await lookupTask;
+        }
+        catch
+        {
+            NeuroLookupCache.TryRemove(pageType, out _);
             throw;
         }
     }
@@ -489,11 +542,27 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         }
     }
 
+    private async Task<IReadOnlyList<NeuronicService.NeuronicRaw>> GetNeuronicCatalogueAsync()
+    {
+        var task = _neuronicCatalogueTask ??= NeuronicService.GetAllAsync();
+        try
+        {
+            return await task;
+        }
+        catch
+        {
+            if (ReferenceEquals(_neuronicCatalogueTask, task))
+                _neuronicCatalogueTask = null;
+            throw;
+        }
+    }
+
     private Task PrimeLookupCachesAsync()
         => Task.WhenAll(
             BuildSpellLookupAsync(),
             BuildMiracleLookupAsync(),
-            GetEvocationCatalogueAsync());
+            GetEvocationCatalogueAsync(),
+            BuildNeuroLookupAsync());
 
     private async Task<Dictionary<string, SpellOption>> BuildSpellLookupCoreAsync()
     {
@@ -529,8 +598,26 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         return miracles;
     }
 
+    private async Task<Dictionary<string, NeuroOption>> BuildNeuroLookupCoreAsync()
+    {
+        var neuronics = (await GetNeuronicCatalogueAsync())
+            .Where(ShouldIncludeNeuro)
+            .OrderBy(n => n.power)
+            .ThenBy(n => n.name, StringComparer.OrdinalIgnoreCase)
+            .Select(n =>
+            {
+                var option = new NeuroOption(n.name, n.power, n.Type);
+                return new KeyValuePair<string, NeuroOption>(FormatNeuroLabel(option), option);
+            })
+            .GroupBy(k => k.Key, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(g => g.Key, g => g.First().Value, StringComparer.OrdinalIgnoreCase);
+
+        return neuronics;
+    }
+
     protected virtual bool ShouldIncludeSpell(SpellService.SpellRaw spell) => spell.level <= 6 && (spell.isAdvanced ?? false) == false;
     protected virtual bool ShouldIncludeMiracle(MiracleService.MiracRaw miracle) => miracle.power >= 1 && miracle.power <= 5 && miracle.isAdvanced == false;
+    protected virtual bool ShouldIncludeNeuro(NeuronicService.NeuronicRaw neuronic) => !string.IsNullOrWhiteSpace(neuronic.name);
 
     protected virtual string FormatSpellLabel(SpellOption option)
     {
@@ -540,6 +627,23 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     protected virtual string FormatMiracleLabel(MiracleOption option)
     {
         return $"{option.Name} ({option.Power})";
+    }
+    
+    protected virtual string FormatEvocationLabel(EvocationOption option)
+    {
+        return $"{option.Name} ({option.Power}{(option.IsAdvanced ? " adv" : string.Empty)})";
+    }
+    protected virtual string FormatNeuroLabel(NeuroOption option)
+    {
+        switch (option.Type)
+        {
+            case NeuroOptionType.Active:
+                return $"{option.Name} (active, {option.Power}TBLP)";
+            case NeuroOptionType.Passive:
+                return $"{option.Name} (passive, {option.Power}TBLP)";
+            default:
+                return $"{option.Name} ({option.Power}TBLP)";
+        }
     }
 
     private void OnSpellResultSelected(object? parameter)
@@ -559,6 +663,11 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         if (parameter is EvocationOption option)
             AddOrIncrementEvocation(option);
     }
+    private void OnNeuroResultSelected(object? parameter)
+    {
+        if (parameter is NeuroOption option)
+            AddOrIncrementNeuro(option);
+    }
 
     private void AddOrIncrementSpell(SpellOption option)
     {
@@ -573,6 +682,11 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     private void AddOrIncrementEvocation(EvocationOption option)
     {
         AddOrIncrementSelection(EvocationSelections, option, FormatEvocationLabel, OnEvocationSelectionUsesChanged);
+    }
+
+    private void AddOrIncrementNeuro(NeuroOption option)
+    {
+        AddOrIncrementSelection(NeuroSelections, option, FormatNeuroLabel, OnNeuroSelectionUsesChanged);
     }
 
     private void OnSpellSelectionUsesChanged(SelectedItemUseVm<SpellOption> entry)
@@ -595,6 +709,14 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     {
         if (entry.Uses < 1)
             EvocationSelections.Remove(entry);
+
+        Recalculate();
+    }
+
+    private void OnNeuroSelectionUsesChanged(SelectedItemUseVm<NeuroOption> entry)
+    {
+        if (entry.Uses < 1)
+            NeuroSelections.Remove(entry);
 
         Recalculate();
     }
@@ -689,6 +811,25 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         await Navigation.PushModalAsync(new NavigationPage(page));
     }
 
+    private async void OnEditNeuroSelectionRequested(object? parameter)
+    {
+        if (parameter is not SelectedItemUseVm<NeuroOption> entry)
+            return;
+
+        var page = new MpSelectionEditorPage<NeuroOption>(
+            title: "Edit neuronic",
+            initialOption: entry.Option,
+            initialUses: entry.Uses,
+            placeholderText: "Search neuronic abilities",
+            selectionDisplayMemberPath: nameof(NeuroOption.Name),
+            displayNameFactory: FormatNeuroLabel,
+            loadOptionsAsync: BuildNeuroLookupAsync,
+            remoteSearchProvider: null,
+            applyChanges: (option, uses) => ApplyEditedSelection(NeuroSelections, entry, option, uses, FormatNeuroLabel));
+
+        await Navigation.PushModalAsync(new NavigationPage(page));
+    }
+
     private async void OnViewSpellInfoRequested(object? parameter)
     {
         if (parameter is not SelectedItemUseVm<SpellOption> entry)
@@ -725,6 +866,18 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         await Navigation.PushModalAsync(new NavigationPage(new EvocationCardPage(evocation)));
     }
 
+    private async void OnViewNeuroInfoRequested(object? parameter)
+    {
+        if (parameter is not SelectedItemUseVm<NeuroOption> entry)
+            return;
+
+        var neuronic = await ResolveNeuroAsync(entry.Option);
+        if (neuronic == null)
+            return;
+
+        await Navigation.PushModalAsync(new NavigationPage(new NeuronicCardPage(neuronic)));
+    }
+
     private void OnDeleteSpellSelectionRequested(object? parameter)
     {
         if (parameter is SelectedItemUseVm<SpellOption> entry)
@@ -741,6 +894,12 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     {
         if (parameter is SelectedItemUseVm<EvocationOption> entry)
             EvocationSelections.Remove(entry);
+    }
+
+    private void OnDeleteNeuroSelectionRequested(object? parameter)
+    {
+        if (parameter is SelectedItemUseVm<NeuroOption> entry)
+            NeuroSelections.Remove(entry);
     }
 
     private static void ApplyEditedSelection<TOption>(
@@ -799,8 +958,14 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
             && evocation.isAdvanced == option.IsAdvanced);
     }
 
-    protected virtual string FormatEvocationLabel(EvocationOption option)
-        => $"{option.Name} ({option.Power}{(option.IsAdvanced ? " adv" : string.Empty)})";
+    private async Task<NeuronicService.NeuronicRaw?> ResolveNeuroAsync(NeuroOption option)
+    {
+        var neuronics = await GetNeuronicCatalogueAsync();
+        return neuronics.FirstOrDefault(neuronic =>
+            string.Equals(neuronic.name, option.Name, StringComparison.OrdinalIgnoreCase)
+            && neuronic.power == option.Power
+            && neuronic.Type == option.Type);
+    }
 
     protected void OnLifeSelectionChanged(object sender, DictionarySelectionChangedEventArgs e)
     {
@@ -853,13 +1018,16 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
             AddContribution(items, ref running, $"evocation-{i}", $"Evocation: {option.Name} x{count}", cost);
         }
 
-        if (ActiveNeuroCount > 0)
+        for (var i = 0; i < NeuroSelections.Count; i++)
         {
-            AddContribution(items, ref running, "neuro-active", $"Active neuro x{ActiveNeuroCount}", 0);
-        }
-        if (PassiveNeuroCount > 0)
-        {
-            AddContribution(items, ref running, "neuro-passive", $"Passive neuro x{PassiveNeuroCount}", 0);
+            var selection = NeuroSelections[i];
+            var count = Math.Max(0, selection.Uses);
+            if (count == 0)
+                continue;
+
+            var option = selection.Option;
+            var cost = CalculateNeuroCost(option, count);
+            AddContribution(items, ref running, $"neuro-{i}", $"Neuronic: {FormatNeuroLabel(option)} x{count}", cost);
         }
 
         if (LifeSliderControl.SelectedIndex >= 0)
@@ -955,6 +1123,18 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
             AddIspContribution(items, ref running, $"evocation-{i}", $"Evocation: {evocation.Name} x{count}", cost);
         }
 
+        for (var i = 0; i < NeuroSelections.Count; i++)
+        {
+            var selection = NeuroSelections[i];
+            var count = Math.Max(0, selection.Uses);
+            if (count == 0)
+                continue;
+
+            var neuro = selection.Option;
+            var cost = CalculateNeuroIspCost(neuro, count);
+            AddIspContribution(items, ref running, $"neuro-{i}", $"Neuronic: {FormatNeuroLabel(neuro)} x{count}", cost);
+        }
+
         if (LifeSliderControl.SelectedIndex >= 0)
         {
             var key = LifeSliderControl.SelectedKey;
@@ -1019,7 +1199,7 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         if (sanitizedLevel <= 4)
             return 10 * sanitizedLevel * sanitizedCount;
 
-        return 10 + 10 * sanitizedLevel * sanitizedCount;
+        return (10 + (10 * sanitizedLevel) * sanitizedCount);
     }
 
     protected virtual int CalculateMiracleCost(MiracleOption option, int count)
@@ -1030,9 +1210,26 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
             return 0;
 
         if (sanitizedPower <= 3)
-            return 10 + 10 * sanitizedPower * sanitizedCount;
+            return (10 + (10 * sanitizedPower)) * sanitizedCount;
+        
+        return (20 + (10 * sanitizedPower)) * sanitizedCount;
+    }
 
-        return 20 + 10 * sanitizedPower * sanitizedCount;
+    protected virtual int CalculateNeuroCost(NeuroOption option, int count)
+    {
+        int sanitizedPower = Math.Max(0, option.Power);
+        int sanitizedCount = Math.Max(0, count);
+        if (sanitizedCount == 0 || sanitizedPower == 0)
+            return 0;
+        
+        return (10 + (5 * sanitizedPower)) * sanitizedCount;
+    }
+
+    protected virtual int CalculateNeuroIspCost(NeuroOption option, int count)
+    {
+        var sanitizedPower = Math.Max(0, option.Power);
+        var sanitizedCount = Math.Max(0, count);
+        return 2 * sanitizedPower * sanitizedCount;
     }
 
     protected virtual int CalculateEvocationCost(EvocationOption option, int count)
@@ -1042,7 +1239,7 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         if (sanitizedCount == 0)
             return 0;
 
-        return 10 + 10 * sanitizedPower * sanitizedCount;
+        return (10 + (10 * sanitizedPower)) * sanitizedCount;
     }
 
     protected static void AddContribution(List<ContributionRow> items, ref int running, string id, string label, int cost)

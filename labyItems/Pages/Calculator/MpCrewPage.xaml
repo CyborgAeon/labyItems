@@ -87,10 +87,23 @@
                                       InfoCommand="{Binding ViewEvocationInfoCommand}"
                                       DeleteCommand="{Binding DeleteEvocationSelectionCommand}" />
 
-        <VerticalStackLayout Spacing="8">
-          <controls:PlusMinusControl LabelText="Active neuro" AllowMultiple="True" Count="{Binding ActiveNeuroCount, Mode=TwoWay}" IsEnabled="False" />
-          <controls:PlusMinusControl LabelText="Passive neuro" AllowMultiple="True" Count="{Binding PassiveNeuroCount, Mode=TwoWay}" IsEnabled="False" />
-        </VerticalStackLayout>
+        <Label Text="Add neuronic ability" FontAttributes="Bold" />
+        <Grid ColumnDefinitions="*" ColumnSpacing="12">
+          <controls:DictionarySearchBar Grid.Column="0"
+                                        x:Name="NeuroSearch"
+                                        x:TypeArguments="local:NeuroOption"
+                                        PlaceholderText="Type neuronic ability"
+                                        SelectionDisplayMemberPath="Name"
+                                        SelectedValue="{Binding SelectedNeuroOption, Mode=TwoWay}"
+                                        ResultSelectedCommand="{Binding AddSelectedNeuroCommand}"
+                                        KeepFocusOnResultSelection="True"
+                                        ClearAfterResultSelection="True" />
+        </Grid>
+        <controls:ConfigSelectionList ItemsSource="{Binding NeuroSelections}"
+                                      IsVisible="{Binding HasNeuroSelections}"
+                                      EditCommand="{Binding EditNeuroSelectionCommand}"
+                                      InfoCommand="{Binding ViewNeuroInfoCommand}"
+                                      DeleteCommand="{Binding DeleteNeuroSelectionCommand}" />
 
         <!-- Life slider -->
         <VerticalStackLayout Spacing="4">

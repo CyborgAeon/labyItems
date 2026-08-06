@@ -13,7 +13,8 @@
     "description": "This allows the user to recognise the colour of the mental aura of one target within range. In game terms, this means that those of Goodly alignment are seen to have a White aura, those of Neutral a Grey aura, and Evil a Black aura. Targets immune to neuronic informational effects, or all neuronics, or that simply have no mind, such as inanimate objects, have no aura at all. It is possible by training to conceal the colour of one's aura so that only a clear aura can be seen - this is not the same as having no aura.",
     "range": "20'",
     "duration": "Instant",
-    "immunities": "Neuronic Informational FX"
+    "immunities": "Neuronic Informational FX",
+    "tree": "Active"
   },
   {
     "power": 3,
@@ -47,7 +48,8 @@
     "description": "The user is instantly aware of how many other minds are within range. This ability does not give location, but does give numbers",
     "range": "60'",
     "duration": "Instant",
-    "immunities": "Neuronic Informational FX"
+    "immunities": "Neuronic Informational FX",
+    "tree": "Passive"
   },
   {
     "power": 6,
@@ -55,7 +57,8 @@
     "description": "One target within line-of-sight, or within 60' and known to the user, receives a telepathic message of up to one reasonable sentence in length (at most 20 words, all one sentence only).",
     "range": "60' or line-of-sight",
     "duration": "Instant",
-    "immunities": ""
+    "immunities": "",
+    "tree": "Passive"
   },
   {
     "power": 6,
@@ -63,7 +66,8 @@
     "description": "Renders the user actively immune to all neuronic effects and attacks. During this time the caster cannot use any neuronic ability, although they may choose to release the Mind Bar.",
     "range": "Self",
     "duration": "5 Minutes Maximum",
-    "immunities": ""
+    "immunities": "",
+    "tree": "Passive"
   },
   {
     "power": 6,
@@ -79,7 +83,8 @@
     "description": "This allows the user to wake a certain sentience in any inanimate object (including liquids). The user may converse with the target object for the duration while touching it. Supernatural objects, including those with minds, may answer as they see fit, while normal objects must tell the truth only. It should be noted that often an object will not know much of its surroundings or events occurring - they have no sensory apparatus! However, supernatural objects will often (at the ref's discretion) be aware of events relating to them.",
     "range": "Touch",
     "duration": "5 Minutes",
-    "immunities": "Neuronic Informational FX"
+    "immunities": "Neuronic Informational FX",
+    "tree": "Active"
   },
   {
     "power": 9,
@@ -87,7 +92,8 @@
     "description": "The user must concentrate on a single type of object for 10 seconds, after which he senses the location of all such objects within range. Only physical properties of objects can be detected (so ‘swords' but not ‘magic swords' could be found). Potion types can be distinguished between with this ability.",
     "range": "20' radius",
     "duration": "10 Seconds/ Instant",
-    "immunities": "Neuronic Informational FX"
+    "immunities": "Neuronic Informational FX",
+    "tree": "Passive"
   },
   {
     "power": 9,
@@ -95,7 +101,8 @@
     "description": "For the duration, the user is aware whether any statements he hears the target make are lies.",
     "range": "Hearing",
     "duration": "5 Minutes",
-    "immunities": "Neuronic Informational FX"
+    "immunities": "Neuronic Informational FX",
+    "tree": "Passive"
   },
   {
     "power": 9,
@@ -103,7 +110,8 @@
     "description": "This ability has parallels with the magical spells of ‘Walk On…' and ‘Walk through…' elements. It can be used in the following ways: Walk on Darkness: As long as the light is at most weak candlelight, the user may ‘fly' as per the walk on darkness spell. Walk through Darkness: Half effect from darkness-based attacks. Walk on Air: The user may ‘fly' as per the walk on air spell. Walk through Air: Half effect from air attacks, including electrical. Walk on Water: The caster may walk on water as if it were solid ground. Walk through Water: The caster may breathe underwater. Note: Either version of Neuro-Mastery Water grants the user ½ effect potions, poisons, and acid for the duration. Walk on Light: The user may ‘fly' as per a walk on light spell, as long as the light is at least strong candlelight. Walk through Light: Half effect from light-based attacks. Walk on Earth: The user may walk on walls, floors, ceilings, mud, quicksand, as if it were solid, level ground. Walk through Earth: The user may walk through any stone or earth wall of not more than 10' in thickness. This is as the Passwall glyph (Brown 4 mana).Walls thicker than this cannot be entered. Walk through Fire: Half effect fire-based attacks. The Walk Through abilities above will stack with resistances to such attacks acquired post-8th, though they will not stack with other temporary defences (e.g. Walk through Fire Spell, or the Resist Fire evocation). Only one Neuro-Mastery may be active at a time.  Specialist Neuronic Abilities These skills are only available to neuronic races or classes, either as one of their 1st to 8th skills or as a post 8th purchase.",
     "range": "Self",
     "duration": "5 Minutes",
-    "immunities": ""
+    "immunities": "",
+    "tree": "Active"
   },
   {
     "power": 9,

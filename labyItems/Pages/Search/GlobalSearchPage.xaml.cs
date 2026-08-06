@@ -1,6 +1,7 @@
 using SpellCardPage = labyItems.Pages.SpellCard.SpellCard;
 using MiracleCardPage = labyItems.Pages.MiracleCard.MiracleCard;
 using EvocationCardPage = labyItems.Pages.EvocationCard.EvocationCard;
+using NeuronicCardPage = labyItems.Pages.NeuronicCard.NeuronicCard;
 using AbilityCardPage = labyItems.Pages.AbilityCard.AbilityCard;
 using labyItems.Services;
 
@@ -105,6 +106,10 @@ public partial class GlobalSearchPage : ContentPage
                 var evocation = result.Evocation ?? await ResolveEvocationAsync(result);
                 return evocation == null ? null : new EvocationCardPage(evocation);
 
+            case GlobalSearchKind.Neuronic:
+                var neuronic = result.Neuronic ?? await ResolveNeuronicAsync(result);
+                return neuronic == null ? null : new NeuronicCardPage(neuronic);
+
             default:
                 return null;
         }
@@ -145,6 +150,12 @@ public partial class GlobalSearchPage : ContentPage
     {
         var all = await DruidEvocationService.GetAllAsync();
         return FindByName(all, evocation => evocation.name, BuildLookupCandidates(result));
+    }
+
+    private static async Task<NeuronicService.NeuronicRaw?> ResolveNeuronicAsync(GlobalSearchResultVm result)
+    {
+        var all = await NeuronicService.GetAllAsync();
+        return FindByName(all, neuronic => neuronic.name, BuildLookupCandidates(result));
     }
 
     private static IReadOnlyList<string> BuildLookupCandidates(GlobalSearchResultVm result)

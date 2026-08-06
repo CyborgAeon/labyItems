@@ -26,7 +26,8 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             ["Abilities"] = GlobalSearchKind.Ability,
             ["Spells"] = GlobalSearchKind.Spell,
             ["Miracles"] = GlobalSearchKind.Miracle,
-            ["Evocations"] = GlobalSearchKind.Evocation
+            ["Evocations"] = GlobalSearchKind.Evocation,
+            ["Neuronics"] = GlobalSearchKind.Neuronic
         };
 
     private static readonly IReadOnlyList<string> PrimaryFilterOrder =
@@ -35,13 +36,15 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         "Abilities",
         "Spells",
         "Miracles",
-        "Evocations"
+        "Evocations",
+        "Neuronics"
     ];
 
     private static readonly IReadOnlyList<FilterOption> SpellColourOptions = BuildSpellColourOptions();
     private static readonly IReadOnlyList<FilterOption> AbilityTableOptions = BuildAbilityTableOptions();
     private static readonly IReadOnlyList<FilterOption> MiracleSphereOptions = BuildMiracleSphereOptions();
     private static readonly IReadOnlyList<FilterOption> EvocationFieldOptions = BuildEvocationFieldOptions();
+    private static readonly IReadOnlyList<FilterOption> NeuroTypeOptions = BuildNeuroTypeOptions();
     private static readonly HashSet<string> EvocationFieldTokens = new(EvocationFieldOptions.Select(o => o.Token), StringComparer.OrdinalIgnoreCase);
 
     private static readonly Dictionary<string, string> EvocationFieldAliases = new(StringComparer.OrdinalIgnoreCase)
@@ -65,6 +68,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
     private readonly HashSet<string> _selectedMiracleTierTokens = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _selectedEvocationFieldTokens = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _selectedEvocationTierTokens = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _selectedNeuroTypeTokens = new(StringComparer.OrdinalIgnoreCase);
 
     private bool _isLoaded;
     private string _selectedPrimaryFilter = "All";
@@ -126,7 +130,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
                 return "Loading search data...";
 
             if (string.IsNullOrWhiteSpace(SearchText))
-                return "Type to search spells, miracles, evocations, and abilities.";
+                return "Type to search spells, miracles, evocations, neuronics, and abilities.";
 
             return "No matches found.";
         }
@@ -280,6 +284,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
                 GlobalSearchKind.Spell => CreateSpellResultFromDto(result),
                 GlobalSearchKind.Miracle => CreateMiracleResultFromDto(result),
                 GlobalSearchKind.Evocation => CreateEvocationResultFromDto(result),
+                GlobalSearchKind.Neuronic => CreateNeuronicResultFromDto(result),
                 _ => null
             };
 
@@ -302,7 +307,8 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Ability: null, // Loaded lazily when the card is opened.
             Spell: null,
             Miracle: null,
-            Evocation: null)
+            Evocation: null,
+            Neuronic: null)
         {
             DetailKey = string.IsNullOrWhiteSpace(dto.LookupKey) ? dto.Name : dto.LookupKey,
             AbilityTable = dto.AbilityTable
@@ -321,7 +327,8 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Ability: null,
             Spell: null,
             Miracle: null,
-            Evocation: null)
+            Evocation: null,
+            Neuronic: null)
         {
             DetailKey = string.IsNullOrWhiteSpace(dto.LookupKey) ? dto.Name : dto.LookupKey
         };
@@ -339,7 +346,8 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Ability: null,
             Spell: null,
             Miracle: null,
-            Evocation: null)
+            Evocation: null,
+            Neuronic: null)
         {
             DetailKey = string.IsNullOrWhiteSpace(dto.LookupKey) ? dto.Name : dto.LookupKey
         };
@@ -357,7 +365,27 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Ability: null,
             Spell: null,
             Miracle: null,
-            Evocation: null)
+            Evocation: null,
+            Neuronic: null)
+        {
+            DetailKey = string.IsNullOrWhiteSpace(dto.LookupKey) ? dto.Name : dto.LookupKey
+        };
+    }
+
+    private GlobalSearchResultVm CreateNeuronicResultFromDto(OptimizedSearchService.SearchResultDto dto)
+    {
+        return new GlobalSearchResultVm(
+            Kind: GlobalSearchKind.Neuronic,
+            Name: dto.Name,
+            GroupText: dto.ExtraInfo ?? string.Empty,
+            IconGlyph: "\uf5dc",
+            MetaText: $"Neuronic - {dto.ExtraInfo}",
+            DescriptionText: dto.Description,
+            Ability: null,
+            Spell: null,
+            Miracle: null,
+            Evocation: null,
+            Neuronic: null)
         {
             DetailKey = string.IsNullOrWhiteSpace(dto.LookupKey) ? dto.Name : dto.LookupKey
         };
@@ -374,6 +402,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         filters.UnionWith(_selectedMiracleTierTokens.Select(t => $"miracle-tier:{t}"));
         filters.UnionWith(_selectedEvocationFieldTokens.Select(t => $"evocation-field:{t}"));
         filters.UnionWith(_selectedEvocationTierTokens.Select(t => $"evocation-tier:{t}"));
+        filters.UnionWith(_selectedNeuroTypeTokens.Select(t => $"neuro-type:{t}"));
 
         return filters;
     }
@@ -396,6 +425,9 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             case SearchSecondaryFilterMode.Evocation:
                 ToggleSelectionForMode(key, "evocation-field:", _selectedEvocationFieldTokens);
                 ToggleSelectionForMode(key, "evocation-tier:", _selectedEvocationTierTokens);
+                break;
+            case SearchSecondaryFilterMode.Neuronic:
+                ToggleSelectionForMode(key, "neuro-type:", _selectedNeuroTypeTokens);
                 break;
         }
     }
@@ -479,6 +511,9 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
                 AddTierChips(chips, "evocation-tier:", _selectedEvocationTierTokens);
                 AddOptionChips(chips, "evocation-field:", EvocationFieldOptions, _selectedEvocationFieldTokens);
                 break;
+            case SearchSecondaryFilterMode.Neuronic:
+                AddOptionChips(chips, "neuro-type:", NeuroTypeOptions, _selectedNeuroTypeTokens);
+                break;
         }
 
         return chips;
@@ -517,6 +552,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             "Spells" => SearchSecondaryFilterMode.Spell,
             "Miracles" => SearchSecondaryFilterMode.Miracle,
             "Evocations" => SearchSecondaryFilterMode.Evocation,
+            "Neuronics" => SearchSecondaryFilterMode.Neuronic,
             _ => SearchSecondaryFilterMode.None
         };
 
@@ -609,6 +645,15 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             .ToList();
     }
 
+    private static IReadOnlyList<FilterOption> BuildNeuroTypeOptions()
+    {
+        return new[]
+        {
+            new FilterOption(NormalizeToken(NeuroOptionType.Active.ToString()), "Active"),
+            new FilterOption(NormalizeToken(NeuroOptionType.Passive.ToString()), "Passive")
+        };
+    }
+
     private static GlobalSearchResultVm CreateAbilityResult(EvolutionService.AbilityResult ability)
     {
         var title = (ability.Index ?? string.Empty).Trim();
@@ -631,7 +676,8 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Ability: ability,
             Spell: null,
             Miracle: null,
-            Evocation: null);
+            Evocation: null,
+            Neuronic: null);
     }
 
     private static string BuildAbilityCostDisplay(EvolutionService.AbilityResult ability)
@@ -728,7 +774,8 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Ability: null,
             Spell: spell,
             Miracle: null,
-            Evocation: null);
+            Evocation: null,
+            Neuronic: null);
     }
 
     private static GlobalSearchResultVm CreateMiracleResult(MiracleService.MiracRaw miracle)
@@ -756,7 +803,8 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Ability: null,
             Spell: null,
             Miracle: miracle,
-            Evocation: null);
+            Evocation: null,
+            Neuronic: null);
     }
 
     private static GlobalSearchResultVm CreateEvocationResult(DruidEvocationService.EvocRaw evocation)
@@ -784,7 +832,29 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Ability: null,
             Spell: null,
             Miracle: null,
-            Evocation: evocation);
+            Evocation: evocation,
+            Neuronic: null);
+    }
+
+    private static GlobalSearchResultVm CreateNeuronicResult(NeuronicService.NeuronicRaw neuronic)
+    {
+        var type = NeuronicService.FormatType(neuronic.Type);
+        var meta = $"Neuronic - {Math.Max(0, neuronic.power)} TBLP";
+        if (!type.Equals("None", StringComparison.OrdinalIgnoreCase))
+            meta += $" - {type}";
+
+        return new GlobalSearchResultVm(
+            Kind: GlobalSearchKind.Neuronic,
+            Name: (neuronic.name ?? string.Empty).Trim(),
+            GroupText: type,
+            IconGlyph: "\uf5dc",
+            MetaText: meta,
+            DescriptionText: (neuronic.description ?? string.Empty).Trim(),
+            Ability: null,
+            Spell: null,
+            Miracle: null,
+            Evocation: null,
+            Neuronic: neuronic);
     }
 
     private void Raise([CallerMemberName] string? name = null)
@@ -806,7 +876,8 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         Ability,
         Spell,
         Miracle,
-        Evocation
+        Evocation,
+        Neuronic
     }
 
     private readonly record struct FilterOption(string Token, string Label);
@@ -817,7 +888,8 @@ public enum GlobalSearchKind
     Ability,
     Spell,
     Miracle,
-    Evocation
+    Evocation,
+    Neuronic
 }
 
 public enum GlobalSearchFilterTransition
@@ -905,7 +977,8 @@ public sealed record GlobalSearchResultVm(
     EvolutionService.AbilityResult? Ability,
     SpellService.SpellRaw? Spell,
     MiracleService.MiracRaw? Miracle,
-    DruidEvocationService.EvocRaw? Evocation)
+    DruidEvocationService.EvocRaw? Evocation,
+    NeuronicService.NeuronicRaw? Neuronic)
 {
     public string DetailKey { get; init; } = string.Empty;
 
@@ -916,10 +989,12 @@ public sealed record GlobalSearchResultVm(
            || Spell != null
            || Miracle != null
            || Evocation != null
+           || Neuronic != null
            || Kind is GlobalSearchKind.Ability
                or GlobalSearchKind.Spell
                or GlobalSearchKind.Miracle
-               or GlobalSearchKind.Evocation;
+               or GlobalSearchKind.Evocation
+               or GlobalSearchKind.Neuronic;
 
     public bool HasDescription => !string.IsNullOrWhiteSpace(DescriptionText);
 
@@ -929,6 +1004,7 @@ public sealed record GlobalSearchResultVm(
         GlobalSearchKind.Spell => "#DBEAFE",
         GlobalSearchKind.Miracle => "#FEF3C7",
         GlobalSearchKind.Evocation => "#DCFCE7",
+        GlobalSearchKind.Neuronic => "#E0E7FF",
         _ => "#E5E7EB"
     };
 
@@ -938,6 +1014,7 @@ public sealed record GlobalSearchResultVm(
         GlobalSearchKind.Spell => "#93C5FD",
         GlobalSearchKind.Miracle => "#FCD34D",
         GlobalSearchKind.Evocation => "#86EFAC",
+        GlobalSearchKind.Neuronic => "#A5B4FC",
         _ => "#D1D5DB"
     };
 
@@ -947,6 +1024,7 @@ public sealed record GlobalSearchResultVm(
         GlobalSearchKind.Spell => "#1E3A8A",
         GlobalSearchKind.Miracle => "#92400E",
         GlobalSearchKind.Evocation => "#166534",
+        GlobalSearchKind.Neuronic => "#3730A3",
         _ => "#374151"
     };
 
