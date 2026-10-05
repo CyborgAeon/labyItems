@@ -15,5 +15,6 @@ public partial class ItemDetailCardPage : ContentPage
     {
         ItemDetails.Item = item;
         Title = ItemDisplayHelper.BuildDisplayName(item);
+        DetailHeader.HeaderText = Title;
     }
 }

@@ -35,6 +35,7 @@ public sealed class SpellListVm : INotifyPropertyChanged
     private readonly Func<SpellService.SpellRaw, bool>? _spellFilter;
     private readonly Action? _onListChanged;
     private bool _isAddingSelected;
+    private bool _suppressChanges;
 
     public SpellListDraft Draft { get; }
 
@@ -177,6 +178,39 @@ public sealed class SpellListVm : INotifyPropertyChanged
         ReindexEntries();
     }
 
+    public IReadOnlyList<SpellService.SpellRaw> AllSpells => _allSpells;
+
+    public bool IsSpellAvailable(SpellService.SpellRaw spell)
+        => _spellFilter == null || _spellFilter(spell);
+
+    public void ReplaceSelection(IEnumerable<SpellOption> options)
+    {
+        if (IsReadOnly)
+            return;
+
+        _suppressChanges = true;
+        try
+        {
+            Entries.Clear();
+            Draft.Entries.Clear();
+            foreach (var option in options)
+            {
+                var draft = new SpellListEntryDraft();
+                Draft.Entries.Add(draft);
+                var vm = new SpellEntryVm(draft, OnEntryChanged, _getCasterLevel, IsSpecialistList);
+                vm.SelectedSpell = option;
+                Entries.Add(vm);
+            }
+        }
+        finally
+        {
+            _suppressChanges = false;
+        }
+
+        ReindexEntries();
+        OnEntryChanged();
+    }
+
     private async Task AddSelectedSpellAsync()
     {
         if (!CanAddSelected || SelectedSpellOption == null)
@@ -213,7 +247,7 @@ public sealed class SpellListVm : INotifyPropertyChanged
         }
     }
 
-    private static async Task<MagicColours?> PromptForSpecialistColourAsync(string spellName)
+    internal static async Task<MagicColours?> PromptForSpecialistColourAsync(string spellName)
     {
         var page = Shell.Current?.CurrentPage ?? Application.Current?.MainPage;
         if (page == null)
@@ -256,6 +290,9 @@ public sealed class SpellListVm : INotifyPropertyChanged
 
     private void OnEntryChanged()
     {
+        if (_suppressChanges)
+            return;
+
         UpdateFilteredOptions();
         _onListChanged?.Invoke();
     }

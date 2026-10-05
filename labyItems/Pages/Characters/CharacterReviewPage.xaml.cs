@@ -668,6 +668,22 @@ public partial class CharacterReviewPage : ContentPage
         await Navigation.PushAsync(new Wizard(_draft, async () => await Navigation.PopAsync()));
     }
 
+    private async void OnEditAdvancementTabClicked(object sender, EventArgs e)
+    {
+        if (sender is not Button button)
+            return;
+
+        var tab = (button.CommandParameter as string) switch
+        {
+            ReviewSectionKeys.Spells => AdvanceCharacterTab.Spells,
+            ReviewSectionKeys.Miracles => AdvanceCharacterTab.Miracles,
+            ReviewSectionKeys.Evocations => AdvanceCharacterTab.Evocations,
+            _ => AdvanceCharacterTab.Details
+        };
+
+        await Navigation.PushAsync(new AdvanceCharacterPage(_draft, tab));
+    }
+
     private async void OnAdvanceClicked(object sender, EventArgs e)
     {
         await CloseActionMenuIfOpenAsync();

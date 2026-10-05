@@ -13,7 +13,8 @@ public partial class AbilityCard : ContentPage
         : this()
     {
         AbilityDetails.Ability = ability;
-        Title = string.IsNullOrWhiteSpace(ability.Index) ? "Ability" : ability.Index;
+        Title = string.IsNullOrWhiteSpace(ability.SourceBook) ? "null source book" : ability.SourceBook;
+        DetailHeader.HeaderText = Title;
     }
 
     public AbilityCard(ManuAbilityService.ManuAbilityEntry ability)

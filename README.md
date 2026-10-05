@@ -1,100 +1,500 @@
-## Required setup
+# labyItems
 
-This repo targets .NET 10 and MAUI. The minimum local setup is:
+## Local development setup
 
-- .NET 10 SDK installed and available on `PATH`.
-- MAUI workloads installed: `maui`, `maui-android`, `ios`.
-- Java 17 for Android builds (macOS: `brew install --cask temurin@17`).
-- Android SDK/NDK available for Android targets, or `dotnet workload install maui-android` will install required SDK bits.
-- If you install via the Microsoft install script, add `$HOME/.dotnet` to your PATH or use `$HOME/.dotnet/dotnet` explicitly.
+This repository targets **.NET 10 / .NET MAUI**. The repository's
+`global.json` pins the required .NET SDK version, so install that SDK
+version rather than changing `global.json` to match a newer SDK on your
+machine.
 
-Example bootstrap for macOS or Linux:
+At the time of writing the pinned SDK is **10.0.101**.
 
-```bash
-curl -L https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh \
-  && chmod +x dotnet-install.sh \
-  && ./dotnet-install.sh --channel 10.0 \
-  && export PATH="$HOME/.dotnet:$PATH" \
-  && dotnet --info \
-  && dotnet workload install maui \
-  && dotnet workload install maui-android \
-  && dotnet workload install ios \
-  && dotnet build -t:InstallAndroidDependencies -f net10.0-android
+### Prerequisites
+
+For Android development on both macOS and Windows you need:
+
+-   .NET SDK **10.0.101**
+-   .NET MAUI workloads
+-   Java **17**
+-   Android SDK and required Android platform/build tools
+-   An Android emulator or physical Android device for running the app
+
+For iOS development you additionally need a Mac with Xcode. iOS builds
+cannot be performed locally on Windows.
+
+------------------------------------------------------------------------
+
+## macOS setup
+
+These instructions assume `zsh`, which is the default shell on current
+macOS versions.
+
+### 1. Install Homebrew
+
+If Homebrew is not already installed, install it from the official
+Homebrew site.
+
+Verify it is available:
+
+``` bash
+brew --version
 ```
 
-If the shell cannot find `dotnet` after install, ensure the `PATH` change is persisted in your profile or use:
+### 2. Install the pinned .NET SDK
 
-```bash
+The repo currently requires .NET SDK `10.0.101`.
+
+.NET SDKs can be installed side-by-side, so you do **not** need to
+uninstall a newer SDK already on your Mac.
+
+``` bash
+cd ~/Downloads
+
+curl -L https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh
+chmod +x dotnet-install.sh
+
+./dotnet-install.sh \
+  --version 10.0.101 \
+  --architecture arm64
+```
+
+The install script places .NET under `$HOME/.dotnet`.
+
+Add it to your current shell:
+
+``` bash
 export PATH="$HOME/.dotnet:$PATH"
-$HOME/.dotnet/dotnet --info
 ```
 
-Example bootstrap for Windows (PowerShell):
+Persist it for future terminals:
 
-```powershell
+``` bash
+echo 'export PATH="$HOME/.dotnet:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+Verify the SDKs installed on the machine:
+
+``` bash
+dotnet --list-sdks
+```
+
+Then, **from the repository directory**, verify that `global.json`
+selects the expected SDK:
+
+``` bash
+cd ~/Source/labyItems
+dotnet --version
+```
+
+Expected:
+
+``` text
+10.0.101
+```
+
+If `dotnet --version` reports that a compatible SDK cannot be found,
+make sure `10.0.101` appears in `dotnet --list-sdks`.
+
+### 3. Install Java 17
+
+Android builds require a JDK. Install Eclipse Temurin 17:
+
+``` bash
+brew install --cask temurin@17
+```
+
+Configure `JAVA_HOME`:
+
+``` bash
+export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+export PATH="$JAVA_HOME/bin:$PATH"
+```
+
+Persist those settings:
+
+``` bash
+cat >> ~/.zshrc <<'EOF'
+
+export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+export PATH="$JAVA_HOME/bin:$PATH"
+EOF
+
+source ~/.zshrc
+```
+
+Verify Java:
+
+``` bash
+java -version
+/usr/libexec/java_home -V
+echo $JAVA_HOME
+```
+
+You should see Java 17 and a path similar to:
+
+``` text
+/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home
+```
+
+### 4. Install the MAUI workloads
+
+From the repository directory:
+
+``` bash
+cd ~/Source/labyItems
+
+dotnet workload install maui
+dotnet workload install maui-android
+dotnet workload install ios
+```
+
+Verify:
+
+``` bash
+dotnet workload list
+```
+
+> `ios` is required only on macOS. Do not attempt to install or build
+> the iOS target on Windows.
+
+### 5. Configure the Android SDK location
+
+Create the standard Android SDK directory:
+
+``` bash
+mkdir -p "$HOME/Library/Android/sdk"
+```
+
+Configure the Android environment variables:
+
+``` bash
+cat >> ~/.zshrc <<'EOF'
+
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+EOF
+
+source ~/.zshrc
+```
+
+Verify:
+
+``` bash
+echo $ANDROID_HOME
+echo $JAVA_HOME
+```
+
+### 6. Install the Android SDK dependencies
+
+The MAUI workload and the Android SDK are separate. Installing
+`maui-android` installs the .NET Android workload, but a new machine may
+still need the actual Android SDK components.
+
+Run:
+
+``` bash
+cd ~/Source/labyItems
+
+dotnet build labyItems/labyItems.csproj \
+  -t:InstallAndroidDependencies \
+  -f:net10.0-android \
+  -p:AndroidSdkDirectory="$HOME/Library/Android/sdk" \
+  -p:JavaSdkDirectory="$JAVA_HOME" \
+  -p:AcceptAndroidSDKLicenses=True
+```
+
+After it completes, verify that the Android SDK has been populated:
+
+``` bash
+ls "$HOME/Library/Android/sdk"
+```
+
+You should see directories such as:
+
+``` text
+build-tools
+cmdline-tools
+platform-tools
+platforms
+```
+
+### 7. Clean, restore and build
+
+For a fresh machine, or after changing SDK/workload versions, remove any
+assets generated by another SDK before restoring:
+
+``` bash
+cd ~/Source/labyItems
+
+rm -rf labyItems/bin labyItems/obj
+rm -rf tests/labyItems.Tests/bin tests/labyItems.Tests/obj
+
+dotnet restore
+dotnet build
+```
+
+If the build reports `NETSDK1005` and says `project.assets.json` does
+not contain a target for `net10.0-android`, delete the relevant
+`bin`/`obj` directories and run `dotnet restore` again.
+
+------------------------------------------------------------------------
+
+## Windows setup
+
+Run these commands from **PowerShell**.
+
+### 1. Install the pinned .NET SDK
+
+Download and run Microsoft's .NET install script:
+
+``` powershell
 Invoke-WebRequest -Uri https://dot.net/v1/dotnet-install.ps1 -OutFile dotnet-install.ps1
-.\dotnet-install.ps1 -Channel 10.0 -Version 10.0.101
-dotnet nuget add source https://api.nuget.org/v3/index.json -n nuget.org
-dotnet nuget add source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet10/nuget/v3/index.json -n dotnet10
-dotnet workload install maui maui-android ios
+
+.\dotnet-install.ps1 -Version 10.0.101
 ```
 
-## task board
+The script normally installs the SDK under:
+
+``` text
+%USERPROFILE%\.dotnet
+```
+
+Make it available in the current PowerShell session:
+
+``` powershell
+$env:PATH = "$HOME\.dotnet;$env:PATH"
+```
+
+If necessary, add `%USERPROFILE%\.dotnet` to your user `PATH`
+permanently through **System Properties \> Environment Variables**.
+
+Verify:
+
+``` powershell
+dotnet --list-sdks
+```
+
+From the repository directory:
+
+``` powershell
+dotnet --version
+```
+
+Expected:
+
+``` text
+10.0.101
+```
+
+### 2. Install Java 17
+
+Install Eclipse Temurin JDK 17 with `winget`:
+
+``` powershell
+winget install EclipseAdoptium.Temurin.17.JDK
+```
+
+Open a **new PowerShell window** after installation.
+
+Verify:
+
+``` powershell
+java -version
+```
+
+It should report Java 17.
+
+If `JAVA_HOME` has not been created automatically, locate the JDK under
+`C:\Program Files\Eclipse Adoptium\`, then set `JAVA_HOME` to its JDK
+directory. For example:
+
+``` powershell
+[Environment]::SetEnvironmentVariable(
+    "JAVA_HOME",
+    "C:\Program Files\Eclipse Adoptium\jdk-17.x.x-hotspot",
+    "User"
+)
+```
+
+Use the actual directory installed on your machine rather than copying
+the example version literally.
+
+Open a new PowerShell window and verify:
+
+``` powershell
+$env:JAVA_HOME
+java -version
+```
+
+### 3. Install the MAUI Android workload
+
+From the repository:
+
+``` powershell
+dotnet workload install maui
+dotnet workload install maui-android
+```
+
+Verify:
+
+``` powershell
+dotnet workload list
+```
+
+Do not install the `ios` workload for local Windows builds.
+
+### 4. Configure the Android SDK location
+
+Use the conventional Windows Android SDK location:
+
+``` powershell
+$androidSdk = "$env:LOCALAPPDATA\Android\Sdk"
+New-Item -ItemType Directory -Force -Path $androidSdk | Out-Null
+
+$env:ANDROID_HOME = $androidSdk
+$env:ANDROID_SDK_ROOT = $androidSdk
+$env:PATH += ";$androidSdk\platform-tools;$androidSdk\cmdline-tools\latest\bin"
+```
+
+Persist the SDK variables:
+
+``` powershell
+[Environment]::SetEnvironmentVariable("ANDROID_HOME", $androidSdk, "User")
+[Environment]::SetEnvironmentVariable("ANDROID_SDK_ROOT", $androidSdk, "User")
+```
+
+### 5. Install the Android SDK dependencies
+
+From the repository:
+
+``` powershell
+dotnet build labyItems/labyItems.csproj `
+  -t:InstallAndroidDependencies `
+  -f:net10.0-android `
+  -p:AndroidSdkDirectory="$env:LOCALAPPDATA\Android\Sdk" `
+  -p:JavaSdkDirectory="$env:JAVA_HOME" `
+  -p:AcceptAndroidSDKLicenses=True
+```
+
+Verify:
+
+``` powershell
+Get-ChildItem "$env:LOCALAPPDATA\Android\Sdk"
+```
+
+You should see directories such as `build-tools`, `cmdline-tools`,
+`platform-tools`, and `platforms`.
+
+### 6. Clean, restore and build
+
+``` powershell
+Remove-Item -Recurse -Force labyItems\bin,labyItems\obj -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force tests\labyItems.Tests\bin,tests\labyItems.Tests\obj -ErrorAction SilentlyContinue
+
+dotnet restore
+dotnet build
+```
+
+------------------------------------------------------------------------
+
+## Setup diagnostics
+
+If the project does not build, check the toolchain before changing the
+repository configuration.
+
+### macOS
+
+``` bash
+dotnet --version
+dotnet --list-sdks
+dotnet workload list
+
+java -version
+/usr/libexec/java_home -V
+echo $JAVA_HOME
+
+echo $ANDROID_HOME
+ls "$ANDROID_HOME"
+```
+
+### Windows
+
+``` powershell
+dotnet --version
+dotnet --list-sdks
+dotnet workload list
+
+java -version
+$env:JAVA_HOME
+
+$env:ANDROID_HOME
+Get-ChildItem $env:ANDROID_HOME
+```
+
+The expected baseline is:
+
+  Component                   Expected
+  --------------------------- -----------------------------------------
+  .NET SDK selected in repo   `10.0.101`
+  Java                        JDK 17
+  MAUI                        Installed
+  MAUI Android workload       Installed
+  Android SDK                 Installed and `ANDROID_HOME` configured
+  iOS workload                macOS only
+
+## task board\*\*
 
 https://trello.com/b/UmbW9Vwl/laby-automation
 
-## Admin Auth & changes API
+**\## Admin Auth & changes API**
 
 https://dash.cloudflare.com/0ff838b499061f3416722568f1e57adc/workers/services/view/laby-auth/production
 
-## setup local: you'll need dotnet 10
-
-```bash
-# one-shot bootstrap for new dev machines/containers (macOS: brew needed for Java 17)
-curl -L https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh \
-  && chmod +x dotnet-install.sh \
-  && ./dotnet-install.sh --channel 10.0 \
-  && export PATH="$HOME/.dotnet:$PATH" \
-  && dotnet --info \
-  && dotnet workload install maui \
-  && dotnet workload install maui-android \
-  && dotnet workload install ios \
-  && dotnet build labyItems/labyItems.csproj -t:InstallAndroidDependencies -f net10.0-android \
-  && brew install --cask temurin@17
-```
-
-If you want the PATH change to persist, add `export PATH="$HOME/.dotnet:$PATH"` to your shell profile.
-
-## hot reload (android)
+**\## hot reload (android)**
 
 Make sure an Android emulator or device is already running.
 
-### macOS / Linux
+**\### macOS / Linux**
 
 Use this when you are running the repo from a bash/zsh shell:
 
-```bash
+``` bash
+
 PKG=bard.uk.labyitems
+
 DB=output/laby.db
+
 ./tools/migrate-any-data.sh "$DB"
+
 adb push "$DB" /data/local/tmp/laby.db
+
 adb shell run-as "$PKG" sh -c 'cd /data/user/0/'"$PKG"' && mkdir -p files && cp /data/local/tmp/laby.db files/laby.db'
 ```
 
 Then start MAUI watch:
 
-```bash
+``` bash
+
 DOTNET_USE_POLLING_FILE_WATCHER=1 \
+
 $HOME/.dotnet/dotnet watch \
+
   --project labyItems/labyItems.csproj \
+
   --framework net10.0-android \
+
   run --configuration Debug
 ```
 
-If you just ran an iOS-only build and `dotnet watch` reports `NETSDK1005` for `net10.0-android`, refresh restore assets with:
+If you just ran an iOS-only build and `dotnet watch` reports
+`NETSDK1005` for `net10.0-android`, refresh restore assets with:
 
-```bash
+``` bash
+
 $HOME/.dotnet/dotnet restore labyItems/labyItems.csproj -p:TargetFramework=net10.0-android
+
 ```r
 
 ### Windows (PowerShell)
@@ -102,151 +502,245 @@ $HOME/.dotnet/dotnet restore labyItems/labyItems.csproj -p:TargetFramework=net10
 Use this from PowerShell. The bash helper script does not run natively on Windows, so generate and migrate the DB with `dotnet run` directly:
 
 ```powershell
+
 $pkg = "bard.uk.labyitems"
+
 $db = "output/laby.db"
+
 $seed = "labyItems/Resources/Raw/druids_way/evocs.json"
 
 New-Item -ItemType Directory -Force -Path output | Out-Null
 
 if (-not (Test-Path $db)) {
+
   dotnet run --project tools/evocdbgen/evocdbgen.csproj -c Release -- $seed $db
+
 }
 
 dotnet run --project tools/migrator/migrator.csproj -c Release -- $db
+
 adb push $db /data/local/tmp/laby.db
+
 adb shell run-as $pkg sh -c "cd /data/user/0/$pkg && mkdir -p files && cp /data/local/tmp/laby.db files/laby.db"
 ```
 
 Then start MAUI watch:
 
-```powershell
+``` powershell
+
 $env:DOTNET_USE_POLLING_FILE_WATCHER = "1"
+
 dotnet watch --project labyItems/labyItems.csproj --framework net10.0-android run --configuration Debug
 ```
 
-If `adb` is not found, add your Android SDK `platform-tools` directory to `PATH` first. On a typical Windows install that is:
+If `adb` is not found, add your Android SDK `platform-tools` directory
+to `PATH` first. On a typical Windows install that is:
 
-```powershell
+``` powershell
+
 $env:PATH += ";$env:LOCALAPPDATA\Android\Sdk\platform-tools"
 ```
 
-If `dotnet watch` reports `NETSDK1005` for `net10.0-android`, refresh restore assets with:
+If `dotnet watch` reports `NETSDK1005` for `net10.0-android`, refresh
+restore assets with:
 
-```powershell
+``` powershell
+
 dotnet restore labyItems/labyItems.csproj -p:TargetFramework=net10.0-android
 ```
 
-## unit tests (logic-only)
+**\## unit tests (logic-only)**
 
-MAUI UI layers are hard to run in fast local unit tests, so this repo includes logic-focused tests (no device/emulator required):
+MAUI UI layers are hard to run in fast local unit tests, so this repo
+includes logic-focused tests (no device/emulator required):
 
-```bash
+``` bash
+
 $HOME/.dotnet/dotnet test tests/labyItems.Tests/labyItems.Tests.csproj
 ```
 
-## iOS (build latest + push to simulator, keep app data)
+**\## iOS (build latest + push to simulator, keep app data)**
 
-**Xcode Version:** This project targets .NET 10 with iOS SDK 26.2.10233, which requires Xcode 26.3 or later. If building with an older version of Xcode, you may need to update your Xcode installation. For CI/CD pipelines, ensure the runner has Xcode 26.3+.
+**\*\*Xcode Version:\*\*** This project targets .NET 10 with iOS SDK
+26.2.10233, which requires Xcode 26.3 or later. If building with an
+older version of Xcode, you may need to update your Xcode installation.
+For CI/CD pipelines, ensure the runner has Xcode 26.3+.
 
 Make sure a simulator is booted, then:
 
-```bash
+``` bash
+
 PKG=bard.uk.labyitems
+
 SIMULATOR_UDID="$(xcrun simctl list devices | awk -F '[()]' '/Booted/{print $2; exit}')"
+
 $HOME/.dotnet/dotnet build labyItems/labyItems.csproj \
+
   -t:Rebuild \
+
   -f net10.0-ios \
+
   -c Debug \
+
   -p:UseIosWorkload=true \
+
   -p:RuntimeIdentifier=iossimulator-arm64
+
 APP_PATH="labyItems/bin/Debug/net10.0-ios/iossimulator-arm64/labyItems.app"
+
 xcrun simctl terminate "$SIMULATOR_UDID" "$PKG" || true
+
 xcrun simctl install "$SIMULATOR_UDID" "$APP_PATH"
+
 xcrun simctl launch "$SIMULATOR_UDID" "$PKG"
 ```
 
-The install command above updates the app in place and preserves simulator app data (including saved character data).
+The install command above updates the app in place and preserves
+simulator app data (including saved character data).
+
 If you explicitly want a clean reset, run:
 
-```bash
+``` bash
+
 xcrun simctl uninstall "$SIMULATOR_UDID" "$PKG"
 ```
 
-`dotnet build -t:Run` on iOS stays attached to app output/logs and can look like it is "stuck"; use `Ctrl+C` to detach.
+`dotnet build -t:Run` on iOS stays attached to app output/logs and can
+look like it is "stuck"; use `Ctrl+C` to detach.
 
 then push the latest DB into that simulator app container:
+
 quick refresh db:
 
-```bash
+``` bash
+
 rm -f output/laby.db
+
 ./tools/migrate-any-data.sh output/laby.db
 ```
 
-```bash
+``` bash
+
 PKG=bard.uk.labyitems
+
 DB=output/laby.db
+
 SIMULATOR_UDID="$(xcrun simctl list devices | awk -F '[()]' '/Booted/{print $2; exit}')"
+
 ./tools/migrate-any-data.sh "$DB"
+
 APP_DATA_DIR="$(xcrun simctl get_app_container "$SIMULATOR_UDID" "$PKG" data)"
+
 cp "$DB" "$APP_DATA_DIR/Library/laby.db"
+
 chmod 666 "$APP_DATA_DIR/Library/laby.db"
+
 rm -f "$APP_DATA_DIR/Library/laby.db-wal" "$APP_DATA_DIR/Library/laby.db-shm"
+
 xcrun simctl terminate "$SIMULATOR_UDID" "$PKG" || true
+
 xcrun simctl launch "$SIMULATOR_UDID" "$PKG"
 ```
 
 run as if you're an end IOS user (strict AOT simulator, clean rebuild)
 
-```bash
+``` bash
+
 rm -rf labyItems/bin/Debug/net10.0-ios labyItems/obj/Debug/net10.0-ios
+
 $HOME/.dotnet/dotnet build labyItems/labyItems.csproj \
+
   -t:Rebuild \
+
   -f net10.0-ios \
+
   -c Debug \
+
   -p:UseIosWorkload=true \
+
   -p:RuntimeIdentifier=iossimulator-arm64 \
+
   -p:IosStrictAotSimulator=true \
+
   -p:IosFailFastFullAotSimulator=false \
+
   -v minimal
 ```
 
 get error logs:
 
-```bash
+``` bash
+
 DATA_DIR="$(xcrun simctl get_app_container booted bard.uk.labyitems data)"
+
 find "$DATA_DIR" -name runtime.log -maxdepth 5 -print
+
 cat "$DATA_DIR"/Library/runtime.log
+
 xcrun simctl spawn booted log show --style compact --last 10m --predicate 'process == "labyItems"'
 ```
 
-If you hit `NETSDK1147` (missing `ios`/`maui-android`) or similar, you’re probably running mixed dotnet installs. This repo uses `$HOME/.dotnet/dotnet`, so install workloads with that exact binary (and do not use `sudo`), e.g.:
+If you hit `NETSDK1147` (missing `ios`/`maui-android`) or similar,
+you're probably running mixed dotnet installs. This repo uses
+`$HOME/.dotnet/dotnet`, so install workloads with that exact binary (and
+do not use `sudo`), e.g.:
 
-```bash
+``` bash
+
 $HOME/.dotnet/dotnet workload install ios maui-android
 ```
 
-If watch ever complains about launch profiles, ensure `Properties/launchSettings.json` contains the `Android` profile (added in this repo).
+If watch ever complains about launch profiles, ensure
+`Properties/launchSettings.json` contains the `Android` profile (added
+in this repo).
 
-## Data generation & migrations
+**\## Data generation & migrations**
 
-- To generate or migrate any SQLite DB against the latest migrations, run: `./tools/migrate-any-data.sh output/laby.db` (optional second arg: custom seed JSON; defaults to `labyItems/Resources/Raw/druids_way/evocs.json`). The script will create the DB from the seed if it does not exist, then apply FluentMigrator migrations.
-- The script uses `$HOME/.dotnet/dotnet` by default; override with `DOTNET=/path/to/dotnet ./tools/migrate-any-data.sh ...` if needed.
-- APK builds now keep all `Resources/Raw` JSON assets and the `Template.xlsx` so the app and migrations can load packaged data directly.
+-   To generate or migrate any SQLite DB against the latest migrations,
+    run: `./tools/migrate-any-data.sh output/laby.db` (optional second
+    arg: custom seed JSON; defaults to
+    `labyItems/Resources/Raw/druids_way/evocs.json`). The script will
+    create the DB from the seed if it does not exist, then apply
+    FluentMigrator migrations.
 
-## Skills index
+-   The script uses `$HOME/.dotnet/dotnet` by default; override with
+    `DOTNET=/path/to/dotnet ./tools/migrate-any-data.sh ...` if needed.
 
-- `docs/skills/storage-caching-flows.md` - concise reference for database storage, caching strategy, startup/migrations, and create flows (character, ISP item, MP item, non-standard).
-- `docs/skills/token-goat-playbook.md` - token-goat-first command playbook for low-token code lookup in this repo.
+-   APK builds now keep all `Resources/Raw` JSON assets and the
+    `Template.xlsx` so the app and migrations can load packaged data
+    directly.
 
-## Android release signing (CI)
+**\## Skills index**
 
-1. Create a fresh keystore (default alias `labyItemsSigningKey` matches Directory.Build.props):
-   `keytool -genkeypair -v -storetype JKS -keystore labyItems/labyItems.keystore -alias labyItemsSigningKey -keyalg RSA -keysize 2048 -validity 10000 -storepass "<storepass>" -keypass "<keypass>" -dname "CN=labyItems, OU=Mobile, O=laby, L=, S=, C="`
-2. Base64 the keystore so the workflow can restore it: `base64 -i labyItems/labyItems.keystore -o labyItems.keystore.b64`
-3. Add GitHub Actions secrets:
-   - `ANDROID_KEYSTORE_BASE64` = contents of `labyItems.keystore.b64`
-   - `ANDROID_KEY_ALIAS` = `labyItemsSigningKey` (or your alias)
-   - `ANDROID_KEY_PASSWORD` = `<keypass>`
-   - `ANDROID_KEYSTORE_PASSWORD` = `<storepass>`
-4. For local release builds, place the keystore at `labyItems/labyItems.keystore` and pass passwords/alias when publishing, e.g.:
-   `AndroidSigningKeyPass=<keypass> AndroidSigningStorePass=<storepass> $HOME/.dotnet/dotnet publish labyItems/labyItems.csproj -f net10.0-android -c Release -clp:ErrorsOnly -p:AndroidSigningKeyAlias=labyItemsSigningKey -p:AndroidPackageFormat=apk -p:GenerateAppBundle=false`
+-   `docs/skills/storage-caching-flows.md` - concise reference for
+    database storage, caching strategy, startup/migrations, and create
+    flows (character, ISP item, MP item, non-standard).
+
+-   `docs/skills/token-goat-playbook.md` - token-goat-first command
+    playbook for low-token code lookup in this repo.
+
+**\## Android release signing (CI)**
+
+1\. Create a fresh keystore (default alias `labyItemsSigningKey` matches
+Directory.Build.props):
+
+`keytool -genkeypair -v -storetype JKS -keystore labyItems/labyItems.keystore -alias labyItemsSigningKey -keyalg RSA -keysize 2048 -validity 10000 -storepass "<storepass>" -keypass "<keypass>" -dname "CN=labyItems, OU=Mobile, O=laby, L=, S=, C="`
+
+2\. Base64 the keystore so the workflow can restore it:
+`base64 -i labyItems/labyItems.keystore -o labyItems.keystore.b64`
+
+3\. Add GitHub Actions secrets:
+
+-   `ANDROID_KEYSTORE_BASE64` = contents of `labyItems.keystore.b64`
+
+-   `ANDROID_KEY_ALIAS` = `labyItemsSigningKey` (or your alias)
+
+-   `ANDROID_KEY_PASSWORD` = `<keypass>`
+
+-   `ANDROID_KEYSTORE_PASSWORD` = `<storepass>`
+
+4\. For local release builds, place the keystore at
+`labyItems/labyItems.keystore` and pass passwords/alias when publishing,
+e.g.:
+
+`AndroidSigningKeyPass=<keypass> AndroidSigningStorePass=<storepass> $HOME/.dotnet/dotnet publish labyItems/labyItems.csproj -f net10.0-android -c Release -clp:ErrorsOnly -p:AndroidSigningKeyAlias=labyItemsSigningKey -p:AndroidPackageFormat=apk -p:GenerateAppBundle=false`

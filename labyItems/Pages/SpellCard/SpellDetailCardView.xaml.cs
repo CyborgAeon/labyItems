@@ -137,7 +137,12 @@ public partial class SpellDetailCardView : ContentView
     public bool ShowNotesSeeMore => CanExpandNotes && !IsNotesExpanded;
 
     public string ColourDisplayText => WizardSpellRules.BuildColourDisplayText(Spell?.colour);
-    public string LevelDisplayText => $"Lvl {Math.Max(0, Spell?.level ?? 0)}";
+    public string LevelDisplayText => Math.Max(0, Spell?.level ?? 0).ToString();
+    public string RangeDisplayText => ReadOrFallback(Spell?.range, "—");
+    public string DurationDisplayText => ReadOrFallback(Spell?.duration, "—");
+    public bool IsAdvanced => Spell?.isAdvanced == true || Spell?.IsAdvancedCompat == true;
+    public string ImmunityDisplayText => (Spell?.immunities ?? string.Empty).Trim();
+    public bool HasImmunity => ImmunityDisplayText.Length > 0;
 
     public Color ColourCircleColor => WizardSpellRules.ResolveColourCircleColor(Spell?.colour);
     public Color ColourCircleBorderColor => NeedsContrastBorder(ColourCircleColor)
@@ -190,6 +195,11 @@ public partial class SpellDetailCardView : ContentView
         OnPropertyChanged(nameof(VerbalChevronText));
         OnPropertyChanged(nameof(ColourDisplayText));
         OnPropertyChanged(nameof(LevelDisplayText));
+        OnPropertyChanged(nameof(RangeDisplayText));
+        OnPropertyChanged(nameof(DurationDisplayText));
+        OnPropertyChanged(nameof(IsAdvanced));
+        OnPropertyChanged(nameof(ImmunityDisplayText));
+        OnPropertyChanged(nameof(HasImmunity));
         OnPropertyChanged(nameof(ColourCircleColor));
         OnPropertyChanged(nameof(ColourCircleBorderColor));
         OnPropertyChanged(nameof(HasMetaChips));

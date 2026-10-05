@@ -5,25 +5,23 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <Frame Style="{StaticResource DetailCardFrameStyle}">
+    <ContentView>
         <VerticalStackLayout Spacing="12">
             <Label Text="{Binding NeuronicName, Source={x:Reference Root}}"
                    FontSize="28"
                    FontAttributes="Bold"
                    LineBreakMode="WordWrap"/>
 
-            <Grid ColumnDefinitions="*,Auto"
-                  ColumnSpacing="8">
-                <Label Text="{Binding TypeDisplayText, Source={x:Reference Root}}"
-                       FontAttributes="Bold"
-                       VerticalTextAlignment="Center"/>
-                <Label Grid.Column="1"
-                       Text="{Binding PowerDisplayText, Source={x:Reference Root}}"
-                       VerticalTextAlignment="Center"
-                       HorizontalTextAlignment="End"/>
+            <Grid x:Name="NeuronicKeyInformationGrid" Margin="-16,0" Padding="12,10"
+                  ColumnDefinitions="*,1,*,1,*">
+                <VerticalStackLayout><Label Text="POWER" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding PowerDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+                <BoxView Grid.Column="1" Color="{StaticResource SurfaceBorderColor}"/><VerticalStackLayout Grid.Column="2"><Label Text="RANGE" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding RangeDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+                <BoxView Grid.Column="3" Color="{StaticResource SurfaceBorderColor}"/><VerticalStackLayout Grid.Column="4"><Label Text="DURATION" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding DurationDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
             </Grid>
 
-            <BoxView Style="{StaticResource SectionDividerBoxStyle}"/>
+            <Border Padding="10" Stroke="{StaticResource SoftStrokeColor}" StrokeShape="RoundRectangle 8" BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}" IsVisible="{Binding HasImmunity, Source={x:Reference Root}}">
+                <HorizontalStackLayout Spacing="8"><Label Text="&#xF3ED;" FontFamily="FASolid"/><VerticalStackLayout><Label Text="IMMUNITY" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Start"/><Label Text="{Binding ImmunityDisplayText, Source={x:Reference Root}}" FontSize="15"/></VerticalStackLayout></HorizontalStackLayout>
+            </Border>
 
             <Label Text="DESCRIPTION"
                    Style="{StaticResource SectionHeaderLabelStyle}"/>
@@ -42,8 +40,9 @@
                                  IsVisible="{Binding HasAsPer, Source={x:Reference Root}}">
                 <Label Text="AS PER"
                        Style="{StaticResource SectionHeaderLabelStyle}"/>
-                <Label Text="{Binding AsPerText, Source={x:Reference Root}}"
-                       LineBreakMode="WordWrap"/>
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding AsPerEntries, Source={x:Reference Root}}" Spacing="2">
+                    <BindableLayout.ItemTemplate><DataTemplate><Grid Padding="8,6" ColumnDefinitions="*,Auto"><Label Text="{Binding Name}" VerticalTextAlignment="Center"/><Button Grid.Column="1" Text="&#xF05A;" FontFamily="FASolid" FontSize="12" Padding="0" BackgroundColor="Transparent" WidthRequest="24" HeightRequest="24" Clicked="OnAsPerInfoClicked" CommandParameter="{Binding .}"/></Grid></DataTemplate></BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
             </VerticalStackLayout>
 
             <VerticalStackLayout Spacing="6"
@@ -81,5 +80,5 @@
                 </FlexLayout>
             </VerticalStackLayout>
         </VerticalStackLayout>
-    </Frame>
+    </ContentView>
 </ContentView>

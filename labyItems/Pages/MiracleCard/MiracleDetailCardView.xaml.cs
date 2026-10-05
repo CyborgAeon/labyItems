@@ -185,7 +185,10 @@ public partial class MiracleDetailCardView : ContentView
     public bool IsNonStandard => Miracle?.nonStandard == true;
     public string SphereDisplayText => BuildSphereDisplay(Miracle?.sphere);
     public string SphereIconGlyph => FontAwesomeGlyphs.GetSphereIcon(SphereDisplayText);
-    public string PowerDisplayText => $"P{Math.Max(0, Miracle?.power ?? 0)}";
+    public string PowerDisplayText => $"{Math.Max(0, Miracle?.power ?? 0)} SP";
+    public string LevelDisplayText => ReadOrFallback(Miracle?.level, "—");
+    public string DurationDisplayText => ReadOrFallback(Miracle?.duration, "—");
+    public string GestureDisplayText => ReadOrFallback(Miracle?.gesture, "—");
     public string AlignmentDisplayText => BuildAlignmentDisplay(Miracle?.alignment);
     public bool HasAlignment => AlignmentDisplayText.Length > 0;
 
@@ -238,6 +241,9 @@ public partial class MiracleDetailCardView : ContentView
         OnPropertyChanged(nameof(SphereDisplayText));
         OnPropertyChanged(nameof(SphereIconGlyph));
         OnPropertyChanged(nameof(PowerDisplayText));
+        OnPropertyChanged(nameof(LevelDisplayText));
+        OnPropertyChanged(nameof(DurationDisplayText));
+        OnPropertyChanged(nameof(GestureDisplayText));
         OnPropertyChanged(nameof(AlignmentDisplayText));
         OnPropertyChanged(nameof(HasAlignment));
         OnPropertyChanged(nameof(DescriptionText));

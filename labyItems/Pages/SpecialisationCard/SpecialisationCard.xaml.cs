@@ -25,5 +25,6 @@ public partial class SpecialisationCard : ContentPage
         Title = selected.Length == 0
             ? baseTitle
             : $"{baseTitle} ({selected})";
+        DetailHeader.HeaderText = Title;
     }
 }

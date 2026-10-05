@@ -13,6 +13,7 @@ public partial class SpellCard : ContentPage
         : this()
     {
         SpellDetails.Spell = spell;
-        Title = string.IsNullOrWhiteSpace(spell?.name) ? "Spell" : spell.name;
+        Title = spell?.isAdvanced == true || spell?.IsAdvancedCompat == true ? "Advanced Grimoire" : "Wizard Grimoire";
+        DetailHeader.HeaderText = Title;
     }
 }

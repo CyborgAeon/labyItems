@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.Characters.AdvanceListSearchPage"
+    x:Name="Root"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    Title="List Search"
+    BackgroundColor="{StaticResource White}"
+    NavigationPage.HasNavigationBar="False"
+    NavigationPage.HasBackButton="False"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto"
+          RowSpacing="0">
+
+        <Border Grid.Row="0"
+                Padding="16,12"
+                Stroke="{StaticResource SurfaceBorderColor}"
+                StrokeThickness="1"
+                BackgroundColor="{StaticResource White}">
+            <Grid ColumnDefinitions="*,Auto"
+                  ColumnSpacing="8">
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="{Binding TitleText}"
+                           FontAttributes="Bold"
+                           FontSize="18"/>
+                    <Label Text="{Binding SubtitleText}"
+                           FontSize="12"
+                           Opacity="0.75"/>
+                </VerticalStackLayout>
+                <Button Grid.Column="1"
+                        Text="{Binding SelectedSummaryText}"
+                        VerticalOptions="Center"
+                        FontSize="12"
+                        Opacity="0.8"
+                        IsEnabled="{Binding HasSelectedItems}"
+                        BackgroundColor="Transparent"
+                        Padding="8,4"
+                        Command="{Binding ToggleSelectedOnlyCommand}"/>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1"
+              Padding="16"
+              RowDefinitions="Auto,*"
+              RowSpacing="10">
+
+            <Border Grid.Row="0"
+                    Stroke="{StaticResource SurfaceBorderColor}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 10"
+                    BackgroundColor="#F9FAFB"
+                    Padding="8,4">
+                <Grid ColumnDefinitions="Auto,*"
+                      ColumnSpacing="6">
+                    <Button Text="&#xF0B0;"
+                            FontFamily="FASolid"
+                            FontSize="13"
+                            Padding="0"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource SubtleTextColor}"
+                            HeightRequest="24"
+                            WidthRequest="24"
+                            MinimumHeightRequest="0"
+                            MinimumWidthRequest="0"
+                            Command="{Binding OpenFiltersCommand}"/>
+                    <Entry Grid.Column="1"
+                           Placeholder="{Binding SearchPlaceholder}"
+                           ClearButtonVisibility="WhileEditing"
+                           Text="{Binding SearchText, Mode=TwoWay}"/>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1">
+                <CollectionView ItemsSource="{Binding FilteredItems}"
+                                IsVisible="{Binding HasResults}"
+                                ItemSizingStrategy="MeasureFirstItem"
+                                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Stroke="{StaticResource SurfaceBorderColor}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 10"
+                                    BackgroundColor="{StaticResource White}"
+                                    Padding="10,8"
+                                    Margin="0,0,0,8">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnItemTapped"
+                                                          CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border"
+                                                 Binding="{Binding IsSelected}"
+                                                 Value="True">
+                                        <Setter Property="Stroke"
+                                                Value="{StaticResource AccentMaroonColor}"/>
+                                        <Setter Property="BackgroundColor"
+                                                Value="{StaticResource SelectedSurfaceBackgroundColor}"/>
+                                    </DataTrigger>
+                                </Border.Triggers>
+
+                                <Grid RowDefinitions="Auto,Auto,Auto"
+                                      ColumnDefinitions="Auto,*,Auto"
+                                      RowSpacing="6"
+                                      ColumnSpacing="8">
+                                    <Border Grid.Row="0"
+                                            Stroke="Transparent"
+                                            BackgroundColor="Transparent"
+                                            HeightRequest="24"
+                                            WidthRequest="24">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleSelectItemCommand}"
+                                                                  CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                        <Label Text="{Binding SelectionGlyph}"
+                                               FontFamily="FASolid"
+                                               FontSize="14"
+                                               TextColor="{Binding SelectionColor}"
+                                               HorizontalTextAlignment="Center"
+                                               VerticalTextAlignment="Center"/>
+                                    </Border>
+
+                                    <Label Grid.Column="1"
+                                           Text="{Binding Name}"
+                                           TextColor="{StaticResource Black}"
+                                           FontAttributes="Bold"
+                                           FontSize="15"
+                                           VerticalTextAlignment="Center">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleSelectItemCommand}"
+                                                                  CommandParameter="{Binding .}"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+
+                                    <Label Grid.Column="2"
+                                           Text="&#xF05A;"
+                                           FontFamily="FASolid"
+                                           FontSize="13"
+                                           TextColor="{StaticResource SubtleTextColor}"
+                                           VerticalTextAlignment="Center"
+                                           HorizontalTextAlignment="Center"/>
+
+                                    <Label Grid.Row="1"
+                                           Grid.ColumnSpan="3"
+                                           Text="{Binding DetailText}"
+                                           FontSize="11"
+                                           Opacity="0.6"/>
+
+                                    <Label Grid.Row="2"
+                                           Grid.Column="1"
+                                           Text="{Binding MetaText}"
+                                           FontSize="12"
+                                           Opacity="0.75"/>
+
+                                    <Label Grid.Row="2"
+                                           Grid.Column="2"
+                                           Text="{Binding TierText}"
+                                           FontSize="11"
+                                           Opacity="0.7"
+                                           HorizontalTextAlignment="End"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Label Text="{Binding EmptyText}"
+                       IsVisible="{Binding HasResults, Converter={StaticResource InverseBoolConverter}}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       HorizontalTextAlignment="Center"
+                       Opacity="0.7"/>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="2"
+              RowDefinitions="1,Auto">
+            <BoxView Grid.Row="0"
+                     HeightRequest="1"
+                     BackgroundColor="{StaticResource SurfaceBorderColor}"/>
+            <Grid Grid.Row="1"
+                  ColumnDefinitions="Auto,*,Auto"
+                  ColumnSpacing="10"
+                  Padding="16,10,16,18"
+                  BackgroundColor="{StaticResource White}">
+                <Button Grid.Column="0"
+                        Text="{Binding CancelButtonText}"
+                        Clicked="OnCancelClicked"/>
+                <Button Grid.Column="2"
+                        Text="{Binding ConfirmButtonText}"
+                        Clicked="OnNextClicked"/>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.RowSpan="3"
+              IsVisible="{Binding IsFilterModalOpen}"
+              BackgroundColor="#66000000"
+              InputTransparent="False">
+            <Border HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    WidthRequest="360"
+                    MaximumWidthRequest="420"
+                    Stroke="{StaticResource SurfaceBorderColor}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    BackgroundColor="{StaticResource White}"
+                    Padding="14">
+                <Grid RowDefinitions="Auto,*,Auto"
+                      RowSpacing="10">
+                    <Label Text="Filters"
+                           FontAttributes="Bold"
+                           FontSize="18"/>
+
+                    <ScrollView Grid.Row="1">
+                        <VerticalStackLayout Spacing="12">
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="Available"
+                                       FontAttributes="Bold"
+                                       FontSize="13"/>
+                                <Grid ColumnDefinitions="*,Auto"
+                                      ColumnSpacing="8">
+                                    <Label Text="{Binding AvailableFilterDescription}"
+                                           FontSize="12"
+                                           Opacity="0.75"
+                                           VerticalTextAlignment="Center"/>
+                                    <Switch Grid.Column="1"
+                                            IsToggled="{Binding PendingAvailableOnly, Mode=TwoWay}"
+                                            IsEnabled="{Binding IsAvailableFilterEnabled}"
+                                            HorizontalOptions="End"
+                                            VerticalOptions="Center"/>
+                                </Grid>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Type"
+                                       FontAttributes="Bold"
+                                       FontSize="13"/>
+                                <FlexLayout BindableLayout.ItemsSource="{Binding TierFilters}"
+                                            Wrap="Wrap"
+                                            Direction="Row"
+                                            AlignItems="Start"
+                                            JustifyContent="Start">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource SelectableFilterPillBorderStyle}"
+                                                    Margin="0,0,8,8">
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ToggleTierFilterCommand}"
+                                                                          CommandParameter="{Binding .}"/>
+                                                </Border.GestureRecognizers>
+                                                <Label Text="{Binding Label}"
+                                                       Style="{StaticResource FilterPillLabelStyle}"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </FlexLayout>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="{Binding CategoryTitle}"
+                                       FontAttributes="Bold"
+                                       FontSize="13"/>
+                                <FlexLayout BindableLayout.ItemsSource="{Binding CategoryFilters}"
+                                            Wrap="Wrap"
+                                            Direction="Row"
+                                            AlignItems="Start"
+                                            JustifyContent="Start">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource SelectableFilterPillBorderStyle}"
+                                                    Margin="0,0,8,8">
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ToggleCategoryFilterCommand}"
+                                                                          CommandParameter="{Binding .}"/>
+                                                </Border.GestureRecognizers>
+                                                <Label Text="{Binding Label}"
+                                                       Style="{StaticResource FilterPillLabelStyle}"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </FlexLayout>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="6"
+                                                 IsVisible="{Binding HasBreakdown}">
+                                <Grid ColumnDefinitions="*,Auto"
+                                      ColumnSpacing="8">
+                                    <Label Text="{Binding BreakdownTitle}"
+                                           FontAttributes="Bold"
+                                           FontSize="13"
+                                           VerticalTextAlignment="Center"/>
+                                    <controls:ChevronIconView Grid.Column="1"
+                                                              IsExpanded="{Binding ShowBreakdownLegend}"
+                                                              AnimateRotation="True"
+                                                              IconSize="28"
+                                                              GlyphSize="14"
+                                                              GlyphColor="{StaticResource MutedTextColor}">
+                                        <controls:ChevronIconView.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding ToggleBreakdownLegendCommand}" />
+                                        </controls:ChevronIconView.GestureRecognizers>
+                                    </controls:ChevronIconView>
+                                </Grid>
+                                <FlexLayout Direction="Row"
+                                            HeightRequest="10"
+                                            BindableLayout.ItemsSource="{Binding BreakdownSegments}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <BoxView Color="{Binding Colour}"
+                                                     FlexLayout.Grow="{Binding Weight}"/>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </FlexLayout>
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Breakdown}"
+                                                     IsVisible="{Binding ShowBreakdownLegend}"
+                                                     Spacing="4">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnDefinitions="Auto,*,Auto"
+                                                  ColumnSpacing="8">
+                                                <BoxView WidthRequest="12"
+                                                         HeightRequest="12"
+                                                         CornerRadius="6"
+                                                         VerticalOptions="Center"
+                                                         Color="{Binding Colour}"/>
+                                                <Label Grid.Column="1"
+                                                       Text="{Binding Label}"
+                                                       FontSize="12"/>
+                                                <Label Grid.Column="2"
+                                                       Text="{Binding Value}"
+                                                       FontSize="12"
+                                                       Opacity="0.75"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </ScrollView>
+
+                    <Grid Grid.Row="2"
+                          ColumnDefinitions="Auto,*,Auto"
+                          ColumnSpacing="10">
+                        <Button Grid.Column="0"
+                                Text="Cancel"
+                                Command="{Binding CancelFiltersCommand}"/>
+                        <Button Grid.Column="2"
+                                Text="Search"
+                                Command="{Binding ApplyFiltersCommand}"/>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</ContentPage>

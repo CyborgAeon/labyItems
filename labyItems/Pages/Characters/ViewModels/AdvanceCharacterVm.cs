@@ -569,7 +569,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             return result;
         }
 
-        if (!IsWizardTrackClass(classRecord))
+        if (!IsWizardTrackClass(classRecord) && !HasCompletedWizardMultiClass())
         {
             if (HasAdvancementAbilityByName(CompetenceAbilityName))
             {
@@ -597,6 +597,57 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
     private bool IsVivomancerClass()
         => (_draft.Class ?? string.Empty).Contains("Vivomancer", StringComparison.OrdinalIgnoreCase);
+
+    // A wizard-track multi-class bought to its final level grants the wizard's specialist/teaching slots.
+    private bool HasCompletedWizardMultiClass()
+    {
+        if (_draft.MultiClassLevels == null || _draft.MultiClassLevels.Count == 0)
+            return false;
+
+        foreach (var multiClassLevel in _draft.MultiClassLevels)
+        {
+            if (multiClassLevel.Value <= 0)
+                continue;
+
+            var key = (multiClassLevel.Key ?? string.Empty).Trim();
+            if (key.Length == 0 || !TryResolveMultiClassDefinition(key, out var resolvedKey, out var definition))
+                continue;
+
+            if (multiClassLevel.Value < ResolveMultiClassMaxLevel(definition))
+                continue;
+
+            var display = ResolveMultiClassDisplayName(definition, resolvedKey);
+            if (IsWizardTrackClassName(display) || IsWizardTrackClassName(resolvedKey))
+                return true;
+
+            if (HasMultiClassWizardColourChoice(key) || HasMultiClassWizardColourChoice(resolvedKey))
+                return true;
+        }
+
+        return false;
+    }
+
+    private bool HasMultiClassWizardColourChoice(string multiClassKey)
+    {
+        var prefix = multiClassKey + "::";
+        foreach (var selection in _draft.MultiClassChoiceSelections ?? new Dictionary<string, string>())
+        {
+            if (!selection.Key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
+                || string.IsNullOrWhiteSpace(selection.Value))
+            {
+                continue;
+            }
+
+            if (TryExtractChoiceSetRefFromStorageKey(selection.Key, out var choiceSetRef)
+                && (choiceSetRef.Equals(WizardColourChoiceSetRef, StringComparison.OrdinalIgnoreCase)
+                    || choiceSetRef.Equals(PowerMasterColourChoiceSetRef, StringComparison.OrdinalIgnoreCase)))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     private bool IsWarlockClass()
     {
@@ -2311,7 +2362,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             return blocked;
 
         var classRecord = ResolveClassRecord();
-        if (IsVivomancerClass() || (!IsWizardTrackClass(classRecord) && !IsWarlockClass()))
+        if (IsVivomancerClass() || (!IsWizardTrackClass(classRecord) && !HasCompletedWizardMultiClass() && !IsWarlockClass()))
             return blocked;
 
         var primary = GetPrimaryWizardColour(selectedColours);

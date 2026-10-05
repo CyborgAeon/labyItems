@@ -21,6 +21,14 @@ using AbilityCardPage = labyItems.Pages.AbilityCard.AbilityCard;
 using ItemDetailCardPage = labyItems.Pages.ItemCard.ItemDetailCardPage;
 namespace labyItems.Pages.Characters;
 
+public enum AdvanceCharacterTab
+{
+    Details,
+    Spells,
+    Miracles,
+    Evocations
+}
+
 public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
 {
     private readonly AdvanceCharacterVm _vm;
@@ -30,6 +38,7 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
     private readonly AdvanceCharacterEvocationsTabVm _evocationsTabVm;
     private CancellationTokenSource? _appearingRefreshCts;
     private Page? _lastNonBackTab;
+    private Page? _pendingInitialTab;
     private bool _isHandlingBackTabSelection;
     private static readonly Regex ContributionCostRegex = new(
         @"=\s*(?<cost>-?\d+)\s*$",
@@ -50,9 +59,16 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
         Title = string.Empty;
     }
 
-    public AdvanceCharacterPage(CharacterDraft draft)
+    public AdvanceCharacterPage(CharacterDraft draft, AdvanceCharacterTab initialTab = AdvanceCharacterTab.Details)
     {
         InitializeComponent();
+        _pendingInitialTab = initialTab switch
+        {
+            AdvanceCharacterTab.Spells => SpellsTab,
+            AdvanceCharacterTab.Miracles => MiraclesTab,
+            AdvanceCharacterTab.Evocations => EvocsTab,
+            _ => null
+        };
         Shell.SetNavBarIsVisible(this, false);
         NavigationPage.SetHasNavigationBar(this, false);
         NavigationPage.SetHasBackButton(this, false);
@@ -140,6 +156,13 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
 
         if (CurrentPage != null && !ReferenceEquals(CurrentPage, BackTab))
             _lastNonBackTab = CurrentPage;
+
+        if (_pendingInitialTab != null && Children.Contains(_pendingInitialTab))
+        {
+            CurrentPage = _pendingInitialTab;
+            _lastNonBackTab = _pendingInitialTab;
+            _pendingInitialTab = null;
+        }
 
         QueuePlatformTabLayoutRefresh();
     }
@@ -362,6 +385,24 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
         => await NavigateWithSectionLoaderAsync(
             AbilitiesActionRow,
             () => Navigation.PushAsync(new AdvanceAbilitySearchPage(_vm)));
+
+    private async void OnOpenListSearchClicked(object sender, EventArgs e)
+    {
+        if (sender is not Microsoft.Maui.Controls.Button button)
+            return;
+
+        var searchVm = button.CommandParameter switch
+        {
+            SpellListVm spells => AdvanceListSearchVm.ForSpells(spells),
+            MiracleListVm miracles => AdvanceListSearchVm.ForMiracles(miracles),
+            EvocationListVm evocations => AdvanceListSearchVm.ForEvocations(evocations),
+            _ => null
+        };
+        if (searchVm == null)
+            return;
+
+        await Navigation.PushAsync(new AdvanceListSearchPage(searchVm));
+    }
 
     private async void OnOpenIspItemCalculatorClicked(object sender, EventArgs e)
         => await NavigateWithSectionLoaderAsync(

@@ -30,6 +30,7 @@ public sealed class EvocationListVm : INotifyPropertyChanged
         return true;
     }
 
+    private bool _suppressChanges;
     private const int MaxTotalPower = 60;
     private const int MaxAdvancedPower = 20;
 
@@ -194,6 +195,33 @@ public sealed class EvocationListVm : INotifyPropertyChanged
         ReindexEntries();
     }
 
+    public IReadOnlyList<DruidEvocationService.EvocRaw> AllEvocations => _allEvocations;
+
+    public void ReplaceSelection(IEnumerable<EvocationOption> options)
+    {
+        _suppressChanges = true;
+        try
+        {
+            Entries.Clear();
+            Draft.Entries.Clear();
+            foreach (var option in options)
+            {
+                var draft = new EvocationListEntryDraft();
+                Draft.Entries.Add(draft);
+                var vm = new EvocationEntryVm(draft, OnEntryChanged);
+                vm.SelectedEvocation = option;
+                Entries.Add(vm);
+            }
+        }
+        finally
+        {
+            _suppressChanges = false;
+        }
+
+        ReindexEntries();
+        OnEntryChanged();
+    }
+
     private void AddSelectedEvocation()
     {
         if (SelectedEvocationOption == null)
@@ -222,6 +250,9 @@ public sealed class EvocationListVm : INotifyPropertyChanged
 
     private void OnEntryChanged()
     {
+        if (_suppressChanges)
+            return;
+
         UpdateFilteredOptions();
         UpdateStats();
     }

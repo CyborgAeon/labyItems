@@ -514,9 +514,14 @@
                                         <controls:AnimatedExpandView IsExpanded="{Binding IsExpanded}"
                                                                      AnimationName="AdvanceSpellListExpand">
                                             <VerticalStackLayout Spacing="8">
-                                                <Grid ColumnDefinitions="*"
+                                                <Grid ColumnDefinitions="*,Auto"
                                                       ColumnSpacing="8"
                                                       IsVisible="{Binding CanEdit}">
+                                                    <Button Grid.Column="1"
+                                                            Text="Browse"
+                                                            VerticalOptions="Center"
+                                                            Clicked="OnOpenListSearchClicked"
+                                                            CommandParameter="{Binding .}"/>
                                                     <controls:DictionarySearchBar x:TypeArguments="viewModels:SpellOption"
                                                                                   ItemsSource="{Binding FilteredOptions}"
                                                                                   SelectedValue="{Binding SelectedSpellOption, Mode=TwoWay}"
@@ -897,8 +902,13 @@
                                                 <VerticalStackLayout Spacing="10">
                                                     <VerticalStackLayout IsVisible="{Binding CanEdit}"
                                                                          Spacing="10">
-                                                        <Grid ColumnDefinitions="*"
+                                                        <Grid ColumnDefinitions="*,Auto"
                                                               ColumnSpacing="8">
+                                                            <Button Grid.Column="1"
+                                                                    Text="Browse"
+                                                                    VerticalOptions="Center"
+                                                                    Clicked="OnOpenListSearchClicked"
+                                                                    CommandParameter="{Binding .}"/>
                                                             <controls:DictionarySearchBar x:TypeArguments="viewModels:MiracleOption"
                                                                                           ItemsSource="{Binding FilteredOptions}"
                                                                                           SelectedValue="{Binding SelectedMiracleOption, Mode=TwoWay}"
@@ -1228,8 +1238,13 @@
                                         <controls:AnimatedExpandView IsExpanded="{Binding IsExpanded}"
                                                                      AnimationName="AdvanceEvocationListExpand">
                                             <VerticalStackLayout Spacing="10">
-                                                <Grid ColumnDefinitions="*"
+                                                <Grid ColumnDefinitions="*,Auto"
                                                       ColumnSpacing="8">
+                                                    <Button Grid.Column="1"
+                                                            Text="Browse"
+                                                            VerticalOptions="Center"
+                                                            Clicked="OnOpenListSearchClicked"
+                                                            CommandParameter="{Binding .}"/>
                                                     <controls:DictionarySearchBar x:TypeArguments="viewModels:EvocationOption"
                                                                                   ItemsSource="{Binding FilteredOptions}"
                                                                                   SelectedValue="{Binding SelectedEvocationOption, Mode=TwoWay}"

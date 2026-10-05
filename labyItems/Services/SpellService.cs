@@ -40,6 +40,7 @@ public static class SpellService
         public string range { get; set; } = string.Empty;
         public string duration { get; set; } = string.Empty;
         public string gesture { get; set; } = string.Empty;
+        public string immunities { get; set; } = string.Empty;
         public string verbal { get; set; } = string.Empty;
         public string description { get; set; } = string.Empty;
         public string notes { get; set; } = string.Empty;

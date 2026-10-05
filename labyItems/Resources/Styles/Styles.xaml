@@ -412,6 +412,19 @@
         <Setter Property="Color" Value="{StaticResource SurfaceBorderColor}"/>
     </Style>
 
+    <Style TargetType="Label" x:Key="KeyInfoLabelStyle">
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="TextColor" Value="{StaticResource MutedTextColor}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style TargetType="Label" x:Key="KeyInfoValueStyle">
+        <Setter Property="FontSize" Value="17"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="WordWrap"/>
+    </Style>
+
     <Style TargetType="ListView">
         <Setter Property="SeparatorColor" Value="{StaticResource Gray200}" />
         <Setter Property="RefreshControlColor" Value="{StaticResource Gray900}" />

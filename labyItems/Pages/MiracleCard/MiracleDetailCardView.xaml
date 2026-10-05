@@ -6,7 +6,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:labyItems.Controls">
 
-    <Frame Style="{StaticResource DetailCardFrameStyle}">
+    <ContentView>
         <VerticalStackLayout Spacing="12">
             <Label Text="{Binding MiracleName, Source={x:Reference Root}}"
                    FontSize="28"
@@ -19,29 +19,16 @@
                    FontAttributes="Bold"
                    IsVisible="{Binding IsNonStandard, Source={x:Reference Root}}"/>
 
-            <Grid ColumnDefinitions="Auto,*,Auto"
-                  ColumnSpacing="8">
-                <Label Text="{Binding SphereIconGlyph, Source={x:Reference Root}}"
-                       FontFamily="FASolid"
-                       FontSize="14"
-                       TextColor="{StaticResource SubtleTextColor}"
-                       VerticalTextAlignment="Center"/>
-                <Label Grid.Column="1"
-                       Text="{Binding SphereDisplayText, Source={x:Reference Root}}"
-                       FontAttributes="Bold"
-                       VerticalTextAlignment="Center"/>
-                <Label Grid.Column="2"
-                       Text="{Binding PowerDisplayText, Source={x:Reference Root}}"
-                       VerticalTextAlignment="Center"
-                       HorizontalTextAlignment="End"/>
+            <Grid x:Name="MiracleKeyInformationGrid" Margin="-16,0" Padding="12,10"
+                  ColumnDefinitions="*,1,*,1,*" RowDefinitions="Auto,1,Auto" ColumnSpacing="0" RowSpacing="10">
+                <VerticalStackLayout><Label Text="LEVEL" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding LevelDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+                <BoxView Grid.Column="1" Grid.RowSpan="3" Color="{StaticResource SurfaceBorderColor}"/><VerticalStackLayout Grid.Column="2"><Label Text="POWER" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding PowerDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+                <BoxView Grid.Column="3" Grid.RowSpan="3" Color="{StaticResource SurfaceBorderColor}"/><VerticalStackLayout Grid.Column="4"><Label Text="DURATION" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding DurationDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+                <BoxView Grid.Row="1" Grid.ColumnSpan="5" Color="{StaticResource SurfaceBorderColor}"/>
+                <VerticalStackLayout Grid.Row="2"><HorizontalStackLayout HorizontalOptions="Center" Spacing="4"><Label Text="&#xF24E;" FontFamily="FASolid" FontSize="10" TextColor="{StaticResource MutedTextColor}"/><Label Text="ALIGNMENT" Style="{StaticResource KeyInfoLabelStyle}"/></HorizontalStackLayout><Label Text="{Binding AlignmentDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+                <VerticalStackLayout Grid.Row="2" Grid.Column="2"><Label Text="SPHERE" Style="{StaticResource KeyInfoLabelStyle}"/><HorizontalStackLayout HorizontalOptions="Center" Spacing="5"><Label Text="{Binding SphereIconGlyph, Source={x:Reference Root}}" FontFamily="FASolid" FontSize="15" VerticalTextAlignment="Center"/><Label Text="{Binding SphereDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></HorizontalStackLayout></VerticalStackLayout>
+                <VerticalStackLayout Grid.Row="2" Grid.Column="4"><Label Text="GESTURE" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding GestureDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
             </Grid>
-
-            <Label Text="{Binding AlignmentDisplayText, Source={x:Reference Root}}"
-                   FontSize="12"
-                   Opacity="0.8"
-                   IsVisible="{Binding HasAlignment, Source={x:Reference Root}}"/>
-
-            <BoxView Style="{StaticResource SectionDividerBoxStyle}"/>
 
             <Grid ColumnDefinitions="*,Auto"
                   ColumnSpacing="8">
@@ -222,5 +209,5 @@
                        IsVisible="{Binding ShowHealSeeMore, Source={x:Reference Root}}"/>
             </VerticalStackLayout>
         </VerticalStackLayout>
-    </Frame>
+    </ContentView>
 </ContentView>

@@ -3,12 +3,16 @@
     x:Class="labyItems.Pages.MiracleCard.MiracleCard"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
     xmlns:miracleCard="clr-namespace:labyItems.Pages.MiracleCard"
-    x:Name="Root"
-    Title="Miracle">
-    <ScrollView>
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False">
+    <Grid RowDefinitions="Auto,*">
+    <controls:DetailPageHeader x:Name="DetailHeader" HeaderText="Words From Above"/>
+    <ScrollView Grid.Row="1">
         <VerticalStackLayout Padding="16">
             <miracleCard:MiracleDetailCardView x:Name="MiracleDetails" />
         </VerticalStackLayout>
     </ScrollView>
+    </Grid>
 </ContentPage>

@@ -27,6 +27,8 @@ public partial class EvocationDetailCardView : ContentView
 
     public string EvocationName => ReadOrFallback(Evocation?.name, "Unnamed Evocation");
     public string PowerDisplayText => $"{Math.Max(0, Evocation?.power ?? 0)} EP";
+    public string RangeDisplayText => ReadOrFallback(Evocation?.range, "—");
+    public string DurationDisplayText => ReadOrFallback(Evocation?.duration, "—");
     public string FieldSummaryText => BuildFieldSummary(Evocation);
 
     public string DescriptionText => ReadOrFallback(Evocation?.description, "No description provided.");
@@ -275,6 +277,8 @@ public partial class EvocationDetailCardView : ContentView
     {
         OnPropertyChanged(nameof(EvocationName));
         OnPropertyChanged(nameof(PowerDisplayText));
+        OnPropertyChanged(nameof(RangeDisplayText));
+        OnPropertyChanged(nameof(DurationDisplayText));
         OnPropertyChanged(nameof(FieldSummaryText));
         OnPropertyChanged(nameof(DescriptionText));
         OnPropertyChanged(nameof(VerbalText));

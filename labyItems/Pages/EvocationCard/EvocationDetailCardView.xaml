@@ -6,28 +6,19 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:labyItems.Controls">
 
-    <Frame Style="{StaticResource DetailCardFrameStyle}">
+    <ContentView>
         <VerticalStackLayout Spacing="12">
             <Label Text="{Binding EvocationName, Source={x:Reference Root}}"
                    FontSize="28"
                    FontAttributes="Bold"
                    LineBreakMode="WordWrap"/>
 
-            <Grid ColumnDefinitions="Auto,*"
-                  ColumnSpacing="8">
-                <Label Text="&#xF06C;"
-                       FontFamily="FASolid"
-                       FontSize="14"
-                       TextColor="{StaticResource SubtleTextColor}"
-                       VerticalTextAlignment="Center"/>
-                <Label Grid.Column="1"
-                       Text="{Binding PowerDisplayText, Source={x:Reference Root}}"
-                       FontAttributes="Bold"
-                       VerticalTextAlignment="Center"
-                       HorizontalTextAlignment="End"/>
+            <Grid x:Name="EvocationKeyInformationGrid" Margin="-16,0" Padding="12,10"
+                  ColumnDefinitions="*,1,*,1,*">
+                <VerticalStackLayout><Label Text="POWER" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding PowerDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+                <BoxView Grid.Column="1" Color="{StaticResource SurfaceBorderColor}"/><VerticalStackLayout Grid.Column="2"><Label Text="RANGE" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding RangeDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+                <BoxView Grid.Column="3" Color="{StaticResource SurfaceBorderColor}"/><VerticalStackLayout Grid.Column="4"><Label Text="DURATION" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding DurationDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
             </Grid>
-
-            <BoxView Style="{StaticResource SectionDividerBoxStyle}"/>
 
             <Grid ColumnDefinitions="*,Auto"
                   ColumnSpacing="8">
@@ -236,5 +227,5 @@
                 </FlexLayout>
             </VerticalStackLayout>
         </VerticalStackLayout>
-    </Frame>
+    </ContentView>
 </ContentView>

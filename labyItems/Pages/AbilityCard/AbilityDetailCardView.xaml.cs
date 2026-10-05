@@ -28,6 +28,11 @@ public partial class AbilityDetailCardView : ContentView
     public bool ShowNonStandardBadge => Ability?.IsNonStandard == true;
     public string TableDisplayText => $"Table: {Math.Max(0, Ability?.Table ?? 0)}";
     public string AvailabilityText => BuildAvailabilityDisplay(Ability?.Available);
+    public IReadOnlyList<string> AvailabilityEntries => BuildAvailabilityChips(Ability);
+    public string AvailabilitySummaryText => string.Join(" · ", AvailabilityEntries);
+    public bool CanExpandAvailability => AvailabilityEntries.Count > 1;
+    public string TableValueText => Math.Max(0, Ability?.Table ?? 0).ToString();
+    public string CostValueText => ShowInfiniteCost ? $"{Math.Max(0, Ability?.Cost ?? 0)}/∞ points" : $"{Math.Max(0, Ability?.Cost ?? 0)} points";
 
     public bool ShowInfiniteCost => Ability?.CanBuyMultiple == true && Ability?.MaxAvailable is not > 0;
     public bool ShowCostText => !ShowInfiniteCost;
@@ -53,6 +58,20 @@ public partial class AbilityDetailCardView : ContentView
     public bool HasNotesSection => HasNotesText || HasPreReqs;
 
     public ObservableCollection<AbilityPreReqEntryVm> PreReqEntries { get; } = new();
+    public ObservableCollection<AbilityPreReqEntryVm> AsPerEntries { get; } = new();
+    public bool HasAsPer => AsPerEntries.Count > 0;
+
+    private bool _isAvailabilityExpanded;
+    public bool IsAvailabilityExpanded
+    {
+        get => _isAvailabilityExpanded;
+        set
+        {
+            if (_isAvailabilityExpanded == value) return;
+            _isAvailabilityExpanded = value;
+            OnPropertyChanged();
+        }
+    }
 
     private bool _isDescriptionExpanded;
     public bool IsDescriptionExpanded
@@ -98,6 +117,7 @@ public partial class AbilityDetailCardView : ContentView
             OnPropertyChanged(nameof(HasPreReqs));
             OnPropertyChanged(nameof(HasNotesSection));
         };
+        AsPerEntries.CollectionChanged += (_, __) => OnPropertyChanged(nameof(HasAsPer));
     }
 
     private static void OnAbilityChanged(BindableObject bindable, object oldValue, object newValue)
@@ -111,9 +131,11 @@ public partial class AbilityDetailCardView : ContentView
     private void HandleAbilityChanged()
     {
         IsDescriptionExpanded = false;
+        IsAvailabilityExpanded = false;
         RaiseComputedProperties();
         ScheduleExpandabilityRefresh();
         _ = RebuildPreReqEntriesAsync();
+        _ = RebuildAsPerEntriesAsync();
     }
 
     private void RaiseComputedProperties()
@@ -122,6 +144,11 @@ public partial class AbilityDetailCardView : ContentView
         OnPropertyChanged(nameof(ShowNonStandardBadge));
         OnPropertyChanged(nameof(TableDisplayText));
         OnPropertyChanged(nameof(AvailabilityText));
+        OnPropertyChanged(nameof(AvailabilityEntries));
+        OnPropertyChanged(nameof(AvailabilitySummaryText));
+        OnPropertyChanged(nameof(CanExpandAvailability));
+        OnPropertyChanged(nameof(TableValueText));
+        OnPropertyChanged(nameof(CostValueText));
         OnPropertyChanged(nameof(CostDisplayText));
         OnPropertyChanged(nameof(ShowCostText));
         OnPropertyChanged(nameof(ShowInfiniteCost));
@@ -174,6 +201,12 @@ public partial class AbilityDetailCardView : ContentView
         OnDescriptionToggleClicked(sender, EventArgs.Empty);
     }
 
+    private void OnAvailabilityTapped(object sender, TappedEventArgs e)
+    {
+        if (CanExpandAvailability)
+            IsAvailabilityExpanded = !IsAvailabilityExpanded;
+    }
+
     private async void OnPreReqInfoClicked(object sender, EventArgs e)
     {
         if (sender is not Button button)
@@ -186,6 +219,17 @@ public partial class AbilityDetailCardView : ContentView
             return;
 
         await Navigation.PushAsync(new AbilityCard(entry.Ability));
+    }
+
+    private void OnAsPerInfoClicked(object sender, EventArgs e) => OnPreReqInfoClicked(sender, e);
+
+    private async Task RebuildAsPerEntriesAsync()
+    {
+        var names = Ability?.AsPer ?? Array.Empty<string>();
+        var lookup = await AbilityDetailsLookupService.GetLookupAsync();
+        AsPerEntries.Clear();
+        foreach (var name in names.Select(x => (x ?? string.Empty).Trim()).Where(x => x.Length > 0).Distinct(StringComparer.OrdinalIgnoreCase))
+            AsPerEntries.Add(new AbilityPreReqEntryVm(name, AbilityDetailsLookupService.FindByIndex(lookup, name)));
     }
 
     private void ScheduleExpandabilityRefresh()
@@ -293,6 +337,44 @@ public partial class AbilityDetailCardView : ContentView
 
         return $"Available: {string.Join(", ", entries)}";
     }
+
+    private static IReadOnlyList<string> BuildAvailabilityChips(EvolutionService.AbilityResult? ability)
+    {
+        if (ability?.AvailabilityRules is { Count: > 0 } rules)
+        {
+            return rules.SelectMany(rule => (rule.Value.Count == 0 ? new[] { "Any" }.AsEnumerable() : rule.Value)
+                    .Select(value => FormatAvailabilityRule(rule.Field, rule.Operator, value)))
+                .Where(value => value.Length > 0)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+
+        var entries = ParseAvailabilityEntries(ability?.Available);
+        return entries.Count > 0 ? entries : new[] { "Unspecified" };
+    }
+
+    private static string FormatAvailabilityRule(string field, Models.Rules.RuleComparisonOp op, string rawValue)
+    {
+        var value = string.Join(" ", (rawValue ?? string.Empty).Split(' ', StringSplitOptions.RemoveEmptyEntries)
+            .Where(token => token.Any(char.IsLetterOrDigit))).Trim();
+        var core = field.Trim().ToLowerInvariant() switch
+        {
+            "bracket" => $"{value} bracket",
+            "originalclass" => $"1st Class {value}",
+            "currentclass" => $"Current Class {value}",
+            "race" => $"{value} race",
+            _ => $"{value} {SplitPascalCase(field)}".Trim()
+        };
+        return op switch
+        {
+            Models.Rules.RuleComparisonOp.NotIn => $"Not {core}",
+            Models.Rules.RuleComparisonOp.Only => $"Only {core}",
+            _ => core
+        };
+    }
+
+    private static string SplitPascalCase(string value) =>
+        System.Text.RegularExpressions.Regex.Replace(value ?? string.Empty, "(?<!^)([A-Z])", " $1").ToLowerInvariant();
 
     private static List<string> ParseAvailabilityEntries(string? rawAvailability)
     {

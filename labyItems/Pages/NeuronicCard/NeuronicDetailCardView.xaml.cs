@@ -21,6 +21,10 @@ public partial class NeuronicDetailCardView : ContentView
 
     public string NeuronicName => ReadOrFallback(Neuronic?.name, "Unnamed Neuronic");
     public string PowerDisplayText => $"{Math.Max(0, Neuronic?.power ?? 0)} TBLP";
+    public string RangeDisplayText => ReadOrFallback(Neuronic?.range, "—");
+    public string DurationDisplayText => ReadOrFallback(Neuronic?.duration, "—");
+    public string ImmunityDisplayText => (Neuronic?.immunities ?? string.Empty).Trim();
+    public bool HasImmunity => ImmunityDisplayText.Length > 0;
     public string TypeDisplayText => Neuronic?.Type switch
     {
         NeuroOptionType.Active => "Active",
@@ -31,6 +35,7 @@ public partial class NeuronicDetailCardView : ContentView
     public string DescriptionText => ReadOrFallback(Neuronic?.description, "No description provided.");
     public string AsPerText => (Neuronic?.asPer ?? string.Empty).Trim();
     public bool HasAsPer => AsPerText.Length > 0;
+    public ObservableCollection<NeuronicAsPerEntryVm> AsPerEntries { get; } = new();
     public string NotesText => (Neuronic?.notes ?? string.Empty).Trim();
     public bool HasNotes => NotesText.Length > 0;
     public string TodoText => (Neuronic?.todo ?? string.Empty).Trim();
@@ -53,6 +58,7 @@ public partial class NeuronicDetailCardView : ContentView
 
         view.RebuildMetaChips();
         view.RaiseComputedProperties();
+        _ = view.RebuildAsPerEntriesAsync();
     }
 
     private void RebuildMetaChips()
@@ -79,6 +85,10 @@ public partial class NeuronicDetailCardView : ContentView
     {
         OnPropertyChanged(nameof(NeuronicName));
         OnPropertyChanged(nameof(PowerDisplayText));
+        OnPropertyChanged(nameof(RangeDisplayText));
+        OnPropertyChanged(nameof(DurationDisplayText));
+        OnPropertyChanged(nameof(ImmunityDisplayText));
+        OnPropertyChanged(nameof(HasImmunity));
         OnPropertyChanged(nameof(TypeDisplayText));
         OnPropertyChanged(nameof(DescriptionText));
         OnPropertyChanged(nameof(AsPerText));
@@ -90,6 +100,29 @@ public partial class NeuronicDetailCardView : ContentView
         OnPropertyChanged(nameof(DamageSummaryText));
         OnPropertyChanged(nameof(HasDamageSummary));
         OnPropertyChanged(nameof(HasMetaChips));
+    }
+
+    private async Task RebuildAsPerEntriesAsync()
+    {
+        AsPerEntries.Clear();
+        var raw = AsPerText;
+        if (raw.Length == 0) return;
+        var kind = raw.StartsWith("$spell.", StringComparison.OrdinalIgnoreCase) ? "spell" : "neuronic";
+        var name = raw.Replace("$spell.", string.Empty, StringComparison.OrdinalIgnoreCase)
+            .Replace("$neuro.", string.Empty, StringComparison.OrdinalIgnoreCase).Trim();
+        object? target = kind == "spell"
+            ? (await SpellService.SearchAsync(name)).FirstOrDefault(x => x.name.Equals(name, StringComparison.OrdinalIgnoreCase))
+            : (await NeuronicService.SearchAsync(name)).FirstOrDefault(x => x.name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        AsPerEntries.Add(new NeuronicAsPerEntryVm(name, kind, target));
+    }
+
+    private async void OnAsPerInfoClicked(object sender, EventArgs e)
+    {
+        if (sender is not Button { CommandParameter: NeuronicAsPerEntryVm entry } || entry.Target == null || Navigation == null) return;
+        if (entry.Target is SpellService.SpellRaw spell)
+            await Navigation.PushAsync(new global::labyItems.Pages.SpellCard.SpellCard(spell));
+        else if (entry.Target is NeuronicService.NeuronicRaw neuronic)
+            await Navigation.PushAsync(new NeuronicCard(neuronic));
     }
 
     private static string BuildDamageSummary(NeuronicService.NeuronicRaw? neuronic)
@@ -154,3 +187,5 @@ public sealed class NeuronicMetaChipVm
         Text = text;
     }
 }
+
+public sealed record NeuronicAsPerEntryVm(string Name, string Kind, object? Target);

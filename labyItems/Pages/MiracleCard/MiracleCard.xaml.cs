@@ -13,6 +13,7 @@ public partial class MiracleCard : ContentPage
         : this()
     {
         MiracleDetails.Miracle = miracle;
-        Title = string.IsNullOrWhiteSpace(miracle?.name) ? "Miracle" : miracle.name;
+        Title = "Words From Above";
+        DetailHeader.HeaderText = Title;
     }
 }

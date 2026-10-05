@@ -107,6 +107,16 @@ public partial class ChipGroup : ContentView
         set => SetValue(SelectedItemProperty, value);
     }
 
+    public static readonly BindableProperty IsReadOnlyProperty = BindableProperty.Create(
+        nameof(IsReadOnly), typeof(bool), typeof(ChipGroup), false,
+        propertyChanged: (bindable, _, _) => ((ChipGroup)bindable).Rebuild());
+
+    public bool IsReadOnly
+    {
+        get => (bool)GetValue(IsReadOnlyProperty);
+        set => SetValue(IsReadOnlyProperty, value);
+    }
+
     private static void OnSelectedItemChanged(
         BindableObject bindable,
         object oldValue,
@@ -170,6 +180,9 @@ public partial class ChipGroup : ContentView
         var tap = new TapGestureRecognizer();
         tap.Tapped += (_, __) =>
         {
+            if (IsReadOnly)
+                return;
+
             if (IsDisabled(text))
                 return;
 

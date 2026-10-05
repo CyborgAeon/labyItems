@@ -422,8 +422,26 @@
                                 <DataTemplate>
                                     <Frame Style="{StaticResource SectionCardFrameStyle}">
                                         <VerticalStackLayout Spacing="8">
-                                            <Label Text="{Binding Title}"
-                                                   FontAttributes="Bold" />
+                                            <Grid ColumnDefinitions="*,Auto"
+                                                  ColumnSpacing="8">
+                                                <Label Text="{Binding Title}"
+                                                       FontAttributes="Bold"
+                                                       VerticalTextAlignment="Center" />
+                                                <Button Grid.Column="1"
+                                                        Text="{x:Static helpers:FontAwesomeGlyphs.Edit}"
+                                                        FontFamily="FASolid"
+                                                        FontSize="14"
+                                                        Padding="0"
+                                                        BackgroundColor="Transparent"
+                                                        TextColor="{StaticResource SubtleTextColor}"
+                                                        HeightRequest="24"
+                                                        WidthRequest="24"
+                                                        MinimumHeightRequest="0"
+                                                        MinimumWidthRequest="0"
+                                                        AutomationProperties.Name="Edit spells"
+                                                        Clicked="OnEditAdvancementTabClicked"
+                                                        CommandParameter="spells" />
+                                            </Grid>
                                             <Label Text="{Binding Subtitle}"
                                                    FontSize="12"
                                                    TextColor="{StaticResource MutedTextColor}"
@@ -481,8 +499,26 @@
                                 <DataTemplate>
                                     <Frame Style="{StaticResource SectionCardFrameStyle}">
                                         <VerticalStackLayout Spacing="8">
-                                            <Label Text="{Binding Title}"
-                                                   FontAttributes="Bold" />
+                                            <Grid ColumnDefinitions="*,Auto"
+                                                  ColumnSpacing="8">
+                                                <Label Text="{Binding Title}"
+                                                       FontAttributes="Bold"
+                                                       VerticalTextAlignment="Center" />
+                                                <Button Grid.Column="1"
+                                                        Text="{x:Static helpers:FontAwesomeGlyphs.Edit}"
+                                                        FontFamily="FASolid"
+                                                        FontSize="14"
+                                                        Padding="0"
+                                                        BackgroundColor="Transparent"
+                                                        TextColor="{StaticResource SubtleTextColor}"
+                                                        HeightRequest="24"
+                                                        WidthRequest="24"
+                                                        MinimumHeightRequest="0"
+                                                        MinimumWidthRequest="0"
+                                                        AutomationProperties.Name="Edit miracles"
+                                                        Clicked="OnEditAdvancementTabClicked"
+                                                        CommandParameter="miracles" />
+                                            </Grid>
                                             <Label Text="{Binding Subtitle}"
                                                    FontSize="12"
                                                    TextColor="{StaticResource MutedTextColor}"
@@ -540,8 +576,26 @@
                                 <DataTemplate>
                                     <Frame Style="{StaticResource SectionCardFrameStyle}">
                                         <VerticalStackLayout Spacing="8">
-                                            <Label Text="{Binding Title}"
-                                                   FontAttributes="Bold" />
+                                            <Grid ColumnDefinitions="*,Auto"
+                                                  ColumnSpacing="8">
+                                                <Label Text="{Binding Title}"
+                                                       FontAttributes="Bold"
+                                                       VerticalTextAlignment="Center" />
+                                                <Button Grid.Column="1"
+                                                        Text="{x:Static helpers:FontAwesomeGlyphs.Edit}"
+                                                        FontFamily="FASolid"
+                                                        FontSize="14"
+                                                        Padding="0"
+                                                        BackgroundColor="Transparent"
+                                                        TextColor="{StaticResource SubtleTextColor}"
+                                                        HeightRequest="24"
+                                                        WidthRequest="24"
+                                                        MinimumHeightRequest="0"
+                                                        MinimumWidthRequest="0"
+                                                        AutomationProperties.Name="Edit evocations"
+                                                        Clicked="OnEditAdvancementTabClicked"
+                                                        CommandParameter="evocations" />
+                                            </Grid>
                                             <Label Text="{Binding Subtitle}"
                                                    FontSize="12"
                                                    TextColor="{StaticResource MutedTextColor}"

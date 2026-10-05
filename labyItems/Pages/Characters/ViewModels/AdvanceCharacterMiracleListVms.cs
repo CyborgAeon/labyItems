@@ -38,6 +38,7 @@ public sealed class MiracleListVm : INotifyPropertyChanged
     private readonly Func<int> _getPoints;
     private readonly Action<MiracleListVm>? _onExpandRequested;
 
+    private bool _suppressChanges;
     private const int MaxListPower = 60;
     private const int MaxAdvancedPower = 10;
 
@@ -349,6 +350,42 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         ReindexEntries();
     }
 
+    public IReadOnlyList<MiracleService.MiracRaw> AllMiracles => _allMiracles;
+
+    public HashSet<string> GetAllowedAlignments(IEnumerable<MiracleListEntryDraft> entries)
+        => _domainService.GetAllowedMiracleAlignments(_getAlignment(), entries, lockTrueNeutral: true);
+
+    public string NormalizeAlignment(string? alignment)
+        => _domainService.NormalizeAlignmentToken(alignment);
+
+    public void ReplaceSelection(IEnumerable<MiracleOption> options)
+    {
+        if (!CanEdit)
+            return;
+
+        _suppressChanges = true;
+        try
+        {
+            Entries.Clear();
+            Draft.Entries.Clear();
+            foreach (var option in options)
+            {
+                var draft = new MiracleListEntryDraft();
+                Draft.Entries.Add(draft);
+                var vm = new MiracleEntryVm(draft, OnEntryChanged);
+                vm.SelectedMiracle = option;
+                Entries.Add(vm);
+            }
+        }
+        finally
+        {
+            _suppressChanges = false;
+        }
+
+        ReindexEntries();
+        OnEntryChanged();
+    }
+
     private void AddSelectedMiracle()
     {
         if (!CanAddSelected || SelectedMiracleOption == null)
@@ -385,6 +422,9 @@ public sealed class MiracleListVm : INotifyPropertyChanged
 
     private void OnEntryChanged()
     {
+        if (_suppressChanges)
+            return;
+
         UpdateFilteredOptions();
         UpdateValidation();
     }
@@ -459,7 +499,7 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         FilteredOptions = dict;
     }
 
-    private string MapSphereLabel(string raw)
+    public string MapSphereLabel(string? raw)
     {
         var cleaned = StripMajorMinorPrefix(raw);
         var key = NormalizeToken(cleaned);

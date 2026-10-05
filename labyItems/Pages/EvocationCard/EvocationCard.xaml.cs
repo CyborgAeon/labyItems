@@ -13,6 +13,7 @@ public partial class EvocationCard : ContentPage
         : this()
     {
         EvocationDetails.Evocation = evocation;
-        Title = string.IsNullOrWhiteSpace(evocation?.name) ? "Evocation" : evocation.name;
+        Title = "Druids Way";
+        DetailHeader.HeaderText = Title;
     }
 }

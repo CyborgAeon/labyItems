@@ -13,6 +13,7 @@ public partial class NeuronicCard : ContentPage
         : this()
     {
         NeuronicDetails.Neuronic = neuronic;
-        Title = string.IsNullOrWhiteSpace(neuronic?.name) ? "Neuronic" : neuronic.name;
+        Title = "Oraculum Insight";
+        DetailHeader.HeaderText = Title;
     }
 }

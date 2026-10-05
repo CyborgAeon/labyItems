@@ -66,6 +66,7 @@ public static class EvolutionService
         public IReadOnlyList<RuleClause> AvailabilityRules { get; init; } = Array.Empty<RuleClause>();
         public bool CanBuyMultiple { get; init; }
         public IReadOnlyList<string> PreReqs { get; init; } = Array.Empty<string>();
+        public IReadOnlyList<string> AsPer { get; init; } = Array.Empty<string>();
         public int? MaxAvailable { get; init; }
         public int MaxAcIncrease { get; init; }
         public IReadOnlyList<string> ChoiceSetRefs { get; init; } = Array.Empty<string>();
@@ -434,6 +435,7 @@ public static class EvolutionService
             AvailabilityRules = availability.Rules,
             CanBuyMultiple = row.can_buy_multiple != 0,
             PreReqs = ParsePreReqs(row.prereqs_json),
+            AsPer = ParseNamedStringValues(row.data_json, "asPer", "asper"),
             MaxAvailable = ParseMaxAvailable(row.data_json),
             MaxAcIncrease = ParseMaxAcIncrease(row.data_json),
             ChoiceSetRefs = ParseChoiceSetRefs(row.data_json),
@@ -988,6 +990,31 @@ public static class EvolutionService
         {
             return Array.Empty<string>();
         }
+    }
+
+    private static IReadOnlyList<string> ParseNamedStringValues(string? dataJson, params string[] propertyNames)
+    {
+        if (string.IsNullOrWhiteSpace(dataJson)) return Array.Empty<string>();
+        try
+        {
+            using var doc = JsonDocument.Parse(dataJson);
+            if (doc.RootElement.ValueKind != JsonValueKind.Object) return Array.Empty<string>();
+            foreach (var property in doc.RootElement.EnumerateObject())
+            {
+                if (!propertyNames.Any(name => property.Name.Equals(name, StringComparison.OrdinalIgnoreCase))) continue;
+                if (property.Value.ValueKind == JsonValueKind.String)
+                {
+                    var value = (property.Value.GetString() ?? string.Empty).Trim();
+                    return value.Length == 0 ? Array.Empty<string>() : new[] { value };
+                }
+                if (property.Value.ValueKind == JsonValueKind.Array)
+                    return property.Value.EnumerateArray().Where(x => x.ValueKind == JsonValueKind.String)
+                        .Select(x => (x.GetString() ?? string.Empty).Trim()).Where(x => x.Length > 0)
+                        .Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+            }
+        }
+        catch { }
+        return Array.Empty<string>();
     }
 
     private static bool ParseNonStandard(string? dataJson)
