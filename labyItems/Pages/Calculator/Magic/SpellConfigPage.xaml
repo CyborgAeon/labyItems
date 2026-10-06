@@ -32,7 +32,8 @@
                  VerticalTextAlignment="Center" />
         </Grid>
 
-        <controls:DictionarySearchBar x:Name="SpellSearch"
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+        <controls:DictionarySearchBar Grid.Column="0" x:Name="SpellSearch"
                                       x:TypeArguments="calc:SpellSearchOption"
                                       ItemsSource="{Binding Source={x:Reference RootPage}, Path=SpellLookup}"
                                       SelectedValue="{Binding Source={x:Reference RootPage}, Path=SelectedSearchSpell, Mode=TwoWay}"
@@ -42,6 +43,8 @@
                                       ClearAfterResultSelection="True"
                                       KeyboardAvoidanceEnabled="True"
                                       IsEnabled="{Binding Source={x:Reference RootPage}, Path=IsLoading, Converter={StaticResource InverseBoolConverter}}"/>
+        <Button Grid.Column="1" Text="&#xF002;" FontFamily="FASolid" FontSize="16" Padding="0" WidthRequest="44" HeightRequest="44" MinimumWidthRequest="0" MinimumHeightRequest="0" BackgroundColor="Transparent" TextColor="{StaticResource SubtleTextColor}" BorderColor="{StaticResource SurfaceBorderColor}" BorderWidth="1" CornerRadius="10" VerticalOptions="Center" Clicked="OnSearchSpellsClicked" />
+        </Grid>
 
         <Label Text="No spells selected yet."
                Opacity="0.7"

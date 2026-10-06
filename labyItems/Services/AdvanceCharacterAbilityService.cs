@@ -108,7 +108,8 @@ public sealed class AdvanceCharacterAbilityService : IAdvanceCharacterAbilitySer
                     if (ability == null)
                         continue;
 
-                    var displayName = EvolutionService.NormalizeAbilityDisplayText(ability.Index);
+                    var displayName = EvolutionService.NormalizeAbilityDisplayText(
+                        string.IsNullOrWhiteSpace(ability.DisplayName) ? ability.Index : ability.DisplayName);
                     if (!string.IsNullOrWhiteSpace(displayName))
                         _abilityDetailsByKey[AbilityDetailsLookupService.NormalizeKey(displayName)] = ability;
 
@@ -177,7 +178,8 @@ public sealed class AdvanceCharacterAbilityService : IAdvanceCharacterAbilitySer
 
         var normalized = AbilityDetailsLookupService.NormalizeKey(trimmed);
         if (_abilityDetailsByKey.TryGetValue(normalized, out var resolved))
-            return EvolutionService.NormalizeAbilityDisplayText(resolved.Index);
+            return EvolutionService.NormalizeAbilityDisplayText(
+                string.IsNullOrWhiteSpace(resolved.DisplayName) ? resolved.Index : resolved.DisplayName);
 
         return trimmed;
     }
@@ -262,7 +264,8 @@ public sealed class AdvanceCharacterAbilityService : IAdvanceCharacterAbilitySer
         if (ability == null)
             return;
 
-        var displayName = EvolutionService.NormalizeAbilityDisplayText(ability.Index);
+        var displayName = EvolutionService.NormalizeAbilityDisplayText(
+            string.IsNullOrWhiteSpace(ability.DisplayName) ? ability.Index : ability.DisplayName);
         if (!string.IsNullOrWhiteSpace(displayName))
             _abilityDetailsByKey[AbilityDetailsLookupService.NormalizeKey(displayName)] = ability;
 

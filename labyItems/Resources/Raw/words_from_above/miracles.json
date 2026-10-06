@@ -20,8 +20,15 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Heal": {
-      "amount": [[6, 6]],
-      "type": ["Missile"]
+      "amount": [
+        [
+          6,
+          6
+        ]
+      ],
+      "type": [
+        "Missile"
+      ]
     },
     "verbal": "Spirits aid me, I abjure thee to staunch this wound.",
     "gesture": "Touch injured part with open palm",
@@ -66,7 +73,9 @@
     "gesture": "Point at target",
     "duration": "15 minutes",
     "range": "20'",
-    "level": "3rd"
+    "level": "3rd",
+    "immunityName": "Befriend",
+    "immunityIndex": "Immunity to Beguile/Befriend/Spiritual Mastery"
   },
   {
     "power": 3,
@@ -79,7 +88,9 @@
     "gesture": "Touch forehead of target with both hands",
     "duration": "24 hours",
     "range": "Touch",
-    "level": "3rd"
+    "level": "3rd",
+    "immunityName": "Bless",
+    "immunityIndex": "Immunity to Bless and Curse"
   },
   {
     "power": 3,
@@ -118,7 +129,9 @@
     "gesture": "Draw line on ground – see below",
     "duration": "15 minutes",
     "range": "6' radius circle or 15' length line",
-    "level": "3rd"
+    "level": "3rd",
+    "immunityName": "Protection from Spirits",
+    "immunityIndex": "Immunity to Protection from Spirits"
   },
   {
     "power": 3,
@@ -154,9 +167,22 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Damage": {
-      "amount": [[18, 0]],
-      "type": ["Body"],
-      "ArmourApplies": [[1, 1]],
+      "DamageType": "Spiritual",
+      "amount": [
+        [
+          18,
+          0
+        ]
+      ],
+      "type": [
+        "Body"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
       "ArmourType": "SAC"
     },
     "verbal": "By all my powers, let thy spirit be smitten ......... Spirit Bolt!",
@@ -189,7 +215,9 @@
     "gesture": "Inscribe rune as below",
     "duration": "Adventure / until triggered",
     "range": "Touch / see below",
-    "level": "4th"
+    "level": "4th",
+    "immunityName": "Rune of Power",
+    "immunityIndex": "Immunity to Rune of Power"
   },
   {
     "power": 2,
@@ -264,9 +292,22 @@
     "sphere": "Minor Force",
     "isAdvanced": true,
     "Damage": {
-      "amount": [[6, 0]],
-      "type": ["Body"],
-      "ArmourApplies": [[1, 0]],
+      "DamageType": "Spiritual",
+      "amount": [
+        [
+          6,
+          0
+        ]
+      ],
+      "type": [
+        "Body"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          0
+        ]
+      ],
       "ArmourType": "SAC"
     },
     "verbal": "Spirits, smite that spirit…",
@@ -416,7 +457,9 @@
     "gesture": "As Protection From Spirits",
     "duration": "1 Hour",
     "range": "As Protection",
-    "level": "6th"
+    "level": "6th",
+    "immunityName": "Bar Spirit",
+    "immunityIndex": "Immunity to Bar Spirit"
   },
   {
     "power": 6,
@@ -506,7 +549,9 @@
     "verbal": "Spirits of evil I bid thee touch this one's limb with the weight of the world",
     "gesture": "Touch limb",
     "duration": "5 minutes",
-    "level": "7th"
+    "level": "7th",
+    "immunityName": "Wither",
+    "immunityIndex": "Immunity to Wither"
   },
   {
     "power": 8,
@@ -578,7 +623,9 @@
     "verbal": "Evil / Good spirit for thy sins I command thee die!",
     "gesture": "Point at target",
     "duration": "As Voice Of Power",
-    "level": "7th"
+    "level": "7th",
+    "immunityName": "Voice of Retribution",
+    "immunityIndex": "Immunity to Voice of Retribution"
   },
   {
     "power": 8,
@@ -624,7 +671,7 @@
     "sphere": "Major Necromancy",
     "isAdvanced": true,
     "verbal": "Spirits of Darkness hearken unto me followed by a 5 minute ritual concluding with:\nSpirits of light fly from this place, by my power thou art banished from here, disembodied spirits at my command,\naid me. I call the spirit of..... to return to this place, your time is not yet come. By my powers I bind thee to your body\nas an undead to do evil's will, return to this living realm!",
-    "gesture": "As Restore Life",
+    "gesture": "Pass hands over body in gather motion, ending in upward sweep",
     "duration": "Permanent",
     "level": "8th"
   },
@@ -651,7 +698,9 @@
     "gesture": "Open palm of empty weapon hand towards target",
     "duration": "10 seconds",
     "range": "10'",
-    "level": "1st"
+    "level": "1st",
+    "immunityName": "Halt",
+    "immunityIndex": "Immunity to Halt"
   },
   {
     "power": 1,
@@ -700,8 +749,15 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Heal": {
-      "amount": [[12, 12]],
-      "type": ["Missile"]
+      "amount": [
+        [
+          12,
+          12
+        ]
+      ],
+      "type": [
+        "Missile"
+      ]
     },
     "verbal": "Spirits aid me, I abjure thee to staunch these wounds ",
     "gesture": "Touch target with both empty hands",
@@ -768,8 +824,15 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Heal": {
-      "amount": [[36, 36]],
-      "type": ["Missile"]
+      "amount": [
+        [
+          36,
+          36
+        ]
+      ],
+      "type": [
+        "Missile"
+      ]
     },
     "verbal": "Spirits, staunch these mortal wounds and let this person be healed!",
     "gesture": "Touch head with both hands",
@@ -814,7 +877,9 @@
     "gesture": "Point at target",
     "duration": "Permanent",
     "range": "20'",
-    "level": "5th"
+    "level": "5th",
+    "immunityName": "Voice of Power",
+    "immunityIndex": "Immunity to Voice of Power"
   },
   {
     "power": 5,
@@ -875,8 +940,16 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Damage": {
-      "amount": [[60, 0]],
-      "type": ["Body"]
+      "DamageType": "Spiritual",
+      "amount": [
+        [
+          60,
+          0
+        ]
+      ],
+      "type": [
+        "Body"
+      ]
     },
     "verbal": "Great spirits, whose powers are mighty! I bind thee by the rune I now inscribe! Protect all within its\nboundaries from all who seek to gain entrance!",
     "gesture": "Draw required shape and inscribe runes",
@@ -891,9 +964,22 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Damage": {
-      "amount": [[4, 4]],
-      "type": ["Missile"],
-      "ArmourApplies": [[1, 1]],
+      "DamageType": "Spiritual",
+      "amount": [
+        [
+          4,
+          4
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
       "ArmourType": "SAC"
     },
     "verbal": "Spirit of Evil I call upon thee to inflict this minor wound",
@@ -910,9 +996,22 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Damage": {
-      "amount": [[6, 6]],
-      "type": ["Missile"],
-      "ArmourApplies": [[1, 1]],
+      "DamageType": "Spiritual",
+      "amount": [
+        [
+          6,
+          6
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
       "ArmourType": "SAC"
     },
     "verbal": "Spirit of evil I call upon thee to inflict this wound",
@@ -929,9 +1028,22 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Damage": {
-      "amount": [[12, 12]],
-      "type": ["Missile"],
-      "ArmourApplies": [[1, 1]],
+      "DamageType": "Spiritual",
+      "amount": [
+        [
+          12,
+          12
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
       "ArmourType": "SAC"
     },
     "verbal": "Spirits of evil, I call upon thee to inflict these wounds!",
@@ -951,7 +1063,9 @@
     "gesture": "Point at target",
     "duration": "24 hours / 1 hour",
     "range": "20'",
-    "level": "3rd"
+    "level": "3rd",
+    "immunityName": "Curse",
+    "immunityIndex": "Immunity to Bless and Curse"
   },
   {
     "power": 3,
@@ -1039,9 +1153,22 @@
     "sphere": "Causing",
     "isAdvanced": false,
     "Damage": {
-      "amount": [[36, 6]],
-      "type": ["Missile"],
-      "ArmourApplies": [[6, 1]],
+      "DamageType": "Spiritual",
+      "amount": [
+        [
+          36,
+          6
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "SAC"
     },
     "verbal": "Spirits of evil I call upon thee to inflict these mortal wounds and let this person die",
@@ -1073,7 +1200,9 @@
     "verbal": "Spirits of light, hear me! I abjure thee by the power of rune lore! By the power vested in me succour this\nunfortunate spirit! Help me to drive the evil from this person! Evil spirit there is no place for thee here! By my\npower and the power of these spirits I now summon, you are cast out! Evil spirit begone!",
     "gesture": "Touch target's head with both hands",
     "duration": "Instant",
-    "level": "6 Spirits Alignment: Good Sphere: Universal Range: Touch"
+    "level": "6 Spirits Alignment: Good Sphere: Universal Range: Touch",
+    "immunityName": "Spiritual Freedom",
+    "immunityIndex": "Immunity to Spiritual Freedom"
   },
   {
     "power": 6,
@@ -1109,10 +1238,17 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Heal": {
-      "amount": [[72, 72]],
-      "type": ["Worst"]
+      "amount": [
+        [
+          72,
+          72
+        ]
+      ],
+      "type": [
+        "Worst"
+      ]
     },
-    "verbal": "By the power of the spirits of light, I bid that thy life shall be as new ...",
+    "verbal": "By the power of the spirits of light, I bid that thy life shall be as new",
     "gesture": "Touch target's head with both hands",
     "duration": "Instant",
     "range": "Touch",
@@ -1644,7 +1780,9 @@
     "verbal": "Angels of truth, grant this poor corrupted undead spirit the shelter of thy wings for a while, and gentle the\nsuffering it undergoes at the hands of darkest evil!",
     "gesture": "Point both hands at target",
     "duration": "90 seconds",
-    "level": "8th"
+    "level": "8th",
+    "immunityName": "Cage of Light",
+    "immunityIndex": "Immunity to Cage of Light"
   },
   {
     "power": 6,
@@ -1680,9 +1818,22 @@
     "sphere": "Major Causing",
     "isAdvanced": true,
     "Damage": {
-      "amount": [[60, 10]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "DamageType": "Spiritual",
+      "amount": [
+        [
+          60,
+          10
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "SAC"
     },
     "verbal": "Spirits of evil I call upon thee to inflict these critical wounds, such that this spirit may suffer great torment\nand depart its mortal form...!",
@@ -1696,13 +1847,28 @@
     "name": "Cause Mortal Wounds",
     "description": "Must be table 11 to learn. inflicts 120/20 life (40 hits).",
     "alignment": "Evil",
-    "preReqs": ["Cause Critical Wounds"],
+    "preReqs": [
+      "Cause Critical Wounds"
+    ],
     "sphere": "Major Causing",
     "isAdvanced": true,
     "Damage": {
-      "amount": [[120, 20]],
-      "type": ["Missile"],
-      "ArmourApplies": [[6, 1]],
+      "DamageType": "Spiritual",
+      "amount": [
+        [
+          120,
+          20
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "SAC"
     },
     "verbal": "Spirits of Evil I call upon thee to inflict these Mortal wounds so the spirit may suffer and break. Let its life\nbe extinguished by my touch.",
@@ -1776,7 +1942,10 @@
     "name": "Communication with the Gods",
     "description": "Ask three yes/no questions of knowledgeable spirits within five minutes; silence if unknown. but answers are short phrases/sentences (≈7 relevant words); three questions in five minutes. but no limit to the number of questions asked and the spirits may respond to an individual question with more than just seven words. Questions must be asked in a measured and respectful manner, or no response will be gained. The caster may choose to have all questions be only regarding one specific area, in which case the divination lasts 5 minutes, or simply answering any questions they desire, in which case the duration is only two minutes but the miracle becomes far more versatile.",
     "alignment": "Neutral",
-    "preReqs": ["Communication", "Greater Communication"],
+    "preReqs": [
+      "Communication",
+      "Greater Communication"
+    ],
     "sphere": "Major Communication",
     "isAdvanced": true,
     "verbal": "All Seeing All K\nnowing Spirits, guardians of the unknown, knowers of knowledge, keepers of secrets, you whose vision and hearing\nare mighty grant me thy wisdom and understanding. Listen to me and converse for I have need of thy insight.",
@@ -1805,7 +1974,12 @@
     "sphere": "Minor Healing",
     "isAdvanced": true,
     "Heal": {
-      "amount": [[60, 60]]
+      "amount": [
+        [
+          60,
+          60
+        ]
+      ]
     },
     "verbal": "I call upon the spirits of light to staunch these mortal wounds and reforge this shattered body... Cure\nCritical Wounds!",
     "gesture": "Palms on target head",
@@ -1940,7 +2114,9 @@
     "verbal": "Spirits of darkness torment this body, let wounds fester and pain grow.",
     "gesture": "Both hands touch target",
     "duration": "15 minutes (hangs for 30 seconds)",
-    "level": "7th"
+    "level": "7th",
+    "immunityName": "Degeneration",
+    "immunityIndex": "Immunity to Degeneration Miracle"
   },
   {
     "power": 14,
@@ -1965,7 +2141,9 @@
     "gesture": "Point at Target",
     "duration": "5 minutes",
     "range": "20'",
-    "level": "5th"
+    "level": "5th",
+    "immunityName": "Diminish Spirit",
+    "immunityIndex": "Immunity to Diminish Spirit"
   },
   {
     "power": 14,
@@ -2099,8 +2277,16 @@
     "sphere": "Major Forces",
     "isAdvanced": true,
     "Damage": {
-      "amount": [[18, 18]],
-      "type": ["Missile"]
+      "DamageType": "Spiritual",
+      "amount": [
+        [
+          18,
+          18
+        ]
+      ],
+      "type": [
+        "Missile"
+      ]
     },
     "verbal": "By all my power let thy [location] be smitten, Focussed spirit bolt",
     "gesture": "Indicate target",
@@ -2132,7 +2318,9 @@
     "gesture": "Touch undead",
     "duration": "15 minutes",
     "range": "Touch",
-    "level": "6th"
+    "level": "6th",
+    "immunityName": "Foul Touch",
+    "immunityIndex": "Immunity to Foul Touch"
   },
   {
     "power": 5,
@@ -2183,7 +2371,9 @@
     "gesture": "Touch Undead",
     "duration": "30 seconds",
     "range": "Touch",
-    "level": "6th"
+    "level": "6th",
+    "immunityName": "Hand of Purity",
+    "immunityIndex": "Immunity to Hand of Purity/Putrefaction"
   },
   {
     "power": 3,
@@ -2233,7 +2423,9 @@
     "verbal": "Spirits of the dead cluster around (him / her) with the touch of the grave.",
     "gesture": "Point at target",
     "duration": "15 minutes",
-    "level": "8th"
+    "level": "8th",
+    "immunityName": "Incarna Mortis",
+    "immunityIndex": "Immunity to Incarna Mortis"
   },
   {
     "power": 12,
@@ -2457,8 +2649,15 @@
     "sphere": "Minor Healing",
     "isAdvanced": true,
     "Heal": {
-      "amount": [[36, 36]],
-      "type": ["Worst"]
+      "amount": [
+        [
+          36,
+          36
+        ]
+      ],
+      "type": [
+        "Worst"
+      ]
     },
     "verbal": "Spirits of Light I beseech thee, remain with this spirit until thy aid is needed!",
     "gesture": "Palms on target head",
@@ -2702,23 +2901,70 @@
     "isAdvanced": true,
     "Heal": {
       "amount": [
-        [6, 6],
-        [6, 6],
-        [6, 6],
-        [6, 6],
-        [6, 6],
-        [6, 6],
-        [6, 6],
-        [6, 6],
-        [6, 6],
-        [6, 6],
-        [6, 6],
-        [6, 6],
-        [6, 6],
-        [6, 6],
-        [6, 6]
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ]
       ],
-      "type": ["Worst"]
+      "type": [
+        "Worst"
+      ]
     },
     "verbal": "Shaehan's touch shall soothe your suffering.",
     "gesture": "Hug recipient warmly",
@@ -2785,8 +3031,15 @@
     "sphere": "Minor Healing",
     "isAdvanced": true,
     "Heal": {
-      "amount": [[24, 4]],
-      "type": ["Body"]
+      "amount": [
+        [
+          24,
+          4
+        ]
+      ],
+      "type": [
+        "Body"
+      ]
     },
     "verbal": "Spirits of light, I bid thee soothe this one's suffering",
     "gesture": "Touch targets head",
@@ -2803,7 +3056,10 @@
     "sphere": "Major Causing",
     "isAdvanced": true,
     "Damage": {
-      "type": ["Body"]
+      "DamageType": "Spiritual",
+      "type": [
+        "Body"
+      ]
     },
     "verbal": "Let the powers of evil sear your soul, and let your own strength be your undoing… Soul Lance!",
     "gesture": "Point both empty hands at target",
@@ -3348,7 +3604,9 @@
     "duration": "Permanent",
     "range": "Touch",
     "level": "4th",
-    "preReqs": ["Summon Wraith / Wight"]
+    "preReqs": [
+      "Summon Wraith / Wight"
+    ]
   },
   {
     "power": 8,
@@ -3386,7 +3644,9 @@
     "gesture": "Point at target",
     "duration": "Permanent",
     "range": "10'",
-    "level": "6th"
+    "level": "6th",
+    "immunityName": "Spiritual Mastery",
+    "immunityIndex": "Immunity to Beguile/Befriend/Spiritual Mastery"
   },
   {
     "power": 10,

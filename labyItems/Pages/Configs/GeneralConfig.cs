@@ -21,7 +21,9 @@ namespace labyItems.Pages.Configs
         public GeneralAbilitySelectionEntry(EvolutionService.AbilityResult ability)
         {
             Ability = ability ?? new EvolutionService.AbilityResult();
-            Name = (Ability.Index ?? string.Empty).Trim();
+            Name = (string.IsNullOrWhiteSpace(Ability.DisplayName)
+                ? Ability.Index
+                : Ability.DisplayName).Trim();
             Cost = Math.Max(0, Ability.Cost);
             Table = Math.Max(0, Ability.Table);
             IsImmunity = ResolveIsImmunity(Ability);
@@ -127,7 +129,9 @@ namespace labyItems.Pages.Configs
 
         private static bool ResolveIsImmunity(EvolutionService.AbilityResult ability)
         {
-            var name = (ability.Index ?? string.Empty).Trim();
+            var name = (string.IsNullOrWhiteSpace(ability.DisplayName)
+                ? ability.Index
+                : ability.DisplayName).Trim();
             return name.Contains("immunity", StringComparison.OrdinalIgnoreCase);
         }
 
@@ -965,6 +969,7 @@ namespace labyItems.Pages.Configs
             var ability = new EvolutionService.AbilityResult
             {
                 Index = picked.Index,
+                DisplayName = picked.DisplayName,
                 Description = picked.Description,
                 Cost = picked.Cost,
                 Table = picked.Table

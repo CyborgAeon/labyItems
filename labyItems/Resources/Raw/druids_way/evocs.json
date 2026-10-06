@@ -386,6 +386,7 @@
     "description": "Must be under a reasonably cloudy sky (usually outdoors). One target takes 36/6 electrical damage (12 hits to monsters).",
     "isAdvanced": false,
     "Damage": {
+      "DamageType": "Lightning",
       "amount": [
         [
           36,
@@ -500,6 +501,7 @@
     "description": "Inflicts 6 tblp and 1 point of damage to each location to 1 target. It will only harm fully Flesh and Blood (F&B) creatures thus elves and undead (for example) are immune to this evocation. Innate PAC applies to this damage (thus a target with innate PAC 1 is immune to this evocation). This evocation inflicts 2 HTK against monsters.",
     "isAdvanced": true,
     "Damage": {
+      "DamageType": "Physical",
       "amount": [
         [
           6,
@@ -684,6 +686,7 @@
     "description": "Inflicts 12TBLP & 2 Lightning damage to each location. (4HTK). Requires cloud cover as Call Lightning does",
     "isAdvanced": true,
     "Damage": {
+      "DamageType": "Lightning",
       "amount": [
         [
           12,
@@ -767,6 +770,7 @@
     "description": "This evocation inflicts 6 points of damage with each hand to a target flesh and blood creature. 2 HTK with each hand vs. monsters. Innate PAC applies to this damage (thus a target with innate PAC 6 is immune to this evocation).",
     "isAdvanced": true,
     "Damage": {
+      "DamageType": "Physical",
       "amount": [
         [
           12,
@@ -860,6 +864,7 @@
     "description": "Target Suffers 6/6 (2 HTK) physical fire to two locations chosen by the caster, Innate PAC applies at 1:1 to each strike separately, the caster must target different locations on 1 target, or may choose to separate the damage between 2 different targets, though these must then be standing within 3’ of each other.",
     "isAdvanced": true,
     "Damage": {
+      "DamageType": "Fire",
       "amount": [
         [
           12,
@@ -894,6 +899,7 @@
     "description": "This evocation inflicts 18/3 natural fire damage (6 HTK). Innate PAC applies at 6/1 per point although the damage is physical fire only.",
     "isAdvanced": true,
     "Damage": {
+      "DamageType": "Fire",
       "amount": [
         [
           18,
@@ -1258,6 +1264,7 @@
     "description": "Affects all targets within a 20’ cone suffer 6/1 (2 HTK) natural cold damage (innate PAC 1 grants immunity) and are knocked back to the edge of the effect. Immunity to Natural Cold grants complete immunity to this evocation, Immunity to Repels to the knockback. A creature that suffers baneful effects for being in a cold environment will suffer from those effects for 5 minutes after being affected by this evocation.",
     "isAdvanced": true,
     "Damage": {
+      "DamageType": "Cold",
       "amount": [
         [
           6,
@@ -1418,6 +1425,7 @@
     "description": "The caster inflicts 36/6 points of damage (12 HTK) by touch (with both hands) in a manner similar to Druidic Harm. Innate PAC applies so 1 PAC negates 6/1 damage.",
     "isAdvanced": true,
     "Damage": {
+      "DamageType": "Physical",
       "amount": [
         [
           36,
@@ -1502,10 +1510,10 @@
       "Entangle"
     ],
     "verbal": "May the trees of the forest rise up against thee",
-    "immunity": "Called Loc Shot",
     "description": "May only be cast on a target that is standing within 5’ of a tree. A large branch shoots off the tree, inflicting a 24 point quad to a location chosen by the caster (8 HTK vs. monsters). This inflicts damage in the same way as a thrown weapon, so any abilities that would apply to a mundane thrown weapon applies, as does any reductions that specifically apply vs. H class weapons (Arrow Cutting, for example). Immunity to Call Loc. Shot grants complete immunity to this evocation.",
     "isAdvanced": true,
     "Damage": {
+      "DamageType": "Physical",
       "amount": [
         [
           24,
@@ -1515,7 +1523,9 @@
       "type": [
         "Missile"
       ]
-    }
+    },
+    "immunityName": "Called Loc Shot",
+    "immunityIndex": "Immunity to Call Location Shot"
   },
   {
     "name": "Oak Nature",
@@ -1549,7 +1559,9 @@
     ],
     "verbal": "May the world grant [me/thee] the strength of the Oak",
     "description": "Target gains +1 stacking grade of STR above normal max. May only be cast upon self, or upon a recipient of the 0 EP evocation “Joining”.",
-    "isAdvanced": true
+    "isAdvanced": true,
+    "immunityName": "Petrification",
+    "immunityIndex": "Immunity to Petrification"
   },
   {
     "name": "Rising Sap",
@@ -1764,6 +1776,7 @@
     "description": "A swarm of tiny biting insects will crawl all over a Flesh & Blood target. These inflict 6/1 (2 HTK to monsters) physical damage every 15 seconds for the duration. The swarm will only remain in place as long as the caster concentrates on maintaining this evocation. Caster may move at a slow walk and talk slowly and still maintain this, but if the caster runs, fights, casts or suffers harm this evocation will end. Innate PAC 1 grants complete immunity to this.",
     "isAdvanced": true,
     "Damage": {
+      "DamageType": "Physical",
       "amount": [
         [
           12,
@@ -1860,6 +1873,7 @@
     ],
     "isAdvanced": true,
     "Damage": {
+      "DamageType": "Physical",
       "amount": [
         [
           12,
@@ -1904,7 +1918,14 @@
       ],
       "type": [
         "Missile"
-      ]
+      ],
+        "ArmourApplies": [
+        [
+          2,
+          2
+        ]
+      ],
+      "ArmourType": "InnatePac"
     }
   },
   {
@@ -2019,7 +2040,9 @@
       "Druidic Harm",
       "Lesser Druidic Harm"
     ],
-    "isAdvanced": true
+    "isAdvanced": true,
+    "immunityName": "Wither",
+    "immunityIndex": "Immunity to Wither"
   },
   {
     "name": "Breath of Life",

@@ -248,7 +248,8 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
                 continue;
 
             var abilityKey = BuildAbilityKey(ability);
-            var displayName = EvolutionService.NormalizeAbilityDisplayText(ability.Index);
+            var displayName = EvolutionService.NormalizeAbilityDisplayText(
+                string.IsNullOrWhiteSpace(ability.DisplayName) ? ability.Index : ability.DisplayName);
             if (string.IsNullOrWhiteSpace(displayName))
                 displayName = abilityKey;
             if (string.IsNullOrWhiteSpace(displayName))
@@ -687,7 +688,9 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
         if (sourceCompare != 0)
             return sourceCompare;
 
-        return string.Compare(left.Index, right.Index, StringComparison.OrdinalIgnoreCase);
+        var leftName = string.IsNullOrWhiteSpace(left.DisplayName) ? left.Index : left.DisplayName;
+        var rightName = string.IsNullOrWhiteSpace(right.DisplayName) ? right.Index : right.DisplayName;
+        return string.Compare(leftName, rightName, StringComparison.OrdinalIgnoreCase);
     }
 
     private static int CompareSourceBooks(string? left, string? right)
@@ -832,6 +835,7 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
             .FirstOrDefault(ability =>
                 string.Equals(ability.AbilityRef, normalized, StringComparison.OrdinalIgnoreCase)
                 || string.Equals(ability.Index, normalized, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(ability.DisplayName, normalized, StringComparison.OrdinalIgnoreCase)
                 || string.Equals(AbilityKey.BuildEvolutionFallback(ability), normalized, StringComparison.OrdinalIgnoreCase));
     }
 
@@ -900,7 +904,7 @@ internal sealed record CachedAbilityEntry(
     EvolutionService.AbilityResult Ability,
     string SourceBook)
 {
-    public string Name => Ability.Index;
+    public string Name => string.IsNullOrWhiteSpace(Ability.DisplayName) ? Ability.Index : Ability.DisplayName;
     public int Table => Ability.Table;
 }
 
@@ -950,7 +954,7 @@ public sealed class AdvanceAbilitySearchItemVm : INotifyPropertyChanged
     }
 
     public EvolutionService.AbilityResult Ability { get; }
-    public string Name => Ability.Index;
+    public string Name => string.IsNullOrWhiteSpace(Ability.DisplayName) ? Ability.Index : Ability.DisplayName;
     public string Description => Ability.Description;
     public int Cost => Ability.Cost;
     public int Table => Ability.Table;

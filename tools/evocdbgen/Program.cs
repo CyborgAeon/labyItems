@@ -278,7 +278,7 @@ VALUES (@id, @name, @name_lower, @power, @range, @duration, @verbal, @fields_jso
         }
 
         // Import make abilities into evolution table (if present)
-        var abilitiesPath = Path.GetFullPath(Path.Combine(resourcesRoot, "makes_abilities.json"));
+        var abilitiesPath = Path.GetFullPath(Path.Combine(resourcesRoot, "Manufacturers_guide", "makes_abilities.json"));
         if (File.Exists(abilitiesPath))
         {
             var rawAbilities = JsonSerializer.Deserialize<List<AbilityRaw>>(File.ReadAllText(abilitiesPath), jsonOptions)

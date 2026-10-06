@@ -32,7 +32,7 @@
         </Grid>
         <Label Text="Add 1st-6th standard spell"
             FontAttributes="Bold"/>
-        <Grid ColumnDefinitions="*"
+        <Grid ColumnDefinitions="*,Auto"
             ColumnSpacing="12">
           <controls:DictionarySearchBar Grid.Column="0"
               x:Name="SpellSearch"
@@ -43,6 +43,7 @@
               ResultSelectedCommand="{Binding AddSelectedSpellCommand}"
               KeepFocusOnResultSelection="True"
               ClearAfterResultSelection="True"/>
+          <Button Grid.Column="1" Text="&#xF002;" FontFamily="FASolid" FontSize="16" Padding="0" WidthRequest="44" HeightRequest="44" MinimumWidthRequest="0" MinimumHeightRequest="0" BackgroundColor="Transparent" TextColor="{StaticResource SubtleTextColor}" BorderColor="{StaticResource SurfaceBorderColor}" BorderWidth="1" CornerRadius="10" VerticalOptions="Center" Command="{Binding OpenSpellSearchCommand}"/>
         </Grid>
         <controls:ConfigSelectionList ItemsSource="{Binding SpellSelections}"
                                       IsVisible="{Binding HasSpellSelections}"
@@ -53,7 +54,7 @@
         <!-- Miracles -->
         <Label Text="Add 1st-5th standard miracle"
             FontAttributes="Bold"/>
-        <Grid ColumnDefinitions="*"
+        <Grid ColumnDefinitions="*,Auto"
             ColumnSpacing="12">
           <controls:DictionarySearchBar Grid.Column="0"
               x:Name="MiracleSearch"
@@ -64,6 +65,7 @@
               ResultSelectedCommand="{Binding AddSelectedMiracleCommand}"
               KeepFocusOnResultSelection="True"
               ClearAfterResultSelection="True"/>
+          <Button Grid.Column="1" Text="&#xF002;" FontFamily="FASolid" FontSize="16" Padding="0" WidthRequest="44" HeightRequest="44" MinimumWidthRequest="0" MinimumHeightRequest="0" BackgroundColor="Transparent" TextColor="{StaticResource SubtleTextColor}" BorderColor="{StaticResource SurfaceBorderColor}" BorderWidth="1" CornerRadius="10" VerticalOptions="Center" Command="{Binding OpenMiracleSearchCommand}"/>
         </Grid>
         <controls:ConfigSelectionList ItemsSource="{Binding MiracleSelections}"
                                       IsVisible="{Binding HasMiracleSelections}"
@@ -74,7 +76,7 @@
         <!-- Evocations -->
         <Label Text="Add 0-4th standard evocation"
             FontAttributes="Bold"/>
-        <Grid ColumnDefinitions="*"
+        <Grid ColumnDefinitions="*,Auto"
             ColumnSpacing="12">
           <controls:DictionarySearchBar IsEnabled="{Binding DbEnabled}"
               Grid.Column="0"
@@ -86,6 +88,7 @@
               ResultSelectedCommand="{Binding AddSelectedEvocationCommand}"
               KeepFocusOnResultSelection="True"
               ClearAfterResultSelection="True"/>
+          <Button Grid.Column="1" Text="&#xF002;" FontFamily="FASolid" FontSize="16" Padding="0" WidthRequest="44" HeightRequest="44" MinimumWidthRequest="0" MinimumHeightRequest="0" BackgroundColor="Transparent" TextColor="{StaticResource SubtleTextColor}" BorderColor="{StaticResource SurfaceBorderColor}" BorderWidth="1" CornerRadius="10" VerticalOptions="Center" Command="{Binding OpenEvocationSearchCommand}"/>
         </Grid>
         <controls:ConfigSelectionList ItemsSource="{Binding EvocationSelections}"
                                       IsVisible="{Binding HasEvocationSelections}"
@@ -95,7 +98,7 @@
 
         <Label Text="Add neuronic ability"
             FontAttributes="Bold"/>
-        <Grid ColumnDefinitions="*"
+        <Grid ColumnDefinitions="*,Auto"
             ColumnSpacing="12">
           <controls:DictionarySearchBar Grid.Column="0"
               x:Name="NeuroSearch"
@@ -106,6 +109,7 @@
               ResultSelectedCommand="{Binding AddSelectedNeuroCommand}"
               KeepFocusOnResultSelection="True"
               ClearAfterResultSelection="True"/>
+          <Button Grid.Column="1" Text="&#xF002;" FontFamily="FASolid" FontSize="16" Padding="0" WidthRequest="44" HeightRequest="44" MinimumWidthRequest="0" MinimumHeightRequest="0" BackgroundColor="Transparent" TextColor="{StaticResource SubtleTextColor}" BorderColor="{StaticResource SurfaceBorderColor}" BorderWidth="1" CornerRadius="10" VerticalOptions="Center" Command="{Binding OpenNeuroSearchCommand}"/>
         </Grid>
         <controls:ConfigSelectionList ItemsSource="{Binding NeuroSelections}"
                                       IsVisible="{Binding HasNeuroSelections}"

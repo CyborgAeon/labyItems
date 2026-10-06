@@ -396,6 +396,92 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     public ICommand SelectRaceFilterCommand { get; }
     public ICommand ToggleClassFilterChipCommand { get; }
 
+    private readonly HashSet<string> _pendingClassFilterKeys = new(StringComparer.OrdinalIgnoreCase);
+    private string _pendingRaceFilter = "All";
+    private bool _isClassFilterModalOpen;
+    private bool _isRaceFilterModalOpen;
+
+    public ObservableCollection<ClassFilterChipVm> ClassFilterModalChips { get; } = new();
+    public ObservableCollection<RaceFilterChipVm> RaceFilterModalChips { get; } = new();
+
+    public bool IsClassFilterModalOpen
+    {
+        get => _isClassFilterModalOpen;
+        private set => Set(ref _isClassFilterModalOpen, value);
+    }
+
+    public bool IsRaceFilterModalOpen
+    {
+        get => _isRaceFilterModalOpen;
+        private set => Set(ref _isRaceFilterModalOpen, value);
+    }
+
+    public ICommand OpenClassFiltersCommand => new Command(() =>
+    {
+        _pendingClassFilterKeys.Clear();
+        _pendingClassFilterKeys.UnionWith(_selectedClassFilterKeys);
+        ClassFilterModalChips.Clear();
+        foreach (var chip in ClassFilterChips)
+            ClassFilterModalChips.Add(new ClassFilterChipVm(chip.Key, chip.Label, _pendingClassFilterKeys.Contains(chip.Key)));
+        IsClassFilterModalOpen = true;
+    });
+
+    public ICommand CancelClassFiltersCommand => new Command(() => IsClassFilterModalOpen = false);
+
+    public ICommand TogglePendingClassFilterCommand => new Command<ClassFilterChipVm>(chip =>
+    {
+        if (chip == null)
+            return;
+
+        if (!_pendingClassFilterKeys.Add(chip.Key))
+            _pendingClassFilterKeys.Remove(chip.Key);
+
+        chip.IsSelected = _pendingClassFilterKeys.Contains(chip.Key);
+    });
+
+    public ICommand ApplyClassFiltersCommand => new Command(() =>
+    {
+        _selectedClassFilterKeys.Clear();
+        _selectedClassFilterKeys.UnionWith(_pendingClassFilterKeys);
+        foreach (var chip in ClassFilterChips)
+            chip.IsSelected = _selectedClassFilterKeys.Contains(chip.Key);
+
+        IsClassFilterModalOpen = false;
+        RefilterClasses();
+    });
+
+    public ICommand OpenRaceFiltersCommand => new Command(() =>
+    {
+        _pendingRaceFilter = string.IsNullOrWhiteSpace(SelectedRaceFilter) ? "All" : SelectedRaceFilter!;
+        RaceFilterModalChips.Clear();
+        foreach (var chip in RaceFilterChips)
+        {
+            RaceFilterModalChips.Add(new RaceFilterChipVm(
+                chip.Label,
+                string.Equals(chip.Label, _pendingRaceFilter, StringComparison.OrdinalIgnoreCase)));
+        }
+
+        IsRaceFilterModalOpen = true;
+    });
+
+    public ICommand CancelRaceFiltersCommand => new Command(() => IsRaceFilterModalOpen = false);
+
+    public ICommand TogglePendingRaceFilterCommand => new Command<RaceFilterChipVm>(chip =>
+    {
+        if (chip == null)
+            return;
+
+        _pendingRaceFilter = string.IsNullOrWhiteSpace(chip.Label) ? "All" : chip.Label;
+        foreach (var item in RaceFilterModalChips)
+            item.IsSelected = string.Equals(item.Label, _pendingRaceFilter, StringComparison.OrdinalIgnoreCase);
+    });
+
+    public ICommand ApplyRaceFiltersCommand => new Command(() =>
+    {
+        IsRaceFilterModalOpen = false;
+        SelectedRaceFilter = _pendingRaceFilter;
+    });
+
     private string _classSearchText = "";
     public string ClassSearchText
     {

@@ -23,6 +23,8 @@ public static class SpellService
 {
     public class SpellDamageRaw
     {
+        [JsonConverter(typeof(SingleOrArrayDamageTypeConverter))]
+        public List<DamageTypeEnum>? DamageType { get; set; }
         [JsonConverter(typeof(IntArrayListConverter))]
         public List<int[]>? amount { get; set; }
         public List<string>? type { get; set; }
@@ -41,6 +43,13 @@ public static class SpellService
         public string duration { get; set; } = string.Empty;
         public string gesture { get; set; } = string.Empty;
         public string immunities { get; set; } = string.Empty;
+        public string immunity { get; set; } = string.Empty;
+        [JsonPropertyName("Immunity")]
+        public string ImmunityCompat { get; set; } = string.Empty;
+        [JsonConverter(typeof(SingleOrArrayStringListConverter))]
+        public List<string> immunityName { get; set; } = new();
+        [JsonConverter(typeof(SingleOrArrayStringListConverter))]
+        public List<string> immunityIndex { get; set; } = new();
         public string verbal { get; set; } = string.Empty;
         public string description { get; set; } = string.Empty;
         public string notes { get; set; } = string.Empty;
@@ -69,6 +78,9 @@ public static class SpellService
 
         public List<string> GetDamageTypes()
             => Damage?.type is { Count: > 0 } nested ? nested : (damType ?? new List<string>());
+
+        public List<DamageTypeEnum> GetDamageCategories()
+            => Damage?.DamageType ?? new List<DamageTypeEnum>();
 
         public List<int[]> GetArmourApplies()
             => Damage?.ArmourApplies is { Count: > 0 } nested ? nested : (MACApplies ?? new List<int[]>());
@@ -276,6 +288,11 @@ public static class SpellService
         raw.verbal = raw.verbal ?? string.Empty;
         raw.description = raw.description ?? string.Empty;
         raw.notes = raw.notes ?? string.Empty;
+        raw.immunities ??= string.Empty;
+        raw.immunity ??= string.Empty;
+        raw.ImmunityCompat ??= string.Empty;
+        raw.immunityName ??= new List<string>();
+        raw.immunityIndex ??= new List<string>();
         raw.damType ??= new List<string>();
         raw.PACDam ??= new List<int>();
         raw.legacyDamage ??= new List<int[]>();
@@ -288,6 +305,7 @@ public static class SpellService
         if (raw.Damage != null)
         {
             raw.Damage.amount ??= new List<int[]>();
+            raw.Damage.DamageType ??= new List<DamageTypeEnum>();
             raw.Damage.type ??= new List<string>();
             raw.Damage.ArmourApplies ??= new List<int[]>();
             raw.Damage.PACDam ??= new List<int>();

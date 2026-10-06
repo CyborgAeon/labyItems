@@ -21,6 +21,7 @@ public partial class AbilityCard : ContentPage
         : this(new EvolutionService.AbilityResult
         {
             Index = ability.name ?? string.Empty,
+            DisplayName = ability.name ?? string.Empty,
             Description = ability.description ?? string.Empty,
             Cost = ability.cost,
             Table = ability.table,

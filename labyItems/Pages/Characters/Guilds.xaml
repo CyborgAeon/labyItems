@@ -7,11 +7,13 @@
     xmlns:controls="clr-namespace:labyItems.Controls"
     xmlns:local="clr-namespace:labyItems.Pages.Characters">
 
+    <Grid>
     <Grid RowDefinitions="Auto,Auto,Auto,*"
           Padding="16"
           RowSpacing="10">
 
         <FlexLayout Grid.Row="0"
+                    IsVisible="{Binding Source={x:Reference Root}, Path=ShowSelectedChips}"
                     Direction="Row"
                     Wrap="Wrap"
                     AlignItems="Center"
@@ -38,50 +40,53 @@
         </FlexLayout>
 
         <Grid Grid.Row="1"
-              ColumnDefinitions="Auto,*"
+              ColumnDefinitions="Auto,*,Auto"
               ColumnSpacing="8">
                 <ContentView x:Name="HeaderLeadingHost"
                              Grid.Column="0" />
-                <Grid Grid.Column="1">
-                    <Entry Placeholder="Search guilds..."
-                           ClearButtonVisibility="WhileEditing"
-                           Text="{Binding SearchText}"/>
-                    <ActivityIndicator IsRunning="{Binding IsSearchInProgress}"
-                                       IsVisible="{Binding IsSearchInProgress}"
-                                       WidthRequest="18"
-                                       HeightRequest="18"
-                                       HorizontalOptions="End"
-                                       VerticalOptions="Center"
-                                       Margin="0,0,12,0"
-                                       InputTransparent="True"/>
-                </Grid>
+                <Border Grid.Column="1"
+                        Stroke="{StaticResource SurfaceBorderColor}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 10"
+                        BackgroundColor="#F9FAFB"
+                        Padding="8,4"
+                        VerticalOptions="Center">
+                    <Grid ColumnDefinitions="*,Auto"
+                          ColumnSpacing="6">
+                        <Entry Placeholder="Search guilds..."
+                               ClearButtonVisibility="WhileEditing"
+                               Text="{Binding SearchText}"/>
+                        <Button Grid.Column="1"
+                                Text="&#xF0B0;"
+                                FontFamily="FASolid"
+                                FontSize="13"
+                                Padding="0"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource SubtleTextColor}"
+                                HeightRequest="24"
+                                WidthRequest="24"
+                                MinimumHeightRequest="0"
+                                MinimumWidthRequest="0"
+                                VerticalOptions="Center"
+                                IsVisible="{Binding Source={x:Reference Root}, Path=UseTypePills}"
+                                Command="{Binding OpenFiltersCommand}"/>
+                        <ActivityIndicator IsRunning="{Binding IsSearchInProgress}"
+                                           IsVisible="{Binding IsSearchInProgress}"
+                                           WidthRequest="18"
+                                           HeightRequest="18"
+                                           HorizontalOptions="End"
+                                           VerticalOptions="Center"
+                                           Margin="0,0,36,0"
+                                           InputTransparent="True"/>
+                    </Grid>
+                </Border>
         </Grid>
 
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2"
+              IsVisible="{Binding Source={x:Reference Root}, Path=UseTypePills, Converter={StaticResource InverseBoolConverter}}">
             <Picker Title="Type"
                     ItemsSource="{Binding TypeFilters}"
-                    SelectedItem="{Binding SelectedTypeFilter}"
-                    IsVisible="{Binding Source={x:Reference Root}, Path=UseTypePills, Converter={StaticResource InverseBoolConverter}}"/>
-
-            <CollectionView ItemsSource="{Binding TypeFilterChips}"
-                            SelectionMode="None"
-                            IsVisible="{Binding Source={x:Reference Root}, Path=UseTypePills}"
-                            ItemsLayout="HorizontalList"
-                            HeightRequest="38">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Border Style="{StaticResource SelectableFilterPillBorderStyle}"
-                                Margin="0,0,8,0">
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type local:Guilds}}, Path=BindingContext.ToggleTypeFilterChipCommand}"
-                                                      CommandParameter="{Binding .}"/>
-                            </Border.GestureRecognizers>
-                            <Label Text="{Binding Label}"
-                                   Style="{StaticResource FilterPillLabelStyle}"/>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                    SelectedItem="{Binding SelectedTypeFilter}"/>
         </Grid>
 
         <Grid Grid.Row="3">
@@ -109,5 +114,71 @@
             </Border>
         </Grid>
 
+    </Grid>
+
+    <Grid IsVisible="{Binding IsFilterModalOpen}"
+          BackgroundColor="#66000000">
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Command="{Binding CancelFiltersCommand}"/>
+        </Grid.GestureRecognizers>
+        <Border HorizontalOptions="Center"
+                VerticalOptions="Center"
+                WidthRequest="360"
+                MaximumWidthRequest="420"
+                MaximumHeightRequest="560"
+                Stroke="{StaticResource SurfaceBorderColor}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 12"
+                BackgroundColor="{StaticResource White}"
+                Padding="14">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer />
+            </Border.GestureRecognizers>
+            <Grid RowDefinitions="Auto,*,Auto"
+                  RowSpacing="10">
+                <Label Text="Filters"
+                       FontAttributes="Bold"
+                       FontSize="18"/>
+
+                <ScrollView Grid.Row="1">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Type"
+                               FontAttributes="Bold"
+                               FontSize="13"/>
+                        <FlexLayout BindableLayout.ItemsSource="{Binding FilterModalChips}"
+                                    Wrap="Wrap"
+                                    Direction="Row"
+                                    AlignItems="Start"
+                                    JustifyContent="Start">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource SelectableFilterPillBorderStyle}"
+                                            Margin="0,0,8,8">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type local:Guilds}}, Path=BindingContext.TogglePendingTypeFilterCommand}"
+                                                                  CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                        <Label Text="{Binding Label}"
+                                               Style="{StaticResource FilterPillLabelStyle}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
+                    </VerticalStackLayout>
+                </ScrollView>
+
+                <Grid Grid.Row="2"
+                      ColumnDefinitions="Auto,*,Auto"
+                      ColumnSpacing="10">
+                    <Button Grid.Column="0"
+                            Text="Cancel"
+                            Command="{Binding CancelFiltersCommand}"/>
+                    <Button Grid.Column="2"
+                            Text="Search"
+                            Command="{Binding ApplyFiltersCommand}"/>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
     </Grid>
 </ContentView>

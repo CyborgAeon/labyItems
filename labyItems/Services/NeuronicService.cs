@@ -10,6 +10,8 @@ public static class NeuronicService
 {
     public sealed class NeuronicDamageRaw
     {
+        [JsonConverter(typeof(SingleOrArrayDamageTypeConverter))]
+        public List<DamageTypeEnum>? DamageType { get; set; }
         [JsonConverter(typeof(IntArrayListConverter))]
         public List<int[]>? amount { get; set; }
 
@@ -32,6 +34,10 @@ public static class NeuronicService
         public string duration { get; set; } = string.Empty;
         [JsonConverter(typeof(SingleOrArrayStringConverter))]
         public string immunities { get; set; } = string.Empty;
+        [JsonConverter(typeof(SingleOrArrayStringListConverter))]
+        public List<string> immunityName { get; set; } = new();
+        [JsonConverter(typeof(SingleOrArrayStringListConverter))]
+        public List<string> immunityIndex { get; set; } = new();
         public string tree { get; set; } = string.Empty;
         public string notes { get; set; } = string.Empty;
         public string todo { get; set; } = string.Empty;
@@ -48,6 +54,9 @@ public static class NeuronicService
 
         public List<string> GetDamageTypes()
             => Damage?.type is { Count: > 0 } nested ? nested : new List<string>();
+
+        public List<DamageTypeEnum> GetDamageCategories()
+            => Damage?.DamageType ?? new List<DamageTypeEnum>();
 
         public List<int[]> GetArmourApplies()
             => Damage?.ArmourApplies is { Count: > 0 } nested ? nested : new List<int[]>();
@@ -173,6 +182,8 @@ public static class NeuronicService
         raw.range = raw.range ?? string.Empty;
         raw.duration = raw.duration ?? string.Empty;
         raw.immunities = raw.immunities ?? string.Empty;
+        raw.immunityName ??= new List<string>();
+        raw.immunityIndex ??= new List<string>();
         raw.tree = raw.tree ?? string.Empty;
         raw.notes = raw.notes ?? string.Empty;
         raw.todo = raw.todo ?? string.Empty;
@@ -187,6 +198,7 @@ public static class NeuronicService
             raw.Damage.amount = (raw.Damage.amount ?? new List<int[]>())
                 .Select(ToIntPairArray)
                 .ToList();
+            raw.Damage.DamageType ??= new List<DamageTypeEnum>();
             raw.Damage.type = (raw.Damage.type ?? new List<string>())
                 .Select(t => DamTypeParser.NormalizeOrFallback(t, "Missile"))
                 .ToList();

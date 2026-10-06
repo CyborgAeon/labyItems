@@ -16,6 +16,7 @@ public sealed class EvolutionServiceTests : ServiceTestBase
         var all = await EvolutionService.GetAllAbilitiesAsync();
 
         var entry = Assert.Single(all, e => e.Index == "AA1");
+        Assert.Equal("Arcane Attunement", entry.DisplayName);
         Assert.Contains("Ability:Focus", entry.PreReqs);
         Assert.Equal(2, entry.MaxAvailable);
     }

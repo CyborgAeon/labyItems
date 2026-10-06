@@ -102,6 +102,10 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     public ICommand DeleteMiracleSelectionCommand { get; }
     public ICommand DeleteEvocationSelectionCommand { get; }
     public ICommand DeleteNeuroSelectionCommand { get; }
+    public ICommand OpenSpellSearchCommand { get; }
+    public ICommand OpenMiracleSearchCommand { get; }
+    public ICommand OpenEvocationSearchCommand { get; }
+    public ICommand OpenNeuroSearchCommand { get; }
 
     public int SpellCount { get => _spellCount; set { if (SetProperty(ref _spellCount, value)) Recalculate(); } }
     private int _spellCount;
@@ -251,6 +255,10 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         DeleteMiracleSelectionCommand = new Command<object?>(OnDeleteMiracleSelectionRequested);
         DeleteEvocationSelectionCommand = new Command<object?>(OnDeleteEvocationSelectionRequested);
         DeleteNeuroSelectionCommand = new Command<object?>(OnDeleteNeuroSelectionRequested);
+        OpenSpellSearchCommand = new Command(async () => await OpenSpellSearchAsync());
+        OpenMiracleSearchCommand = new Command(async () => await OpenMiracleSearchAsync());
+        OpenEvocationSearchCommand = new Command(async () => await OpenEvocationSearchAsync());
+        OpenNeuroSearchCommand = new Command(async () => await OpenNeuroSearchAsync());
 
         SpellSelections.CollectionChanged += (_, __) =>
         {
@@ -554,6 +562,64 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
             if (ReferenceEquals(_neuronicCatalogueTask, task))
                 _neuronicCatalogueTask = null;
             throw;
+        }
+    }
+
+    private async Task OpenSpellSearchAsync()
+    {
+        try
+        {
+            var spells = (await SpellService.GetAllAsync()).Where(ShouldIncludeSpell);
+            foreach (var s in await MpCatalogSearch.PickSpellsAsync(Navigation, spells))
+                AddOrIncrementSpell(new SpellOption(s.name, s.level, s.isAdvanced ?? false));
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"Could not open spell search: {ex.Message}", "OK");
+        }
+    }
+
+    private async Task OpenMiracleSearchAsync()
+    {
+        try
+        {
+            var miracles = (await MiracleService.GetAllAsync()).Where(ShouldIncludeMiracle);
+            foreach (var m in await MpCatalogSearch.PickMiraclesAsync(Navigation, miracles))
+                AddOrIncrementMiracle(new MiracleOption(m.name, m.power, m.isAdvanced));
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"Could not open miracle search: {ex.Message}", "OK");
+        }
+    }
+
+    private async Task OpenEvocationSearchAsync()
+    {
+        try
+        {
+            var evocations = (await GetEvocationCatalogueAsync())
+                .Where(ev => IncludeAdvancedEvocations || !ev.isAdvanced)
+                .Where(ev => !MaxEvocationPower.HasValue || ev.power <= MaxEvocationPower.Value);
+            foreach (var ev in await MpCatalogSearch.PickEvocationsAsync(Navigation, evocations))
+                AddOrIncrementEvocation(new EvocationOption(ev.name, ev.power, ev.isAdvanced));
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"Could not open evocation search: {ex.Message}", "OK");
+        }
+    }
+
+    private async Task OpenNeuroSearchAsync()
+    {
+        try
+        {
+            var neuronics = (await GetNeuronicCatalogueAsync()).Where(ShouldIncludeNeuro);
+            foreach (var n in await MpCatalogSearch.PickNeuronicsAsync(Navigation, neuronics))
+                AddOrIncrementNeuro(new NeuroOption(n.name, n.power, n.Type));
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"Could not open neuronic search: {ex.Message}", "OK");
         }
     }
 

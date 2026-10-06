@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using labyItems.Controls;
 using labyItems.Helpers;
 using labyItems.Models.Enums;
 using labyItems.Services;
@@ -29,6 +30,31 @@ public partial class EvocationDetailCardView : ContentView
     public string PowerDisplayText => $"{Math.Max(0, Evocation?.power ?? 0)} EP";
     public string RangeDisplayText => ReadOrFallback(Evocation?.range, "—");
     public string DurationDisplayText => ReadOrFallback(Evocation?.duration, "—");
+    public string FieldsDisplayText => string.Join(", ", Evocation?.fields ?? new List<string>());
+    public IReadOnlyList<string> FieldEntries => Evocation?.fields is { } fields ? fields : Array.Empty<string>();
+    public bool HasFields => FieldEntries.Count > 0;
+    public string ImmunityDisplayText => ReadFirst(JoinValues(Evocation?.immunityName), Evocation?.immunity, Evocation?.ImmunityCompat, JoinValues(Evocation?.immunityIndex));
+    public bool HasImmunity => ImmunityDisplayText.Length > 0;
+    public bool HasImmunityLink => ImmunityNavigationHelper.HasIndex(Evocation?.immunityIndex);
+
+    private bool _isFieldsExpanded;
+    public bool IsFieldsExpanded
+    {
+        get => _isFieldsExpanded;
+        set { if (_isFieldsExpanded == value) return; _isFieldsExpanded = value; OnPropertyChanged(); }
+    }
+    private bool _canExpandFields;
+    public bool CanExpandFields
+    {
+        get => _canExpandFields;
+        private set
+        {
+            if (_canExpandFields == value) return;
+            _canExpandFields = value;
+            if (!value) IsFieldsExpanded = false;
+            OnPropertyChanged();
+        }
+    }
     public string FieldSummaryText => BuildFieldSummary(Evocation);
 
     public string DescriptionText => ReadOrFallback(Evocation?.description, "No description provided.");
@@ -40,6 +66,21 @@ public partial class EvocationDetailCardView : ContentView
     public string DamageSummaryText => BuildDamageSummary(Evocation);
     public bool HasHealSummary => !string.IsNullOrWhiteSpace(HealSummaryText);
     public string HealSummaryText => BuildHealSummary(Evocation);
+    public CombatQuickFactsVm DamageQuickFacts => CombatQuickFactsFormatter.Build(
+        Evocation?.Damage != null,
+        Evocation?.GetDamageAmounts() ?? new List<int[]>(),
+        Evocation?.GetDamageTypes() ?? new List<string>(),
+        Evocation?.GetDamageCategories(), Evocation?.GetArmourApplies(), Evocation?.GetArmourType());
+    public CombatQuickFactsVm HealQuickFacts => CombatQuickFactsFormatter.Build(
+        Evocation?.Heal != null || Evocation?.healing != null || Evocation?.healType != null,
+        Evocation?.GetHealAmounts() ?? new List<int[]>(),
+        Evocation?.GetHealTypes() ?? new List<string>(), isHealing: true);
+    public bool HasDamageQuickFacts => DamageQuickFacts.HasValue;
+    public bool HasHealQuickFacts => HealQuickFacts.HasValue;
+    public bool HasBothCombatQuickFacts => HasDamageQuickFacts && HasHealQuickFacts;
+
+    private static string JoinValues(IEnumerable<string>? values) =>
+        string.Join(", ", values?.Where(value => !string.IsNullOrWhiteSpace(value)).Select(value => value.Trim()) ?? Array.Empty<string>());
 
     public ObservableCollection<EvocationMetaChipVm> MetaChips { get; } = new();
     public bool HasMetaChips => MetaChips.Count > 0;
@@ -230,6 +271,8 @@ public partial class EvocationDetailCardView : ContentView
         IsPrereqExpanded = false;
         IsDamageExpanded = false;
         IsHealExpanded = false;
+        IsFieldsExpanded = false;
+        CanExpandFields = false;
 
         RebuildMetaChips();
         RaiseComputedProperties();
@@ -243,20 +286,6 @@ public partial class EvocationDetailCardView : ContentView
         AddMetaChip("\uf256", "Gesture", Evocation?.verbal);
         AddMetaChip("\uf124", "Range", Evocation?.range);
         AddMetaChip("\uf017", "Duration", Evocation?.duration);
-
-        if (Evocation?.fields != null)
-        {
-            foreach (var field in Evocation.fields
-                         .Select(f => (f ?? string.Empty).Trim())
-                         .Where(f => f.Length > 0)
-                         .Distinct(StringComparer.OrdinalIgnoreCase))
-            {
-                MetaChips.Add(new EvocationMetaChipVm("\uf02c", $"Field: {field}"));
-            }
-        }
-
-        if (Evocation?.isAdvanced == true)
-            MetaChips.Add(new EvocationMetaChipVm("\uf005", "Advanced"));
 
         if (Evocation?.nonStandard == true)
             MetaChips.Add(new EvocationMetaChipVm("\uf12a", "Non-standard"));
@@ -279,6 +308,13 @@ public partial class EvocationDetailCardView : ContentView
         OnPropertyChanged(nameof(PowerDisplayText));
         OnPropertyChanged(nameof(RangeDisplayText));
         OnPropertyChanged(nameof(DurationDisplayText));
+        OnPropertyChanged(nameof(FieldsDisplayText));
+        OnPropertyChanged(nameof(FieldEntries));
+        OnPropertyChanged(nameof(HasFields));
+        OnPropertyChanged(nameof(CanExpandFields));
+        OnPropertyChanged(nameof(ImmunityDisplayText));
+        OnPropertyChanged(nameof(HasImmunity));
+        OnPropertyChanged(nameof(HasImmunityLink));
         OnPropertyChanged(nameof(FieldSummaryText));
         OnPropertyChanged(nameof(DescriptionText));
         OnPropertyChanged(nameof(VerbalText));
@@ -289,6 +325,11 @@ public partial class EvocationDetailCardView : ContentView
         OnPropertyChanged(nameof(HasDamageSummary));
         OnPropertyChanged(nameof(HealSummaryText));
         OnPropertyChanged(nameof(HasHealSummary));
+        OnPropertyChanged(nameof(DamageQuickFacts));
+        OnPropertyChanged(nameof(HealQuickFacts));
+        OnPropertyChanged(nameof(HasDamageQuickFacts));
+        OnPropertyChanged(nameof(HasHealQuickFacts));
+        OnPropertyChanged(nameof(HasBothCombatQuickFacts));
         OnPropertyChanged(nameof(DescriptionChevronText));
         OnPropertyChanged(nameof(VerbalChevronText));
         OnPropertyChanged(nameof(PrereqChevronText));
@@ -432,6 +473,27 @@ public partial class EvocationDetailCardView : ContentView
             return;
 
         OnDescriptionToggleClicked(sender, EventArgs.Empty);
+    }
+
+    private void OnFieldsTapped(object sender, TappedEventArgs e)
+    {
+        if (CanExpandFields)
+            IsFieldsExpanded = !IsFieldsExpanded;
+    }
+
+    private async void OnImmunityTapped(object sender, TappedEventArgs e) =>
+        await ImmunityNavigationHelper.OpenFirstAvailableAsync(Navigation, Evocation?.immunityIndex);
+
+    private void OnFieldsSummarySizeChanged(object sender, EventArgs e)
+    {
+        if (sender is not Label label || label.Width <= 0 || string.IsNullOrWhiteSpace(label.Text))
+        {
+            CanExpandFields = false;
+            return;
+        }
+
+        var naturalWidth = label.Measure(double.PositiveInfinity, double.PositiveInfinity).Width;
+        CanExpandFields = naturalWidth > label.Width + 0.5;
     }
 
     private void OnVerbalSectionTapped(object sender, TappedEventArgs e)
@@ -663,6 +725,10 @@ public partial class EvocationDetailCardView : ContentView
         var text = (value ?? string.Empty).Trim();
         return text.Length == 0 ? fallback : text;
     }
+
+    private static string ReadFirst(params string?[] values) => values
+        .Select(value => (value ?? string.Empty).Trim())
+        .FirstOrDefault(value => value.Length > 0) ?? string.Empty;
 
     private static int At(int[]? arr, int index)
         => (arr != null && index >= 0 && index < arr.Length) ? arr[index] : 0;

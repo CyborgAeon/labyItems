@@ -63,7 +63,9 @@ public static class BattleboardAdvancementEffectResolver
             foreach (var keyOrName in keysOrNames)
             {
                 var details = AbilityDetailsLookupService.FindByIndex(lookup, keyOrName);
-                var resolvedDisplayName = (details?.Index ?? keyOrName).Trim();
+                var resolvedDisplayName = (details is null
+                    ? keyOrName
+                    : string.IsNullOrWhiteSpace(details.DisplayName) ? details.Index : details.DisplayName).Trim();
                 var abilityRef = (details?.AbilityRef ?? string.Empty).Trim();
 
                 var definition = AbilityDefinitionLookupService.Find(definitionLookup, abilityRef)

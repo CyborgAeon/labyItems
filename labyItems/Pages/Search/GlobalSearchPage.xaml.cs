@@ -9,14 +9,59 @@ namespace labyItems.Pages.Search;
 
 public partial class GlobalSearchPage : ContentPage
 {
-    private readonly GlobalSearchVm _vm = new();
+    private readonly GlobalSearchVm _vm;
     private bool _isNavigatingBack;
     private bool _isOpeningResult;
+    private TaskCompletionSource<IReadOnlyList<GlobalSearchResultVm>>? _pickTcs;
+    private bool _isCompleting;
 
-    public GlobalSearchPage()
+    public GlobalSearchPage() : this(null)
     {
+    }
+
+    public GlobalSearchPage(GlobalSearchPickerOptions? picker)
+    {
+        _vm = new GlobalSearchVm(picker);
         InitializeComponent();
         BindingContext = _vm;
+    }
+
+    public async Task<IReadOnlyList<GlobalSearchResultVm>> PickAsync(INavigation navigation)
+    {
+        _pickTcs = new TaskCompletionSource<IReadOnlyList<GlobalSearchResultVm>>();
+        await navigation.PushAsync(this);
+        return await _pickTcs.Task;
+    }
+
+    protected override bool OnBackButtonPressed()
+    {
+        if (!_vm.IsPickerMode)
+            return base.OnBackButtonPressed();
+
+        _ = CompletePickerAsync(save: false);
+        return true;
+    }
+
+    private async void OnPickerCancelClicked(object? sender, EventArgs e) => await CompletePickerAsync(save: false);
+
+    private async void OnPickerSaveClicked(object? sender, EventArgs e) => await CompletePickerAsync(save: true);
+
+    private async Task CompletePickerAsync(bool save)
+    {
+        if (_isCompleting)
+            return;
+
+        _isCompleting = true;
+        try
+        {
+            IReadOnlyList<GlobalSearchResultVm> picked = save ? _vm.GetPickedResults() : Array.Empty<GlobalSearchResultVm>();
+            await Navigation.PopAsync();
+            _pickTcs?.TrySetResult(picked);
+        }
+        finally
+        {
+            _isCompleting = false;
+        }
     }
 
     protected override async void OnAppearing()
@@ -48,21 +93,29 @@ public partial class GlobalSearchPage : ContentPage
         }
     }
 
-    private void OnFilterChipTapped(object? sender, TappedEventArgs e)
-    {
-        var chip = e.Parameter as GlobalSearchFilterChipVm
-            ?? (sender as BindableObject)?.BindingContext as GlobalSearchFilterChipVm;
-        if (chip == null)
-            return;
-
-        _vm.ApplyFilterChip(chip);
-    }
-
     private async void OnResultTapped(object? sender, TappedEventArgs e)
     {
-        if (e.Parameter is not GlobalSearchResultVm result
-            || !result.CanOpenDetails
-            || _isOpeningResult)
+        if (e.Parameter is not GlobalSearchResultVm result)
+            return;
+
+        if (_vm.IsPickerMode)
+        {
+            _vm.ToggleResultSelectionCommand.Execute(result);
+            return;
+        }
+
+        await OpenResultAsync(result);
+    }
+
+    private async void OnResultInfoTapped(object? sender, TappedEventArgs e)
+    {
+        if (e.Parameter is GlobalSearchResultVm result)
+            await OpenResultAsync(result);
+    }
+
+    private async Task OpenResultAsync(GlobalSearchResultVm result)
+    {
+        if (!result.CanOpenDetails || _isOpeningResult)
             return;
 
         _isOpeningResult = true;

@@ -35,6 +35,12 @@ public partial class Guilds : ContentView
         typeof(Guilds),
         false);
 
+    public static readonly BindableProperty ShowSelectedChipsProperty = BindableProperty.Create(
+        nameof(ShowSelectedChips),
+        typeof(bool),
+        typeof(Guilds),
+        true);
+
     public static readonly BindableProperty HeaderLeadingViewProperty = BindableProperty.Create(
         nameof(HeaderLeadingView),
         typeof(View),
@@ -70,6 +76,12 @@ public partial class Guilds : ContentView
     {
         get => (bool)GetValue(UseTypePillsProperty);
         set => SetValue(UseTypePillsProperty, value);
+    }
+
+    public bool ShowSelectedChips
+    {
+        get => (bool)GetValue(ShowSelectedChipsProperty);
+        set => SetValue(ShowSelectedChipsProperty, value);
     }
 
     public View? HeaderLeadingView

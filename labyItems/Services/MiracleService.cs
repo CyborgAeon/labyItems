@@ -29,6 +29,8 @@ public static class MiracleService
 {
     public sealed class MiracleDamageRaw
     {
+        [JsonConverter(typeof(SingleOrArrayDamageTypeConverter))]
+        public List<DamageTypeEnum>? DamageType { get; set; }
         [JsonConverter(typeof(IntArrayListConverter))]
         public List<int[]>? amount { get; set; }
         public List<string>? type { get; set; }
@@ -58,6 +60,13 @@ public static class MiracleService
         public string sphere { get; set; } = string.Empty;
         public bool isAdvanced { get; set; } = false;
         public string alignment { get; set; } = string.Empty;
+        public string immunity { get; set; } = string.Empty;
+        [JsonPropertyName("Immunity")]
+        public string ImmunityCompat { get; set; } = string.Empty;
+        [JsonConverter(typeof(SingleOrArrayStringListConverter))]
+        public List<string> immunityName { get; set; } = new();
+        [JsonConverter(typeof(SingleOrArrayStringListConverter))]
+        public List<string> immunityIndex { get; set; } = new();
         public bool nonStandard { get; set; }
         [JsonPropertyName("NonStandard")]
         public bool? NonStandardCompat { get; set; }
@@ -91,6 +100,9 @@ public static class MiracleService
 
         public List<string> GetDamageTypes()
             => Damage?.type is { Count: > 0 } nested ? nested : (damType ?? new List<string>());
+
+        public List<DamageTypeEnum> GetDamageCategories()
+            => Damage?.DamageType ?? new List<DamageTypeEnum>();
 
         public List<int[]> GetArmourApplies()
             => Damage?.ArmourApplies is { Count: > 0 } nested ? nested : (sacApplies ?? new List<int[]>());
@@ -190,6 +202,10 @@ public static class MiracleService
                 e.level ??= string.Empty;
                 e.sphere ??= string.Empty;
                 e.alignment ??= string.Empty;
+                e.immunity ??= string.Empty;
+                e.ImmunityCompat ??= string.Empty;
+                e.immunityName ??= new List<string>();
+                e.immunityIndex ??= new List<string>();
                 if (!e.nonStandard && e.NonStandardCompat == true)
                     e.nonStandard = true;
                 e.damage ??= new List<int[]>();
@@ -202,6 +218,7 @@ public static class MiracleService
                 if (e.Damage != null)
                 {
                     e.Damage.amount ??= new List<int[]>();
+                    e.Damage.DamageType ??= new List<DamageTypeEnum>();
                     e.Damage.type ??= new List<string>();
                     e.Damage.ArmourApplies ??= new List<int[]>();
                     e.Damage.PACDam ??= new List<int>();

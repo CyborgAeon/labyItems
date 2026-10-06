@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:labyItems.Controls"
+    xmlns:local="clr-namespace:labyItems.Pages.Characters"
     NavigationPage.HasNavigationBar="False"
     Shell.NavBarIsVisible="False"
     x:Name="Root">
@@ -34,11 +35,71 @@
                         Grid.Column="0"
                         HorizontalOptions="Start"/>
 
+                <Grid Grid.Column="1"
+                      IsVisible="{Binding IsGuildsStep}"
+                      BackgroundColor="Transparent"
+                      HorizontalOptions="Center"
+                      VerticalOptions="Center"
+                      ColumnDefinitions="Auto,Auto,Auto"
+                      ColumnSpacing="4">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GuildsVm.OpenReviewCommand}"/>
+                    </Grid.GestureRecognizers>
+                    <CheckBox Grid.Column="0"
+                              IsChecked="{Binding GuildsVm.IsPoliticalFilled, Mode=OneWay}"
+                              InputTransparent="True"/>
+                    <CheckBox Grid.Column="1"
+                              IsChecked="{Binding GuildsVm.IsProfessionalFilled, Mode=OneWay}"
+                              InputTransparent="True"/>
+                    <CheckBox Grid.Column="2"
+                              IsChecked="{Binding GuildsVm.IsSocialFilled, Mode=OneWay}"
+                              InputTransparent="True"/>
+                </Grid>
+
                 <Button Grid.Column="2"
                         Text="{Binding NextButtonText}"
                         Command="{Binding NextCommand}"
                         IsEnabled="{Binding CanGoNext}"
                         HorizontalOptions="End"/>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1"
+              Grid.RowSpan="2"
+              RowDefinitions="*,1,Auto"
+              BackgroundColor="{StaticResource White}"
+              IsVisible="{Binding GuildsVm.IsReviewOpen}">
+            <Grid RowDefinitions="Auto,*"
+                  Padding="16"
+                  RowSpacing="10">
+                <Label Text="Selected guilds"
+                       FontAttributes="Bold"
+                       FontSize="18"/>
+                <CollectionView Grid.Row="1"
+                                ItemsSource="{Binding GuildsVm.ReviewGuilds}"
+                                SelectionMode="None"
+                                ItemSizingStrategy="MeasureAllItems">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <local:GuildCardView
+                                ToggleExpandedCommand="{Binding Source={x:Reference Root}, Path=BindingContext.GuildsVm.ToggleExpandedCommand}"
+                                SelectCommand="{Binding Source={x:Reference Root}, Path=BindingContext.GuildsVm.ToggleSelectedCommand}"/>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+            <BoxView Grid.Row="1"
+                     HeightRequest="1"
+                     BackgroundColor="{StaticResource Gray200}"/>
+            <Grid Grid.Row="2"
+                  ColumnDefinitions="Auto,*,Auto"
+                  Padding="16,0,16,0">
+                <Button Grid.Column="0"
+                        Text="Cancel"
+                        Command="{Binding GuildsVm.CancelReviewCommand}"/>
+                <Button Grid.Column="2"
+                        Text="Save"
+                        Command="{Binding GuildsVm.SaveReviewCommand}"/>
             </Grid>
         </Grid>
     </Grid>

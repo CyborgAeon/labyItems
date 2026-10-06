@@ -194,14 +194,16 @@ public static class ItemAbilityLinkService
         if (context.Length == 0)
             return ability;
 
-        var index = (ability.Index ?? string.Empty).Trim();
-        if (index.Length == 0)
-            return ability with { Index = context };
+        var displayName = (string.IsNullOrWhiteSpace(ability.DisplayName)
+            ? ability.Index
+            : ability.DisplayName).Trim();
+        if (displayName.Length == 0)
+            return ability with { DisplayName = context };
 
-        if (index.Equals(context, StringComparison.OrdinalIgnoreCase))
+        if (displayName.Equals(context, StringComparison.OrdinalIgnoreCase))
             return ability;
 
-        return ability with { Index = $"{index} ({context})" };
+        return ability with { DisplayName = $"{displayName} ({context})" };
     }
 
     private static EvolutionService.AbilityResult ToAbilityResult(
@@ -220,6 +222,7 @@ public static class ItemAbilityLinkService
         return new EvolutionService.AbilityResult
         {
             Index = name,
+            DisplayName = name,
             Description = source.Effect ?? string.Empty,
             Cost = 0,
             Table = 0,

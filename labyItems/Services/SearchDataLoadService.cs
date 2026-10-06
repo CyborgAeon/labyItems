@@ -112,7 +112,9 @@ public sealed class SearchDataLoadService
 
     private static GlobalSearchResultVm CreateAbilityResult(EvolutionService.AbilityResult ability)
     {
-        var title = (ability.Index ?? string.Empty).Trim();
+        var title = string.IsNullOrWhiteSpace(ability.DisplayName)
+            ? (ability.Index ?? string.Empty).Trim()
+            : ability.DisplayName.Trim();
         return new GlobalSearchResultVm(
             Kind: GlobalSearchKind.Ability,
             Name: title,

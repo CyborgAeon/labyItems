@@ -15,6 +15,7 @@
                 MinimumWidthRequest="0"
                 Clicked="OnBackClicked"/>
         <Label Grid.Column="1"
+               x:Name="HeaderLabel"
                Text="{Binding HeaderText, Source={x:Reference Root}}"
                FontSize="18"
                FontAttributes="Bold"
@@ -22,6 +23,10 @@
                HorizontalTextAlignment="Center"
                VerticalTextAlignment="Center"
                MaxLines="1"
-               LineBreakMode="TailTruncation"/>
+               LineBreakMode="TailTruncation">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnHeaderTapped"/>
+            </Label.GestureRecognizers>
+        </Label>
     </Grid>
 </ContentView>

@@ -179,6 +179,23 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
         SelectedSearchMiracle = null;
     }
 
+    private async void OnSearchMiraclesClicked(object? sender, EventArgs e)
+    {
+        if (BindingContext is not MiracleConfig cfg)
+            return;
+
+        try
+        {
+            var picked = await MpCatalogSearch.PickMiraclesAsync(Navigation, await MiracleService.GetAllAsync());
+            foreach (var miracle in picked)
+                cfg.TryAddMiracle(miracle);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Miracle search failed", ex.Message, "OK");
+        }
+    }
+
     private async void OnEditMiracleRequested(object? parameter)
     {
         if (parameter is not MiracleSelectionEntry entry)

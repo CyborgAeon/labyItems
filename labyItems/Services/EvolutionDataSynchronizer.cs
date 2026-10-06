@@ -15,7 +15,7 @@ public interface IEvolutionDataSynchronizer
 
 public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
 {
-    private const string SeedVersion = "evolution-defaults-v3";
+    private const string SeedVersion = "evolution-defaults-v4";
     private const int NgramSize = 3;
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -60,7 +60,7 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
             return;
         }
 
-        var makesJson = await ReadAssetTextAsync("makes_abilities.json", cancellationToken).ConfigureAwait(false);
+        var makesJson = await ReadAssetTextAsync("Manufacturers_guide/makes_abilities.json", cancellationToken).ConfigureAwait(false);
         var checksum = ComputeChecksum($"{mergedJson}\n{makesJson}");
 
         var defaults = LoadDefaults(mergedJson, makesJson);
@@ -140,6 +140,10 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
             if (index.Length == 0)
                 continue;
 
+            var displayName = (seed.displayName ?? string.Empty).Trim();
+            if (displayName.Length == 0)
+                displayName = index;
+
             var description = (seed.desc ?? string.Empty).Trim();
             var table = Math.Max(0, seed.table);
             var availableRaw = SerializeAvailable(seed.available);
@@ -158,6 +162,7 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
             {
                 available = availableRaw,
                 index,
+                displayName,
                 desc = description,
                 cost = parsedCost.Cost,
                 table,
@@ -173,6 +178,7 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
             list.Add(new EvolutionDefaultAbility(
                 Id: id,
                 Index: index,
+                DisplayName: displayName,
                 Description: description,
                 Cost: parsedCost.Cost,
                 Table: table,
@@ -351,11 +357,12 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
         cmd.Transaction = tx;
         cmd.CommandText = @"
 INSERT INTO evolution
-(id, idx, idx_lower, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json, is_default, created_at, updated_at)
-VALUES ($id, $idx, $idxLower, $description, $cost, $available, $table, $canBuyMultiple, $preReqs, $data, 1, $createdAt, $updatedAt)
+(id, idx, idx_lower, display_name, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json, is_default, created_at, updated_at)
+VALUES ($id, $idx, $idxLower, $displayName, $description, $cost, $available, $table, $canBuyMultiple, $preReqs, $data, 1, $createdAt, $updatedAt)
 ON CONFLICT(id) DO UPDATE SET
     idx = excluded.idx,
     idx_lower = excluded.idx_lower,
+    display_name = excluded.display_name,
     description = excluded.description,
     cost = excluded.cost,
     available = excluded.available,
@@ -369,6 +376,7 @@ ON CONFLICT(id) DO UPDATE SET
         cmd.Parameters.AddWithValue("$id", ability.Id);
         cmd.Parameters.AddWithValue("$idx", ability.Index);
         cmd.Parameters.AddWithValue("$idxLower", ability.Index.ToLowerInvariant());
+        cmd.Parameters.AddWithValue("$displayName", ability.DisplayName);
         cmd.Parameters.AddWithValue("$description", ability.Description);
         cmd.Parameters.AddWithValue("$cost", ability.Cost);
         cmd.Parameters.AddWithValue("$available", ability.AvailableRaw);
@@ -440,11 +448,11 @@ WHERE is_default = 1
             clear.ExecuteNonQuery();
         }
 
-        var rows = new List<(string Id, string Index)>();
+        var rows = new List<(string Id, string Index, string DisplayName)>();
         using (var read = conn.CreateCommand())
         {
             read.Transaction = tx;
-            read.CommandText = "SELECT id, idx FROM evolution;";
+            read.CommandText = "SELECT id, idx, display_name FROM evolution;";
             using var reader = read.ExecuteReader();
             while (reader.Read())
             {
@@ -456,7 +464,8 @@ WHERE is_default = 1
                     continue;
 
                 var idx = reader.IsDBNull(1) ? string.Empty : (reader.GetString(1) ?? string.Empty);
-                rows.Add((id, idx));
+                var displayName = reader.IsDBNull(2) ? string.Empty : (reader.GetString(2) ?? string.Empty);
+                rows.Add((id, idx, displayName));
             }
         }
 
@@ -468,7 +477,7 @@ WHERE is_default = 1
 
         foreach (var row in rows)
         {
-            var normalized = ServiceHelper.NormalizeForNgrams(row.Index.ToLowerInvariant());
+            var normalized = ServiceHelper.NormalizeForNgrams($"{row.Index} {row.DisplayName}".ToLowerInvariant());
             if (string.IsNullOrWhiteSpace(normalized))
                 continue;
 
@@ -566,6 +575,7 @@ CREATE TABLE IF NOT EXISTS evolution (
   id TEXT PRIMARY KEY,
   idx TEXT NOT NULL,
   idx_lower TEXT,
+  display_name TEXT,
   description TEXT,
   cost INTEGER,
   available TEXT,
@@ -578,6 +588,7 @@ CREATE TABLE IF NOT EXISTS evolution (
   updated_at TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_evolution_idx_lower ON evolution(idx_lower);
+CREATE INDEX IF NOT EXISTS idx_evolution_display_name ON evolution(display_name COLLATE NOCASE);
 
 CREATE TABLE IF NOT EXISTS evolution_ngrams (
   token TEXT,
@@ -639,6 +650,7 @@ CREATE TABLE IF NOT EXISTS seed_metadata (
     {
         public JsonElement available { get; set; }
         public string index { get; set; } = string.Empty;
+        public string? displayName { get; set; }
         public string? desc { get; set; }
         public JsonElement cost { get; set; }
         public int table { get; set; }
@@ -656,6 +668,7 @@ CREATE TABLE IF NOT EXISTS seed_metadata (
     private sealed record EvolutionDefaultAbility(
         string Id,
         string Index,
+        string DisplayName,
         string Description,
         int Cost,
         int Table,

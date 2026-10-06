@@ -93,7 +93,7 @@ public sealed class SearchFilterService
         return results;
     }
 
-    private bool PassesSpellSubFilters(SpellService.SpellRaw spell, IReadOnlySet<string> selectedFilters)
+    public bool PassesSpellSubFilters(SpellService.SpellRaw spell, IReadOnlySet<string> selectedFilters)
     {
         var tierFilters = ExtractFiltersForPrefix(selectedFilters, "spell-tier:");
         if (tierFilters.Count > 0 && !PassesTierFilter(tierFilters, spell.isAdvanced ?? false))
@@ -116,7 +116,7 @@ public sealed class SearchFilterService
         return tableFilters.Contains(abilityTableToken);
     }
 
-    private bool PassesMiracleSubFilters(MiracleService.MiracRaw miracle, IReadOnlySet<string> selectedFilters)
+    public bool PassesMiracleSubFilters(MiracleService.MiracRaw miracle, IReadOnlySet<string> selectedFilters)
     {
         var tierFilters = ExtractFiltersForPrefix(selectedFilters, "miracle-tier:");
         if (tierFilters.Count > 0 && !PassesTierFilter(tierFilters, miracle.isAdvanced))
@@ -133,7 +133,7 @@ public sealed class SearchFilterService
         return sphereFilters.Contains(sphereToken);
     }
 
-    private bool PassesEvocationSubFilters(DruidEvocationService.EvocRaw evocation, IReadOnlySet<string> selectedFilters)
+    public bool PassesEvocationSubFilters(DruidEvocationService.EvocRaw evocation, IReadOnlySet<string> selectedFilters)
     {
         var tierFilters = ExtractFiltersForPrefix(selectedFilters, "evocation-tier:");
         if (tierFilters.Count > 0 && !PassesTierFilter(tierFilters, evocation.isAdvanced))
@@ -147,7 +147,7 @@ public sealed class SearchFilterService
         return fieldTokens.Overlaps(fieldFilters);
     }
 
-    private bool PassesNeuronicSubFilters(NeuronicService.NeuronicRaw neuronic, IReadOnlySet<string> selectedFilters)
+    public bool PassesNeuronicSubFilters(NeuronicService.NeuronicRaw neuronic, IReadOnlySet<string> selectedFilters)
     {
         var typeFilters = ExtractFiltersForPrefix(selectedFilters, "neuro-type:");
         if (typeFilters.Count == 0)

@@ -837,9 +837,9 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
 
         var options = _raceAbilityLookup.Values
             .OrderBy(entry => entry.Table)
-            .ThenBy(entry => entry.Index, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(entry => string.IsNullOrWhiteSpace(entry.DisplayName) ? entry.Index : entry.DisplayName, StringComparer.OrdinalIgnoreCase)
             .Select(entry => new NonStandardSearchOption(
-                Title: entry.Index,
+                Title: string.IsNullOrWhiteSpace(entry.DisplayName) ? entry.Index : entry.DisplayName,
                 Subtitle: $"Table {entry.Table}",
                 Value: entry.Index))
             .ToList();
@@ -1122,9 +1122,9 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
 
         var options = _raceAbilityLookup.Values
             .OrderBy(entry => entry.Table)
-            .ThenBy(entry => entry.Index, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(entry => string.IsNullOrWhiteSpace(entry.DisplayName) ? entry.Index : entry.DisplayName, StringComparer.OrdinalIgnoreCase)
             .Select(entry => new NonStandardSearchOption(
-                Title: entry.Index,
+                Title: string.IsNullOrWhiteSpace(entry.DisplayName) ? entry.Index : entry.DisplayName,
                 Subtitle: $"Table {entry.Table}",
                 Value: entry.Index))
             .ToList();

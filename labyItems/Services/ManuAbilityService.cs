@@ -127,7 +127,7 @@ public static class ManuAbilityService
 
     private static ManuAbilityEntry MapEntry(EvolutionService.AbilityResult ability)
         => new(
-            ability.Index,
+            string.IsNullOrWhiteSpace(ability.DisplayName) ? ability.Index : ability.DisplayName,
             ability.AbilityRef,
             ability.Available,
             ability.AvailabilityRules,

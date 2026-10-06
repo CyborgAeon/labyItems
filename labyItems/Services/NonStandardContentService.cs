@@ -423,6 +423,7 @@ VALUES ($id, $entityType, $entityName, $displayName, $filePath, $fileKind, $cont
                 var model = new JsonObject
                 {
                     ["index"] = a.Index,
+                    ["displayName"] = string.IsNullOrWhiteSpace(a.DisplayName) ? a.Index : a.DisplayName,
                     ["desc"] = a.Description,
                     ["cost"] = a.Cost,
                     ["table"] = a.Table,
@@ -439,7 +440,7 @@ VALUES ($id, $entityType, $entityName, $displayName, $filePath, $fileKind, $cont
                     model["maxAvailable"] = max;
 
                 return new NonStandardTemplate(
-                    Name: a.Index,
+                    Name: string.IsNullOrWhiteSpace(a.DisplayName) ? a.Index : a.DisplayName,
                     Json: model.ToJsonString(PrettyJson),
                     Subtitle: a.IsNonStandard ? "Non-standard" : $"Table {a.Table}");
             })

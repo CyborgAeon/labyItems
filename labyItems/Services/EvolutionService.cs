@@ -24,6 +24,7 @@ public static class EvolutionService
     public sealed record EvolutionResult
     {
         public string Index { get; init; } = string.Empty;
+        public string DisplayName { get; init; } = string.Empty;
         public string Description { get; init; } = string.Empty;
         public int Cost { get; init; }
         public int Table { get; init; }
@@ -38,7 +39,7 @@ public static class EvolutionService
         try
         {
             using var conn = ServiceHelper.OpenReadOnlyConnection();
-            var rows = conn.Query<EvoRow>("SELECT idx, description, cost, table_id FROM evolution ORDER BY table_id, idx;");
+            var rows = conn.Query<EvoRow>("SELECT idx, display_name, description, cost, table_id FROM evolution ORDER BY table_id, display_name, idx;");
             var list = rows
                 .Select(ToEvolutionResult)
                 .ToList();
@@ -56,6 +57,7 @@ public static class EvolutionService
     public sealed record AbilityResult
     {
         public string Index { get; init; } = string.Empty;
+        public string DisplayName { get; init; } = string.Empty;
         public string Description { get; init; } = string.Empty;
         public int Cost { get; init; }
         public int Table { get; init; }
@@ -82,7 +84,7 @@ public static class EvolutionService
         {
             using var conn = ServiceHelper.OpenReadOnlyConnection();
 
-            var rows = conn.Query<AbilityRow>("SELECT idx, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json FROM evolution ORDER BY table_id, idx;");
+            var rows = conn.Query<AbilityRow>("SELECT idx, display_name, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json FROM evolution ORDER BY table_id, display_name, idx;");
             if (rows.Count == 0)
             {
                 var emptyEx = new InvalidOperationException("Evolution table returned zero rows. Ensure the abilities data has been migrated into laby.db.");
@@ -121,7 +123,7 @@ public static class EvolutionService
             if (TryParseEvolutionFallbackKey(token, out var table, out var indexLower))
             {
                 var byFallback = conn.Query<AbilityRow>(
-                    "SELECT idx, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json FROM evolution WHERE table_id = ? AND idx_lower = ? ORDER BY idx LIMIT 1;",
+                    "SELECT idx, display_name, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json FROM evolution WHERE table_id = ? AND idx_lower = ? ORDER BY idx LIMIT 1;",
                     table,
                     indexLower);
                 if (byFallback.Count > 0)
@@ -130,7 +132,8 @@ public static class EvolutionService
 
             var normalizedName = token.ToLowerInvariant();
             var byName = conn.Query<AbilityRow>(
-                "SELECT idx, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json FROM evolution WHERE idx_lower = ? ORDER BY idx LIMIT 1;",
+                "SELECT idx, display_name, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json FROM evolution WHERE idx_lower = ? OR lower(display_name) = ? ORDER BY idx LIMIT 1;",
+                normalizedName,
                 normalizedName);
             if (byName.Count > 0)
                 return ToAbilityResult(byName[0]);
@@ -139,14 +142,14 @@ public static class EvolutionService
                 .Replace("\"", "\\\"", StringComparison.Ordinal);
             var abilityRefPattern = $"%\"abilityRef\":\"{escapedToken}\"%";
             var byAbilityRef = conn.Query<AbilityRow>(
-                "SELECT idx, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json FROM evolution WHERE data_json LIKE ? ORDER BY idx LIMIT 1;",
+                "SELECT idx, display_name, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json FROM evolution WHERE data_json LIKE ? ORDER BY idx LIMIT 1;",
                 abilityRefPattern);
             if (byAbilityRef.Count > 0)
                 return ToAbilityResult(byAbilityRef[0]);
 
             var loosePattern = $"%{token}%";
             var byLooseDataMatch = conn.Query<AbilityRow>(
-                "SELECT idx, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json FROM evolution WHERE data_json LIKE ? ORDER BY idx LIMIT 1;",
+                "SELECT idx, display_name, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json FROM evolution WHERE data_json LIKE ? ORDER BY idx LIMIT 1;",
                 loosePattern);
             return byLooseDataMatch.Count > 0 ? ToAbilityResult(byLooseDataMatch[0]) : null;
         }
@@ -189,7 +192,7 @@ public static class EvolutionService
         }
 
         var inClause = string.Join(",", paramNames);
-        var sql = $"SELECT e.idx, e.description, e.cost, e.table_id FROM evolution e JOIN (SELECT evolution_id, COUNT(*) as ct FROM evolution_ngrams WHERE token IN ({inClause}) GROUP BY evolution_id ORDER BY ct DESC LIMIT 50) g ON e.id = g.evolution_id;";
+        var sql = $"SELECT e.idx, e.display_name, e.description, e.cost, e.table_id FROM evolution e JOIN (SELECT evolution_id, COUNT(*) as ct FROM evolution_ngrams WHERE token IN ({inClause}) GROUP BY evolution_id ORDER BY ct DESC LIMIT 50) g ON e.id = g.evolution_id;";
 
             var rows = conn.Query<EvoRow>(sql, args.ToArray());
             var list = rows
@@ -253,7 +256,7 @@ public static class EvolutionService
             }
 
             var inClause = string.Join(",", paramNames);
-            var sql = $"SELECT e.idx, e.description, e.cost, e.available, e.table_id, e.can_buy_multiple, e.prereqs_json, e.data_json FROM evolution e JOIN (SELECT evolution_id, COUNT(*) as ct FROM evolution_ngrams WHERE token IN ({inClause}) GROUP BY evolution_id ORDER BY ct DESC LIMIT 50) g ON e.id = g.evolution_id;";
+            var sql = $"SELECT e.idx, e.display_name, e.description, e.cost, e.available, e.table_id, e.can_buy_multiple, e.prereqs_json, e.data_json FROM evolution e JOIN (SELECT evolution_id, COUNT(*) as ct FROM evolution_ngrams WHERE token IN ({inClause}) GROUP BY evolution_id ORDER BY ct DESC LIMIT 50) g ON e.id = g.evolution_id;";
 
             var rows = conn.Query<AbilityRow>(sql, args.ToArray());
             var list = rows
@@ -396,8 +399,9 @@ public static class EvolutionService
 
     private static IReadOnlyList<AbilityResult> SearchAbilitiesByLike(SQLite.SQLiteConnection conn, string query, int? table)
     {
-        var sql = "SELECT idx, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json FROM evolution WHERE idx LIKE ? ORDER BY table_id, idx LIMIT 50;";
-        var rows = conn.Query<AbilityRow>(sql, $"%{query}%");
+        var sql = "SELECT idx, display_name, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json FROM evolution WHERE idx LIKE ? OR display_name LIKE ? ORDER BY table_id, display_name, idx LIMIT 50;";
+        var pattern = $"%{query}%";
+        var rows = conn.Query<AbilityRow>(sql, pattern, pattern);
         var list = rows.Select(ToAbilityResult).ToList();
 
         if (table is { } t && t >= 1)
@@ -408,8 +412,9 @@ public static class EvolutionService
 
     private static IReadOnlyList<EvolutionResult> SearchByIndexLike(SQLite.SQLiteConnection conn, string query, int? table)
     {
-        var sql = "SELECT idx, description, cost, table_id FROM evolution WHERE idx LIKE ? ORDER BY table_id, idx LIMIT 50;";
-        var rows = conn.Query<EvoRow>(sql, $"%{query}%");
+        var sql = "SELECT idx, display_name, description, cost, table_id FROM evolution WHERE idx LIKE ? OR display_name LIKE ? ORDER BY table_id, display_name, idx LIMIT 50;";
+        var pattern = $"%{query}%";
+        var rows = conn.Query<EvoRow>(sql, pattern, pattern);
         var list = rows.Select(ToEvolutionResult).ToList();
 
         if (table is { } t && t >= 1)
@@ -424,7 +429,8 @@ public static class EvolutionService
 
         return new AbilityResult
         {
-            Index = NormalizeAbilityDisplayText(row.idx),
+            Index = row.idx.Trim(),
+            DisplayName = NormalizeAbilityDisplayText(string.IsNullOrWhiteSpace(row.display_name) ? row.idx : row.display_name),
             Description = NormalizeAbilityDisplayText(row.description),
             Cost = row.cost,
             Table = row.table_id,
@@ -445,14 +451,16 @@ public static class EvolutionService
 
     private static EvolutionResult ToEvolutionResult(EvoRow row)
     {
-        var index = NormalizeAbilityDisplayText(row.idx);
+        var index = row.idx.Trim();
+        var displayName = NormalizeAbilityDisplayText(string.IsNullOrWhiteSpace(row.display_name) ? index : row.display_name);
         return new EvolutionResult
         {
             Index = index,
+            DisplayName = displayName,
             Description = NormalizeAbilityDisplayText(row.description),
             Cost = row.cost,
             Table = row.table_id,
-            IsImmunity = index.IsImmunity()
+            IsImmunity = displayName.IsImmunity()
         };
     }
 
@@ -1062,6 +1070,7 @@ public static class EvolutionService
     private class EvoRow
     {
         public string idx { get; set; } = string.Empty;
+        public string? display_name { get; set; }
         public string? description { get; set; }
         public int cost { get; set; }
         public int table_id { get; set; }
@@ -1069,6 +1078,7 @@ public static class EvolutionService
     private class AbilityRow
     {
         public string idx { get; set; } = string.Empty;
+        public string? display_name { get; set; }
         public string? description { get; set; }
         public int cost { get; set; }
         public string? available { get; set; }

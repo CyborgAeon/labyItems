@@ -112,6 +112,7 @@ public sealed class WizardVm : INotifyPropertyChanged
             Raise(nameof(CanGoNext));
             Raise(nameof(NextButtonText));
             Raise(nameof(ShowContinueToAdvancement));
+            Raise(nameof(IsGuildsStep));
         }
     }
 
@@ -155,6 +156,9 @@ public sealed class WizardVm : INotifyPropertyChanged
 
     public string NextButtonText => CurrentStep == StepSteps.Count - 1 ? "Save" : "Next";
     public bool ShowContinueToAdvancement => CurrentStep == StepSteps.Count - 1;
+
+    // Guilds is step index 2 in BuildSteps().
+    public bool IsGuildsStep => CurrentStep == 2;
     public ICommand BackCommand { get; }
     public ICommand NextCommand { get; }
     public Command<int> StepClickCommand { get; }
@@ -342,7 +346,8 @@ public sealed class WizardVm : INotifyPropertyChanged
                 canEnter: () => WizardStepRules.CanEnterGuilds(Draft, CharacterBuilderVm.SpecialisationVm),
                 createView: () => new Guilds(GuildsVm)
                 {
-                    UseTypePills = true
+                    UseTypePills = true,
+                    ShowSelectedChips = false
                 },
                 onEnterAsync: async () => await GuildsVm.ReloadAsync(),
                 onExitAsync: async () => await GuildsVm.ReleaseScreenCacheAsync()),
@@ -1749,21 +1754,23 @@ public sealed class WizardVm : INotifyPropertyChanged
         var abilities = await EvolutionService.GetAllAbilitiesAsync();
         foreach (var entry in abilities)
         {
-            var name = (entry.Index ?? string.Empty).Trim();
-            if (name.Length == 0)
+            var index = (entry.Index ?? string.Empty).Trim();
+            if (index.Length == 0)
                 continue;
+            var displayName = (string.IsNullOrWhiteSpace(entry.DisplayName) ? index : entry.DisplayName).Trim();
 
-            RegisterAbilityCostEntry(name, entry.Cost, displayName: name);
+            RegisterAbilityCostEntry(index, entry.Cost, displayName);
+            RegisterAbilityCostEntry(displayName, entry.Cost, displayName);
 
             var abilityKey = AbilityKey.Build(entry);
             if (!string.IsNullOrWhiteSpace(abilityKey))
-                RegisterAbilityCostEntry(abilityKey, entry.Cost, displayName: name);
+                RegisterAbilityCostEntry(abilityKey, entry.Cost, displayName);
 
             var legacyKey = AbilityKey.BuildEvolutionFallback(entry);
             if (!string.IsNullOrWhiteSpace(legacyKey)
                 && !string.Equals(legacyKey, abilityKey, StringComparison.OrdinalIgnoreCase))
             {
-                RegisterAbilityCostEntry(legacyKey, entry.Cost, displayName: name);
+                RegisterAbilityCostEntry(legacyKey, entry.Cost, displayName);
             }
         }
     }
@@ -1822,7 +1829,8 @@ public sealed class WizardVm : INotifyPropertyChanged
         if (ability == null)
             return key;
 
-        var displayName = EvolutionService.NormalizeAbilityDisplayText(ability.Index);
+        var displayName = EvolutionService.NormalizeAbilityDisplayText(
+            string.IsNullOrWhiteSpace(ability.DisplayName) ? ability.Index : ability.DisplayName);
         if (displayName.Length == 0)
             return key;
 

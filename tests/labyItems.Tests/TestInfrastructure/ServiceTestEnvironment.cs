@@ -102,7 +102,8 @@ internal static class ServiceTestEnvironment
             available: "Any",
             canBuyMultiple: false,
             preReqsJson: "[\"Ability:Focus\"]",
-            dataJson: "{\"maxAvailable\":2,\"data\":{\"effectType\":\"increase:maxAC\",\"amount\":2}}");
+            dataJson: "{\"maxAvailable\":2,\"data\":{\"effectType\":\"increase:maxAC\",\"amount\":2}}",
+            displayName: "Arcane Attunement");
 
         InsertEvolution(
             idx: "Immunity! Fire",
@@ -135,7 +136,8 @@ internal static class ServiceTestEnvironment
         string available,
         bool canBuyMultiple,
         string preReqsJson,
-        string dataJson)
+        string dataJson,
+        string? displayName = null)
     {
         var id = SQLiteTestStore.AddEvolution(
             idx,
@@ -145,9 +147,10 @@ internal static class ServiceTestEnvironment
             available,
             canBuyMultiple ? 1 : 0,
             preReqsJson,
-            dataJson);
+            dataJson,
+            displayName);
 
-        var searchable = ServiceHelper.NormalizeForNgrams($"{idx} {description}".ToLowerInvariant());
+        var searchable = ServiceHelper.NormalizeForNgrams($"{idx} {displayName} {description}".ToLowerInvariant());
         var ngrams = ServiceHelper.GenerateNGrams(searchable, 3).Distinct(StringComparer.Ordinal).ToList();
         foreach (var token in ngrams)
             SQLiteTestStore.AddEvolutionNgram(id, token);

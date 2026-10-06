@@ -25,10 +25,10 @@ public sealed class EvolutionDataSeedIntegrityTests : ServiceTestBase
             .EnumerateArray()
             .Any(entry =>
                 entry.ValueKind == JsonValueKind.Object
-                && entry.TryGetProperty("index", out var indexElement)
-                && indexElement.ValueKind == JsonValueKind.String
+                && entry.TryGetProperty("displayName", out var displayNameElement)
+                && displayNameElement.ValueKind == JsonValueKind.String
                 && string.Equals(
-                    indexElement.GetString(),
+                    displayNameElement.GetString(),
                     "9th Level Resistance to Magic and Spirits",
                     StringComparison.OrdinalIgnoreCase));
 

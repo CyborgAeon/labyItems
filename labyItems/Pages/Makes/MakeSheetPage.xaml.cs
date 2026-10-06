@@ -53,6 +53,28 @@ public partial class MakeSheetPage : ContentPage
     private void OnCriticalTabClicked(object? sender, EventArgs e)
         => _vm.ActivateCriticalTab();
 
+    private async void OnSearchEffectsClicked(object? sender, EventArgs e)
+    {
+        try
+        {
+            var picked = await _vm.PickEffectOptionsFromSearchAsync(Navigation);
+            foreach (var option in picked)
+            {
+                _vm.SelectedEffectLookup = option;
+                var error = _vm.AddEffect();
+                if (!string.IsNullOrEmpty(error))
+                {
+                    await DisplayAlert("Invalid Effect", error, "OK");
+                    break;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Effect Search", $"Search failed: {ex.Message}", "OK");
+        }
+    }
+
     private async void OnAddEffectClicked(object? sender, EventArgs e)
     {
         var error = _vm.AddEffect();

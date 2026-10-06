@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using labyItems.Controls;
 using labyItems.Helpers;
 using labyItems.Services;
 
@@ -187,8 +188,13 @@ public partial class MiracleDetailCardView : ContentView
     public string SphereIconGlyph => FontAwesomeGlyphs.GetSphereIcon(SphereDisplayText);
     public string PowerDisplayText => $"{Math.Max(0, Miracle?.power ?? 0)} SP";
     public string LevelDisplayText => ReadOrFallback(Miracle?.level, "—");
-    public string DurationDisplayText => ReadOrFallback(Miracle?.duration, "—");
+    public string DurationDisplayText => (Miracle?.duration ?? string.Empty).Trim();
+    public bool HasDuration => DurationDisplayText.Length > 0;
     public string GestureDisplayText => ReadOrFallback(Miracle?.gesture, "—");
+    public bool IsAdvanced => Miracle?.isAdvanced == true;
+    public string ImmunityDisplayText => ReadFirst(JoinValues(Miracle?.immunityName), Miracle?.immunity, Miracle?.ImmunityCompat, JoinValues(Miracle?.immunityIndex));
+    public bool HasImmunity => ImmunityDisplayText.Length > 0;
+    public bool HasImmunityLink => ImmunityNavigationHelper.HasIndex(Miracle?.immunityIndex);
     public string AlignmentDisplayText => BuildAlignmentDisplay(Miracle?.alignment);
     public bool HasAlignment => AlignmentDisplayText.Length > 0;
 
@@ -200,6 +206,21 @@ public partial class MiracleDetailCardView : ContentView
     public bool HasDamageSummary => DamageSummaryText.Length > 0;
     public string HealSummaryText => BuildHealSummary(Miracle);
     public bool HasHealSummary => HealSummaryText.Length > 0;
+    public CombatQuickFactsVm DamageQuickFacts => CombatQuickFactsFormatter.Build(
+        Miracle?.Damage != null,
+        Miracle?.GetDamageAmounts() ?? new List<int[]>(),
+        Miracle?.GetDamageTypes() ?? new List<string>(),
+        Miracle?.GetDamageCategories(), Miracle?.GetArmourApplies(), Miracle?.GetArmourType());
+    public CombatQuickFactsVm HealQuickFacts => CombatQuickFactsFormatter.Build(
+        Miracle?.Heal != null || Miracle?.healing != null || Miracle?.healType != null,
+        Miracle?.GetHealAmounts() ?? new List<int[]>(),
+        Miracle?.GetHealTypes() ?? new List<string>(), isHealing: true);
+    public bool HasDamageQuickFacts => DamageQuickFacts.HasValue;
+    public bool HasHealQuickFacts => HealQuickFacts.HasValue;
+    public bool HasBothCombatQuickFacts => HasDamageQuickFacts && HasHealQuickFacts;
+
+    private static string JoinValues(IEnumerable<string>? values) =>
+        string.Join(", ", values?.Where(value => !string.IsNullOrWhiteSpace(value)).Select(value => value.Trim()) ?? Array.Empty<string>());
 
     private bool _isDescriptionAnimating;
     private bool _isVerbalAnimating;
@@ -243,7 +264,12 @@ public partial class MiracleDetailCardView : ContentView
         OnPropertyChanged(nameof(PowerDisplayText));
         OnPropertyChanged(nameof(LevelDisplayText));
         OnPropertyChanged(nameof(DurationDisplayText));
+        OnPropertyChanged(nameof(HasDuration));
         OnPropertyChanged(nameof(GestureDisplayText));
+        OnPropertyChanged(nameof(IsAdvanced));
+        OnPropertyChanged(nameof(ImmunityDisplayText));
+        OnPropertyChanged(nameof(HasImmunity));
+        OnPropertyChanged(nameof(HasImmunityLink));
         OnPropertyChanged(nameof(AlignmentDisplayText));
         OnPropertyChanged(nameof(HasAlignment));
         OnPropertyChanged(nameof(DescriptionText));
@@ -254,6 +280,11 @@ public partial class MiracleDetailCardView : ContentView
         OnPropertyChanged(nameof(HasDamageSummary));
         OnPropertyChanged(nameof(HealSummaryText));
         OnPropertyChanged(nameof(HasHealSummary));
+        OnPropertyChanged(nameof(DamageQuickFacts));
+        OnPropertyChanged(nameof(HealQuickFacts));
+        OnPropertyChanged(nameof(HasDamageQuickFacts));
+        OnPropertyChanged(nameof(HasHealQuickFacts));
+        OnPropertyChanged(nameof(HasBothCombatQuickFacts));
         OnPropertyChanged(nameof(DescriptionChevronText));
         OnPropertyChanged(nameof(VerbalChevronText));
         OnPropertyChanged(nameof(PrereqChevronText));
@@ -265,6 +296,9 @@ public partial class MiracleDetailCardView : ContentView
         OnPropertyChanged(nameof(ShowDamageSeeMore));
         OnPropertyChanged(nameof(ShowHealSeeMore));
     }
+
+    private async void OnImmunityTapped(object sender, TappedEventArgs e) =>
+        await ImmunityNavigationHelper.OpenFirstAvailableAsync(Navigation, Miracle?.immunityIndex);
 
     private async void OnDescriptionToggleClicked(object sender, EventArgs e)
     {
@@ -659,6 +693,10 @@ public partial class MiracleDetailCardView : ContentView
         var text = (value ?? string.Empty).Trim();
         return text.Length == 0 ? fallback : text;
     }
+
+    private static string ReadFirst(params string?[] values) => values
+        .Select(value => (value ?? string.Empty).Trim())
+        .FirstOrDefault(value => value.Length > 0) ?? string.Empty;
 
     private static string StripMajorMinorPrefix(string raw)
     {

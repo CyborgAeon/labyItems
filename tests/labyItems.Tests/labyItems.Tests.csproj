@@ -45,6 +45,7 @@
     <Compile Include="../../labyItems/Services/DruidEvocationService.cs" Link="Source/DruidEvocationService.cs" />
     <Compile Include="../../labyItems/Services/EvolutionService.cs" Link="Source/EvolutionService.cs" />
     <Compile Include="../../labyItems/Services/EvolutionDataSynchronizer.cs" Link="Source/EvolutionDataSynchronizer.cs" />
+    <Compile Include="../../labyItems/Services/SourceBookPdfCatalog.cs" Link="Source/SourceBookPdfCatalog.cs" />
     <Compile Include="../../labyItems/Services/ManuAbilityService.cs" Link="Source/ManuAbilityService.cs" />
     <Compile Include="../../labyItems/Services/AbilityDetailsLookupService.cs" Link="Source/AbilityDetailsLookupService.cs" />
     <Compile Include="../../labyItems/Services/ClassService.cs" Link="Source/ClassService.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="../../labyItems/Models/Characters/MagicListDrafts.cs" Link="Source/MagicListDrafts.cs" />
     <Compile Include="../../labyItems/Models/Rules/RuleTree.cs" Link="Source/RuleTree.cs" />
     <Compile Include="../../labyItems/Models/Enums/ArmourType.cs" Link="Source/ArmourType.cs" />
+    <Compile Include="../../labyItems/Models/Enums/DamageTypeEnum.cs" Link="Source/DamageTypeEnum.cs" />
     <Compile Include="../../labyItems/Models/Enums/DamType.cs" Link="Source/DamType.cs" />
     <Compile Include="../../labyItems/Models/Enums/MagicColours.cs" Link="Source/MagicColours.cs" />
   </ItemGroup>

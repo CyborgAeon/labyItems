@@ -156,6 +156,23 @@ public partial class EvocationConfigPage : ConfigPageBase<EvocationConfig>
         SelectedSearchEvocation = null;
     }
 
+    private async void OnSearchEvocationsClicked(object? sender, EventArgs e)
+    {
+        if (BindingContext is not EvocationConfig cfg)
+            return;
+
+        try
+        {
+            var picked = await MpCatalogSearch.PickEvocationsAsync(Navigation, await DruidEvocationService.GetAllAsync());
+            foreach (var evocation in picked)
+                cfg.TryAddEvocation(evocation);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Evocation search failed", ex.Message, "OK");
+        }
+    }
+
     private async void OnEditEvocationRequested(object? parameter)
     {
         if (parameter is not EvocationSelectionEntry entry)

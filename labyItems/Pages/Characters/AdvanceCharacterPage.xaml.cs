@@ -1102,6 +1102,7 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
         return new EvolutionService.AbilityResult
         {
             Index = name,
+            DisplayName = name,
             Description = source.Effect ?? string.Empty,
             Cost = 0,
             Table = 0,

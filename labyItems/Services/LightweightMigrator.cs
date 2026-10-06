@@ -118,6 +118,7 @@ CREATE TABLE IF NOT EXISTS evolution (
   id TEXT PRIMARY KEY,
   idx TEXT NOT NULL,
   idx_lower TEXT,
+  display_name TEXT,
   description TEXT,
   cost INTEGER,
   available TEXT,
@@ -131,6 +132,9 @@ CREATE TABLE IF NOT EXISTS evolution (
 );
 CREATE INDEX IF NOT EXISTS idx_evolution_idx_lower ON evolution(idx_lower);
 ";
+				cmd.ExecuteNonQuery();
+				EnsureColumn(conn, tx, "evolution", "display_name", "TEXT");
+				cmd.CommandText = "CREATE INDEX IF NOT EXISTS idx_evolution_display_name ON evolution(display_name COLLATE NOCASE);";
 				cmd.ExecuteNonQuery();
 
 				cmd.CommandText = @"
@@ -201,6 +205,30 @@ CREATE TABLE IF NOT EXISTS seed_metadata (
 				logger?.LogError(ex, "Lightweight schema application failed: {Message}", ex.Message);
 				throw;
 			}
+		}
+
+		private static void EnsureColumn(
+			SqliteConnection connection,
+			SqliteTransaction transaction,
+			string table,
+			string column,
+			string type)
+		{
+			using var info = connection.CreateCommand();
+			info.Transaction = transaction;
+			info.CommandText = $"PRAGMA table_info({table});";
+			using var reader = info.ExecuteReader();
+			while (reader.Read())
+			{
+				if (string.Equals(reader.GetString(1), column, StringComparison.OrdinalIgnoreCase))
+					return;
+			}
+			reader.Close();
+
+			using var alter = connection.CreateCommand();
+			alter.Transaction = transaction;
+			alter.CommandText = $"ALTER TABLE {table} ADD COLUMN {column} {type};";
+			alter.ExecuteNonQuery();
 		}
 	}
 }

@@ -30,6 +30,7 @@ public static class AbilityDetailsLookupService
             foreach (var ability in abilities)
             {
                 AddLookupEntries(map, ability, ability.Index);
+                AddLookupEntries(map, ability, ability.DisplayName);
 
                 // Support stable character draft storage by ability key.
                 var abilityKey = AbilityKey.Build(ability);
@@ -183,6 +184,7 @@ public static class AbilityDetailsLookupService
         return new EvolutionService.AbilityResult
         {
             Index = name,
+            DisplayName = name,
             Description = source.Effect ?? string.Empty,
             Cost = 0,
             Table = 0,

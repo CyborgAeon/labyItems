@@ -3,7 +3,8 @@
     x:Class="labyItems.Pages.NeuronicCard.NeuronicDetailCardView"
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls">
 
     <ContentView>
         <VerticalStackLayout Spacing="12">
@@ -12,16 +13,13 @@
                    FontAttributes="Bold"
                    LineBreakMode="WordWrap"/>
 
-            <Grid x:Name="NeuronicKeyInformationGrid" Margin="-16,0" Padding="12,10"
-                  ColumnDefinitions="*,1,*,1,*">
-                <VerticalStackLayout><Label Text="POWER" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding PowerDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
-                <BoxView Grid.Column="1" Color="{StaticResource SurfaceBorderColor}"/><VerticalStackLayout Grid.Column="2"><Label Text="RANGE" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding RangeDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
-                <BoxView Grid.Column="3" Color="{StaticResource SurfaceBorderColor}"/><VerticalStackLayout Grid.Column="4"><Label Text="DURATION" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding DurationDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
-            </Grid>
+            <HorizontalStackLayout Spacing="7"><Label Text="&#xF5DC;" FontFamily="FASolid" FontSize="14" TextColor="{StaticResource SubtleTextColor}"/><Label Text="{Binding TypeDisplayText, Source={x:Reference Root}}" FontSize="14"/></HorizontalStackLayout>
 
-            <Border Padding="10" Stroke="{StaticResource SoftStrokeColor}" StrokeShape="RoundRectangle 8" BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}" IsVisible="{Binding HasImmunity, Source={x:Reference Root}}">
-                <HorizontalStackLayout Spacing="8"><Label Text="&#xF3ED;" FontFamily="FASolid"/><VerticalStackLayout><Label Text="IMMUNITY" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Start"/><Label Text="{Binding ImmunityDisplayText, Source={x:Reference Root}}" FontSize="15"/></VerticalStackLayout></HorizontalStackLayout>
-            </Border>
+            <VerticalStackLayout x:Name="NeuronicKeyInformationGrid" Margin="-16,0" Padding="12,10" Spacing="10">
+                <Grid ColumnDefinitions="*,1,*,1,*"><VerticalStackLayout><Label Text="POWER" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding PowerDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout><BoxView Grid.Column="1" Color="{StaticResource SurfaceBorderColor}"/><VerticalStackLayout Grid.Column="2"><Label Text="RANGE" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding RangeDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout><BoxView Grid.Column="3" Color="{StaticResource SurfaceBorderColor}"/><VerticalStackLayout Grid.Column="4"><Label Text="DURATION" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding DurationDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout></Grid>
+                <VerticalStackLayout Spacing="10" IsVisible="{Binding HasImmunity, Source={x:Reference Root}}"><BoxView HeightRequest="1" Color="{StaticResource SurfaceBorderColor}"/><Grid ColumnDefinitions="*,Auto"><Grid.GestureRecognizers><TapGestureRecognizer Tapped="OnImmunityTapped"/></Grid.GestureRecognizers><VerticalStackLayout><Label Text="IMMUNITY" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding ImmunityDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout><Label Grid.Column="1" Text="&#xF05A;" FontFamily="FASolid" FontSize="14" Margin="8,0" VerticalTextAlignment="Center" IsVisible="{Binding HasImmunityLink, Source={x:Reference Root}}"/></Grid></VerticalStackLayout>
+                <VerticalStackLayout Spacing="0" IsVisible="{Binding HasDamageQuickFacts, Source={x:Reference Root}}"><BoxView HeightRequest="1" Color="{StaticResource SurfaceBorderColor}"/><controls:CombatQuickFactsView Facts="{Binding DamageQuickFacts, Source={x:Reference Root}}"/></VerticalStackLayout>
+            </VerticalStackLayout>
 
             <Label Text="DESCRIPTION"
                    Style="{StaticResource SectionHeaderLabelStyle}"/>

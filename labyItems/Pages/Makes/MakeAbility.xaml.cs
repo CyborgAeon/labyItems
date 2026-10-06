@@ -178,6 +178,119 @@ namespace labyItems.Pages
         }
 
         public string AvailabilityToggleText => ShowAvailableOnly ? "Available" : "Show All";
+
+        public sealed class FilterChip : ObservableObject
+        {
+            private bool _isSelected;
+
+            public FilterChip(string label, bool isBracket, bool isSelected)
+            {
+                Label = label;
+                IsBracket = isBracket;
+                _isSelected = isSelected;
+            }
+
+            public string Label { get; }
+            public bool IsBracket { get; }
+
+            public bool IsSelected
+            {
+                get => _isSelected;
+                set => SetProperty(ref _isSelected, value);
+            }
+        }
+
+        private bool _isFilterModalOpen;
+        private bool _pendingShowAvailableOnly;
+
+        public ObservableCollection<FilterChip> SourceBookChips { get; } = new();
+        public ObservableCollection<FilterChip> BracketChips { get; } = new();
+
+        public bool IsFilterModalOpen
+        {
+            get => _isFilterModalOpen;
+            private set
+            {
+                if (_isFilterModalOpen == value)
+                    return;
+
+                _isFilterModalOpen = value;
+                OnPropertyChanged(nameof(IsFilterModalOpen));
+            }
+        }
+
+        public bool PendingShowAvailableOnly
+        {
+            get => _pendingShowAvailableOnly;
+            set
+            {
+                if (_pendingShowAvailableOnly == value)
+                    return;
+
+                _pendingShowAvailableOnly = value;
+                OnPropertyChanged(nameof(PendingShowAvailableOnly));
+            }
+        }
+
+        private void OnOpenFiltersClicked(object? sender, EventArgs e)
+        {
+            PendingShowAvailableOnly = ShowAvailableOnly;
+            RebuildChips(SourceBookChips, SourceBookFilterOptions, SelectedSourceBookFilter, isBracket: false);
+            RebuildChips(BracketChips, BracketFilterOptions, SelectedBracketFilter, isBracket: true);
+            IsFilterModalOpen = true;
+        }
+
+        private static void RebuildChips(
+            ObservableCollection<FilterChip> target,
+            IEnumerable<string> options,
+            string? selected,
+            bool isBracket)
+        {
+            target.Clear();
+            foreach (var option in options)
+            {
+                target.Add(new FilterChip(
+                    option,
+                    isBracket,
+                    string.Equals(option, selected, StringComparison.OrdinalIgnoreCase)));
+            }
+        }
+
+        private void OnFilterChipTapped(object? sender, TappedEventArgs e)
+        {
+            if (e.Parameter is not FilterChip chip)
+                return;
+
+            var group = chip.IsBracket ? BracketChips : SourceBookChips;
+            var select = !chip.IsSelected;
+            foreach (var item in group)
+                item.IsSelected = false;
+
+            chip.IsSelected = select;
+        }
+
+        private void OnCancelFiltersClicked(object? sender, EventArgs e) => IsFilterModalOpen = false;
+
+        private async void OnApplyFiltersClicked(object? sender, EventArgs e)
+        {
+            IsFilterModalOpen = false;
+            ShowAvailableOnly = PendingShowAvailableOnly;
+
+            _suppressSourceBookFilterReload = true;
+            _suppressBracketFilterReload = true;
+            try
+            {
+                SelectedSourceBookFilter = SourceBookChips.FirstOrDefault(c => c.IsSelected)?.Label;
+                SelectedBracketFilter = BracketChips.FirstOrDefault(c => c.IsSelected)?.Label;
+            }
+            finally
+            {
+                _suppressSourceBookFilterReload = false;
+                _suppressBracketFilterReload = false;
+            }
+
+            await LoadAsync((Search?.Text ?? string.Empty).Trim());
+        }
         public string ConfirmButtonText => HasSelectedRows
             ? $"Add Selected ({_selectedByKey.Count})"
             : "Add Selected";

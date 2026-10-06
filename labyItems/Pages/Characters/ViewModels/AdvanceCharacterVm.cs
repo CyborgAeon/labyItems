@@ -785,7 +785,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
         foreach (var ability in abilities)
         {
-            var displayName = EvolutionService.NormalizeAbilityDisplayText(ability.Index);
+            var displayName = EvolutionService.NormalizeAbilityDisplayText(
+                string.IsNullOrWhiteSpace(ability.DisplayName) ? ability.Index : ability.DisplayName);
             if (string.IsNullOrWhiteSpace(displayName))
                 continue;
 
@@ -896,7 +897,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         var resolved = _abilityService.TryResolveAbilityDetails(trimmed);
         if (resolved != null)
         {
-            var displayName = EvolutionService.NormalizeAbilityDisplayText(resolved.Index);
+            var displayName = EvolutionService.NormalizeAbilityDisplayText(
+                string.IsNullOrWhiteSpace(resolved.DisplayName) ? resolved.Index : resolved.DisplayName);
             var abilityKey = AbilityKey.Build(resolved);
             var adjustedCost = _abilityService.ApplyRaceAbilityCostModifiers(
                 Math.Max(0, resolved.Cost),

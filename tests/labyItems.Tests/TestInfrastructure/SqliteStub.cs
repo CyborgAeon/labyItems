@@ -20,6 +20,7 @@ public static class SQLiteTestStore
     private sealed record EvolutionRow(
         int Id,
         string Index,
+        string DisplayName,
         string Description,
         int Cost,
         int TableId,
@@ -64,12 +65,14 @@ public static class SQLiteTestStore
         string available,
         int canBuyMultiple,
         string preReqsJson,
-        string dataJson)
+        string dataJson,
+        string? displayName = null)
     {
         var id = _nextEvolutionId++;
         EvolutionRows.Add(new EvolutionRow(
             id,
             index ?? string.Empty,
+            string.IsNullOrWhiteSpace(displayName) ? index ?? string.Empty : displayName,
             description ?? string.Empty,
             cost,
             tableId,
@@ -174,7 +177,8 @@ public static class SQLiteTestStore
             var needle = like.Trim('%');
 
             var rows = EvolutionRows
-                .Where(r => r.Index.Contains(needle, StringComparison.OrdinalIgnoreCase))
+                .Where(r => r.Index.Contains(needle, StringComparison.OrdinalIgnoreCase)
+                    || r.DisplayName.Contains(needle, StringComparison.OrdinalIgnoreCase))
                 .OrderBy(r => r.TableId)
                 .ThenBy(r => r.Index, StringComparer.OrdinalIgnoreCase)
                 .Take(50)
@@ -205,6 +209,7 @@ public static class SQLiteTestStore
             {
                 ["id"] = row.Id,
                 ["idx"] = row.Index,
+                ["display_name"] = row.DisplayName,
                 ["description"] = row.Description,
                 ["cost"] = row.Cost,
                 ["table_id"] = row.TableId

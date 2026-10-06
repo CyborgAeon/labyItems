@@ -184,14 +184,18 @@
                     <VerticalStackLayout Spacing="10">
                         <Label FontAttributes="Bold" Text="Spell / Effect Builder" />
 
-                        <controls:DictionarySearchBar
-                            x:TypeArguments="makes:MakeEffectLookupOption"
-                            IsVisible="{Binding ShowEffectSearch}"
-                            ItemsSource="{Binding EffectLookupOptions}"
-                            KeyboardAvoidanceEnabled="True"
-                            PlaceholderText="{Binding EffectSearchPlaceholder}"
-                            SelectedValue="{Binding SelectedEffectLookup, Mode=TwoWay}"
-                            SelectionDisplayMemberPath="Name" />
+                        <Grid ColumnDefinitions="*,Auto"
+                              ColumnSpacing="8"
+                              IsVisible="{Binding ShowEffectSearch}">
+                            <controls:DictionarySearchBar
+                                x:TypeArguments="makes:MakeEffectLookupOption"
+                                ItemsSource="{Binding EffectLookupOptions}"
+                                KeyboardAvoidanceEnabled="True"
+                                PlaceholderText="{Binding EffectSearchPlaceholder}"
+                                SelectedValue="{Binding SelectedEffectLookup, Mode=TwoWay}"
+                                SelectionDisplayMemberPath="Name" />
+                            <Button Grid.Column="1" Text="&#xF002;" FontFamily="FASolid" FontSize="16" Padding="0" WidthRequest="44" HeightRequest="44" MinimumWidthRequest="0" MinimumHeightRequest="0" BackgroundColor="Transparent" TextColor="{StaticResource SubtleTextColor}" BorderColor="{StaticResource SurfaceBorderColor}" BorderWidth="1" CornerRadius="10" VerticalOptions="Center" Clicked="OnSearchEffectsClicked" />
+                        </Grid>
 
                         <Entry
                             IsVisible="{Binding ShowEffectNameEntry}"
@@ -212,10 +216,6 @@
                                 Placeholder="Uses/day"
                                 Text="{Binding NewEffectUses, Mode=TwoWay}" />
                         </Grid>
-                        <controls:ChipGroup
-                            Items="{Binding EffectCategoryOptions}"
-                            SelectedItem="{Binding NewEffectCategory, Mode=TwoWay}"
-                            DisabledItems="{Binding EffectCategoryDisabledOptions}" />
                         <Button Clicked="OnAddEffectClicked" Text="Add Effect" />
 
                         <Label FontAttributes="Bold" Text="Current Effects" />

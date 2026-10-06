@@ -23,7 +23,8 @@ public sealed class EvolutionDataSynchronizerTests : ServiceTestBase
             () => ToStream("""
                 [
                   {
-                    "index": "Checksum Source Ability",
+                    "index": "checksum-source-ability",
+                    "displayName": "Checksum Source Ability",
                     "desc": "Fresh source row",
                     "cost": 10,
                     "table": 1,
@@ -33,7 +34,7 @@ public sealed class EvolutionDataSynchronizerTests : ServiceTestBase
                   }
                 ]
                 """));
-        FileSystem.SetPackageOverride("makes_abilities.json", () => ToStream("[]"));
+        FileSystem.SetPackageOverride("Manufacturers_guide/makes_abilities.json", () => ToStream("[]"));
 
         var synchronizer = new EvolutionDataSynchronizer(NullLogger<EvolutionDataSynchronizer>.Instance);
 
@@ -42,13 +43,18 @@ public sealed class EvolutionDataSynchronizerTests : ServiceTestBase
         using var conn = new SqliteConnection($"Data Source={dbPath}");
         await conn.OpenAsync();
         using var cmd = conn.CreateCommand();
-        cmd.CommandText = "SELECT data_json FROM evolution WHERE idx = $idx LIMIT 1;";
-        cmd.Parameters.AddWithValue("$idx", "Checksum Source Ability");
-        var dataJson = Assert.IsType<string>(cmd.ExecuteScalar());
+        cmd.CommandText = "SELECT display_name, data_json FROM evolution WHERE idx = $idx LIMIT 1;";
+        cmd.Parameters.AddWithValue("$idx", "checksum-source-ability");
+        using var reader = await cmd.ExecuteReaderAsync();
+        Assert.True(await reader.ReadAsync());
+        Assert.Equal("Checksum Source Ability", reader.GetString(0));
+        var dataJson = reader.GetString(1);
 
         using var doc = JsonDocument.Parse(dataJson);
         Assert.Equal("Classes", doc.RootElement.GetProperty("sourceBook").GetString());
         Assert.Equal("ability.test.checksum-source", doc.RootElement.GetProperty("abilityRef").GetString());
+        Assert.Equal("checksum-source-ability", doc.RootElement.GetProperty("index").GetString());
+        Assert.Equal("Checksum Source Ability", doc.RootElement.GetProperty("displayName").GetString());
     }
 
     private static async Task InsertStaleEvolutionMetadataAsync(string dbPath)

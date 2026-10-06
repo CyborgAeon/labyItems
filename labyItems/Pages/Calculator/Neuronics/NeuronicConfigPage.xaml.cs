@@ -143,6 +143,23 @@ public partial class NeuronicConfigPage : ConfigPageBase<NeuronicConfig>
         SelectedSearchNeuronic = null;
     }
 
+    private async void OnSearchNeuronicsClicked(object? sender, EventArgs e)
+    {
+        if (BindingContext is not NeuronicConfig cfg)
+            return;
+
+        try
+        {
+            var picked = await MpCatalogSearch.PickNeuronicsAsync(Navigation, await NeuronicService.GetAllAsync());
+            foreach (var neuronic in picked)
+                cfg.TryAddNeuronic(neuronic);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Neuronic search failed", ex.Message, "OK");
+        }
+    }
+
     private async void OnEditNeuronicRequested(object? parameter)
     {
         if (parameter is not NeuronicSelectionEntry entry)

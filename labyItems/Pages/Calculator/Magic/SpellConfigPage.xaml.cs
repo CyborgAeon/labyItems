@@ -168,6 +168,23 @@ public partial class SpellConfigPage : ConfigPageBase<SpellConfig>
         SelectedSearchSpell = null;
     }
 
+    private async void OnSearchSpellsClicked(object? sender, EventArgs e)
+    {
+        if (BindingContext is not SpellConfig cfg)
+            return;
+
+        try
+        {
+            var picked = await MpCatalogSearch.PickSpellsAsync(Navigation, await SpellService.GetAllAsync());
+            foreach (var spell in picked)
+                cfg.TryAddSpell(spell);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Spell search failed", ex.Message, "OK");
+        }
+    }
+
     private async void OnEditSpellRequested(object? parameter)
     {
         if (parameter is not SpellSelectionEntry entry)

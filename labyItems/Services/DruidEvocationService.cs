@@ -13,6 +13,8 @@ public static class DruidEvocationService
 {
     public sealed class EvocationDamageRaw
     {
+        [JsonConverter(typeof(SingleOrArrayDamageTypeConverter))]
+        public List<DamageTypeEnum>? DamageType { get; set; }
         [JsonConverter(typeof(IntArrayListConverter))]
         public List<int[]>? amount { get; set; }
 
@@ -44,6 +46,13 @@ public static class DruidEvocationService
         public string description { get; set; } = string.Empty;
         public string range { get; set; } = string.Empty;
         public string duration { get; set; } = string.Empty;
+        public string immunity { get; set; } = string.Empty;
+        [JsonPropertyName("Immunity")]
+        public string ImmunityCompat { get; set; } = string.Empty;
+        [JsonConverter(typeof(SingleOrArrayStringListConverter))]
+        public List<string> immunityName { get; set; } = new();
+        [JsonConverter(typeof(SingleOrArrayStringListConverter))]
+        public List<string> immunityIndex { get; set; } = new();
         public string verbal { get; set; } = string.Empty;
         public List<string> preReqs { get; set; } = new();
 
@@ -85,6 +94,9 @@ public static class DruidEvocationService
         public List<string> GetDamageTypes()
             => Damage?.type is { Count: > 0 } nested ? nested : (damType ?? new List<string>());
 
+        public List<DamageTypeEnum> GetDamageCategories()
+            => Damage?.DamageType ?? new List<DamageTypeEnum>();
+
         public List<int[]> GetArmourApplies()
             => Damage?.ArmourApplies is { Count: > 0 } nested ? nested : (InnatePacApplies ?? new List<int[]>());
 
@@ -125,10 +137,9 @@ public static class DruidEvocationService
 
         var merged = new Dictionary<string, EvocRaw>(StringComparer.OrdinalIgnoreCase);
 
-        var json = await ReadPackagedJsonAsync();
-        var packaged = JsonSerializer.Deserialize<List<EvocRaw>>(json, _jsonOptions)
-                       ?? new List<EvocRaw>();
-        foreach (var item in packaged)
+        // Load persisted rows first. Packaged standard records may contain newer
+        // structured Damage/Heal data than an older installed database.
+        foreach (var item in await Task.Run(() => LoadFromDatabase()))
         {
             if (string.IsNullOrWhiteSpace(item?.name))
                 continue;
@@ -136,7 +147,10 @@ public static class DruidEvocationService
             merged[item.name.Trim()] = item;
         }
 
-        foreach (var item in await Task.Run(() => LoadFromDatabase()))
+        var json = await ReadPackagedJsonAsync();
+        var packaged = JsonSerializer.Deserialize<List<EvocRaw>>(json, _jsonOptions)
+                       ?? new List<EvocRaw>();
+        foreach (var item in packaged)
         {
             if (string.IsNullOrWhiteSpace(item?.name))
                 continue;
@@ -255,6 +269,7 @@ public static class DruidEvocationService
             ? new EvocationDamageRaw
             {
                 amount = damageAmounts,
+                DamageType = source.GetDamageCategories().ToList(),
                 type = damageTypes,
                 ArmourApplies = armourApplies,
                 ArmourType = armourType,
@@ -286,6 +301,10 @@ public static class DruidEvocationService
             description = source.description ?? string.Empty,
             range = source.range ?? string.Empty,
             duration = source.duration ?? string.Empty,
+            immunity = source.immunity ?? string.Empty,
+            ImmunityCompat = source.ImmunityCompat ?? string.Empty,
+            immunityName = source.immunityName ?? new List<string>(),
+            immunityIndex = source.immunityIndex ?? new List<string>(),
             verbal = source.verbal ?? string.Empty,
             preReqs = (source.preReqs ?? new List<string>())
                 .Select(p => (p ?? string.Empty).Trim())

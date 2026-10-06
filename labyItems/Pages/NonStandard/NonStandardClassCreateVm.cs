@@ -729,7 +729,9 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
             return;
 
         var selectedNames = (selectedAbilities ?? Array.Empty<EvolutionService.AbilityResult>())
-            .Select(ability => (ability.Index ?? string.Empty).Trim())
+            .Select(ability => (string.IsNullOrWhiteSpace(ability.DisplayName)
+                ? ability.Index
+                : ability.DisplayName).Trim())
             .Where(name => name.Length > 0)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
@@ -1479,12 +1481,17 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
             if (key.Length == 0)
                 continue;
 
+            var displayName = (string.IsNullOrWhiteSpace(ability.DisplayName)
+                ? key
+                : ability.DisplayName).Trim();
+
             _abilityLookup[key] = new AbilityDefinition
             {
-                Name = key,
+                Name = displayName,
                 Type = "Static",
                 Effect = ability.Description ?? string.Empty
             };
+            _abilityLookup[displayName] = _abilityLookup[key];
         }
 
         var specialisations = await SpecialisationDefinitionRepository.GetIndexAsync();

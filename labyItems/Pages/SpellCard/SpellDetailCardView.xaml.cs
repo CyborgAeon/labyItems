@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using labyItems.Controls;
 using labyItems.Helpers;
 using labyItems.Models.Enums;
 using labyItems.Services;
@@ -137,12 +138,30 @@ public partial class SpellDetailCardView : ContentView
     public bool ShowNotesSeeMore => CanExpandNotes && !IsNotesExpanded;
 
     public string ColourDisplayText => WizardSpellRules.BuildColourDisplayText(Spell?.colour);
+    public string ColourSubtitleText => $"{ColourDisplayText} Spell";
     public string LevelDisplayText => Math.Max(0, Spell?.level ?? 0).ToString();
-    public string RangeDisplayText => ReadOrFallback(Spell?.range, "—");
-    public string DurationDisplayText => ReadOrFallback(Spell?.duration, "—");
+    public string RangeDisplayText => (Spell?.range ?? string.Empty).Trim();
+    public string DurationDisplayText => (Spell?.duration ?? string.Empty).Trim();
+    public bool HasRange => RangeDisplayText.Length > 0;
+    public bool HasDuration => DurationDisplayText.Length > 0;
+    public bool HasRangeOrDuration => HasRange || HasDuration;
+    public bool HasBothRangeAndDuration => HasRange && HasDuration;
+    public bool HasOnlyRange => HasRange && !HasDuration;
+    public bool HasOnlyDuration => !HasRange && HasDuration;
     public bool IsAdvanced => Spell?.isAdvanced == true || Spell?.IsAdvancedCompat == true;
-    public string ImmunityDisplayText => (Spell?.immunities ?? string.Empty).Trim();
+    public string ImmunityDisplayText => ReadFirst(JoinValues(Spell?.immunityName), Spell?.immunity, Spell?.immunities, Spell?.ImmunityCompat, JoinValues(Spell?.immunityIndex));
     public bool HasImmunity => ImmunityDisplayText.Length > 0;
+    public bool HasImmunityLink => ImmunityNavigationHelper.HasIndex(Spell?.immunityIndex);
+    public CombatQuickFactsVm DamageQuickFacts => CombatQuickFactsFormatter.Build(
+        Spell?.Damage != null,
+        Spell?.GetDamageAmounts() ?? new List<int[]>(),
+        Spell?.GetDamageTypes() ?? new List<string>(),
+        Spell?.GetDamageCategories(), Spell?.GetArmourApplies(), Spell?.GetArmourType());
+    public bool HasDamageQuickFacts => DamageQuickFacts.HasValue;
+    public bool HasKeyInformation => HasRangeOrDuration || HasImmunity || HasDamageQuickFacts;
+
+    private static string JoinValues(IEnumerable<string>? values) =>
+        string.Join(", ", values?.Where(value => !string.IsNullOrWhiteSpace(value)).Select(value => value.Trim()) ?? Array.Empty<string>());
 
     public Color ColourCircleColor => WizardSpellRules.ResolveColourCircleColor(Spell?.colour);
     public Color ColourCircleBorderColor => NeedsContrastBorder(ColourCircleColor)
@@ -194,16 +213,30 @@ public partial class SpellDetailCardView : ContentView
         OnPropertyChanged(nameof(DescriptionChevronText));
         OnPropertyChanged(nameof(VerbalChevronText));
         OnPropertyChanged(nameof(ColourDisplayText));
+        OnPropertyChanged(nameof(ColourSubtitleText));
         OnPropertyChanged(nameof(LevelDisplayText));
         OnPropertyChanged(nameof(RangeDisplayText));
         OnPropertyChanged(nameof(DurationDisplayText));
+        OnPropertyChanged(nameof(HasRange));
+        OnPropertyChanged(nameof(HasDuration));
+        OnPropertyChanged(nameof(HasRangeOrDuration));
+        OnPropertyChanged(nameof(HasBothRangeAndDuration));
+        OnPropertyChanged(nameof(HasOnlyRange));
+        OnPropertyChanged(nameof(HasOnlyDuration));
         OnPropertyChanged(nameof(IsAdvanced));
         OnPropertyChanged(nameof(ImmunityDisplayText));
         OnPropertyChanged(nameof(HasImmunity));
+        OnPropertyChanged(nameof(HasImmunityLink));
+        OnPropertyChanged(nameof(DamageQuickFacts));
+        OnPropertyChanged(nameof(HasDamageQuickFacts));
+        OnPropertyChanged(nameof(HasKeyInformation));
         OnPropertyChanged(nameof(ColourCircleColor));
         OnPropertyChanged(nameof(ColourCircleBorderColor));
         OnPropertyChanged(nameof(HasMetaChips));
     }
+
+    private async void OnImmunityTapped(object sender, TappedEventArgs e) =>
+        await ImmunityNavigationHelper.OpenFirstAvailableAsync(Navigation, Spell?.immunityIndex);
 
     private void RebuildMetaChips()
     {
@@ -428,6 +461,10 @@ public partial class SpellDetailCardView : ContentView
         var text = (value ?? string.Empty).Trim();
         return text.Length == 0 ? fallback : text;
     }
+
+    private static string ReadFirst(params string?[] values) => values
+        .Select(value => (value ?? string.Empty).Trim())
+        .FirstOrDefault(value => value.Length > 0) ?? string.Empty;
 
     private static string Capitalize(string value)
     {

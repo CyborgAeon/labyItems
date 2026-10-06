@@ -7,17 +7,27 @@
     xmlns:pickers="clr-namespace:labyItems.Controls.Pickers">
 
     <ScrollView>
-        <VerticalStackLayout Padding="16"
-                             Spacing="12">
-            <Label Text="Player name"
-                   FontAttributes="Bold"/>
-            <Entry Placeholder="e.g. Alex"
-                   Text="{Binding PlayerName, Mode=TwoWay}"/>
-
-            <Label Text="Character name"
-                   FontAttributes="Bold"/>
-            <Entry Placeholder="e.g. Stormcaller"
-                   Text="{Binding CharacterName, Mode=TwoWay}"/>
+        <VerticalStackLayout Padding="16">
+            <Grid ColumnDefinitions="*,*"
+                  RowDefinitions="Auto,Auto"
+                  ColumnSpacing="12">
+                <Label Grid.Row="0"
+                       Grid.Column="0"
+                       Text="Player name"
+                       FontAttributes="Bold"/>
+                <Label Grid.Row="0"
+                       Grid.Column="1"
+                       Text="Character name"
+                       FontAttributes="Bold"/>
+                <Entry Grid.Row="1"
+                       Grid.Column="0"
+                       Placeholder="e.g. Alex"
+                       Text="{Binding PlayerName, Mode=TwoWay}"/>
+                <Entry Grid.Row="1"
+                       Grid.Column="1"
+                       Placeholder="e.g. Stormcaller"
+                       Text="{Binding CharacterName, Mode=TwoWay}"/>
+            </Grid>
 
             <Label Text="Alignment"
                    FontAttributes="Bold"/>

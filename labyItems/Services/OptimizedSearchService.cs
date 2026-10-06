@@ -507,6 +507,9 @@ public sealed class OptimizedSearchService
         var results = new List<SearchResultDto>();
         foreach (var row in cmd.ExecuteQuery<(string id, string name, string description, int power, int isAdvanced, string fieldsJson, string dataJson)>())
         {
+            if (fieldFilters.Count > 0 && !MatchesEvocationField(row.fieldsJson, fieldFilters))
+                continue;
+
             results.Add(new SearchResultDto
             {
                 Id = row.id,
@@ -520,6 +523,22 @@ public sealed class OptimizedSearchService
         }
 
         return results;
+    }
+
+    private static bool MatchesEvocationField(string? fieldsJson, HashSet<string> fieldTokens)
+    {
+        // Tolerates singular/plural differences (e.g. "forest" vs "forests").
+        foreach (var field in ParseStringArray(fieldsJson))
+        {
+            var normalized = new string(field.Where(char.IsLetterOrDigit).Select(char.ToLowerInvariant).ToArray());
+            foreach (var token in fieldTokens)
+            {
+                if (normalized.StartsWith(token, StringComparison.Ordinal) || token.StartsWith(normalized, StringComparison.Ordinal))
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     // ===== NEURONIC SEARCHES =====

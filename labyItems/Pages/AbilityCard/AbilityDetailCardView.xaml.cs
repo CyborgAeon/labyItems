@@ -24,7 +24,7 @@ public partial class AbilityDetailCardView : ContentView
         set => SetValue(AbilityProperty, value);
     }
 
-    public string AbilityIndex => ReadOrFallback(Ability?.Index, "Unnamed Ability");
+    public string AbilityIndex => ReadOrFallback(Ability?.DisplayName, ReadOrFallback(Ability?.Index, "Unnamed Ability"));
     public bool ShowNonStandardBadge => Ability?.IsNonStandard == true;
     public string TableDisplayText => $"Table: {Math.Max(0, Ability?.Table ?? 0)}";
     public string AvailabilityText => BuildAvailabilityDisplay(Ability?.Available);

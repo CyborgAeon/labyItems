@@ -199,7 +199,7 @@ public sealed class GeneralAbilitySearchVm : INotifyPropertyChanged
             .Where(ability => ability != null && ability.Cost > 0)
             .OrderBy(ability => ability.Table)
             .ThenBy(ability => NormalizeSourceBook(ability.SourceBook), StringComparer.OrdinalIgnoreCase)
-            .ThenBy(ability => ability.Index, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(ability => string.IsNullOrWhiteSpace(ability.DisplayName) ? ability.Index : ability.DisplayName, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
         RebuildFilterChips();
@@ -357,6 +357,7 @@ public sealed class GeneralAbilitySearchVm : INotifyPropertyChanged
         {
             filtered = filtered.Where(ability =>
                 Matches(ability.Index, query)
+                || Matches(ability.DisplayName, query)
                 || Matches(NormalizeSourceBook(ability.SourceBook), query)
                 || Matches($"table {ability.Table}", query)
                 || Matches($"cost {ability.Cost}", query));
@@ -473,7 +474,7 @@ public sealed class GeneralAbilitySearchResultVm : INotifyPropertyChanged
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
     public EvolutionService.AbilityResult Ability { get; }
-    public string Name => Ability.Index;
+    public string Name => string.IsNullOrWhiteSpace(Ability.DisplayName) ? Ability.Index : Ability.DisplayName;
     public string MetaText => $"Table {Ability.Table} • Cost {Ability.Cost}";
     public string DescriptionText => Ability.Description ?? string.Empty;
     public bool HasDescription => !string.IsNullOrWhiteSpace(DescriptionText);

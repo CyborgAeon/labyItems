@@ -207,6 +207,7 @@ public partial class CharacterSpecialisation : ContentView
         return new EvolutionService.AbilityResult
         {
             Index = name,
+            DisplayName = name,
             Description = source.Effect ?? string.Empty,
             Cost = 0,
             Table = 0,

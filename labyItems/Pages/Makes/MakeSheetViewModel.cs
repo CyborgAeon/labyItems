@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using labyItems.Infrastructure;
 using labyItems.Models;
 using labyItems.Models.Characters;
+using labyItems.Pages.Calculator;
 using Microsoft.Maui.Graphics;
 using labyItems.Services;
 using labyItems.Services.Specialisations;
@@ -560,10 +561,7 @@ public sealed class MakeSheetViewModel : ObservableObject
         set
         {
             var normalized = NormalizeSelection(value, _newEffectCategory);
-            if (!SetProperty(ref _newEffectCategory, normalized))
-                return;
-
-            _ = RefreshEffectLookupAsync();
+            SetProperty(ref _newEffectCategory, normalized);
         }
     }
 
@@ -711,7 +709,43 @@ public sealed class MakeSheetViewModel : ObservableObject
                 NewEffectPower = Math.Max(1, value.BaseCost).ToString();
                 if (IsSingleEffectType())
                     NewEffectUses = "1";
+
+                var category = value.IsAdvanced ? EffectCategoryAdvanced : EffectCategoryStandard;
+                var isAvailable = EffectCategoryOptions.Contains(category, StringComparer.OrdinalIgnoreCase)
+                    && !EffectCategoryDisabledOptions.Contains(category, StringComparer.OrdinalIgnoreCase);
+                if (isAvailable)
+                    NewEffectCategory = category;
             }
+        }
+    }
+
+    public async Task<IReadOnlyList<MakeEffectLookupOption>> PickEffectOptionsFromSearchAsync(INavigation navigation)
+    {
+        switch (GetEffectLookupKind())
+        {
+            case EffectLookupKind.Spells:
+            {
+                var picked = await MpCatalogSearch.PickSpellsAsync(navigation, await SpellService.GetAllAsync());
+                return picked
+                    .Select(s => new MakeEffectLookupOption(s.name, Math.Max(1, s.level), "Spell", IsSpellAdvanced(s)))
+                    .ToList();
+            }
+            case EffectLookupKind.Miracles:
+            {
+                var picked = await MpCatalogSearch.PickMiraclesAsync(navigation, await MiracleService.GetAllAsync());
+                return picked
+                    .Select(m => new MakeEffectLookupOption(m.name, Math.Max(1, m.power), "Miracle", m.isAdvanced))
+                    .ToList();
+            }
+            case EffectLookupKind.Evocations:
+            {
+                var picked = await MpCatalogSearch.PickEvocationsAsync(navigation, await DruidEvocationService.GetAllAsync());
+                return picked
+                    .Select(e => new MakeEffectLookupOption(e.name, Math.Max(1, e.power), "Evocation", e.isAdvanced))
+                    .ToList();
+            }
+            default:
+                return Array.Empty<MakeEffectLookupOption>();
         }
     }
 
@@ -1355,13 +1389,13 @@ public sealed class MakeSheetViewModel : ObservableObject
             if (kind == EffectLookupKind.Spells)
             {
                 var spells = await SpellService.GetAllAsync();
-                var filtered = FilterSpellsForCategory(spells, NewEffectCategory);
-                lookup = BuildLookupDictionary(filtered
+                lookup = BuildLookupDictionary(spells
                     .Where(spell => !string.IsNullOrWhiteSpace(spell?.name))
                     .Select(spell => new MakeEffectLookupOption(
                         spell.name.Trim(),
                         Math.Max(1, spell.level),
-                        "Spell"))
+                        "Spell",
+                        IsSpellAdvanced(spell)))
                     .OrderBy(option => option.BaseCost)
                     .ThenBy(option => option.Name, StringComparer.OrdinalIgnoreCase),
                     option => $"{option.Name} (L{option.BaseCost})");
@@ -1375,7 +1409,8 @@ public sealed class MakeSheetViewModel : ObservableObject
                     .Select(miracle => new MakeEffectLookupOption(
                         miracle.name.Trim(),
                         Math.Max(1, miracle.power),
-                        "Miracle"))
+                        "Miracle",
+                        miracle.isAdvanced))
                     .OrderBy(option => option.BaseCost)
                     .ThenBy(option => option.Name, StringComparer.OrdinalIgnoreCase),
                     option => $"{option.Name} (P{option.BaseCost})");
@@ -1389,7 +1424,8 @@ public sealed class MakeSheetViewModel : ObservableObject
                     .Select(evoc => new MakeEffectLookupOption(
                         evoc.name.Trim(),
                         Math.Max(1, evoc.power),
-                        "Evocation"))
+                        "Evocation",
+                        evoc.isAdvanced))
                     .OrderBy(option => option.BaseCost)
                     .ThenBy(option => option.Name, StringComparer.OrdinalIgnoreCase),
                     option => $"{option.Name} (P{option.BaseCost})");
@@ -2833,10 +2869,13 @@ public sealed class MakeSheetViewModel : ObservableObject
             var resolved = await AbilityDetailsLookupService.FindByIndexAsync(token);
             if (resolved != null)
             {
+                var displayName = string.IsNullOrWhiteSpace(resolved.DisplayName)
+                    ? resolved.Index
+                    : resolved.DisplayName;
                 AddOwnedAbility(
                     resolved.Index,
                     resolved.AbilityRef,
-                    $"Advancement: {resolved.Index}");
+                    $"Advancement: {displayName}");
             }
             else
             {
@@ -3483,12 +3522,15 @@ public sealed record MakeTableRowVm(
 
 public sealed class MakeEffectLookupOption
 {
-    public MakeEffectLookupOption(string name, int baseCost, string sourceType)
+    public MakeEffectLookupOption(string name, int baseCost, string sourceType, bool isAdvanced = false)
     {
         Name = (name ?? string.Empty).Trim();
         BaseCost = Math.Max(1, baseCost);
         SourceType = (sourceType ?? string.Empty).Trim();
+        IsAdvanced = isAdvanced;
     }
+
+    public bool IsAdvanced { get; }
 
     public string Name { get; }
     public int BaseCost { get; }

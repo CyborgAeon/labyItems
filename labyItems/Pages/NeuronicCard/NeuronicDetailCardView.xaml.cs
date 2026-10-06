@@ -1,4 +1,6 @@
 using System.Collections.ObjectModel;
+using labyItems.Controls;
+using labyItems.Helpers;
 using labyItems.Models.Enums;
 using labyItems.Services;
 
@@ -23,13 +25,14 @@ public partial class NeuronicDetailCardView : ContentView
     public string PowerDisplayText => $"{Math.Max(0, Neuronic?.power ?? 0)} TBLP";
     public string RangeDisplayText => ReadOrFallback(Neuronic?.range, "—");
     public string DurationDisplayText => ReadOrFallback(Neuronic?.duration, "—");
-    public string ImmunityDisplayText => (Neuronic?.immunities ?? string.Empty).Trim();
+    public string ImmunityDisplayText => ReadFirst(JoinValues(Neuronic?.immunityName), Neuronic?.immunities, JoinValues(Neuronic?.immunityIndex));
     public bool HasImmunity => ImmunityDisplayText.Length > 0;
+    public bool HasImmunityLink => ImmunityNavigationHelper.HasIndex(Neuronic?.immunityIndex);
     public string TypeDisplayText => Neuronic?.Type switch
     {
-        NeuroOptionType.Active => "Active",
-        NeuroOptionType.Passive => "Passive",
-        _ => "Unclassified"
+        NeuroOptionType.Active => "Active Neuronic",
+        NeuroOptionType.Passive => "Passive Neuronic",
+        _ => "Unclassified Neuronic"
     };
 
     public string DescriptionText => ReadOrFallback(Neuronic?.description, "No description provided.");
@@ -42,6 +45,19 @@ public partial class NeuronicDetailCardView : ContentView
     public bool HasTodo => TodoText.Length > 0;
     public string DamageSummaryText => BuildDamageSummary(Neuronic);
     public bool HasDamageSummary => DamageSummaryText.Length > 0;
+    public CombatQuickFactsVm DamageQuickFacts => CombatQuickFactsFormatter.Build(
+        Neuronic?.Damage != null,
+        Neuronic?.GetDamageAmounts() ?? new List<int[]>(),
+        Neuronic?.GetDamageTypes() ?? new List<string>(),
+        Neuronic?.GetDamageCategories(), Neuronic?.GetArmourApplies(), Neuronic?.GetArmourType());
+    public bool HasDamageQuickFacts => DamageQuickFacts.HasValue;
+
+    private static string JoinValues(IEnumerable<string>? values) =>
+        string.Join(", ", values?.Where(value => !string.IsNullOrWhiteSpace(value)).Select(value => value.Trim()) ?? Array.Empty<string>());
+
+    private static string ReadFirst(params string?[] values) => values
+        .Select(value => (value ?? string.Empty).Trim())
+        .FirstOrDefault(value => value.Length > 0) ?? string.Empty;
 
     public ObservableCollection<NeuronicMetaChipVm> MetaChips { get; } = new();
     public bool HasMetaChips => MetaChips.Count > 0;
@@ -67,8 +83,6 @@ public partial class NeuronicDetailCardView : ContentView
 
         AddMetaChip("Range", Neuronic?.range);
         AddMetaChip("Duration", Neuronic?.duration);
-        AddMetaChip("Immunities", Neuronic?.immunities);
-
         OnPropertyChanged(nameof(HasMetaChips));
     }
 
@@ -89,6 +103,7 @@ public partial class NeuronicDetailCardView : ContentView
         OnPropertyChanged(nameof(DurationDisplayText));
         OnPropertyChanged(nameof(ImmunityDisplayText));
         OnPropertyChanged(nameof(HasImmunity));
+        OnPropertyChanged(nameof(HasImmunityLink));
         OnPropertyChanged(nameof(TypeDisplayText));
         OnPropertyChanged(nameof(DescriptionText));
         OnPropertyChanged(nameof(AsPerText));
@@ -99,8 +114,13 @@ public partial class NeuronicDetailCardView : ContentView
         OnPropertyChanged(nameof(HasTodo));
         OnPropertyChanged(nameof(DamageSummaryText));
         OnPropertyChanged(nameof(HasDamageSummary));
+        OnPropertyChanged(nameof(DamageQuickFacts));
+        OnPropertyChanged(nameof(HasDamageQuickFacts));
         OnPropertyChanged(nameof(HasMetaChips));
     }
+
+    private async void OnImmunityTapped(object sender, TappedEventArgs e) =>
+        await ImmunityNavigationHelper.OpenFirstAvailableAsync(Navigation, Neuronic?.immunityIndex);
 
     private async Task RebuildAsPerEntriesAsync()
     {

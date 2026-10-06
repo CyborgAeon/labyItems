@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView x:Class="labyItems.Controls.CombatQuickFactsView" x:Name="Root"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <VerticalStackLayout IsVisible="{Binding Facts.HasValue, Source={x:Reference Root}}" Spacing="0">
+        <Grid ColumnDefinitions="*,1,*" IsVisible="{Binding Facts.ShowTwoCells, Source={x:Reference Root}}">
+            <VerticalStackLayout Padding="8,6"><Label Text="{Binding Facts.ValueLabel, Source={x:Reference Root}}" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding Facts.ValueText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+            <BoxView Grid.Column="1" Color="{StaticResource SurfaceBorderColor}"/>
+            <VerticalStackLayout Grid.Column="2" Padding="8,6"><Label Text="TYPE" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding Facts.TypeText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+        </Grid>
+        <Grid ColumnDefinitions="*,1,*,1,*" IsVisible="{Binding Facts.ShowThreeCells, Source={x:Reference Root}}">
+            <VerticalStackLayout Padding="8,6"><Label Text="{Binding Facts.ValueLabel, Source={x:Reference Root}}" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding Facts.ValueText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+            <BoxView Grid.Column="1" Color="{StaticResource SurfaceBorderColor}"/>
+            <VerticalStackLayout Grid.Column="2" Padding="8,6"><Label Text="TYPE" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding Facts.TypeText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+            <BoxView Grid.Column="3" Color="{StaticResource SurfaceBorderColor}"/>
+            <VerticalStackLayout Grid.Column="4" Padding="8,6"><Label Text="ARMOUR" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding Facts.ArmourText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+        </Grid>
+        <VerticalStackLayout Padding="8,6" IsVisible="{Binding Facts.ShowWideOnly, Source={x:Reference Root}}"><Label Text="{Binding Facts.ValueLabel, Source={x:Reference Root}}" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding Facts.ValueText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+        <Grid ColumnDefinitions="2*,1,*" IsVisible="{Binding Facts.ShowWideWithArmour, Source={x:Reference Root}}">
+            <VerticalStackLayout Padding="8,6"><Label Text="{Binding Facts.ValueLabel, Source={x:Reference Root}}" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding Facts.ValueText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+            <BoxView Grid.Column="1" Color="{StaticResource SurfaceBorderColor}"/>
+            <VerticalStackLayout Grid.Column="2" Padding="8,6"><Label Text="ARMOUR" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding Facts.ArmourText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+        </Grid>
+    </VerticalStackLayout>
+</ContentView>

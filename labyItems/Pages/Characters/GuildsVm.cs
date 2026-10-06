@@ -98,7 +98,14 @@ public sealed class GuildsVm : INotifyPropertyChanged
     {
         Raise(nameof(SelectedGuilds));
         Raise(nameof(IsComplete));
+        Raise(nameof(IsPoliticalFilled));
+        Raise(nameof(IsProfessionalFilled));
+        Raise(nameof(IsSocialFilled));
     }
+
+    public bool IsPoliticalFilled => _slotRules.IsTypeFilled("political", _draft.Guilds, _guildRecords);
+    public bool IsProfessionalFilled => _slotRules.IsTypeFilled("professional", _draft.Guilds, _guildRecords);
+    public bool IsSocialFilled => _slotRules.IsTypeFilled("social", _draft.Guilds, _guildRecords);
 
     private readonly CharacterDraft _draft;
     private readonly Action _notifyWizardGatingChanged;
@@ -152,6 +159,13 @@ public sealed class GuildsVm : INotifyPropertyChanged
             operation: "GUILD_TOGGLE_SELECTED",
             guildName: item?.Name));
         ToggleTypeFilterChipCommand = new Command<GuildTypeFilterChipVm>(ToggleTypeFilterChip);
+        OpenFiltersCommand = new Command(OpenFilters);
+        CancelFiltersCommand = new Command(() => IsFilterModalOpen = false);
+        ApplyFiltersCommand = new Command(ApplyPendingFilters);
+        TogglePendingTypeFilterCommand = new Command<GuildTypeFilterChipVm>(TogglePendingTypeFilter);
+        OpenReviewCommand = new Command(OpenReview);
+        CancelReviewCommand = new Command(CancelReview);
+        SaveReviewCommand = new Command(SaveReview);
 
         SelectTypeFilterCommand = new Command<string>(s =>
         {
@@ -1730,6 +1744,115 @@ public sealed class GuildsVm : INotifyPropertyChanged
         RebuildTypeFilterChips();
         ScheduleRefilter(debounce: false);
     }
+
+    private readonly HashSet<string> _pendingTypeFilters = new(StringComparer.OrdinalIgnoreCase);
+    private bool _isFilterModalOpen;
+    private bool _isReviewOpen;
+    private HashSet<string> _reviewSnapshot = new(StringComparer.OrdinalIgnoreCase);
+
+    public ObservableCollection<GuildTypeFilterChipVm> FilterModalChips { get; } = new();
+    public ObservableCollection<GuildCardVm> ReviewGuilds { get; } = new();
+    public ICommand OpenFiltersCommand { get; }
+    public ICommand CancelFiltersCommand { get; }
+    public ICommand ApplyFiltersCommand { get; }
+    public ICommand TogglePendingTypeFilterCommand { get; }
+    public ICommand OpenReviewCommand { get; }
+    public ICommand CancelReviewCommand { get; }
+    public ICommand SaveReviewCommand { get; }
+
+    public bool IsFilterModalOpen
+    {
+        get => _isFilterModalOpen;
+        private set => Set(ref _isFilterModalOpen, value);
+    }
+
+    public bool IsReviewOpen
+    {
+        get => _isReviewOpen;
+        private set => Set(ref _isReviewOpen, value);
+    }
+
+    private void OpenFilters()
+    {
+        _pendingTypeFilters.Clear();
+        _pendingTypeFilters.UnionWith(_selectedTypeFilters);
+
+        FilterModalChips.Clear();
+        var types = TypeFilters
+            .Where(t => !string.IsNullOrWhiteSpace(t) && !string.Equals(t, AllTypeFilterValue, StringComparison.OrdinalIgnoreCase))
+            .Distinct(StringComparer.OrdinalIgnoreCase);
+        foreach (var type in types)
+            FilterModalChips.Add(new GuildTypeFilterChipVm(type, _pendingTypeFilters.Contains(type)));
+
+        IsFilterModalOpen = true;
+    }
+
+    private void TogglePendingTypeFilter(GuildTypeFilterChipVm? chip)
+    {
+        if (chip == null)
+            return;
+
+        if (!_pendingTypeFilters.Add(chip.Type))
+            _pendingTypeFilters.Remove(chip.Type);
+
+        chip.IsSelected = _pendingTypeFilters.Contains(chip.Type);
+    }
+
+    private void ApplyPendingFilters()
+    {
+        _selectedTypeFilters.Clear();
+        _selectedTypeFilters.UnionWith(_pendingTypeFilters);
+        IsFilterModalOpen = false;
+        RebuildTypeFilterChips();
+        ScheduleRefilter(debounce: false);
+    }
+
+    private void OpenReview()
+    {
+        _reviewSnapshot = new HashSet<string>(_draft.Guilds, StringComparer.OrdinalIgnoreCase);
+
+        ReviewGuilds.Clear();
+        foreach (var card in AllGuilds
+                     .Where(g => g.IsSelected)
+                     .OrderBy(g => g.Name, StringComparer.OrdinalIgnoreCase))
+        {
+            ReviewGuilds.Add(card);
+        }
+
+        IsReviewOpen = true;
+    }
+
+    private void SaveReview()
+    {
+        IsReviewOpen = false;
+        ReviewGuilds.Clear();
+        if (_hideUnavailableGuilds)
+            ScheduleRefilter(debounce: false);
+    }
+
+    private void CancelReview()
+    {
+        var snapshot = _reviewSnapshot;
+        var toRevert = AllGuilds
+            .Where(g => g.IsSelected != snapshot.Contains(g.Name))
+            .ToList();
+
+        IsReviewOpen = false;
+        ReviewGuilds.Clear();
+
+        _ = ExecuteGuildCardCommandSafeAsync(
+            action: async () =>
+            {
+                foreach (var card in toRevert)
+                    await ToggleSelectedAsync(card);
+
+                if (_hideUnavailableGuilds)
+                    ScheduleRefilter(debounce: false);
+            },
+            operation: "GUILD_REVIEW_CANCEL",
+            guildName: null);
+    }
+
     public int SelectedCount => _draft.Guilds.Count;
 
     private void RecomputeDraftAlignments()
@@ -3311,6 +3434,15 @@ public sealed class GuildSlotRules
             return true;
 
         return false;
+    }
+
+    public bool IsTypeFilled(string type, IEnumerable<string> selected, Dictionary<string, GuildRecord> records)
+    {
+        if (AllGuildsBlocked)
+            return true;
+
+        var limit = GetLimit(type);
+        return limit <= 0 || CountOfType(type, selected, records) >= limit;
     }
 
     public GuildSelectability CanSelect(string type, string guildName, IReadOnlyList<string> selected, Dictionary<string, GuildRecord> records)

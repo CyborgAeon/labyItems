@@ -54,7 +54,9 @@ public static class AbilityPrerequisiteService
                     continue;
 
                 var resolved = ResolveAbility(requiredTerm, aliasLookup);
-                var displayName = (resolved?.Index ?? requiredTerm).Trim();
+                var displayName = (resolved is null
+                    ? requiredTerm
+                    : string.IsNullOrWhiteSpace(resolved.DisplayName) ? resolved.Index : resolved.DisplayName).Trim();
                 if (displayName.Length > 0)
                     missingNames.Add(displayName);
 
@@ -69,7 +71,9 @@ public static class AbilityPrerequisiteService
             if (missingNames.Count == 0)
                 continue;
 
-            var abilityName = (ability.Index ?? string.Empty).Trim();
+            var abilityName = (string.IsNullOrWhiteSpace(ability.DisplayName)
+                ? ability.Index
+                : ability.DisplayName).Trim();
             if (abilityName.Length == 0)
                 abilityName = "Ability";
 

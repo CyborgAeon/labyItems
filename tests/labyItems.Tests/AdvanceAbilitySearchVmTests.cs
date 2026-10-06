@@ -117,16 +117,16 @@ public sealed class AdvanceAbilitySearchVmTests : ServiceTestBase
         await WaitForAsync(() => vm.FilteredAbilities.Count > 0);
 
         var prereqAbility = vm.FilteredAbilities
-            .First(item => item.Name.Equals("AA1", StringComparison.OrdinalIgnoreCase));
+            .First(item => item.Name.Equals("Arcane Attunement", StringComparison.OrdinalIgnoreCase));
         prereqAbility.IsSelected = true;
         await WaitForAsync(() => vm.SelectedCount == 1);
 
         var result = vm.GetSelectionPrerequisiteIssues();
 
         Assert.True(result.HasIssues);
-        Assert.Contains(result.Issues, issue => issue.AbilityName.Equals("AA1", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(result.Issues, issue => issue.AbilityName.Equals("Arcane Attunement", StringComparison.OrdinalIgnoreCase));
         var message = vm.BuildMissingPrerequisiteMessage(result);
-        Assert.Contains("AA1", message, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("Arcane Attunement", message, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("Focus", message, StringComparison.OrdinalIgnoreCase);
     }
 
