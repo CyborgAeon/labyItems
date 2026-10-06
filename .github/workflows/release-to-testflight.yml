@@ -34,10 +34,10 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Select Xcode 27.0
+      - name: Select Xcode 26.6
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "27.0"
+          xcode-version: "26.6"
 
       - name: Confirm Xcode version
         run: xcodebuild -version
@@ -45,8 +45,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "10.0.x"
-          global-json-file: global.json
+          dotnet-version: "10.0.401"
 
       - name: Validate required secrets
         run: |
@@ -65,8 +64,8 @@ jobs:
 
       - name: Install .NET MAUI workloads
         run: |
-          dotnet workload install maui-ios maui-android
-
+          dotnet workload install maui-ios maui-android --version 10.0.401
+      
       - name: Build bundled database
         run: |
           set -euo pipefail
