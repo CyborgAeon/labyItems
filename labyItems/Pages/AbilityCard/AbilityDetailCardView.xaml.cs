@@ -7,6 +7,17 @@ namespace labyItems.Pages.AbilityCard;
 
 public partial class AbilityDetailCardView : ContentView
 {
+    public event EventHandler<AbilityFieldEditRequestedEventArgs>? FieldEditRequested;
+
+    public static readonly BindableProperty IsEditingProperty = BindableProperty.Create(
+        nameof(IsEditing), typeof(bool), typeof(AbilityDetailCardView), false,
+        propertyChanged: (bindable, _, _) => ((AbilityDetailCardView)bindable).RaiseComputedProperties());
+
+    public bool IsEditing
+    {
+        get => (bool)GetValue(IsEditingProperty);
+        set => SetValue(IsEditingProperty, value);
+    }
     private const int DescriptionCollapsedLines = 5;
     private const double ExpanderOverflowTolerance = 0.01;
     private const string InfinityGlyphCode = "\uf534";
@@ -24,7 +35,7 @@ public partial class AbilityDetailCardView : ContentView
         set => SetValue(AbilityProperty, value);
     }
 
-    public string AbilityIndex => ReadOrFallback(Ability?.DisplayName, ReadOrFallback(Ability?.Index, "Unnamed Ability"));
+    public string AbilityIndex => ReadOrFallback(Ability?.DisplayName, ReadOrFallback(Ability?.Index, IsEditing ? "Tap to add a name" : "Unnamed Ability"));
     public bool ShowNonStandardBadge => Ability?.IsNonStandard == true;
     public string TableDisplayText => $"Table: {Math.Max(0, Ability?.Table ?? 0)}";
     public string AvailabilityText => BuildAvailabilityDisplay(Ability?.Available);
@@ -51,11 +62,14 @@ public partial class AbilityDetailCardView : ContentView
     public string InfiniteCostPrefixText => $"Cost: ({Math.Max(0, Ability?.Cost ?? 0)}/";
     public string InfinityGlyph => InfinityGlyphCode;
 
-    public string DescriptionText => ReadOrFallback(Ability?.Description, "No description provided.");
+    public string DescriptionText => ReadOrFallback(Ability?.Description, IsEditing ? "Tap to add a description" : "No description provided.");
     public string NotesText => BuildNotesText(Ability);
     public bool HasNotesText => NotesText.Length > 0;
     public bool HasPreReqs => PreReqEntries.Count > 0;
-    public bool HasNotesSection => HasNotesText || HasPreReqs;
+    public bool HasNotesSection => IsEditing || HasNotesText || HasPreReqs;
+    public bool ShowPreReqs => IsEditing || HasPreReqs;
+    public bool ShowPurchaseOptions => IsEditing || HasNotesText;
+    public string PurchaseOptionsText => HasNotesText ? NotesText : "Tap to configure repeat purchases";
 
     public ObservableCollection<AbilityPreReqEntryVm> PreReqEntries { get; } = new();
     public ObservableCollection<AbilityPreReqEntryVm> AsPerEntries { get; } = new();
@@ -115,6 +129,7 @@ public partial class AbilityDetailCardView : ContentView
         PreReqEntries.CollectionChanged += (_, __) =>
         {
             OnPropertyChanged(nameof(HasPreReqs));
+            OnPropertyChanged(nameof(ShowPreReqs));
             OnPropertyChanged(nameof(HasNotesSection));
         };
         AsPerEntries.CollectionChanged += (_, __) => OnPropertyChanged(nameof(HasAsPer));
@@ -158,6 +173,9 @@ public partial class AbilityDetailCardView : ContentView
         OnPropertyChanged(nameof(NotesText));
         OnPropertyChanged(nameof(HasNotesText));
         OnPropertyChanged(nameof(HasNotesSection));
+        OnPropertyChanged(nameof(ShowPreReqs));
+        OnPropertyChanged(nameof(ShowPurchaseOptions));
+        OnPropertyChanged(nameof(PurchaseOptionsText));
         OnPropertyChanged(nameof(DescriptionChevronText));
         OnPropertyChanged(nameof(ShowDescriptionSeeMore));
     }
@@ -195,6 +213,11 @@ public partial class AbilityDetailCardView : ContentView
 
     private void OnDescriptionSectionTapped(object sender, TappedEventArgs e)
     {
+        if (IsEditing)
+        {
+            RequestEdit("description");
+            return;
+        }
         if (!CanExpandDescription)
             return;
 
@@ -529,6 +552,28 @@ public partial class AbilityDetailCardView : ContentView
         var text = (value ?? string.Empty).Trim();
         return text.Length == 0 ? fallback : text;
     }
+
+    private void RequestEdit(string field)
+    {
+        if (IsEditing)
+            FieldEditRequested?.Invoke(this, new AbilityFieldEditRequestedEventArgs(field));
+    }
+
+    private void OnNameTapped(object sender, TappedEventArgs e) => RequestEdit("name");
+    private void OnCostTapped(object sender, TappedEventArgs e) => RequestEdit("cost");
+    private void OnTableTapped(object sender, TappedEventArgs e) => RequestEdit("table");
+    private void OnAvailabilityEditTapped(object sender, TappedEventArgs e)
+    {
+        if (IsEditing) RequestEdit("available");
+        else OnAvailabilityTapped(sender, e);
+    }
+    private void OnPurchaseOptionsTapped(object sender, TappedEventArgs e) => RequestEdit("purchaseOptions");
+    private void OnPreReqsTapped(object sender, TappedEventArgs e) => RequestEdit("preReqs");
+}
+
+public sealed class AbilityFieldEditRequestedEventArgs(string field) : EventArgs
+{
+    public string Field { get; } = field;
 }
 
 public sealed class AbilityPreReqEntryVm

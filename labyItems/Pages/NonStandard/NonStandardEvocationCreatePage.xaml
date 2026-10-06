@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="labyItems.Pages.NonStandard.NonStandardEvocationCreatePage"
+             x:Name="Root"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:labyItems.Controls"
+             xmlns:cards="clr-namespace:labyItems.Pages.EvocationCard"
+             Shell.NavBarIsVisible="False"
+             NavigationPage.HasNavigationBar="False">
+    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="0">
+        <Grid Grid.Row="0" Padding="12,8" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+            <controls:BackNavigationButton Command="{Binding BackCommand}"/>
+            <Label Grid.Column="1" Text="{Binding CharacterName}" FontAttributes="Bold" FontSize="18"
+                   LineBreakMode="TailTruncation" MaxLines="1" VerticalTextAlignment="Center">
+                <Label.GestureRecognizers><TapGestureRecognizer Command="{Binding ChooseCharacterCommand}"/></Label.GestureRecognizers>
+            </Label>
+            <Button Grid.Column="2" Text="&#xF002;" FontFamily="FASolid" FontSize="16"
+                    WidthRequest="42" HeightRequest="42" Padding="0" BackgroundColor="Transparent"
+                    TextColor="{StaticResource AccentMaroonColor}" Command="{Binding SearchCommand}"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,10,16,24" Spacing="10">
+                <Label Text="Tap any value to change it. Use search to start from an existing evocation."
+                       FontSize="12" TextColor="{StaticResource MutedTextColor}"/>
+                <cards:EvocationDetailCardView Evocation="{Binding Draft}"
+                                                IsEditing="True"
+                                                FieldEditRequested="OnFieldEditRequested"/>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Grid Grid.Row="2" RowDefinitions="1,Auto">
+            <BoxView HeightRequest="1" BackgroundColor="{StaticResource SurfaceBorderColor}"/>
+            <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10"
+                  Padding="16,10,16,18" BackgroundColor="{StaticResource White}">
+                <Button Grid.Column="0" Text="Cancel" Command="{Binding BackCommand}"/>
+                <Button Grid.Column="2" Text="Save" Command="{Binding SaveCommand}" IsEnabled="{Binding CanSave}"/>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.RowSpan="3" IsVisible="{Binding IsBusy}" BackgroundColor="#66000000">
+            <ActivityIndicator IsRunning="True" Color="White" HorizontalOptions="Center" VerticalOptions="Center"/>
+        </Grid>
+    </Grid>
+</ContentPage>

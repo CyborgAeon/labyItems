@@ -22,28 +22,34 @@ public partial class NonStandardDashboardPage : ContentPage
         => await Navigation.PushAsync(CreateLegacyPage(NonStandardEntityType.CharacterRace));
 
     private async void OnOpenSpellClicked(object sender, EventArgs e)
-        => await Navigation.PushAsync(CreateLegacyPage(NonStandardEntityType.Spell));
+        => await Navigation.PushAsync(new NonStandardSpellCreatePage());
 
     private async void OnOpenSpellTapped(object sender, TappedEventArgs e)
-        => await Navigation.PushAsync(CreateLegacyPage(NonStandardEntityType.Spell));
+        => await Navigation.PushAsync(new NonStandardSpellCreatePage());
 
     private async void OnOpenMiracleClicked(object sender, EventArgs e)
-        => await Navigation.PushAsync(CreateLegacyPage(NonStandardEntityType.Miracle));
+        => await Navigation.PushAsync(new NonStandardMiracleCreatePage());
 
     private async void OnOpenMiracleTapped(object sender, TappedEventArgs e)
-        => await Navigation.PushAsync(CreateLegacyPage(NonStandardEntityType.Miracle));
+        => await Navigation.PushAsync(new NonStandardMiracleCreatePage());
 
     private async void OnOpenEvocationClicked(object sender, EventArgs e)
-        => await Navigation.PushAsync(CreateLegacyPage(NonStandardEntityType.Evocation));
+        => await Navigation.PushAsync(new NonStandardEvocationCreatePage());
 
     private async void OnOpenEvocationTapped(object sender, TappedEventArgs e)
-        => await Navigation.PushAsync(CreateLegacyPage(NonStandardEntityType.Evocation));
+        => await Navigation.PushAsync(new NonStandardEvocationCreatePage());
+
+    private async void OnOpenNeuronicClicked(object sender, EventArgs e)
+        => await Navigation.PushAsync(new NonStandardNeuronicCreatePage());
+
+    private async void OnOpenNeuronicTapped(object sender, TappedEventArgs e)
+        => await Navigation.PushAsync(new NonStandardNeuronicCreatePage());
 
     private async void OnOpenAbilityClicked(object sender, EventArgs e)
-        => await Navigation.PushAsync(CreateLegacyPage(NonStandardEntityType.Ability));
+        => await Navigation.PushAsync(new NonStandardAbilityCreatePage());
 
     private async void OnOpenAbilityTapped(object sender, TappedEventArgs e)
-        => await Navigation.PushAsync(CreateLegacyPage(NonStandardEntityType.Ability));
+        => await Navigation.PushAsync(new NonStandardAbilityCreatePage());
 
     private static NonStandardLegacyCreatePage CreateLegacyPage(NonStandardEntityType entityType)
         => new()

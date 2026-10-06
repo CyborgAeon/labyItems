@@ -11,7 +11,8 @@ public enum NonStandardEntityType
     Ability,
     Miracle,
     Spell,
-    Evocation
+    Evocation,
+    Neuronic
 }
 
 public sealed record NonStandardTemplate(
@@ -94,6 +95,7 @@ public static class NonStandardContentService
             NonStandardEntityType.Miracle => await GetMiracleTemplatesAsync(),
             NonStandardEntityType.Spell => await GetSpellTemplatesAsync(),
             NonStandardEntityType.Evocation => await GetEvocationTemplatesAsync(),
+            NonStandardEntityType.Neuronic => await GetNeuronicTemplatesAsync(),
             _ => Array.Empty<NonStandardTemplate>()
         };
     }
@@ -230,6 +232,10 @@ public static class NonStandardContentService
                 UpsertEvocation(conn, saveName, payload);
                 DruidEvocationService.InvalidateCache();
                 break;
+            case NonStandardEntityType.Neuronic:
+                UpsertNeuronic(conn, saveName, payload);
+                NeuronicService.InvalidateCache();
+                break;
             default:
                 throw new InvalidOperationException($"Unsupported entity type: {request.EntityType}");
         }
@@ -253,6 +259,7 @@ public static class NonStandardContentService
         AppendWalletEntries(conn, entries, NonStandardEntityType.Miracle, "miracles", "name");
         AppendWalletEntries(conn, entries, NonStandardEntityType.Spell, "spells", "name");
         AppendWalletEntries(conn, entries, NonStandardEntityType.Evocation, "evocs", "name");
+        AppendWalletEntries(conn, entries, NonStandardEntityType.Neuronic, "neuronics", "name");
 
         var ordered = entries
             .OrderBy(entry => entry.EntityType)
@@ -486,6 +493,15 @@ VALUES ($id, $entityType, $entityName, $displayName, $filePath, $fileKind, $cont
             .ToList();
     }
 
+    private static async Task<IReadOnlyList<NonStandardTemplate>> GetNeuronicTemplatesAsync()
+    {
+        var all = await NeuronicService.GetAllAsync();
+        return all.OrderBy(n => n.power).ThenBy(n => n.name, StringComparer.OrdinalIgnoreCase)
+            .Select(n => new NonStandardTemplate(n.name, JsonSerializer.Serialize(n, PrettyJson),
+                $"{NeuronicService.FormatType(n.Type)} · {Math.Max(0, n.power)} TBLP"))
+            .ToList();
+    }
+
     private static JsonObject BuildPayload(NonStandardEntityType entityType, string name, string rawJson)
     {
         if (!TryParseObject(rawJson, out var payload))
@@ -503,6 +519,7 @@ VALUES ($id, $entityType, $entityName, $displayName, $filePath, $fileKind, $cont
             case NonStandardEntityType.Spell:
             case NonStandardEntityType.Miracle:
             case NonStandardEntityType.Evocation:
+            case NonStandardEntityType.Neuronic:
                 payload["name"] = name;
                 break;
         }
@@ -698,6 +715,7 @@ VALUES ($id, $entityType, $entityName, $displayName, $filePath, $fileKind, $cont
             NonStandardEntityType.Spell => "Spell",
             NonStandardEntityType.Miracle => "Miracle",
             NonStandardEntityType.Evocation => "Evocation",
+            NonStandardEntityType.Neuronic => "Neuronic",
             _ => entityType.ToString()
         };
     }
@@ -1188,6 +1206,28 @@ VALUES ($id, $name, $lower, $power, $range, $duration, $verbal, $fields, $descri
         }
 
         ReplaceNgramRows(conn, "evoc_ngrams", "evoc_id", id, name);
+    }
+
+    private static void UpsertNeuronic(SqliteConnection conn, string defaultName, JsonObject payload)
+    {
+        var name = ReadString(payload, "name");
+        if (name.Length == 0) name = defaultName;
+        var id = FindIdByName(conn, "neuronics", name) ?? Guid.NewGuid().ToString();
+        var now = DateTime.UtcNow.ToString("o");
+        var values = new (string, object?)[]
+        {
+            ("$id", id), ("$name", name), ("$lower", name.ToLowerInvariant()),
+            ("$power", ReadInt(payload, 0, "power")), ("$type", ReadString(payload, "tree", "type")),
+            ("$range", ReadString(payload, "range")), ("$duration", ReadString(payload, "duration")),
+            ("$immunities", ReadString(payload, "immunities")), ("$description", ReadString(payload, "description")),
+            ("$notes", ReadString(payload, "notes")), ("$asPer", ReadString(payload, "asPer")),
+            ("$todo", ReadString(payload, "todo")), ("$damage", ReadNode(payload, "Damage")?.ToJsonString() ?? string.Empty),
+            ("$data", payload.ToJsonString()), ("$now", now)
+        };
+        if (ExistsById(conn, "neuronics", id))
+            Execute(conn, @"UPDATE neuronics SET name=$name,name_lower=$lower,power=$power,type=$type,range=$range,duration=$duration,immunities=$immunities,description=$description,notes=$notes,as_per=$asPer,todo=$todo,damage_json=$damage,data_json=$data,is_default=0,updated_at=$now WHERE id=$id;", values);
+        else
+            Execute(conn, @"INSERT INTO neuronics (id,name,name_lower,power,type,range,duration,immunities,description,notes,as_per,todo,damage_json,data_json,is_default,created_at,updated_at) VALUES ($id,$name,$lower,$power,$type,$range,$duration,$immunities,$description,$notes,$asPer,$todo,$damage,$data,0,$now,$now);", values);
     }
 
     private static void ReplaceNgramRows(

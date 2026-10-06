@@ -132,10 +132,18 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
     public GlobalSearchVm(GlobalSearchPickerOptions? picker = null)
     {
         _picker = picker;
-        if (picker != null)
+        if (picker != null && !picker.AllowAllKinds)
         {
             _applied.Kinds.Add(picker.Kind);
             _pending.Kinds.Add(picker.Kind);
+        }
+        else if (picker?.AllowAllKinds == true)
+        {
+            foreach (var (kind, _) in KindOrder)
+            {
+                _applied.Kinds.Add(kind);
+                _pending.Kinds.Add(kind);
+            }
         }
 
         _searchDebounce = new DebouncedAsyncAction(300, ApplyFiltersAsync);
@@ -151,8 +159,9 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
 
     public ICommand ToggleResultSelectionCommand { get; }
     public bool IsPickerMode => _picker != null;
-    public bool ShowKindChips => _picker == null;
+    public bool ShowKindChips => _picker == null || _picker.AllowAllKinds;
     public string PickerTitle => _picker?.Title ?? string.Empty;
+    public string PickerConfirmText => _picker?.ConfirmText ?? "Save";
 
     public string SearchPlaceholder => _picker == null
         ? "Search abilities, spells, miracles, evocations, neuronics..."
@@ -173,6 +182,13 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         }
         else
         {
+            if (_picker?.SingleSelection == true)
+            {
+                foreach (var selected in _selectedResults.Values)
+                    selected.IsSelected = false;
+                _selectedResults.Clear();
+            }
+
             result.IsSelected = true;
             _selectedResults[key] = result;
         }
@@ -393,6 +409,30 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             var converted = await Task.Run(
                 () => ConvertOptimizedResults(dtos),
                 cancellationToken);
+
+            if (_picker?.AllowAllKinds == true)
+            {
+                var query = (_searchText ?? string.Empty).Trim();
+                var guildNames = await GuildsService.GetGuildNamesAsync();
+                converted.AddRange(guildNames
+                    .Where(name => query.Length == 0 || name.Contains(query, StringComparison.OrdinalIgnoreCase))
+                    .Select(name => new GlobalSearchResultVm(
+                        GlobalSearchKind.Guild, name, "Guild", "\uf0c0", "Guild", string.Empty,
+                        null, null, null, null, null)));
+                converted = converted
+                    .OrderBy(result => result.Name, StringComparer.OrdinalIgnoreCase)
+                    .Take(MaxVisibleResults)
+                    .ToList();
+            }
+
+            if (_picker?.InitialSelectedNames is { Count: > 0 } initial)
+            {
+                foreach (var result in converted.Where(result => initial.Contains(result.Name)))
+                {
+                    result.IsSelected = true;
+                    _selectedResults.TryAdd(SelectionKey(result), result);
+                }
+            }
             
             FilteredResults = converted;
         }
@@ -934,7 +974,8 @@ public enum GlobalSearchKind
     Spell,
     Miracle,
     Evocation,
-    Neuronic
+    Neuronic,
+    Guild
 }
 
 public sealed class GlobalSearchFilterSectionVm : INotifyPropertyChanged
@@ -1063,6 +1104,10 @@ public sealed class GlobalSearchPickerOptions
     public required string Title { get; init; }
     public IReadOnlySet<string>? AllowedNames { get; init; }
     public Func<string, bool>? IsFilterAvailable { get; init; }
+    public string ConfirmText { get; init; } = "Save";
+    public bool SingleSelection { get; init; }
+    public bool AllowAllKinds { get; init; }
+    public IReadOnlySet<string>? InitialSelectedNames { get; init; }
 }
 
 public sealed record GlobalSearchResultVm(
@@ -1126,6 +1171,7 @@ public sealed record GlobalSearchResultVm(
         GlobalSearchKind.Miracle => "#FEF3C7",
         GlobalSearchKind.Evocation => "#DCFCE7",
         GlobalSearchKind.Neuronic => "#E0E7FF",
+        GlobalSearchKind.Guild => "#F3E8FF",
         _ => "#E5E7EB"
     };
 
@@ -1136,6 +1182,7 @@ public sealed record GlobalSearchResultVm(
         GlobalSearchKind.Miracle => "#FCD34D",
         GlobalSearchKind.Evocation => "#86EFAC",
         GlobalSearchKind.Neuronic => "#A5B4FC",
+        GlobalSearchKind.Guild => "#D8B4FE",
         _ => "#D1D5DB"
     };
 
@@ -1146,6 +1193,7 @@ public sealed record GlobalSearchResultVm(
         GlobalSearchKind.Miracle => "#92400E",
         GlobalSearchKind.Evocation => "#166534",
         GlobalSearchKind.Neuronic => "#3730A3",
+        GlobalSearchKind.Guild => "#581C87",
         _ => "#374151"
     };
 

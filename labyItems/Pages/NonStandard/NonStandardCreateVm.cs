@@ -323,7 +323,8 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
     public bool RequiresCharacterAssignment => CurrentType is NonStandardEntityType.Ability
         or NonStandardEntityType.Spell
         or NonStandardEntityType.Miracle
-        or NonStandardEntityType.Evocation;
+        or NonStandardEntityType.Evocation
+        or NonStandardEntityType.Neuronic;
 
     public CharacterAssignmentOptionVm? SelectedAssignedCharacter
     {
@@ -1043,7 +1044,7 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         {
             var details = new List<string>
             {
-                known.Index,
+                string.IsNullOrWhiteSpace(known.DisplayName) ? known.Index : known.DisplayName,
                 $"Type: {(string.IsNullOrWhiteSpace(row.AbilityType) ? "Static" : row.AbilityType)}",
                 $"Table: {known.Table}",
                 $"Cost: {known.Cost}"
@@ -2957,6 +2958,7 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
             NonStandardEntityType.Miracle => "Miracle",
             NonStandardEntityType.Spell => "Spell",
             NonStandardEntityType.Evocation => "Evocation",
+            NonStandardEntityType.Neuronic => "Neuronic",
             _ => type.ToString()
         };
     }

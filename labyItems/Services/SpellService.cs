@@ -33,6 +33,7 @@ public static class SpellService
         public string ArmourType { get; set; } = string.Empty;
         public List<int>? PACDam { get; set; }
     }
+    public class SpellHealRaw { [JsonConverter(typeof(IntArrayListConverter))] public List<int[]>? amount { get; set; } public List<string>? type { get; set; } }
 
     public class SpellRaw
     {
@@ -55,6 +56,7 @@ public static class SpellService
         public string notes { get; set; } = string.Empty;
         [JsonPropertyName("Damage")]
         public SpellDamageRaw? Damage { get; set; }
+        [JsonPropertyName("Heal")] public SpellHealRaw? Heal { get; set; }
         [JsonPropertyName("isAdvanced")]
         public bool? isAdvanced { get; set; } = false;
         [JsonPropertyName("IsAdvanced")]
@@ -96,6 +98,8 @@ public static class SpellService
 
         public ArmourType? GetArmourTypeEnum()
             => ArmourTypeParser.ParseOrNull(GetArmourType());
+        public List<int[]> GetHealAmounts() => Heal?.amount ?? [];
+        public List<string> GetHealTypes() => Heal?.type ?? [];
     }
 
     private static List<SpellRaw>? _cache;

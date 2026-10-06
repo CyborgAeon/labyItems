@@ -24,6 +24,7 @@ public static class NeuronicService
         public string ArmourType { get; set; } = string.Empty;
         public List<int>? PACDam { get; set; }
     }
+    public sealed class NeuronicHealRaw { [JsonConverter(typeof(IntArrayListConverter))] public List<int[]>? amount { get; set; } [JsonConverter(typeof(SingleOrArrayStringListConverter))] public List<string>? type { get; set; } }
 
     public sealed record NeuronicRaw
     {
@@ -45,6 +46,7 @@ public static class NeuronicService
 
         [JsonPropertyName("Damage")]
         public NeuronicDamageRaw? Damage { get; set; }
+        [JsonPropertyName("Heal")] public NeuronicHealRaw? Heal { get; set; }
 
         [JsonIgnore]
         public NeuroOptionType Type { get; set; } = NeuroOptionType.None;
@@ -69,6 +71,8 @@ public static class NeuronicService
 
         public ArmourType? GetArmourTypeEnum()
             => ArmourTypeParser.ParseOrNull(GetArmourType());
+        public List<int[]> GetHealAmounts() => Heal?.amount ?? [];
+        public List<string> GetHealTypes() => Heal?.type ?? [];
     }
 
     private static readonly JsonSerializerOptions JsonOptions = new()

@@ -817,7 +817,9 @@ public sealed class BattleboardExportService : IBattleboardExportService
 
             result.Add(text);
             var resolved = AbilityDetailsLookupService.FindByIndex(lookup, text);
-            var display = (resolved?.Index ?? string.Empty).Trim();
+            var display = (resolved is null
+                ? string.Empty
+                : string.IsNullOrWhiteSpace(resolved.DisplayName) ? resolved.Index : resolved.DisplayName).Trim();
             if (display.Length > 0
                 && !display.Equals(text, StringComparison.OrdinalIgnoreCase))
             {

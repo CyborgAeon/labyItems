@@ -7,6 +7,9 @@ namespace labyItems.Pages.MiracleCard;
 
 public partial class MiracleDetailCardView : ContentView
 {
+    public event EventHandler<MiracleFieldEditRequestedEventArgs>? FieldEditRequested;
+    public static readonly BindableProperty IsEditingProperty = BindableProperty.Create(nameof(IsEditing), typeof(bool), typeof(MiracleDetailCardView), false, propertyChanged: (b, _, _) => ((MiracleDetailCardView)b).RaiseComputedProperties());
+    public bool IsEditing { get => (bool)GetValue(IsEditingProperty); set => SetValue(IsEditingProperty, value); }
     private const int CollapsedLines = 3;
     private const int DescriptionChevronThresholdChars = 200;
     private const int VerbalChevronThresholdChars = 150;
@@ -182,30 +185,42 @@ public partial class MiracleDetailCardView : ContentView
     public bool ShowDamageSeeMore => CanExpandDamage && !IsDamageExpanded;
     public bool ShowHealSeeMore => CanExpandHeal && !IsHealExpanded;
 
-    public string MiracleName => ReadOrFallback(Miracle?.name, "Unnamed Miracle");
+    public string MiracleName => ReadOrFallback(Miracle?.name, IsEditing ? "Tap to add a name" : "Unnamed Miracle");
     public bool IsNonStandard => Miracle?.nonStandard == true;
-    public string SphereDisplayText => BuildSphereDisplay(Miracle?.sphere);
+    public string SphereDisplayText => string.IsNullOrWhiteSpace(Miracle?.sphere)
+        ? (IsEditing ? "Tap to set sphere" : "Unknown")
+        : BuildSphereDisplay(Miracle.sphere);
     public string SphereIconGlyph => FontAwesomeGlyphs.GetSphereIcon(SphereDisplayText);
     public string PowerDisplayText => $"{Math.Max(0, Miracle?.power ?? 0)} SP";
-    public string LevelDisplayText => ReadOrFallback(Miracle?.level, "—");
-    public string DurationDisplayText => (Miracle?.duration ?? string.Empty).Trim();
-    public bool HasDuration => DurationDisplayText.Length > 0;
-    public string GestureDisplayText => ReadOrFallback(Miracle?.gesture, "—");
+    public string LevelDisplayText => ReadOrFallback(Miracle?.level, IsEditing ? "Tap to set" : "—");
+    public string DurationDisplayText => ReadOrFallback(Miracle?.duration, IsEditing ? "Tap to set" : string.Empty);
+    public bool HasDuration => !string.IsNullOrWhiteSpace(Miracle?.duration);
+    public bool ShowDurationRow => IsEditing || HasDuration;
+    public bool ShowCompactRow => !IsEditing && !HasDuration;
+    public string GestureDisplayText => ReadOrFallback(Miracle?.gesture, IsEditing ? "Tap to set" : "—");
     public bool IsAdvanced => Miracle?.isAdvanced == true;
-    public string ImmunityDisplayText => ReadFirst(JoinValues(Miracle?.immunityName), Miracle?.immunity, Miracle?.ImmunityCompat, JoinValues(Miracle?.immunityIndex));
-    public bool HasImmunity => ImmunityDisplayText.Length > 0;
+    public bool ShowTier => IsEditing || IsAdvanced;
+    public string TierDisplayText => IsAdvanced ? "★ Advanced" : "Standard";
+    public Color TierBackgroundColor => IsAdvanced ? Color.FromArgb("#FFF3D6") : Colors.Transparent;
+    private string RawImmunityDisplayText => ReadFirst(JoinValues(Miracle?.immunityName), Miracle?.immunity, Miracle?.ImmunityCompat, JoinValues(Miracle?.immunityIndex));
+    public string ImmunityDisplayText => ReadOrFallback(RawImmunityDisplayText, IsEditing ? "Tap to set" : string.Empty);
+    public bool HasImmunity => RawImmunityDisplayText.Length > 0;
+    public bool ShowImmunity => IsEditing || HasImmunity;
     public bool HasImmunityLink => ImmunityNavigationHelper.HasIndex(Miracle?.immunityIndex);
-    public string AlignmentDisplayText => BuildAlignmentDisplay(Miracle?.alignment);
+    public string AlignmentDisplayText => ReadOrFallback(BuildAlignmentDisplay(Miracle?.alignment), IsEditing ? "Tap to set" : "—");
     public bool HasAlignment => AlignmentDisplayText.Length > 0;
 
-    public string DescriptionText => ReadOrFallback(Miracle?.description, "No description provided.");
-    public string VerbalText => ReadOrFallback(Miracle?.verbal, "No verbal provided.");
-    public string PrereqText => BuildPrereqText(Miracle);
+    public string DescriptionText => ReadOrFallback(Miracle?.description, IsEditing ? "Tap to add a description" : "No description provided.");
+    public string VerbalText => ReadOrFallback(Miracle?.verbal, IsEditing ? "Tap to set" : "No verbal provided.");
+    public string PrereqText => ReadOrFallback(BuildPrereqText(Miracle), IsEditing ? "Tap to set" : string.Empty);
     public bool HasPrereqs => PrereqText.Length > 0;
+    public bool ShowPrereqs => IsEditing || HasPrereqs;
     public string DamageSummaryText => BuildDamageSummary(Miracle);
     public bool HasDamageSummary => DamageSummaryText.Length > 0;
+    public bool ShowDamageSection => IsEditing || HasDamageSummary;
     public string HealSummaryText => BuildHealSummary(Miracle);
     public bool HasHealSummary => HealSummaryText.Length > 0;
+    public bool ShowHealSection => IsEditing || HasHealSummary;
     public CombatQuickFactsVm DamageQuickFacts => CombatQuickFactsFormatter.Build(
         Miracle?.Damage != null,
         Miracle?.GetDamageAmounts() ?? new List<int[]>(),
@@ -265,10 +280,16 @@ public partial class MiracleDetailCardView : ContentView
         OnPropertyChanged(nameof(LevelDisplayText));
         OnPropertyChanged(nameof(DurationDisplayText));
         OnPropertyChanged(nameof(HasDuration));
+        OnPropertyChanged(nameof(ShowDurationRow));
+        OnPropertyChanged(nameof(ShowCompactRow));
         OnPropertyChanged(nameof(GestureDisplayText));
         OnPropertyChanged(nameof(IsAdvanced));
+        OnPropertyChanged(nameof(ShowTier));
+        OnPropertyChanged(nameof(TierDisplayText));
+        OnPropertyChanged(nameof(TierBackgroundColor));
         OnPropertyChanged(nameof(ImmunityDisplayText));
         OnPropertyChanged(nameof(HasImmunity));
+        OnPropertyChanged(nameof(ShowImmunity));
         OnPropertyChanged(nameof(HasImmunityLink));
         OnPropertyChanged(nameof(AlignmentDisplayText));
         OnPropertyChanged(nameof(HasAlignment));
@@ -276,10 +297,13 @@ public partial class MiracleDetailCardView : ContentView
         OnPropertyChanged(nameof(VerbalText));
         OnPropertyChanged(nameof(PrereqText));
         OnPropertyChanged(nameof(HasPrereqs));
+        OnPropertyChanged(nameof(ShowPrereqs));
         OnPropertyChanged(nameof(DamageSummaryText));
         OnPropertyChanged(nameof(HasDamageSummary));
+        OnPropertyChanged(nameof(ShowDamageSection));
         OnPropertyChanged(nameof(HealSummaryText));
         OnPropertyChanged(nameof(HasHealSummary));
+        OnPropertyChanged(nameof(ShowHealSection));
         OnPropertyChanged(nameof(DamageQuickFacts));
         OnPropertyChanged(nameof(HealQuickFacts));
         OnPropertyChanged(nameof(HasDamageQuickFacts));
@@ -297,8 +321,12 @@ public partial class MiracleDetailCardView : ContentView
         OnPropertyChanged(nameof(ShowHealSeeMore));
     }
 
-    private async void OnImmunityTapped(object sender, TappedEventArgs e) =>
+    private async void OnImmunityTapped(object sender, TappedEventArgs e)
+    {
+        if (RequestEdit("immunity")) return;
         await ImmunityNavigationHelper.OpenFirstAvailableAsync(Navigation, Miracle?.immunityIndex);
+    }
+    private async void OnImmunityInfoClicked(object sender, EventArgs e) => await ImmunityNavigationHelper.OpenFirstAvailableAsync(Navigation, Miracle?.immunityIndex);
 
     private async void OnDescriptionToggleClicked(object sender, EventArgs e)
     {
@@ -427,6 +455,7 @@ public partial class MiracleDetailCardView : ContentView
 
     private void OnDescriptionSectionTapped(object sender, TappedEventArgs e)
     {
+        if (RequestEdit("description")) return;
         if (!CanExpandDescription)
             return;
 
@@ -435,6 +464,7 @@ public partial class MiracleDetailCardView : ContentView
 
     private void OnVerbalSectionTapped(object sender, TappedEventArgs e)
     {
+        if (RequestEdit("verbal")) return;
         if (!CanExpandVerbal)
             return;
 
@@ -443,6 +473,7 @@ public partial class MiracleDetailCardView : ContentView
 
     private void OnPrereqSectionTapped(object sender, TappedEventArgs e)
     {
+        if (RequestEdit("preReqs")) return;
         if (!CanExpandPrereqs)
             return;
 
@@ -451,6 +482,7 @@ public partial class MiracleDetailCardView : ContentView
 
     private void OnDamageSectionTapped(object sender, TappedEventArgs e)
     {
+        if (RequestEdit("Damage")) return;
         if (!CanExpandDamage)
             return;
 
@@ -459,6 +491,7 @@ public partial class MiracleDetailCardView : ContentView
 
     private void OnHealSectionTapped(object sender, TappedEventArgs e)
     {
+        if (RequestEdit("Heal")) return;
         if (!CanExpandHeal)
             return;
 
@@ -719,4 +752,25 @@ public partial class MiracleDetailCardView : ContentView
 
     private static T OrDefault<T>(IReadOnlyList<T> list, int index, T fallback)
         => list.Count == 0 ? fallback : (index < list.Count ? list[index] : list[^1]);
+
+    private bool RequestEdit(string field)
+    {
+        if (!IsEditing) return false;
+        FieldEditRequested?.Invoke(this, new MiracleFieldEditRequestedEventArgs(field));
+        return true;
+    }
+
+    private void OnNameTapped(object sender, TappedEventArgs e) => RequestEdit("name");
+    private void OnSphereTapped(object sender, TappedEventArgs e) => RequestEdit("sphere");
+    private void OnTierTapped(object sender, TappedEventArgs e) => RequestEdit("isAdvanced");
+    private void OnLevelTapped(object sender, TappedEventArgs e) => RequestEdit("level");
+    private void OnPowerTapped(object sender, TappedEventArgs e) => RequestEdit("power");
+    private void OnDurationTapped(object sender, TappedEventArgs e) => RequestEdit("duration");
+    private void OnGestureTapped(object sender, TappedEventArgs e) => RequestEdit("gesture");
+    private void OnAlignmentTapped(object sender, TappedEventArgs e) => RequestEdit("alignment");
+}
+
+public sealed class MiracleFieldEditRequestedEventArgs(string field) : EventArgs
+{
+    public string Field { get; } = field;
 }

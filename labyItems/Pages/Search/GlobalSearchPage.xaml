@@ -166,7 +166,7 @@
                     Text="Cancel"
                     Clicked="OnPickerCancelClicked"/>
             <Button Grid.Column="2"
-                    Text="Save"
+                    Text="{Binding PickerConfirmText}"
                     Clicked="OnPickerSaveClicked"/>
         </Grid>
 

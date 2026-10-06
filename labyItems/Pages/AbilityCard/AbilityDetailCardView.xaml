@@ -11,7 +11,9 @@
             <Label Text="{Binding AbilityIndex, Source={x:Reference Root}}"
                    FontSize="28"
                    FontAttributes="Bold"
-                   LineBreakMode="WordWrap"/>
+                   LineBreakMode="WordWrap">
+                <Label.GestureRecognizers><TapGestureRecognizer Tapped="OnNameTapped"/></Label.GestureRecognizers>
+            </Label>
 
             <Label Text="Non-standard"
                    TextColor="{StaticResource AccentMaroonColor}"
@@ -20,14 +22,14 @@
                    IsVisible="{Binding ShowNonStandardBadge, Source={x:Reference Root}}"/>
 
             <Grid x:Name="AbilityKeyInformationGrid" Margin="-16,0" Padding="12,10" ColumnDefinitions="*,1,*">
-                <VerticalStackLayout><Label Text="COST" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding CostValueText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+                <VerticalStackLayout><VerticalStackLayout.GestureRecognizers><TapGestureRecognizer Tapped="OnCostTapped"/></VerticalStackLayout.GestureRecognizers><Label Text="COST" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding CostValueText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
                 <BoxView Grid.Column="1" Color="{StaticResource SurfaceBorderColor}"/>
-                <VerticalStackLayout Grid.Column="2"><Label Text="TABLE" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding TableValueText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="2"><VerticalStackLayout.GestureRecognizers><TapGestureRecognizer Tapped="OnTableTapped"/></VerticalStackLayout.GestureRecognizers><Label Text="TABLE" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding TableValueText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
             </Grid>
 
             <VerticalStackLayout Spacing="4">
                 <Border Stroke="{StaticResource SurfaceBorderColor}" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#F9FAFB" Padding="12,10">
-                    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnAvailabilityTapped"/></Border.GestureRecognizers>
+                    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnAvailabilityEditTapped"/></Border.GestureRecognizers>
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
                         <Label Text="&#xF0C0;" FontFamily="FASolid" FontSize="18" TextColor="{StaticResource SubtleTextColor}" VerticalOptions="Center"/>
                         <VerticalStackLayout Grid.Column="1" Spacing="1">
@@ -89,14 +91,19 @@
                 <Label Text="NOTES"
                        Style="{StaticResource SectionHeaderLabelStyle}"/>
 
-                <Label Text="{Binding NotesText, Source={x:Reference Root}}"
-                       IsVisible="{Binding HasNotesText, Source={x:Reference Root}}"
+                <Label Text="{Binding PurchaseOptionsText, Source={x:Reference Root}}"
+                       IsVisible="{Binding ShowPurchaseOptions, Source={x:Reference Root}}"
                        LineBreakMode="WordWrap"/>
+                <VerticalStackLayout.GestureRecognizers><TapGestureRecognizer Tapped="OnPurchaseOptionsTapped"/></VerticalStackLayout.GestureRecognizers>
 
                 <VerticalStackLayout Spacing="6"
-                                     IsVisible="{Binding HasPreReqs, Source={x:Reference Root}}">
+                                     IsVisible="{Binding ShowPreReqs, Source={x:Reference Root}}">
+                    <VerticalStackLayout.GestureRecognizers><TapGestureRecognizer Tapped="OnPreReqsTapped"/></VerticalStackLayout.GestureRecognizers>
                     <Label Text="PREREQUISITES"
                            Style="{StaticResource SectionHeaderLabelStyle}"/>
+
+                    <Label Text="Tap to choose prerequisites" FontSize="13" TextColor="{StaticResource MutedTextColor}"
+                           IsVisible="{Binding IsEditing, Source={x:Reference Root}}"/>
 
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding PreReqEntries, Source={x:Reference Root}}"
                                          Spacing="6">

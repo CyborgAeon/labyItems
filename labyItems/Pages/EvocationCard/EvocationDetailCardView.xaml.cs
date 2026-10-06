@@ -8,6 +8,17 @@ namespace labyItems.Pages.EvocationCard;
 
 public partial class EvocationDetailCardView : ContentView
 {
+    public event EventHandler<EvocationFieldEditRequestedEventArgs>? FieldEditRequested;
+
+    public static readonly BindableProperty IsEditingProperty = BindableProperty.Create(
+        nameof(IsEditing), typeof(bool), typeof(EvocationDetailCardView), false,
+        propertyChanged: (bindable, _, _) => ((EvocationDetailCardView)bindable).RaiseComputedProperties());
+
+    public bool IsEditing
+    {
+        get => (bool)GetValue(IsEditingProperty);
+        set => SetValue(IsEditingProperty, value);
+    }
     private const int CollapsedLines = 3;
     private const int DescriptionChevronThresholdChars = 200;
     private const int VerbalChevronThresholdChars = 150;
@@ -26,15 +37,21 @@ public partial class EvocationDetailCardView : ContentView
         set => SetValue(EvocationProperty, value);
     }
 
-    public string EvocationName => ReadOrFallback(Evocation?.name, "Unnamed Evocation");
+    public string EvocationName => ReadOrFallback(Evocation?.name, IsEditing ? "Tap to add a name" : "Unnamed Evocation");
+    public string TierDisplayText => Evocation?.isAdvanced == true ? "Advanced" : "Standard";
     public string PowerDisplayText => $"{Math.Max(0, Evocation?.power ?? 0)} EP";
-    public string RangeDisplayText => ReadOrFallback(Evocation?.range, "—");
-    public string DurationDisplayText => ReadOrFallback(Evocation?.duration, "—");
-    public string FieldsDisplayText => string.Join(", ", Evocation?.fields ?? new List<string>());
+    public string RangeDisplayText => ReadOrFallback(Evocation?.range, IsEditing ? "Tap to set" : "—");
+    public string DurationDisplayText => ReadOrFallback(Evocation?.duration, IsEditing ? "Tap to set" : "—");
+    public string FieldsDisplayText => ReadOrFallback(
+        string.Join(", ", Evocation?.fields ?? new List<string>()),
+        IsEditing ? "Tap to set" : "—");
     public IReadOnlyList<string> FieldEntries => Evocation?.fields is { } fields ? fields : Array.Empty<string>();
     public bool HasFields => FieldEntries.Count > 0;
-    public string ImmunityDisplayText => ReadFirst(JoinValues(Evocation?.immunityName), Evocation?.immunity, Evocation?.ImmunityCompat, JoinValues(Evocation?.immunityIndex));
-    public bool HasImmunity => ImmunityDisplayText.Length > 0;
+    public bool ShowFields => IsEditing || HasFields;
+    private string RawImmunityDisplayText => ReadFirst(JoinValues(Evocation?.immunityName), Evocation?.immunity, Evocation?.ImmunityCompat, JoinValues(Evocation?.immunityIndex));
+    public string ImmunityDisplayText => ReadOrFallback(RawImmunityDisplayText, IsEditing ? "Tap to set" : string.Empty);
+    public bool HasImmunity => RawImmunityDisplayText.Length > 0;
+    public bool ShowImmunity => IsEditing || HasImmunity;
     public bool HasImmunityLink => ImmunityNavigationHelper.HasIndex(Evocation?.immunityIndex);
 
     private bool _isFieldsExpanded;
@@ -57,14 +74,18 @@ public partial class EvocationDetailCardView : ContentView
     }
     public string FieldSummaryText => BuildFieldSummary(Evocation);
 
-    public string DescriptionText => ReadOrFallback(Evocation?.description, "No description provided.");
+    public string DescriptionText => ReadOrFallback(Evocation?.description, IsEditing ? "Tap to add a description" : "No description provided.");
     public bool HasVerbal => !string.IsNullOrWhiteSpace((Evocation?.verbal ?? string.Empty).Trim());
-    public string VerbalText => (Evocation?.verbal ?? string.Empty).Trim();
+    public bool ShowVerbal => IsEditing || HasVerbal;
+    public string VerbalText => ReadOrFallback(Evocation?.verbal, IsEditing ? "Tap to set" : string.Empty);
     public bool HasPrereqs => !string.IsNullOrWhiteSpace(PrereqText);
-    public string PrereqText => BuildPrereqText(Evocation);
+    public bool ShowPrereqs => IsEditing || HasPrereqs;
+    public string PrereqText => ReadOrFallback(BuildPrereqText(Evocation), IsEditing ? "Tap to set" : string.Empty);
     public bool HasDamageSummary => !string.IsNullOrWhiteSpace(DamageSummaryText);
+    public bool ShowDamageSection => IsEditing || HasDamageSummary;
     public string DamageSummaryText => BuildDamageSummary(Evocation);
     public bool HasHealSummary => !string.IsNullOrWhiteSpace(HealSummaryText);
+    public bool ShowHealSection => IsEditing || HasHealSummary;
     public string HealSummaryText => BuildHealSummary(Evocation);
     public CombatQuickFactsVm DamageQuickFacts => CombatQuickFactsFormatter.Build(
         Evocation?.Damage != null,
@@ -305,26 +326,33 @@ public partial class EvocationDetailCardView : ContentView
     private void RaiseComputedProperties()
     {
         OnPropertyChanged(nameof(EvocationName));
+        OnPropertyChanged(nameof(TierDisplayText));
         OnPropertyChanged(nameof(PowerDisplayText));
         OnPropertyChanged(nameof(RangeDisplayText));
         OnPropertyChanged(nameof(DurationDisplayText));
         OnPropertyChanged(nameof(FieldsDisplayText));
         OnPropertyChanged(nameof(FieldEntries));
         OnPropertyChanged(nameof(HasFields));
+        OnPropertyChanged(nameof(ShowFields));
         OnPropertyChanged(nameof(CanExpandFields));
         OnPropertyChanged(nameof(ImmunityDisplayText));
         OnPropertyChanged(nameof(HasImmunity));
+        OnPropertyChanged(nameof(ShowImmunity));
         OnPropertyChanged(nameof(HasImmunityLink));
         OnPropertyChanged(nameof(FieldSummaryText));
         OnPropertyChanged(nameof(DescriptionText));
         OnPropertyChanged(nameof(VerbalText));
+        OnPropertyChanged(nameof(ShowVerbal));
         OnPropertyChanged(nameof(HasVerbal));
         OnPropertyChanged(nameof(PrereqText));
+        OnPropertyChanged(nameof(ShowPrereqs));
         OnPropertyChanged(nameof(HasPrereqs));
         OnPropertyChanged(nameof(DamageSummaryText));
         OnPropertyChanged(nameof(HasDamageSummary));
+        OnPropertyChanged(nameof(ShowDamageSection));
         OnPropertyChanged(nameof(HealSummaryText));
         OnPropertyChanged(nameof(HasHealSummary));
+        OnPropertyChanged(nameof(ShowHealSection));
         OnPropertyChanged(nameof(DamageQuickFacts));
         OnPropertyChanged(nameof(HealQuickFacts));
         OnPropertyChanged(nameof(HasDamageQuickFacts));
@@ -469,6 +497,7 @@ public partial class EvocationDetailCardView : ContentView
 
     private void OnDescriptionSectionTapped(object sender, TappedEventArgs e)
     {
+        if (RequestEdit("description")) return;
         if (!CanExpandDescription)
             return;
 
@@ -477,12 +506,17 @@ public partial class EvocationDetailCardView : ContentView
 
     private void OnFieldsTapped(object sender, TappedEventArgs e)
     {
+        if (RequestEdit("fields")) return;
         if (CanExpandFields)
             IsFieldsExpanded = !IsFieldsExpanded;
     }
 
-    private async void OnImmunityTapped(object sender, TappedEventArgs e) =>
+    private async void OnImmunityTapped(object sender, TappedEventArgs e)
+    {
+        if (RequestEdit("immunity")) return;
         await ImmunityNavigationHelper.OpenFirstAvailableAsync(Navigation, Evocation?.immunityIndex);
+    }
+    private async void OnImmunityInfoClicked(object sender, EventArgs e) => await ImmunityNavigationHelper.OpenFirstAvailableAsync(Navigation, Evocation?.immunityIndex);
 
     private void OnFieldsSummarySizeChanged(object sender, EventArgs e)
     {
@@ -498,6 +532,7 @@ public partial class EvocationDetailCardView : ContentView
 
     private void OnVerbalSectionTapped(object sender, TappedEventArgs e)
     {
+        if (RequestEdit("verbal")) return;
         if (!CanExpandVerbal)
             return;
 
@@ -506,6 +541,7 @@ public partial class EvocationDetailCardView : ContentView
 
     private void OnPrereqSectionTapped(object sender, TappedEventArgs e)
     {
+        if (RequestEdit("preReqs")) return;
         if (!CanExpandPrereqs)
             return;
 
@@ -514,6 +550,7 @@ public partial class EvocationDetailCardView : ContentView
 
     private void OnDamageSectionTapped(object sender, TappedEventArgs e)
     {
+        if (RequestEdit("Damage")) return;
         if (!CanExpandDamage)
             return;
 
@@ -522,6 +559,7 @@ public partial class EvocationDetailCardView : ContentView
 
     private void OnHealSectionTapped(object sender, TappedEventArgs e)
     {
+        if (RequestEdit("Heal")) return;
         if (!CanExpandHeal)
             return;
 
@@ -738,6 +776,19 @@ public partial class EvocationDetailCardView : ContentView
 
     private static T OrDefault<T>(IReadOnlyList<T> list, int index, T fallback)
         => list.Count == 0 ? fallback : (index < list.Count ? list[index] : list[^1]);
+
+    private bool RequestEdit(string field)
+    {
+        if (!IsEditing) return false;
+        FieldEditRequested?.Invoke(this, new EvocationFieldEditRequestedEventArgs(field));
+        return true;
+    }
+
+    private void OnNameTapped(object sender, TappedEventArgs e) => RequestEdit("name");
+    private void OnPowerTapped(object sender, TappedEventArgs e) => RequestEdit("power");
+    private void OnRangeTapped(object sender, TappedEventArgs e) => RequestEdit("range");
+    private void OnDurationTapped(object sender, TappedEventArgs e) => RequestEdit("duration");
+    private void OnTierTapped(object sender, TappedEventArgs e) => RequestEdit("isAdvanced");
 }
 
 public sealed class EvocationMetaChipVm
@@ -750,4 +801,10 @@ public sealed class EvocationMetaChipVm
         IconGlyph = iconGlyph;
         Text = text;
     }
+
+}
+
+public sealed class EvocationFieldEditRequestedEventArgs(string field) : EventArgs
+{
+    public string Field { get; } = field;
 }

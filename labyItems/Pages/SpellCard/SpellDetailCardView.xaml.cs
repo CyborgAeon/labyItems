@@ -9,6 +9,17 @@ namespace labyItems.Pages.SpellCard;
 
 public partial class SpellDetailCardView : ContentView
 {
+    public event EventHandler<SpellFieldEditRequestedEventArgs>? FieldEditRequested;
+
+    public static readonly BindableProperty IsEditingProperty = BindableProperty.Create(
+        nameof(IsEditing), typeof(bool), typeof(SpellDetailCardView), false,
+        propertyChanged: (bindable, _, _) => ((SpellDetailCardView)bindable).HandleSpellChanged());
+
+    public bool IsEditing
+    {
+        get => (bool)GetValue(IsEditingProperty);
+        set => SetValue(IsEditingProperty, value);
+    }
     private const int DescriptionCollapsedLines = 5;
     private const int VerbalCollapsedLines = 3;
     private const int NotesCollapsedLines = 2;
@@ -124,13 +135,13 @@ public partial class SpellDetailCardView : ContentView
     private bool _isVerbalAnimating;
     private bool IsAnimatingExpand => _isDescriptionAnimating || _isVerbalAnimating;
 
-    public string SpellName => ReadOrFallback(Spell?.name, fallback: "Unnamed Spell");
-    public string DescriptionText => ReadOrFallback(Spell?.description, fallback: "No description provided.");
-    public string VerbalText => ReadOrFallback(Spell?.verbal, fallback: "No verbal provided.");
+    public string SpellName => ReadOrFallback(Spell?.name, IsEditing ? "Tap to add a name" : "Unnamed Spell");
+    public string DescriptionText => ReadOrFallback(Spell?.description, IsEditing ? "Tap to add a description" : "No description provided.");
+    public string VerbalText => ReadOrFallback(Spell?.verbal, IsEditing ? "Tap to set" : "No verbal provided.");
     public bool HasDescription => !string.IsNullOrWhiteSpace((Spell?.description ?? string.Empty).Trim());
     public bool HasVerbal => !string.IsNullOrWhiteSpace((Spell?.verbal ?? string.Empty).Trim());
-    public string NotesText => (Spell?.notes ?? string.Empty).Trim();
-    public bool HasNotes => NotesText.Length > 0;
+    public string NotesText => ReadOrFallback(Spell?.notes, IsEditing ? "Tap to set" : string.Empty);
+    public bool HasNotes => IsEditing || !string.IsNullOrWhiteSpace(Spell?.notes);
     public bool ShowDescriptionChevron => HasDescription && CanExpandDescription;
     public bool ShowVerbalChevron => HasVerbal && CanExpandVerbal;
     public bool ShowDescriptionSeeMore => CanExpandDescription && !IsDescriptionExpanded;
@@ -140,25 +151,30 @@ public partial class SpellDetailCardView : ContentView
     public string ColourDisplayText => WizardSpellRules.BuildColourDisplayText(Spell?.colour);
     public string ColourSubtitleText => $"{ColourDisplayText} Spell";
     public string LevelDisplayText => Math.Max(0, Spell?.level ?? 0).ToString();
-    public string RangeDisplayText => (Spell?.range ?? string.Empty).Trim();
-    public string DurationDisplayText => (Spell?.duration ?? string.Empty).Trim();
-    public bool HasRange => RangeDisplayText.Length > 0;
-    public bool HasDuration => DurationDisplayText.Length > 0;
+    public string RangeDisplayText => ReadOrFallback(Spell?.range, IsEditing ? "Tap to set" : string.Empty);
+    public string DurationDisplayText => ReadOrFallback(Spell?.duration, IsEditing ? "Tap to set" : string.Empty);
+    public bool HasRange => IsEditing || !string.IsNullOrWhiteSpace(Spell?.range);
+    public bool HasDuration => IsEditing || !string.IsNullOrWhiteSpace(Spell?.duration);
     public bool HasRangeOrDuration => HasRange || HasDuration;
     public bool HasBothRangeAndDuration => HasRange && HasDuration;
     public bool HasOnlyRange => HasRange && !HasDuration;
     public bool HasOnlyDuration => !HasRange && HasDuration;
     public bool IsAdvanced => Spell?.isAdvanced == true || Spell?.IsAdvancedCompat == true;
-    public string ImmunityDisplayText => ReadFirst(JoinValues(Spell?.immunityName), Spell?.immunity, Spell?.immunities, Spell?.ImmunityCompat, JoinValues(Spell?.immunityIndex));
-    public bool HasImmunity => ImmunityDisplayText.Length > 0;
+    public string ImmunityDisplayText => ReadOrFallback(
+        ReadFirst(JoinValues(Spell?.immunityName), Spell?.immunity, Spell?.immunities, Spell?.ImmunityCompat, JoinValues(Spell?.immunityIndex)),
+        IsEditing ? "Tap to set" : string.Empty);
+    public string TierDisplayText => IsAdvanced ? "★ Advanced" : "Standard";
+    public bool HasImmunity => IsEditing || ImmunityDisplayText.Length > 0;
     public bool HasImmunityLink => ImmunityNavigationHelper.HasIndex(Spell?.immunityIndex);
     public CombatQuickFactsVm DamageQuickFacts => CombatQuickFactsFormatter.Build(
         Spell?.Damage != null,
         Spell?.GetDamageAmounts() ?? new List<int[]>(),
         Spell?.GetDamageTypes() ?? new List<string>(),
         Spell?.GetDamageCategories(), Spell?.GetArmourApplies(), Spell?.GetArmourType());
-    public bool HasDamageQuickFacts => DamageQuickFacts.HasValue;
-    public bool HasKeyInformation => HasRangeOrDuration || HasImmunity || HasDamageQuickFacts;
+    public bool HasDamageQuickFacts => IsEditing || DamageQuickFacts.HasValue;
+    public CombatQuickFactsVm HealQuickFacts => CombatQuickFactsFormatter.Build(Spell?.Heal != null, Spell?.GetHealAmounts() ?? [], Spell?.GetHealTypes() ?? [], isHealing: true);
+    public bool HasHealQuickFacts => IsEditing || HealQuickFacts.HasValue;
+    public bool HasKeyInformation => HasRangeOrDuration || HasImmunity || HasDamageQuickFacts || HasHealQuickFacts;
 
     private static string JoinValues(IEnumerable<string>? values) =>
         string.Join(", ", values?.Where(value => !string.IsNullOrWhiteSpace(value)).Select(value => value.Trim()) ?? Array.Empty<string>());
@@ -224,19 +240,26 @@ public partial class SpellDetailCardView : ContentView
         OnPropertyChanged(nameof(HasOnlyRange));
         OnPropertyChanged(nameof(HasOnlyDuration));
         OnPropertyChanged(nameof(IsAdvanced));
+        OnPropertyChanged(nameof(TierDisplayText));
         OnPropertyChanged(nameof(ImmunityDisplayText));
         OnPropertyChanged(nameof(HasImmunity));
         OnPropertyChanged(nameof(HasImmunityLink));
         OnPropertyChanged(nameof(DamageQuickFacts));
         OnPropertyChanged(nameof(HasDamageQuickFacts));
+        OnPropertyChanged(nameof(HealQuickFacts));
+        OnPropertyChanged(nameof(HasHealQuickFacts));
         OnPropertyChanged(nameof(HasKeyInformation));
         OnPropertyChanged(nameof(ColourCircleColor));
         OnPropertyChanged(nameof(ColourCircleBorderColor));
         OnPropertyChanged(nameof(HasMetaChips));
     }
 
-    private async void OnImmunityTapped(object sender, TappedEventArgs e) =>
+    private async void OnImmunityTapped(object sender, TappedEventArgs e)
+    {
+        if (RequestEdit("immunity")) return;
         await ImmunityNavigationHelper.OpenFirstAvailableAsync(Navigation, Spell?.immunityIndex);
+    }
+    private async void OnImmunityInfoClicked(object sender, EventArgs e) => await ImmunityNavigationHelper.OpenFirstAvailableAsync(Navigation, Spell?.immunityIndex);
 
     private void RebuildMetaChips()
     {
@@ -320,6 +343,7 @@ public partial class SpellDetailCardView : ContentView
 
     private void OnDescriptionSectionTapped(object sender, TappedEventArgs e)
     {
+        if (RequestEdit("description")) return;
         if (!CanExpandDescription)
             return;
 
@@ -328,6 +352,7 @@ public partial class SpellDetailCardView : ContentView
 
     private void OnVerbalSectionTapped(object sender, TappedEventArgs e)
     {
+        if (RequestEdit("verbal")) return;
         if (!CanExpandVerbal)
             return;
 
@@ -336,6 +361,7 @@ public partial class SpellDetailCardView : ContentView
 
     private void OnNotesSectionTapped(object sender, TappedEventArgs e)
     {
+        if (RequestEdit("notes")) return;
         if (!CanExpandNotes)
             return;
 
@@ -514,6 +540,27 @@ public partial class SpellDetailCardView : ContentView
             return "🤲";
         return "🖐";
     }
+
+    private bool RequestEdit(string field)
+    {
+        if (!IsEditing) return false;
+        FieldEditRequested?.Invoke(this, new SpellFieldEditRequestedEventArgs(field));
+        return true;
+    }
+
+    private void OnNameTapped(object sender, TappedEventArgs e) => RequestEdit("name");
+    private void OnColourTapped(object sender, TappedEventArgs e) => RequestEdit("colour");
+    private void OnLevelTapped(object sender, TappedEventArgs e) => RequestEdit("level");
+    private void OnTierTapped(object sender, TappedEventArgs e) => RequestEdit("isAdvanced");
+    private void OnRangeTapped(object sender, TappedEventArgs e) => RequestEdit("range");
+    private void OnDurationTapped(object sender, TappedEventArgs e) => RequestEdit("duration");
+    private void OnDamageTapped(object sender, TappedEventArgs e) => RequestEdit("Damage");
+    private void OnHealTapped(object sender, TappedEventArgs e) => RequestEdit("Heal");
+}
+
+public sealed class SpellFieldEditRequestedEventArgs(string field) : EventArgs
+{
+    public string Field { get; } = field;
 }
 
 public sealed class SpellMetaChipVm

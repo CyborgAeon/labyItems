@@ -177,6 +177,15 @@
                                 <TapGestureRecognizer Tapped="OnOpenEvocationTapped" />
                             </Border.GestureRecognizers>
                         </Border>
+
+                        <Border Stroke="{StaticResource SurfaceBorderColor}" StrokeThickness="1" StrokeShape="RoundRectangle 14" Padding="14,12">
+                            <Grid ColumnDefinitions="32,*,Auto">
+                                <Label FontFamily="FASolid" Text="&#xF5DC;" FontSize="18" TextColor="{StaticResource AccentMaroonColor}" VerticalTextAlignment="Center" />
+                                <Label Grid.Column="1" Text="Neuronic" FontSize="16" VerticalTextAlignment="Center" />
+                                <Button Grid.Column="2" Text="&#xF054;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnOpenNeuronicClicked" />
+                            </Grid>
+                            <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnOpenNeuronicTapped" /></Border.GestureRecognizers>
+                        </Border>
                 </VerticalStackLayout>
             </VerticalStackLayout>
         </ScrollView>

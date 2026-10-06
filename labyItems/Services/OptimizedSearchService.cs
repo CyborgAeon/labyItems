@@ -167,11 +167,18 @@ public sealed class OptimizedSearchService
     private List<SearchResultDto> SearchAbilities(SQLiteConnection conn, string searchText, bool isEmptySearch)
     {
         const string query = @"
-            SELECT id, idx as name, description, cost, table_id, data_json
+            SELECT id,
+                   idx,
+                   COALESCE(NULLIF(TRIM(display_name), ''), idx) AS display_name,
+                   description,
+                   cost,
+                   table_id,
+                   data_json
             FROM evolution
             WHERE (@empty = 1) OR
-                  LOWER(idx) LIKE @search
-            ORDER BY idx COLLATE NOCASE
+                  LOWER(idx) LIKE @search OR
+                  LOWER(COALESCE(display_name, '')) LIKE @search
+            ORDER BY COALESCE(NULLIF(TRIM(display_name), ''), idx) COLLATE NOCASE
             LIMIT 5000";
 
         var cmd = conn.CreateCommand(query, QueryTimeoutMs);
@@ -179,13 +186,13 @@ public sealed class OptimizedSearchService
         cmd.Bind("@search", $"%{searchText}%");
 
         var results = new List<SearchResultDto>();
-        foreach (var row in cmd.ExecuteQuery<(string id, string name, string description, int cost, int tableId, string dataJson)>())
+        foreach (var row in cmd.ExecuteQuery<(string id, string index, string displayName, string description, int cost, int tableId, string dataJson)>())
         {
             results.Add(new SearchResultDto
             {
                 Id = row.id,
-                LookupKey = BuildAbilityLookupKey(row.tableId, row.name),
-                Name = row.name,
+                LookupKey = BuildAbilityLookupKey(row.tableId, row.index),
+                Name = row.displayName,
                 Description = row.description ?? string.Empty,
                 Kind = (int)GlobalSearchKind.Ability,
                 ExtraInfo = BuildAbilityExtraInfo(row.tableId, row.cost),
@@ -214,11 +221,17 @@ public sealed class OptimizedSearchService
         }
 
         var query = $@"
-            SELECT id, idx as name, description, cost, table_id, data_json
+            SELECT id,
+                   idx,
+                   COALESCE(NULLIF(TRIM(display_name), ''), idx) AS display_name,
+                   description,
+                   cost,
+                   table_id,
+                   data_json
             FROM evolution
             WHERE ({whereClause}) AND
-                  ((@empty = 1) OR LOWER(idx) LIKE @search)
-            ORDER BY idx COLLATE NOCASE
+                  ((@empty = 1) OR LOWER(idx) LIKE @search OR LOWER(COALESCE(display_name, '')) LIKE @search)
+            ORDER BY COALESCE(NULLIF(TRIM(display_name), ''), idx) COLLATE NOCASE
             LIMIT 5000";
 
         var cmd = conn.CreateCommand(query, QueryTimeoutMs);
@@ -226,13 +239,13 @@ public sealed class OptimizedSearchService
         cmd.Bind("@search", $"%{searchText}%");
 
         var results = new List<SearchResultDto>();
-        foreach (var row in cmd.ExecuteQuery<(string id, string name, string description, int cost, int tableId, string dataJson)>())
+        foreach (var row in cmd.ExecuteQuery<(string id, string index, string displayName, string description, int cost, int tableId, string dataJson)>())
         {
             results.Add(new SearchResultDto
             {
                 Id = row.id,
-                LookupKey = BuildAbilityLookupKey(row.tableId, row.name),
-                Name = row.name,
+                LookupKey = BuildAbilityLookupKey(row.tableId, row.index),
+                Name = row.displayName,
                 Description = row.description ?? string.Empty,
                 Kind = (int)GlobalSearchKind.Ability,
                 ExtraInfo = BuildAbilityExtraInfo(row.tableId, row.cost),
