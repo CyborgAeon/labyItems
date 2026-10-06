@@ -926,7 +926,7 @@
   },
   "Knights of the Risen Phoenix": {
     "Type": "political",
-    "PreRequisites": "Members of the Knights of the Risen Phoenix may not attack peons and other weak or defenseless creatures except in defense of self or the party and will actively seek to protect non-aggressive peons/defenseless creatures against the un-warranted aggressive actions of others, including those of the party.",
+    "PreRequisites": "Membership is open to those who seek to protect the weak and the downtrodden of Primus and any other land. Those who are dark of heart may join with the guild master’s permission, having attended at least one quest with members of the order.",
     "Ethos": "The order follows the Mother Phoenix, a kind and nurturing creature who seeks to protect the weak and bring peace to the world. Our order judges people by their actions, not by the colour of their soul. The light-hearted fascist who smites the helpless due to the colour of their soul and the dark-hearted bringer of chaos who revels in destruction are both to be equally thwarted. We seek to protect, through strength of arms, intelligence and guile, those who do not have the ability to protect themselves and to try and bring peace and harmony where we tread.",
     "Restrictions": "Members of the Knights of the Risen Phoenix may not attack peons and other weak or defenseless creatures except in defense of self or the party and will actively seek to protect non-aggressive peons/defenseless creatures against the un-warranted aggressive actions of others, including those of the party.",
     "Benefits": {
