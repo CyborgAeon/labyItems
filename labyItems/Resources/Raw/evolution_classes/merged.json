@@ -1,11 +1,14 @@
 [
   {
-    "available": [],
-    "index": "Rebirth",
-    "desc": "player character can restart character at 1st level with same memories but with no abilities",
+    "index": "Rebirthsd",
     "table": 1,
     "cost": 10,
-    "sourceBook": "Classes"
+    "sourceBook": "Classes",
+    "desc": "player character can restart character at 1st level with same memories but with no abilities",
+    "preReqs": [],
+    "available": [],
+    "abilityRef": "",
+    "choiceSetRefs": []
   },
   {
     "available": [],
