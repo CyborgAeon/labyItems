@@ -3,6 +3,7 @@ using Microsoft.Maui.Controls.Shapes;
 using Microsoft.Maui.Layouts;
 using Microsoft.Maui.Graphics;
 using labyItems.Controls.Pickers;
+using System.Threading;
 
 namespace labyItems.Controls;
 
@@ -17,6 +18,7 @@ public partial class DictionarySearchBar<TValue>
     private ContentPage? _overlayPage;
     private EventHandler? _pageSizeChanged;
     private EventHandler<ScrolledEventArgs>? _scrollHandler;
+    private int _overlayGeneration;
 
     private Task ShowResultsAsync() => ShowOverlayAsync();
 
@@ -25,6 +27,7 @@ public partial class DictionarySearchBar<TValue>
     private async Task ShowOverlayAsync()
     {
         DismissLocalOverlay();
+        var generation = _overlayGeneration;
 
         if (_filteredResults == null || !_filteredResults.Any())
         {
@@ -110,6 +113,8 @@ public partial class DictionarySearchBar<TValue>
         _overlayPage = page;
 
         await RepositionLocalOverlaySafeAsync();
+        if (generation != _overlayGeneration || _overlay == null)
+            return;
 
         _pageSizeChanged = async (_, _) =>
         {
@@ -150,6 +155,14 @@ public partial class DictionarySearchBar<TValue>
 
         var hostPos = await NativeCoordinateHelper.GetAbsolutePositionAsync(_overlayHost);
         var anchorPos = await NativeCoordinateHelper.GetAbsolutePositionAsync(_searchBar);
+        if (TryGetPositionRelativeToAncestor(_searchBar, _overlayHost, out var relativeAnchor))
+        {
+            // Use one MAUI coordinate space. Mixing a native screen coordinate for
+            // the Entry with a newly-created host's layout coordinate caused large
+            // vertical offsets on Android pages such as MP Crew.
+            hostPos = Point.Zero;
+            anchorPos = relativeAnchor;
+        }
         var anchorHeight = _searchBar.Height;
 
         var localX = Math.Max(8, anchorPos.X - hostPos.X);
@@ -204,8 +217,40 @@ public partial class DictionarySearchBar<TValue>
             collectionView.HeightRequest = finalHeight;
     }
 
+    private static bool TryGetPositionRelativeToAncestor(
+        VisualElement element,
+        VisualElement ancestor,
+        out Point position)
+    {
+        double x = 0;
+        double y = 0;
+        Element? current = element;
+
+        while (current != null && !ReferenceEquals(current, ancestor))
+        {
+            if (current is VisualElement visual)
+            {
+                x += visual.X + visual.TranslationX;
+                y += visual.Y + visual.TranslationY;
+            }
+
+            if (current.Parent is ScrollView scroll)
+            {
+                x -= scroll.ScrollX;
+                y -= scroll.ScrollY;
+            }
+
+            current = current.Parent;
+        }
+
+        position = new Point(x, y);
+        return ReferenceEquals(current, ancestor);
+    }
+
     private void DismissLocalOverlay()
     {
+        Interlocked.Increment(ref _overlayGeneration);
+
         if (_overlayHost != null && _overlay != null && _overlayHost.Children.Contains(_overlay))
             _overlayHost.Children.Remove(_overlay);
 
@@ -276,14 +321,14 @@ public partial class DictionarySearchBar<TValue>
         await scroll.ScrollToAsync(scroll.ScrollX, upwardTarget, true);
     }
 
-    private async Task RefreshFromRemoteAsync(string? query)
+    private async Task RefreshFromRemoteAsync(string? query, CancellationToken cancellationToken = default)
     {
         if (RemoteSearchProvider == null)
             return;
 
         var requestId = ++_remoteRequestId;
         var results = await RemoteSearchProvider(query ?? string.Empty);
-        if (_remoteRequestId != requestId)
+        if (cancellationToken.IsCancellationRequested || _remoteRequestId != requestId)
             return;
 
         ItemsSource = results ?? new Dictionary<string, TValue>();

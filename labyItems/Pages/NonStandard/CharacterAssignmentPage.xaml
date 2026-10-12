@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="labyItems.Pages.NonStandard.CharacterAssignmentPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:labyItems.Controls"
+             NavigationPage.HasNavigationBar="False" Shell.NavBarIsVisible="False"
+             Title="Choose character">
+    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="0">
+        <Grid Padding="16,12" ColumnDefinitions="Auto,*" ColumnSpacing="12">
+            <controls:BackNavigationButton Command="{Binding CancelCommand}" />
+            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                <Label Text="Choose character" FontAttributes="Bold" FontSize="24" />
+                <Label Text="Select who this creation belongs to" FontSize="13" TextColor="{StaticResource MutedTextColor}" />
+            </VerticalStackLayout>
+        </Grid>
+
+        <Grid Grid.Row="1" Padding="16,4,16,8">
+            <Label Text="No characters saved yet." IsVisible="{Binding IsEmpty}"
+                   TextColor="{StaticResource MutedTextColor}" VerticalOptions="Center" HorizontalOptions="Center" />
+            <CollectionView ItemsSource="{Binding Rows}" SelectedItem="{Binding SelectedRow, Mode=TwoWay}"
+                            SelectionMode="Single" SelectionChanged="OnSelectionChanged"
+                            SemanticProperties.Description="Saved characters">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Margin="0,0,0,12" Padding="12" MinimumHeightRequest="76"
+                                BackgroundColor="{Binding SelectionBackground}"
+                                BorderColor="{Binding SelectionStroke}"
+                                CornerRadius="14" HasShadow="{Binding IsSelected}"
+                                SemanticProperties.Description="{Binding AccessibilityDescription}">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnRowTapped" />
+                            </Frame.GestureRecognizers>
+                            <Grid ColumnDefinitions="52,*,Auto" ColumnSpacing="12">
+                                <controls:ClassBracketIconView IconSize="52"
+                                                               HasSplitIcon="{Binding HasSplitIcon}"
+                                                               SingleGlyph="{Binding SingleGlyph}"
+                                                               SingleIconFontFamily="{Binding SingleIconFontFamily}"
+                                                               SingleBackground="{Binding SingleBackground}"
+                                                               SplitLeftGlyph="{Binding SplitLeftGlyph}"
+                                                               SplitRightGlyph="{Binding SplitRightGlyph}"
+                                                               SplitLeftBackground="{Binding SplitLeftBackground}"
+                                                               SplitRightBackground="{Binding SplitRightBackground}"
+                                                               BorderColor="{StaticResource SurfaceBorderColor}" />
+                                <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                                    <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="17" LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding Subtitle}" FontSize="12" TextColor="{StaticResource MutedTextColor}" LineBreakMode="TailTruncation" />
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Border Stroke="{StaticResource SurfaceBorderColor}" StrokeThickness="1" StrokeShape="RoundRectangle 999"
+                                                BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}" Padding="8,2">
+                                            <Label Text="{Binding PointsText}" FontSize="12" />
+                                        </Border>
+                                        <Label Text="{Binding LastPlayedText}" FontSize="12" TextColor="{StaticResource MutedTextColor}" VerticalTextAlignment="Center" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                                <Label Grid.Column="2" Text="&#xF058;" FontFamily="FASolid" FontSize="20"
+                                       TextColor="{StaticResource AccentMaroonColor}" IsVisible="{Binding IsSelected}"
+                                       VerticalTextAlignment="Center" />
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+
+        <Grid Grid.Row="2" RowDefinitions="1,Auto">
+            <BoxView HeightRequest="1" BackgroundColor="{StaticResource SurfaceBorderColor}" />
+            <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="12" Padding="16,10,16,18" BackgroundColor="{StaticResource White}">
+                <Button Text="Cancel" Command="{Binding CancelCommand}" MinimumHeightRequest="44"
+                        SemanticProperties.Description="Cancel without changing character" />
+                <Button Grid.Column="1" Text="Next" Command="{Binding NextCommand}" IsEnabled="{Binding CanContinue}"
+                        MinimumHeightRequest="44" SemanticProperties.Description="Use selected character" />
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentPage>

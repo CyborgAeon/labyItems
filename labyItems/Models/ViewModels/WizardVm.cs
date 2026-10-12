@@ -974,15 +974,20 @@ public sealed class WizardVm : INotifyPropertyChanged
         var moved = await _flow.TryTransitionAsync(targetIndex, deferEnter: movingForward);
         if (!moved) return;
 
-        CurrentStep = _flow.CurrentStep;
-
         if (movingForward)
         {
             var deferredEnter = _flow.ConsumePendingEnter();
             if (deferredEnter != null)
-                BeginDeferredLoadingState(CurrentStep);
+                BeginDeferredLoadingState(_flow.CurrentStep);
+
+            // Set loading before constructing the next step. Otherwise the view binds
+            // the previous sections for a frame, then clears them and flashes a loader.
+            CurrentStep = _flow.CurrentStep;
             _ = RunPostTransitionSyncAsync(deferredEnter);
+            return;
         }
+
+        CurrentStep = _flow.CurrentStep;
     }
 
     private void BeginDeferredLoadingState(int stepIndex)

@@ -6,7 +6,11 @@ using System.Text.Json;
 using System.Windows.Input;
 using labyItems.Controls;
 using labyItems.Infrastructure;
+using labyItems.Models.Characters;
 using labyItems.Models.Enums;
+using labyItems.Models.ViewModels;
+using labyItems.Pages.Characters;
+using labyItems.Pages.Characters.ViewModels;
 using labyItems.Services;
 
 namespace labyItems.Pages.Search;
@@ -26,7 +30,12 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         (GlobalSearchKind.Miracle, "Miracles"),
         (GlobalSearchKind.Evocation, "Evocations"),
         (GlobalSearchKind.Neuronic, "Neuronics"),
-        (GlobalSearchKind.Ability, "Abilities")
+        (GlobalSearchKind.Class, "Classes"),
+        (GlobalSearchKind.Race, "Races"),
+        (GlobalSearchKind.Ability, "Abilities"),
+        (GlobalSearchKind.Guild, "Guilds"),
+        (GlobalSearchKind.MultiClass, "Multi-Classes"),
+        (GlobalSearchKind.MultiRace, "Multi-Races")
     ];
 
     private static readonly IReadOnlyList<FilterOption> SpellColourOptions = BuildSpellColourOptions();
@@ -123,19 +132,24 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
                 return "Loading search data...";
 
             if (string.IsNullOrWhiteSpace(SearchText))
-                return "Type to search spells, miracles, evocations, neuronics, and abilities.";
+                return "Type to search spells, miracles, evocations, neuronics, classes, races, abilities, guilds, multi-classes, and multi-races.";
 
             return "No matches found.";
         }
     }
 
-    public GlobalSearchVm(GlobalSearchPickerOptions? picker = null)
+    public GlobalSearchVm(GlobalSearchPickerOptions? picker = null, GlobalSearchKind? initialKind = null)
     {
         _picker = picker;
         if (picker != null && !picker.AllowAllKinds)
         {
             _applied.Kinds.Add(picker.Kind);
             _pending.Kinds.Add(picker.Kind);
+        }
+        else if (initialKind.HasValue && picker == null)
+        {
+            _applied.Kinds.Add(initialKind.Value);
+            _pending.Kinds.Add(initialKind.Value);
         }
         else if (picker?.AllowAllKinds == true)
         {
@@ -410,17 +424,13 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
                 () => ConvertOptimizedResults(dtos),
                 cancellationToken);
 
-            if (_picker?.AllowAllKinds == true)
+            var extraResults = await SearchEntitiesAsync(_searchText, snapshot.Kinds, cancellationToken);
+            if (extraResults.Count > 0)
             {
-                var query = (_searchText ?? string.Empty).Trim();
-                var guildNames = await GuildsService.GetGuildNamesAsync();
-                converted.AddRange(guildNames
-                    .Where(name => query.Length == 0 || name.Contains(query, StringComparison.OrdinalIgnoreCase))
-                    .Select(name => new GlobalSearchResultVm(
-                        GlobalSearchKind.Guild, name, "Guild", "\uf0c0", "Guild", string.Empty,
-                        null, null, null, null, null)));
+                converted.AddRange(extraResults);
                 converted = converted
                     .OrderBy(result => result.Name, StringComparer.OrdinalIgnoreCase)
+                    .ThenBy(result => result.Kind)
                     .Take(MaxVisibleResults)
                     .ToList();
             }
@@ -444,6 +454,188 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         {
             ServiceHelper.LogDbError("ApplyFiltersAsync", ex);
         }
+    }
+
+    private async Task<List<GlobalSearchResultVm>> SearchEntitiesAsync(
+        string query,
+        IReadOnlySet<GlobalSearchKind> selectedKinds,
+        CancellationToken cancellationToken)
+    {
+        var results = new List<GlobalSearchResultVm>();
+        var includeAll = selectedKinds.Count == 0;
+        var q = (query ?? string.Empty).Trim().ToLowerInvariant();
+
+        // 1. Classes
+        if (includeAll || selectedKinds.Contains(GlobalSearchKind.Class))
+        {
+            var classes = await ClassService.GetAllAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+            foreach (var kvp in classes)
+            {
+                var name = kvp.Key;
+                var rec = kvp.Value;
+                if (rec == null) continue;
+
+                var (_, category, bracketTags) = ClassCardVm.ParseBrackets(rec.Brackets);
+                var summary = ClassCardVm.BuildSummaryFromLevels(rec.Levels);
+                var bracketText = bracketTags != null ? string.Join(" ", bracketTags) : string.Empty;
+
+                if (q.Length == 0 ||
+                    name.ToLowerInvariant().Contains(q) ||
+                    category.ToLowerInvariant().Contains(q) ||
+                    bracketText.ToLowerInvariant().Contains(q) ||
+                    summary.ToLowerInvariant().Contains(q))
+                {
+                    results.Add(new GlobalSearchResultVm(
+                        GlobalSearchKind.Class,
+                        name,
+                        category.Length > 0 ? category : "Class",
+                        "\uf0c0",
+                        $"Class · {bracketText}",
+                        summary,
+                        null, null, null, null, null)
+                    {
+                        DetailKey = name
+                    });
+                }
+            }
+        }
+
+        // 2. Races
+        if (includeAll || selectedKinds.Contains(GlobalSearchKind.Race))
+        {
+            var races = await PeopleService.GetAllAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+            foreach (var kvp in races)
+            {
+                var name = kvp.Key;
+                var rec = kvp.Value;
+                if (rec == null) continue;
+
+                var peopleType = rec.PeopleType != null ? string.Join(", ", rec.PeopleType) : string.Empty;
+                var desc = rec.Description ?? string.Empty;
+
+                if (q.Length == 0 ||
+                    name.ToLowerInvariant().Contains(q) ||
+                    peopleType.ToLowerInvariant().Contains(q) ||
+                    desc.ToLowerInvariant().Contains(q))
+                {
+                    results.Add(new GlobalSearchResultVm(
+                        GlobalSearchKind.Race,
+                        name,
+                        peopleType.Length > 0 ? peopleType : "Race",
+                        "\uf2bd",
+                        $"Race · {peopleType}",
+                        desc,
+                        null, null, null, null, null)
+                    {
+                        DetailKey = name
+                    });
+                }
+            }
+        }
+
+        // 3. Guilds
+        if (includeAll || selectedKinds.Contains(GlobalSearchKind.Guild))
+        {
+            var guilds = await GuildsService.GetAllAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+            foreach (var kvp in guilds)
+            {
+                var name = kvp.Key;
+                var rec = kvp.Value;
+                if (rec == null) continue;
+
+                var ethos = rec.Ethos ?? string.Empty;
+                var background = rec.Background ?? string.Empty;
+                var type = rec.Type ?? string.Empty;
+
+                if (q.Length == 0 ||
+                    name.ToLowerInvariant().Contains(q) ||
+                    type.ToLowerInvariant().Contains(q) ||
+                    ethos.ToLowerInvariant().Contains(q) ||
+                    background.ToLowerInvariant().Contains(q))
+                {
+                    results.Add(new GlobalSearchResultVm(
+                        GlobalSearchKind.Guild,
+                        name,
+                        type.Length > 0 ? type : "Guild",
+                        "\uf19c",
+                        $"Guild · {type}",
+                        ethos.Length > 0 ? ethos : background,
+                        null, null, null, null, null)
+                    {
+                        DetailKey = name
+                    });
+                }
+            }
+        }
+
+        // 4. Multi-Classes
+        if (includeAll || selectedKinds.Contains(GlobalSearchKind.MultiClass))
+        {
+            var mcCatalog = await MultiClassService.GetCatalogAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+            foreach (var pair in mcCatalog.MultiClasses)
+            {
+                var name = !string.IsNullOrWhiteSpace(pair.Value.DisplayName) ? pair.Value.DisplayName.Trim() : pair.Key;
+                var powerBase = MultiPathWizardHelpers.ResolvePowerBase<
+                    MultiClassDefinition, MultiClassAvailabilityOption, MultiClassLevelAbility, MultiClassSystemEffect>(pair.Value);
+                var maxLevel = MultiPathWizardHelpers.ResolveMaxLevel<
+                    MultiClassDefinition, MultiClassAvailabilityOption, MultiClassLevelAbility, MultiClassSystemEffect>(pair.Value);
+
+                if (q.Length == 0 ||
+                    name.ToLowerInvariant().Contains(q) ||
+                    powerBase.ToLowerInvariant().Contains(q))
+                {
+                    results.Add(new GlobalSearchResultVm(
+                        GlobalSearchKind.MultiClass,
+                        name,
+                        powerBase.Length > 0 ? powerBase : "Multi-Class",
+                        "\uf6cf",
+                        $"Multi-Class · Max Level {maxLevel}",
+                        $"Progress up to level {maxLevel} in {powerBase}",
+                        null, null, null, null, null)
+                    {
+                        DetailKey = pair.Key
+                    });
+                }
+            }
+        }
+
+        // 5. Multi-Races
+        if (includeAll || selectedKinds.Contains(GlobalSearchKind.MultiRace))
+        {
+            var mrCatalog = await MultiRaceService.GetCatalogAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+            foreach (var pair in mrCatalog.MultiRaces)
+            {
+                var name = !string.IsNullOrWhiteSpace(pair.Value.DisplayName) ? pair.Value.DisplayName.Trim() : pair.Key;
+                var powerBase = MultiPathWizardHelpers.ResolvePowerBase<
+                    MultiRaceDefinition, MultiRaceAvailabilityOption, MultiRaceLevelAbility, MultiRaceSystemEffect>(pair.Value);
+                var maxLevel = MultiPathWizardHelpers.ResolveMaxLevel<
+                    MultiRaceDefinition, MultiRaceAvailabilityOption, MultiRaceLevelAbility, MultiRaceSystemEffect>(pair.Value);
+
+                if (q.Length == 0 ||
+                    name.ToLowerInvariant().Contains(q) ||
+                    powerBase.ToLowerInvariant().Contains(q))
+                {
+                    results.Add(new GlobalSearchResultVm(
+                        GlobalSearchKind.MultiRace,
+                        name,
+                        powerBase.Length > 0 ? powerBase : "Multi-Race",
+                        "\uf500",
+                        $"Multi-Race · Max Level {maxLevel}",
+                        $"Progress up to level {maxLevel} in {powerBase}",
+                        null, null, null, null, null)
+                    {
+                        DetailKey = pair.Key
+                    });
+                }
+            }
+        }
+
+        return results;
     }
 
     /// <summary>
@@ -975,7 +1167,11 @@ public enum GlobalSearchKind
     Miracle,
     Evocation,
     Neuronic,
-    Guild
+    Class,
+    Race,
+    Guild,
+    MultiClass,
+    MultiRace
 }
 
 public sealed class GlobalSearchFilterSectionVm : INotifyPropertyChanged
@@ -1160,7 +1356,12 @@ public sealed record GlobalSearchResultVm(
                or GlobalSearchKind.Spell
                or GlobalSearchKind.Miracle
                or GlobalSearchKind.Evocation
-               or GlobalSearchKind.Neuronic;
+               or GlobalSearchKind.Neuronic
+               or GlobalSearchKind.Guild
+               or GlobalSearchKind.Class
+               or GlobalSearchKind.Race
+               or GlobalSearchKind.MultiClass
+               or GlobalSearchKind.MultiRace;
 
     public bool HasDescription => !string.IsNullOrWhiteSpace(DescriptionText);
 
@@ -1172,6 +1373,10 @@ public sealed record GlobalSearchResultVm(
         GlobalSearchKind.Evocation => "#DCFCE7",
         GlobalSearchKind.Neuronic => "#E0E7FF",
         GlobalSearchKind.Guild => "#F3E8FF",
+        GlobalSearchKind.Class => "#FEE2E2",
+        GlobalSearchKind.Race => "#FFEDD5",
+        GlobalSearchKind.MultiClass => "#FCE7F3",
+        GlobalSearchKind.MultiRace => "#ECFCCB",
         _ => "#E5E7EB"
     };
 
@@ -1183,6 +1388,10 @@ public sealed record GlobalSearchResultVm(
         GlobalSearchKind.Evocation => "#86EFAC",
         GlobalSearchKind.Neuronic => "#A5B4FC",
         GlobalSearchKind.Guild => "#D8B4FE",
+        GlobalSearchKind.Class => "#FCA5A5",
+        GlobalSearchKind.Race => "#FDBA74",
+        GlobalSearchKind.MultiClass => "#F472B6",
+        GlobalSearchKind.MultiRace => "#A3E635",
         _ => "#D1D5DB"
     };
 
@@ -1194,6 +1403,10 @@ public sealed record GlobalSearchResultVm(
         GlobalSearchKind.Evocation => "#166534",
         GlobalSearchKind.Neuronic => "#3730A3",
         GlobalSearchKind.Guild => "#581C87",
+        GlobalSearchKind.Class => "#B91C1C",
+        GlobalSearchKind.Race => "#C2410C",
+        GlobalSearchKind.MultiClass => "#BE185D",
+        GlobalSearchKind.MultiRace => "#4D7C0F",
         _ => "#374151"
     };
 

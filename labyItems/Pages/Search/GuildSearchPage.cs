@@ -22,12 +22,13 @@ public sealed class GuildSearchPage : ContentPage
         var guilds = new Guilds(vm)
         {
             ShowBackButton = false,
-            UseTypePills = true
+            UseTypePills = true,
+            CanExpandGuildCards = false
         };
 
         var menu = new ToolsetNavigationMenu
         {
-            SelectedRoute = ToolsetRouteKeys.Guilds
+            SelectedRoute = ToolsetRouteKeys.SearchGuilds
         };
 
         guilds.HeaderLeadingView = new BurgerMenuButton

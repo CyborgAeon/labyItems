@@ -33,11 +33,89 @@
 
                                    <VerticalStackLayout x:Name="LevelProgressionExpandedContent"
                                                         Spacing="8">
-                                          <ScrollView Orientation="Horizontal"
-                                                      HorizontalScrollBarVisibility="Always"
-                                                      VerticalScrollBarVisibility="Never">
-                                                 <Grid x:Name="LevelProgressionTableHost" />
-                                          </ScrollView>
+                                          <Grid>
+                                                 <VisualStateManager.VisualStateGroups>
+                                                        <VisualStateGroup x:Name="ProgressionWidthStates">
+                                                               <VisualState x:Name="Compact">
+                                                                      <VisualState.StateTriggers>
+                                                                             <AdaptiveTrigger MinWindowWidth="0"/>
+                                                                      </VisualState.StateTriggers>
+                                                                      <VisualState.Setters>
+                                                                             <Setter TargetName="LevelProgressionCards" Property="IsVisible" Value="True"/>
+                                                                             <Setter TargetName="LevelProgressionTableScroller" Property="IsVisible" Value="False"/>
+                                                                      </VisualState.Setters>
+                                                               </VisualState>
+                                                               <VisualState x:Name="Wide">
+                                                                      <VisualState.StateTriggers>
+                                                                             <AdaptiveTrigger MinWindowWidth="720"/>
+                                                                      </VisualState.StateTriggers>
+                                                                      <VisualState.Setters>
+                                                                             <Setter TargetName="LevelProgressionCards" Property="IsVisible" Value="False"/>
+                                                                             <Setter TargetName="LevelProgressionTableScroller" Property="IsVisible" Value="True"/>
+                                                                      </VisualState.Setters>
+                                                               </VisualState>
+                                                        </VisualStateGroup>
+                                                 </VisualStateManager.VisualStateGroups>
+
+                                                 <VerticalStackLayout x:Name="LevelProgressionCards"
+                                                                      BindableLayout.ItemsSource="{Binding Source={x:Reference Root}, Path=LevelColumns}"
+                                                                      Spacing="8">
+                                                        <BindableLayout.ItemTemplate>
+                                                               <DataTemplate>
+                                                                      <Border Padding="12,10"
+                                                                              Stroke="{StaticResource SurfaceBorderColor}"
+                                                                              StrokeShape="RoundRectangle 10"
+                                                                              BackgroundColor="{StaticResource White}">
+                                                                             <VerticalStackLayout Spacing="8">
+                                                                                    <Grid ColumnDefinitions="*,Auto">
+                                                                                           <Label Text="{Binding Level, StringFormat='Level {0}'}"
+                                                                                                  FontAttributes="Bold"
+                                                                                                  FontSize="15"/>
+                                                                                           <Label Grid.Column="1"
+                                                                                                  Text="{Binding LifeText, StringFormat='Life  {0}'}"
+                                                                                                  TextColor="{StaticResource MutedTextColor}"/>
+                                                                                    </Grid>
+                                                                                    <Button Text="{Binding ClassSkillDisplayText, StringFormat='Class  •  {0}'}"
+                                                                                            HorizontalOptions="Fill"
+                                                                                            BackgroundColor="Transparent"
+                                                                                            TextColor="{StaticResource Black}"
+                                                                                            BorderColor="{StaticResource SurfaceBorderColor}"
+                                                                                            BorderWidth="1"
+                                                                                            IsEnabled="{Binding HasClassSkill}"
+                                                                                            Clicked="OnLevelProgressionClassCellClicked"
+                                                                                            CommandParameter="{Binding .}"/>
+                                                                                    <Button Text="{Binding RaceSkillDisplayText, StringFormat='Race  •  {0}'}"
+                                                                                            HorizontalOptions="Fill"
+                                                                                            BackgroundColor="Transparent"
+                                                                                            TextColor="{StaticResource Black}"
+                                                                                            BorderColor="{StaticResource SurfaceBorderColor}"
+                                                                                            BorderWidth="1"
+                                                                                            IsEnabled="{Binding HasRaceSkill}"
+                                                                                            Clicked="OnLevelProgressionRaceCellClicked"
+                                                                                            CommandParameter="{Binding .}"/>
+                                                                                    <Button Text="{Binding WeaponSkillDisplayText, StringFormat='Weapon  •  {0}'}"
+                                                                                            HorizontalOptions="Fill"
+                                                                                            BackgroundColor="Transparent"
+                                                                                            TextColor="{StaticResource Black}"
+                                                                                            BorderColor="{StaticResource SurfaceBorderColor}"
+                                                                                            BorderWidth="1"
+                                                                                            IsEnabled="{Binding HasWeaponSkill}"
+                                                                                            Clicked="OnLevelProgressionWeaponCellClicked"
+                                                                                            CommandParameter="{Binding .}"/>
+                                                                             </VerticalStackLayout>
+                                                                      </Border>
+                                                               </DataTemplate>
+                                                        </BindableLayout.ItemTemplate>
+                                                 </VerticalStackLayout>
+
+                                                 <ScrollView x:Name="LevelProgressionTableScroller"
+                                                             IsVisible="False"
+                                                             Orientation="Horizontal"
+                                                             HorizontalScrollBarVisibility="Always"
+                                                             VerticalScrollBarVisibility="Never">
+                                                        <Grid x:Name="LevelProgressionTableHost" />
+                                                 </ScrollView>
+                                          </Grid>
                                    </VerticalStackLayout>
                             </VerticalStackLayout>
                      </Frame>

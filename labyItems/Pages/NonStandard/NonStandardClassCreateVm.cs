@@ -133,8 +133,8 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
     public ObservableCollection<CustomLifeScalePointVm> CustomLifeScaleRows { get; } = new();
     public ObservableCollection<LifeScaleSearchOptionVm> FilteredLifeScaleOptions { get; } = new();
     public ObservableCollection<LifeScaleAssignmentVm> LifeScaleAssignments { get; } = new();
-    public ObservableCollection<string> RaceWhitelist { get; } = new();
-    public ObservableCollection<string> RaceBlacklist { get; } = new();
+    public ObservableCollection<string> IncludedRaces { get; } = new();
+    public ObservableCollection<string> ExcludedRaces { get; } = new();
     public ObservableCollection<PostEighthEntryVm> PostEighthEntries { get; } = new();
     public ObservableCollection<string> PostEighthMultiRaces { get; } = new();
     public ObservableCollection<string> PostEighthMultiClasses { get; } = new();
@@ -903,11 +903,11 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
         Raise(nameof(LifescaleChevronText));
     }
 
-    public async Task AddRaceToWhitelistAsync(INavigation navigation)
-        => await AddRaceToListAsync(navigation, RaceWhitelist, RaceBlacklist);
+    public async Task AddIncludedRaceAsync(INavigation navigation)
+        => await AddRaceToListAsync(navigation, IncludedRaces, ExcludedRaces);
 
-    public async Task AddRaceToBlacklistAsync(INavigation navigation)
-        => await AddRaceToListAsync(navigation, RaceBlacklist, RaceWhitelist);
+    public async Task AddExcludedRaceAsync(INavigation navigation)
+        => await AddRaceToListAsync(navigation, ExcludedRaces, IncludedRaces);
 
     public async Task AddPostEighthRaceAsync(INavigation navigation)
     {
@@ -1057,17 +1057,17 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
                 .Select(entry => entry.Name));
     }
 
-    public void RemoveFromWhitelist(string? race)
-        => RemoveFromCollection(RaceWhitelist, race);
+    public void RemoveIncludedRace(string? race)
+        => RemoveFromCollection(IncludedRaces, race);
 
-    public void RemoveFromBlacklist(string? race)
-        => RemoveFromCollection(RaceBlacklist, race);
+    public void RemoveExcludedRace(string? race)
+        => RemoveFromCollection(ExcludedRaces, race);
 
-    public void MoveWhitelistToBlacklist(string? race)
-        => MoveBetweenCollections(RaceWhitelist, RaceBlacklist, race);
+    public void ExcludeRace(string? race)
+        => MoveBetweenCollections(IncludedRaces, ExcludedRaces, race);
 
-    public void MoveBlacklistToWhitelist(string? race)
-        => MoveBetweenCollections(RaceBlacklist, RaceWhitelist, race);
+    public void IncludeRace(string? race)
+        => MoveBetweenCollections(ExcludedRaces, IncludedRaces, race);
 
     public async Task SaveAsync()
     {
@@ -1269,8 +1269,8 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
         if (TryReadInt(payload, "CasterLevel", out var casterLevel))
             RebuildCasterLevels(casterLevel);
 
-        ReplaceCollection(RaceWhitelist, ReadStringArray(payload, "RaceWhitelist"));
-        ReplaceCollection(RaceBlacklist, ReadStringArray(payload, "RaceBlacklist"));
+        ReplaceCollection(IncludedRaces, ReadStringArray(payload, "RaceWhitelist"));
+        ReplaceCollection(ExcludedRaces, ReadStringArray(payload, "RaceBlacklist"));
 
         if (TryGetObject(payload, "Post8Progression", out var postEighthObject))
             ApplyPostEighthProgression(postEighthObject);
@@ -1826,8 +1826,9 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
             ["alignmentRule"] = JsonSerializer.SerializeToNode(BuildAlignmentRulePayload()),
             ["Armour"] = JsonSerializer.SerializeToNode(BuildArmourPayload()),
             ["Path"] = (PathClassName ?? string.Empty).Trim(),
-            ["RaceWhitelist"] = JsonSerializer.SerializeToNode(RaceWhitelist.ToList()) ?? new JsonArray(),
-            ["RaceBlacklist"] = JsonSerializer.SerializeToNode(RaceBlacklist.ToList()) ?? new JsonArray(),
+            // Preserve legacy serialized keys while keeping user-facing and code-facing terminology inclusive.
+            ["RaceWhitelist"] = JsonSerializer.SerializeToNode(IncludedRaces.ToList()) ?? new JsonArray(),
+            ["RaceBlacklist"] = JsonSerializer.SerializeToNode(ExcludedRaces.ToList()) ?? new JsonArray(),
             ["NonStandard"] = true,
             ["nonStandard"] = true,
             ["is_default"] = 0

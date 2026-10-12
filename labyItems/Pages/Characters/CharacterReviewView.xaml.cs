@@ -74,16 +74,19 @@ public partial class CharacterReviewView : ContentView
 
         public string ClassSkillText { get; init; } = string.Empty;
         public bool HasClassSkill => ClassSkillText.Length > 0;
+        public string ClassSkillDisplayText => HasClassSkill ? ClassSkillText : "None gained";
         public IReadOnlyList<string> ClassSkillNames { get; init; } = Array.Empty<string>();
         public IReadOnlyList<string> ClassSkillKeys { get; init; } = Array.Empty<string>();
 
         public string RaceSkillText { get; init; } = string.Empty;
         public bool HasRaceSkill => RaceSkillText.Length > 0;
+        public string RaceSkillDisplayText => HasRaceSkill ? RaceSkillText : "None gained";
         public IReadOnlyList<string> RaceSkillNames { get; init; } = Array.Empty<string>();
         public IReadOnlyList<string> RaceSkillKeys { get; init; } = Array.Empty<string>();
 
         public string WeaponSkillText { get; init; } = string.Empty;
         public bool HasWeaponSkill => WeaponSkillText.Length > 0;
+        public string WeaponSkillDisplayText => HasWeaponSkill ? WeaponSkillText : "None gained";
         public IReadOnlyList<string> WeaponSkillNames { get; init; } = Array.Empty<string>();
         public IReadOnlyList<string> WeaponSkillKeys { get; init; } = Array.Empty<string>();
     }

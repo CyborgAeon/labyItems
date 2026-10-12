@@ -57,6 +57,18 @@ public partial class ToolsetNavigationMenu : ContentView
         set => SetValue(ItemsExpandedProperty, value);
     }
 
+    public static readonly BindableProperty SearchExpandedProperty = BindableProperty.Create(
+        nameof(SearchExpanded),
+        typeof(bool),
+        typeof(ToolsetNavigationMenu),
+        false);
+
+    public bool SearchExpanded
+    {
+        get => (bool)GetValue(SearchExpandedProperty);
+        set => SetValue(SearchExpandedProperty, value);
+    }
+
     private async void OnLoaded(object? sender, EventArgs e)
     {
         await SetMenuOpenAsync(false, immediate: true);
@@ -114,11 +126,47 @@ public partial class ToolsetNavigationMenu : ContentView
     private async void OnCraftingTapped(object sender, TappedEventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new MakeSheetPage()));
 
+    private void OnSearchGroupTapped(object sender, TappedEventArgs e)
+        => SearchExpanded = !SearchExpanded;
+
     private async void OnSearchClicked(object sender, EventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage()));
 
     private async void OnSearchTapped(object sender, TappedEventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage()));
+
+    private async void OnGlobalSearchTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage()));
+
+    private async void OnSearchSpellsTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.Spell)));
+
+    private async void OnSearchMiraclesTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.Miracle)));
+
+    private async void OnSearchEvocationsTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.Evocation)));
+
+    private async void OnSearchNeuronicsTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.Neuronic)));
+
+    private async void OnSearchClassesTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new ClassSearchPage()));
+
+    private async void OnSearchRacesTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new RaceSearchPage()));
+
+    private async void OnSearchAbilitiesTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.Ability)));
+
+    private async void OnSearchGuildsTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GuildSearchPage()));
+
+    private async void OnSearchMultiClassesTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new MultiClassSearchPage()));
+
+    private async void OnSearchMultiRacesTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new MultiRaceSearchPage()));
 
     private async void OnGuildSearchClicked(object sender, EventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GuildSearchPage()));
@@ -234,6 +282,7 @@ public partial class ToolsetNavigationMenu : ContentView
     private void ApplySelectionState()
     {
         ItemsExpanded = IsItemsRoute(SelectedRoute);
+        SearchExpanded = IsSearchRoute(SelectedRoute);
 
         ApplyRowState(HomeRow, ToolsetRouteKeys.Home);
         ApplyRowState(CharactersRow, ToolsetRouteKeys.Characters);
@@ -245,8 +294,18 @@ public partial class ToolsetNavigationMenu : ContentView
         ApplyRowState(ItemWalletRow, ToolsetRouteKeys.ItemsWallet);
         ApplyRowState(CreationsRow, ToolsetRouteKeys.NonStandard);
         ApplyRowState(CalendarRow, ToolsetRouteKeys.Calendar);
-        ApplyRowState(SearchRow, ToolsetRouteKeys.Search);
-        ApplyRowState(GuildsRow, ToolsetRouteKeys.Guilds);
+        ApplyRowState(SearchRow, SelectedRoute, IsSearchRoute);
+        ApplyRowState(SearchGlobalRow, ToolsetRouteKeys.SearchGlobal);
+        ApplyRowState(SearchSpellsRow, ToolsetRouteKeys.SearchSpells);
+        ApplyRowState(SearchMiraclesRow, ToolsetRouteKeys.SearchMiracles);
+        ApplyRowState(SearchEvocationsRow, ToolsetRouteKeys.SearchEvocations);
+        ApplyRowState(SearchNeuronicsRow, ToolsetRouteKeys.SearchNeuronics);
+        ApplyRowState(SearchClassesRow, ToolsetRouteKeys.SearchClasses);
+        ApplyRowState(SearchRacesRow, ToolsetRouteKeys.SearchRaces);
+        ApplyRowState(SearchAbilitiesRow, ToolsetRouteKeys.SearchAbilities);
+        ApplyRowState(SearchGuildsRow, ToolsetRouteKeys.SearchGuilds);
+        ApplyRowState(SearchMultiClassesRow, ToolsetRouteKeys.SearchMultiClasses);
+        ApplyRowState(SearchMultiRacesRow, ToolsetRouteKeys.SearchMultiRaces);
         ApplyRowState(TradeRow, ToolsetRouteKeys.Trade);
         ApplyRowState(SettingsRow, ToolsetRouteKeys.Settings);
     }
@@ -275,6 +334,21 @@ public partial class ToolsetNavigationMenu : ContentView
            || string.Equals(route, ToolsetRouteKeys.ItemsCrafting, StringComparison.OrdinalIgnoreCase)
            || string.Equals(route, ToolsetRouteKeys.ScrollBuilder, StringComparison.OrdinalIgnoreCase)
            || string.Equals(route, ToolsetRouteKeys.ItemsWallet, StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsSearchRoute(string? route)
+        => string.Equals(route, ToolsetRouteKeys.Search, StringComparison.OrdinalIgnoreCase)
+           || string.Equals(route, ToolsetRouteKeys.SearchGlobal, StringComparison.OrdinalIgnoreCase)
+           || string.Equals(route, ToolsetRouteKeys.SearchSpells, StringComparison.OrdinalIgnoreCase)
+           || string.Equals(route, ToolsetRouteKeys.SearchMiracles, StringComparison.OrdinalIgnoreCase)
+           || string.Equals(route, ToolsetRouteKeys.SearchEvocations, StringComparison.OrdinalIgnoreCase)
+           || string.Equals(route, ToolsetRouteKeys.SearchNeuronics, StringComparison.OrdinalIgnoreCase)
+           || string.Equals(route, ToolsetRouteKeys.SearchClasses, StringComparison.OrdinalIgnoreCase)
+           || string.Equals(route, ToolsetRouteKeys.SearchRaces, StringComparison.OrdinalIgnoreCase)
+           || string.Equals(route, ToolsetRouteKeys.SearchAbilities, StringComparison.OrdinalIgnoreCase)
+           || string.Equals(route, ToolsetRouteKeys.SearchGuilds, StringComparison.OrdinalIgnoreCase)
+           || string.Equals(route, ToolsetRouteKeys.SearchMultiClasses, StringComparison.OrdinalIgnoreCase)
+           || string.Equals(route, ToolsetRouteKeys.SearchMultiRaces, StringComparison.OrdinalIgnoreCase)
+           || string.Equals(route, ToolsetRouteKeys.Guilds, StringComparison.OrdinalIgnoreCase);
 
     private static IEnumerable<T> GetDescendants<T>(Element root) where T : Element
     {

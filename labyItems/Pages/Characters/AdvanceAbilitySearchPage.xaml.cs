@@ -1,4 +1,5 @@
 using labyItems.Pages.Characters.ViewModels;
+using labyItems.Helpers;
 using AbilityCardPage = labyItems.Pages.AbilityCard.AbilityCard;
 
 namespace labyItems.Pages.Characters;
@@ -6,6 +7,7 @@ namespace labyItems.Pages.Characters;
 public partial class AdvanceAbilitySearchPage : ContentPage
 {
     private readonly AdvanceAbilitySearchVm _vm;
+    private readonly CollectionViewScrollPreserver _scrollPreserver;
     private bool _initialized;
     private bool _disposed;
 
@@ -14,6 +16,7 @@ public partial class AdvanceAbilitySearchPage : ContentPage
         _vm = new AdvanceAbilitySearchVm(rootVm);
         InitializeComponent();
         BindingContext = _vm;
+        _scrollPreserver = new CollectionViewScrollPreserver(AbilitiesCollection, this);
     }
 
     public AdvanceAbilitySearchPage(IAbilitySearchHost host)
@@ -21,18 +24,23 @@ public partial class AdvanceAbilitySearchPage : ContentPage
         _vm = new AdvanceAbilitySearchVm(host);
         InitializeComponent();
         BindingContext = _vm;
+        _scrollPreserver = new CollectionViewScrollPreserver(AbilitiesCollection, this);
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
         if (_initialized)
+        {
+            _scrollPreserver.RestoreScrollPosition();
             return;
+        }
 
         _initialized = true;
         try
         {
             await _vm.LoadAsync();
+            _scrollPreserver.RestoreScrollPosition();
         }
         catch (Exception ex)
         {
@@ -61,6 +69,7 @@ public partial class AdvanceAbilitySearchPage : ContentPage
         if (e.Parameter is not AdvanceAbilitySearchItemVm ability)
             return;
 
+        _scrollPreserver.RecordItem(ability);
         await Navigation.PushAsync(new AbilityCardPage(ability.Ability));
     }
 

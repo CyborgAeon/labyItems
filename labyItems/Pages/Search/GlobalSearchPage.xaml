@@ -50,7 +50,8 @@
             </Border>
         </Grid>
         <Grid Grid.Row="1">
-            <CollectionView ItemsSource="{Binding FilteredResults}"
+            <CollectionView x:Name="ResultsCollection"
+                            ItemsSource="{Binding FilteredResults}"
                             ItemSizingStrategy="MeasureAllItems"
                             ItemsLayout="VerticalList"
                             SelectionMode="None"

@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using labyItems.Services;
 
 namespace labyItems.Pages.NonStandard;
@@ -48,17 +47,6 @@ public partial class NonStandardWalletPage : ContentPage
 {
     private readonly List<NonStandardWalletEntryVm> _allEntries = new();
 
-    public ObservableCollection<string> AvailableFilters { get; } =
-    [
-        "Classes",
-        "Races",
-        "Abilities",
-        "Spells",
-        "Miracles",
-        "Evocations"
-    ];
-
-    public ObservableCollection<string> SelectedFilters { get; } = new();
     public ObservableCollection<NonStandardWalletEntryVm> FilteredEntries { get; } = new();
 
     public string SummaryText
@@ -70,7 +58,6 @@ public partial class NonStandardWalletPage : ContentPage
     {
         InitializeComponent();
         BindingContext = this;
-        SelectedFilters.CollectionChanged += OnSelectedFiltersChanged;
     }
 
     protected override async void OnAppearing()
@@ -94,19 +81,9 @@ public partial class NonStandardWalletPage : ContentPage
         }
     }
 
-    private void OnSelectedFiltersChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        => ApplyFilter();
-
     private void ApplyFilter()
     {
-        IEnumerable<NonStandardWalletEntryVm> query = _allEntries;
-        if (SelectedFilters.Count > 0)
-        {
-            query = query.Where(entry => SelectedFilters.Any(filter =>
-                string.Equals(filter, entry.FilterKey, StringComparison.OrdinalIgnoreCase)));
-        }
-
-        var ordered = query
+        var ordered = _allEntries
             .OrderBy(entry => entry.Name, StringComparer.OrdinalIgnoreCase)
             .ThenBy(entry => entry.FilterKey, StringComparer.OrdinalIgnoreCase)
             .ToList();

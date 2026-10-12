@@ -85,6 +85,28 @@ public partial class NonStandardLegacyCreatePage : ContentPage
     public bool CanAdvance => !(_vm.IsBusy);
     public string NextButtonText => IsReviewStep ? "Save" : (CurrentStepIndex == StepItems.Count - 2 ? "Review" : "Next");
     public string StepCounterText => StepItems.Count == 0 ? string.Empty : $"Step {CurrentStepIndex + 1}/{StepItems.Count}";
+    public string CurrentStepTitle => CurrentStepKey switch
+    {
+        "assign" => "Choose who this belongs to",
+        "base" when IsRaceFlow => "Start with the race identity",
+        "base" => "Start with the basics",
+        "race" => "Shape the race details",
+        "abilities" => "Build the level progression",
+        "fields" => $"Define the {_vm.SelectedEntityType?.Label?.ToLowerInvariant() ?? "entry"}",
+        "lifescale" => "Set the race lifescale",
+        _ => IsRaceFlow ? "Review your race" : "Review your creation"
+    };
+    public string CurrentStepDescription => CurrentStepKey switch
+    {
+        "assign" => "Select the character who will receive this creation.",
+        "base" when IsRaceFlow => "Choose a base, name the race, and describe its subtype.",
+        "base" => "Choose a base and give your creation a clear name.",
+        "race" => "Set people types, subtype options, guild rules, and alignment.",
+        "abilities" => "Add abilities, then tap a card to edit its level and details.",
+        "fields" => "Complete the content below; searchable fields can reuse existing entries.",
+        "lifescale" => "Reuse a known lifescale or enter custom values for levels 1–8.",
+        _ => "Check each section. You can jump back to make changes before saving."
+    };
 
     public bool ShowAssignmentSection => CurrentStepKey == "assign";
     public bool ShowBasicSection => CurrentStepKey == "base";
@@ -147,6 +169,13 @@ public partial class NonStandardLegacyCreatePage : ContentPage
         {
             await DisplayAlert("Load failed", ex.Message, "OK");
         }
+    }
+
+    private async void OnChooseAssignedCharacterClicked(object? sender, EventArgs e)
+    {
+        var selected = await CharacterAssignmentPage.PickAsync(Navigation, _vm.SelectedAssignedCharacter?.Id);
+        if (selected != null)
+            _vm.SelectedAssignedCharacter = selected;
     }
 
     private async void OnSearchBaseClicked(object sender, EventArgs e)
@@ -460,11 +489,11 @@ public partial class NonStandardLegacyCreatePage : ContentPage
 
         if (IsRaceFlow)
         {
-            AddStep("base", "Base");
+            AddStep("base", "Basics");
             AddStep("race", "Details");
-            AddStep("abilities", "Abilities");
+            AddStep("abilities", "Progress");
             if (HasLifeScaleFlow)
-                AddStep("lifescale", "Life");
+                AddStep("lifescale", "Lifescale");
             AddStep("review", "Review");
         }
         else
@@ -499,6 +528,8 @@ public partial class NonStandardLegacyCreatePage : ContentPage
         OnPropertyChanged(nameof(CanAdvance));
         OnPropertyChanged(nameof(NextButtonText));
         OnPropertyChanged(nameof(StepCounterText));
+        OnPropertyChanged(nameof(CurrentStepTitle));
+        OnPropertyChanged(nameof(CurrentStepDescription));
         OnPropertyChanged(nameof(ShowAssignmentSection));
         OnPropertyChanged(nameof(ShowBasicSection));
         OnPropertyChanged(nameof(ShowRaceDetailsSection));

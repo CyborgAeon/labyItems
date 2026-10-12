@@ -30,7 +30,7 @@ public partial class NonStandardNeuronicCreatePage : ContentPage, INotifyPropert
     public ICommand BackCommand { get; } public ICommand SearchCommand { get; } public ICommand ChooseCharacterCommand { get; } public ICommand SaveCommand { get; }
     protected override void OnAppearing() { base.OnAppearing(); if (_character != null) return; var c = LiteDbService.GetCharacters().OrderBy(x => x.Name).FirstOrDefault(); if (c != null) _character = new(c.Id,c.Name,c.PlayerName,c.Class); Raise(nameof(CharacterName)); Raise(nameof(CanSave)); Refresh(); }
     private async Task SearchAsync() { var picked = await MpCatalogSearch.PickNeuronicTemplateAsync(Navigation, await NeuronicService.GetAllAsync()); if (picked != null) Draft = Clone(picked); }
-    private async Task ChooseCharacterAsync() { var all=LiteDbService.GetCharacters().OrderBy(x=>x.Name).ToList(); var labels=all.Select(x=>x.Name).ToArray(); var picked=await DisplayActionSheet("Assign to character","Cancel",null,labels); var i=Array.IndexOf(labels,picked); if(i<0)return; var c=all[i]; _character=new(c.Id,c.Name,c.PlayerName,c.Class); Raise(nameof(CharacterName)); Raise(nameof(CanSave)); Refresh(); }
+    private async Task ChooseCharacterAsync() { var selected=await CharacterAssignmentPage.PickAsync(Navigation,_character?.Id); if(selected==null)return; _character=selected; Raise(nameof(CharacterName)); Raise(nameof(CanSave)); Refresh(); }
     private async void OnFieldEditRequested(object? sender, NeuronicFieldEditRequestedEventArgs e)
     {
         var d=Clone(Draft);

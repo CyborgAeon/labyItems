@@ -15,11 +15,11 @@ public partial class NonStandardClassCreatePage : ContentPage
 
     public ObservableCollection<StepItem> StepItems { get; } =
     [
-        new StepItem { Id = 0, Label = "Base" },
-        new StepItem { Id = 1, Label = "Life" },
-        new StepItem { Id = 2, Label = "Armour" },
-        new StepItem { Id = 3, Label = "Skills" },
-        new StepItem { Id = 4, Label = "Power" },
+        new StepItem { Id = 0, Label = "Basics" },
+        new StepItem { Id = 1, Label = "Lifescale" },
+        new StepItem { Id = 2, Label = "Protection" },
+        new StepItem { Id = 3, Label = "Progress" },
+        new StepItem { Id = 4, Label = "Powers" },
         new StepItem { Id = 5, Label = "Review" }
     ];
 
@@ -66,6 +66,10 @@ public partial class NonStandardClassCreatePage : ContentPage
             OnPropertyChanged(nameof(CanGoNext));
             OnPropertyChanged(nameof(NextButtonText));
             OnPropertyChanged(nameof(StepCounterText));
+            OnPropertyChanged(nameof(CurrentStepTitle));
+            OnPropertyChanged(nameof(CurrentStepDescription));
+            OnPropertyChanged(nameof(CurrentStepIcon));
+            OnPropertyChanged(nameof(StepProgress));
         }
     }
 
@@ -75,6 +79,16 @@ public partial class NonStandardClassCreatePage : ContentPage
     public bool IsSkillsStep => CurrentStepIndex == 3;
     public bool IsPowerStep => CurrentStepIndex == 4;
     public bool IsReviewStep => CurrentStepIndex == 5;
+    public double StepProgress => (CurrentStepIndex + 1d) / StepItems.Count;
+    public string CurrentStepIcon => CurrentStepIndex switch
+    {
+        0 => "\uf02b",
+        1 => "\uf201",
+        2 => "\uf3ed",
+        3 => "\uf0ae",
+        4 => "\uf0e7",
+        _ => "\uf00c"
+    };
     public bool IsReviewOnly
     {
         get => _isReviewOnly;
@@ -99,6 +113,21 @@ public partial class NonStandardClassCreatePage : ContentPage
     public bool CanGoNext => ResolveCanGoNext();
     public string NextButtonText => IsReviewStep ? "Finish" : "Next";
     public string StepCounterText => $"Step {CurrentStepIndex + 1}/{StepItems.Count}";
+    public string CurrentStepTitle => CurrentStepIndex switch
+    {
+        0 => "Start with the class identity", 1 => "Set toughness and race lifescales",
+        2 => "Choose armour and restrictions", 3 => "Build the level progression",
+        4 => "Define power and alignment", _ => "Review your class"
+    };
+    public string CurrentStepDescription => CurrentStepIndex switch
+    {
+        0 => "Choose a base, name the class, and set how it can be bought.",
+        1 => "Reuse an existing lifescale or fine-tune values and race assignments.",
+        2 => "Select permitted armour and record any special limits.",
+        3 => "Tap any level card to edit its weapon skills and gained abilities.",
+        4 => "Choose powerbases, calculations, alignment, and rebirth status.",
+        _ => "Check each section. You can jump back to make changes before saving."
+    };
     public int MaxAccessibleStep => ResolveMaxAccessibleStep();
 
     protected override async void OnAppearing()
@@ -276,11 +305,11 @@ public partial class NonStandardClassCreatePage : ContentPage
     private void OnDeleteLifescaleAssignmentClicked(object sender, EventArgs e)
         => _vm.RemoveLifeScaleAssignment((sender as Button)?.CommandParameter?.ToString());
 
-    private async void OnAddWhitelistRaceClicked(object sender, EventArgs e)
+    private async void OnAddIncludedRaceClicked(object sender, EventArgs e)
     {
         try
         {
-            await _vm.AddRaceToWhitelistAsync(Navigation);
+            await _vm.AddIncludedRaceAsync(Navigation);
         }
         catch (Exception ex)
         {
@@ -288,17 +317,17 @@ public partial class NonStandardClassCreatePage : ContentPage
         }
     }
 
-    private void OnMoveWhitelistToBlacklistClicked(object sender, EventArgs e)
-        => _vm.MoveWhitelistToBlacklist((sender as Button)?.CommandParameter?.ToString());
+    private void OnExcludeRaceClicked(object sender, EventArgs e)
+        => _vm.ExcludeRace((sender as Button)?.CommandParameter?.ToString());
 
-    private void OnDeleteWhitelistRaceClicked(object sender, EventArgs e)
-        => _vm.RemoveFromWhitelist((sender as Button)?.CommandParameter?.ToString());
+    private void OnDeleteIncludedRaceClicked(object sender, EventArgs e)
+        => _vm.RemoveIncludedRace((sender as Button)?.CommandParameter?.ToString());
 
-    private async void OnAddBlacklistRaceClicked(object sender, EventArgs e)
+    private async void OnAddExcludedRaceClicked(object sender, EventArgs e)
     {
         try
         {
-            await _vm.AddRaceToBlacklistAsync(Navigation);
+            await _vm.AddExcludedRaceAsync(Navigation);
         }
         catch (Exception ex)
         {
@@ -306,11 +335,11 @@ public partial class NonStandardClassCreatePage : ContentPage
         }
     }
 
-    private void OnMoveBlacklistToWhitelistClicked(object sender, EventArgs e)
-        => _vm.MoveBlacklistToWhitelist((sender as Button)?.CommandParameter?.ToString());
+    private void OnIncludeRaceClicked(object sender, EventArgs e)
+        => _vm.IncludeRace((sender as Button)?.CommandParameter?.ToString());
 
-    private void OnDeleteBlacklistRaceClicked(object sender, EventArgs e)
-        => _vm.RemoveFromBlacklist((sender as Button)?.CommandParameter?.ToString());
+    private void OnDeleteExcludedRaceClicked(object sender, EventArgs e)
+        => _vm.RemoveExcludedRace((sender as Button)?.CommandParameter?.ToString());
 
     private async void OnSaveClicked(object sender, EventArgs e)
     {

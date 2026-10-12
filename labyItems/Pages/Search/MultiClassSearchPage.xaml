@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.Search.MultiClassSearchPage"
+    x:Name="Root"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:characters="clr-namespace:labyItems.Pages.Characters"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    BackgroundColor="{StaticResource White}"
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="ClassCardTemplate"
+                          x:DataType="characters:ClassCardVm">
+                <characters:ClassCardView
+                    SelectCommand="{Binding ToggleExpandedCommand, Source={x:Reference Root}}"
+                    ToggleExpandedCommand="{Binding ToggleExpandedCommand, Source={x:Reference Root}}"/>
+            </DataTemplate>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid RowDefinitions="Auto,Auto,*"
+              RowSpacing="8"
+              Padding="16,12,16,8">
+
+            <!-- Header Row: Burger Menu, Search Input -->
+            <Grid Grid.Row="0"
+                  ColumnDefinitions="Auto,*"
+                  ColumnSpacing="10"
+                  VerticalOptions="Center">
+                <controls:BurgerMenuButton Grid.Column="0"
+                                           Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
+                <Border Grid.Column="1"
+                        Stroke="{StaticResource SurfaceBorderColor}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 10"
+                        BackgroundColor="#F9FAFB"
+                        Padding="8,4">
+                    <Grid ColumnDefinitions="*,Auto"
+                          ColumnSpacing="6">
+                        <Entry Placeholder="Search multi-classes..."
+                               ClearButtonVisibility="WhileEditing"
+                               Text="{Binding SearchText, Mode=TwoWay}"
+                               FontSize="14" />
+                        <Button Grid.Column="1"
+                                Text="&#xF002;"
+                                FontFamily="FASolid"
+                                FontSize="13"
+                                Padding="0"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource SubtleTextColor}"
+                                HeightRequest="24"
+                                WidthRequest="24"
+                                MinimumHeightRequest="0"
+                                MinimumWidthRequest="0"
+                                VerticalOptions="Center" />
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Filter Chips Row -->
+            <ScrollView Grid.Row="1"
+                        Orientation="Horizontal"
+                        HorizontalScrollBarVisibility="Never">
+                <HorizontalStackLayout BindableLayout.ItemsSource="{Binding FilterChips}"
+                                       Spacing="8"
+                                       Padding="0,2">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource SelectableFilterPillBorderStyle}">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=ToggleFilterChipCommand}"
+                                                          CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                <Label Text="{Binding Label}"
+                                       Style="{StaticResource FilterPillLabelStyle}" />
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </HorizontalStackLayout>
+            </ScrollView>
+
+            <!-- MultiClass Cards CollectionView -->
+            <Grid Grid.Row="2">
+                <CollectionView x:Name="MultiClassesCollection"
+                                ItemsSource="{Binding FilteredMultiClasses}"
+                                ItemTemplate="{StaticResource ClassCardTemplate}"
+                                SelectionMode="None"
+                                ItemSizingStrategy="MeasureAllItems" />
+
+                <VerticalStackLayout IsVisible="{Binding HasNoResults}"
+                                     VerticalOptions="Center"
+                                     HorizontalOptions="Center"
+                                     Spacing="8">
+                    <Label Text="No matching multi-classes found."
+                           FontSize="13"
+                           Opacity="0.75"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+
+                <controls:LoadingIndicator IsRunning="{Binding IsLoading}"
+                                           IsVisible="{Binding IsLoading}"
+                                           Message="Loading multi-classes..." />
+            </Grid>
+        </Grid>
+
+        <!-- Slide-out Burger Menu -->
+        <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
+                                        SelectedRoute="{x:Static controls:ToolsetRouteKeys.SearchMultiClasses}" />
+    </Grid>
+</ContentPage>

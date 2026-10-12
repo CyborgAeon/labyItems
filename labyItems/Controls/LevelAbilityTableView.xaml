@@ -6,7 +6,92 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:viewModels="clr-namespace:labyItems.Models.ViewModels">
 
-    <VerticalStackLayout Spacing="2">
+    <Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="WidthStates">
+                <VisualState x:Name="Compact">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter TargetName="CompactCards" Property="IsVisible" Value="True"/>
+                        <Setter TargetName="WideTable" Property="IsVisible" Value="False"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Wide">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="720"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter TargetName="CompactCards" Property="IsVisible" Value="False"/>
+                        <Setter TargetName="WideTable" Property="IsVisible" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <!-- Phone layout: each level is a self-contained, readable group rather than
+             one row in a table whose useful column is squeezed to a few words. -->
+        <VerticalStackLayout x:Name="CompactCards"
+                             BindableLayout.ItemsSource="{Binding Source={x:Reference Root}, Path=ItemsSource}"
+                             Spacing="8">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="viewModels:LevelAbilityRowVm">
+                    <Border Padding="12,10"
+                            Stroke="{StaticResource SurfaceBorderColor}"
+                            StrokeShape="RoundRectangle 10"
+                            BackgroundColor="{StaticResource White}">
+                        <Grid RowDefinitions="Auto,Auto,Auto"
+                              ColumnDefinitions="*,Auto"
+                              RowSpacing="8"
+                              ColumnSpacing="8">
+                            <Label Text="{Binding StageHeading}"
+                                   FontAttributes="Bold"
+                                   FontSize="15"
+                                   VerticalTextAlignment="Center"/>
+                            <Button Grid.Column="1"
+                                    Text="&#xF05A;"
+                                    FontFamily="FASolid"
+                                    FontSize="14"
+                                    Padding="0"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{StaticResource AccentMaroonColor}"
+                                    HeightRequest="44"
+                                    WidthRequest="44"
+                                    SemanticProperties.Description="Open ability details"
+                                    IsVisible="{Binding HasAbilityDetails}"
+                                    Clicked="OnInfoClicked"
+                                    CommandParameter="{Binding .}"/>
+
+                            <HorizontalStackLayout Grid.Row="1"
+                                                   Grid.ColumnSpan="2"
+                                                   Spacing="14"
+                                                   IsVisible="{Binding Source={x:Reference Root}, Path=ShowBodyAndLoc}">
+                                <Label Text="{Binding Body, StringFormat='Body  {0}'}"
+                                       TextColor="{StaticResource MutedTextColor}"/>
+                                <Label Text="{Binding Loc, StringFormat='Loc  {0}'}"
+                                       TextColor="{StaticResource MutedTextColor}"/>
+                                <Label Text="{Binding WeaponSkills, StringFormat='WS  {0}'}"
+                                       TextColor="{StaticResource MutedTextColor}"
+                                       IsVisible="{Binding Source={x:Reference Root}, Path=ShowWeaponSkillsColumn}"/>
+                            </HorizontalStackLayout>
+
+                            <VerticalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="3">
+                                <Label Text="{Binding Source={x:Reference Root}, Path=AbilitiesHeaderText}"
+                                       FontSize="11"
+                                       TextTransform="Uppercase"
+                                       TextColor="{StaticResource MutedTextColor}"/>
+                                <Label Text="{Binding AbilitiesDisplayText}"
+                                       LineBreakMode="WordWrap"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </VerticalStackLayout>
+
+        <!-- Tablet/desktop layout keeps the denser comparison table. -->
+        <VerticalStackLayout x:Name="WideTable" Spacing="2" IsVisible="False">
         <Grid ColumnSpacing="8"
               Opacity="0.7">
             <Grid.ColumnDefinitions>
@@ -74,10 +159,9 @@
                                 Padding="0"
                                 BackgroundColor="Transparent"
                                 TextColor="{StaticResource SubtleTextColor}"
-                                HeightRequest="18"
-                                WidthRequest="18"
-                                MinimumHeightRequest="0"
-                                MinimumWidthRequest="0"
+                                HeightRequest="44"
+                                WidthRequest="44"
+                                SemanticProperties.Description="Open ability details"
                                 VerticalOptions="Center"
                                 IsVisible="{Binding HasAbilityDetails}"
                                 Clicked="OnInfoClicked"
@@ -86,5 +170,6 @@
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
         </VerticalStackLayout>
-    </VerticalStackLayout>
+        </VerticalStackLayout>
+    </Grid>
 </ContentView>

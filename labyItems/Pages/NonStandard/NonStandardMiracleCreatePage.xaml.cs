@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Windows.Input;
 using labyItems.Pages.Calculator;
-using labyItems.Pages.MiracleCard;
 using labyItems.Services;
 
 namespace labyItems.Pages.NonStandard;
@@ -25,8 +24,12 @@ public partial class NonStandardMiracleCreatePage : ContentPage, INotifyProperty
         InitializeComponent(); BindingContext = this;
     }
 
-    public MiracleService.MiracRaw Draft { get => _draft; private set { _draft = value; Raise(); Raise(nameof(CanSave)); RefreshCommands(); } }
+    public MiracleService.MiracRaw Draft { get => _draft; private set { _draft = value; Raise(); Raise(nameof(PowerText)); Raise(nameof(PrerequisitesButtonText)); Raise(nameof(ImmunityButtonText)); Raise(nameof(CanSave)); RefreshCommands(); } }
     public string CharacterName => string.IsNullOrWhiteSpace(_character?.Name) ? "No character selected" : _character.Name;
+    public string CharacterButtonText => _character == null ? "Choose character *" : $"Assigned to {_character.Name} · Change";
+    public string PowerText { get => Draft.power.ToString(); set { if (int.TryParse(value, out var power)) Draft.power = Math.Max(0, power); } }
+    public string PrerequisitesButtonText => Draft.preReqs is not { Count: > 0 } ? "Choose prerequisites" : $"Prerequisites · {Draft.preReqs.Count} selected";
+    public string ImmunityButtonText => string.IsNullOrWhiteSpace(Draft.immunity) ? "Choose immunity" : $"Immunity · {Draft.immunity}";
     public bool CanSave => !IsBusy && _character != null && !string.IsNullOrWhiteSpace(Draft.name);
     public ICommand BackCommand { get; }
     public ICommand SearchCommand { get; }
@@ -39,7 +42,7 @@ public partial class NonStandardMiracleCreatePage : ContentPage, INotifyProperty
         base.OnAppearing(); if (_character != null) return;
         var selected = LiteDbService.GetCharacters().OrderBy(c => c.Name, StringComparer.OrdinalIgnoreCase).FirstOrDefault();
         if (selected != null) _character = new(selected.Id, selected.Name, selected.PlayerName, selected.Class);
-        Raise(nameof(CharacterName)); Raise(nameof(CanSave)); RefreshCommands();
+        Raise(nameof(CharacterName)); Raise(nameof(CharacterButtonText)); Raise(nameof(CanSave)); RefreshCommands();
     }
 
     private async Task SelectTemplateAsync()
@@ -50,45 +53,41 @@ public partial class NonStandardMiracleCreatePage : ContentPage, INotifyProperty
 
     private async Task ChooseCharacterAsync()
     {
-        var characters = LiteDbService.GetCharacters().OrderBy(c => c.Name, StringComparer.OrdinalIgnoreCase).ToList();
-        if (characters.Count == 0) { await DisplayAlert("No characters", "Create a character before assigning a custom miracle.", "OK"); return; }
-        var labels = characters.Select(c => string.IsNullOrWhiteSpace(c.PlayerName) ? c.Name : $"{c.Name} — {c.PlayerName}").ToArray();
-        var picked = await DisplayActionSheet("Assign to character", "Cancel", null, labels); var index = Array.IndexOf(labels, picked); if (index < 0) return;
-        var selected = characters[index]; _character = new(selected.Id, selected.Name, selected.PlayerName, selected.Class);
-        Raise(nameof(CharacterName)); Raise(nameof(CanSave)); RefreshCommands();
+        var selected = await CharacterAssignmentPage.PickAsync(Navigation, _character?.Id);
+        if (selected == null) return;
+        _character = selected;
+        Raise(nameof(CharacterName)); Raise(nameof(CharacterButtonText)); Raise(nameof(CanSave)); RefreshCommands();
     }
 
-    private async void OnFieldEditRequested(object? sender, MiracleFieldEditRequestedEventArgs e)
+    private void OnDraftTextChanged(object? sender, TextChangedEventArgs e) { Draft.name = e.NewTextValue ?? string.Empty; Raise(nameof(CanSave)); RefreshCommands(); }
+
+    private async void OnPrerequisitesClicked(object? sender, EventArgs e)
     {
-        var draft = Clone(Draft);
-        switch (e.Field)
-        {
-            case "name": draft.name = await PromptAsync("Name", "Miracle name", draft.name); break;
-            case "sphere": draft.sphere = await PromptAsync("Sphere", "Sphere", draft.sphere); break;
-            case "level": draft.level = await PromptAsync("Level", "Level", draft.level); break;
-            case "power": var power = await PromptAsync("Power", "Spirit point cost", draft.power.ToString(), Keyboard.Numeric); if (int.TryParse(power, out var parsed)) draft.power = Math.Max(0, parsed); break;
-            case "duration": draft.duration = await PromptAsync("Duration", "Duration", draft.duration); break;
-            case "gesture": draft.gesture = await PromptAsync("Gesture", "Gesture", draft.gesture); break;
-            case "alignment": draft.alignment = await PromptAsync("Alignment", "Alignment", draft.alignment); break;
-            case "description": draft.description = await PromptAsync("Description", "Description", draft.description); break;
-            case "verbal": draft.verbal = await PromptAsync("Verbal", "Verbal", draft.verbal); break;
-            case "isAdvanced": draft.isAdvanced = !draft.isAdvanced; break;
-            case "immunity":
-                var ability = await MpCatalogSearch.PickAbilityAsync(Navigation, await EvolutionService.GetAllAbilitiesAsync());
-                if (ability != null) { var display = string.IsNullOrWhiteSpace(ability.DisplayName) ? ability.Index : ability.DisplayName; draft.immunity = display; draft.immunityName = [display]; draft.immunityIndex = [ability.Index]; } break;
-            case "preReqs": draft.preReqs = (await MpCatalogSearch.PickGlobalPrerequisitesAsync(Navigation, draft.preReqs)).ToList(); break;
-            case "Damage": case "Heal": var edited = await MiracleCombatEditorPage.EditAsync(Navigation, draft, e.Field == "Damage"); if (edited != null) draft = edited; break;
-        }
-        Draft = draft;
+        Draft.preReqs = (await MpCatalogSearch.PickGlobalPrerequisitesAsync(Navigation, Draft.preReqs ?? [])).ToList();
+        Raise(nameof(PrerequisitesButtonText));
     }
 
-    private async Task<string> PromptAsync(string title, string message, string initial, Keyboard? keyboard = null) =>
-        (await DisplayPromptAsync(title, message, "Apply", "Cancel", initialValue: initial ?? string.Empty, keyboard: keyboard ?? Keyboard.Default)) ?? initial ?? string.Empty;
+    private async void OnImmunityClicked(object? sender, EventArgs e)
+    {
+        var ability = await MpCatalogSearch.PickAbilityAsync(Navigation, await EvolutionService.GetAllAbilitiesAsync());
+        if (ability == null) return;
+        var display = string.IsNullOrWhiteSpace(ability.DisplayName) ? ability.Index : ability.DisplayName;
+        Draft.immunity = display; Draft.immunityName = [display]; Draft.immunityIndex = [ability.Index];
+        Raise(nameof(ImmunityButtonText));
+    }
+
+    private async void OnDamageClicked(object? sender, EventArgs e) => await EditCombatAsync(true);
+    private async void OnHealClicked(object? sender, EventArgs e) => await EditCombatAsync(false);
+    private async Task EditCombatAsync(bool isDamage)
+    {
+        var edited = await MiracleCombatEditorPage.EditAsync(Navigation, Clone(Draft), isDamage);
+        if (edited != null) Draft = edited;
+    }
 
     private async Task SaveAsync()
     {
         if (!CanSave || _character == null) return; IsBusy = true;
-        try { Draft.nonStandard = true; await NonStandardContentService.SaveAsync(new NonStandardSaveRequest { EntityType = NonStandardEntityType.Miracle, Name = Draft.name.Trim(), DataJson = JsonSerializer.Serialize(Draft, JsonOptions), AssignedCharacterId = _character.Id, AssignedCharacterName = _character.Name, AssignedCharacterPlayerName = _character.PlayerName }); await DisplayAlert("Miracle saved", $"'{Draft.name.Trim()}' was saved for {_character.Name}.", "OK"); await Navigation.PopAsync(); }
+        try { Draft.nonStandard = true; await NonStandardContentService.SaveAsync(new NonStandardSaveRequest { EntityType = NonStandardEntityType.Miracle, Name = Draft.name.Trim(), DataJson = JsonSerializer.Serialize(Draft, JsonOptions), AssignedCharacterId = _character.Id, AssignedCharacterName = _character.Name, AssignedCharacterPlayerName = _character.PlayerName }); await Navigation.PopAsync(); }
         catch (Exception ex) { await DisplayAlert("Save failed", ex.Message, "OK"); } finally { IsBusy = false; }
     }
 

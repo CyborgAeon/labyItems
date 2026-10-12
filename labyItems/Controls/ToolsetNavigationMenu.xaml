@@ -299,50 +299,273 @@
                             Padding="12,10"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 18">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnSearchTapped" />
-                        </Border.GestureRecognizers>
-                        <Grid ColumnDefinitions="28,*,24"
-                              ColumnSpacing="8">
-                            <Label FontFamily="FASolid"
-                                   FontSize="18"
-                                   Text="&#xF002;"
-                                   HorizontalTextAlignment="Center"
-                                   VerticalTextAlignment="Center" />
-                            <Label Grid.Column="1"
-                                   HorizontalOptions="Fill"
-                                   HorizontalTextAlignment="Start"
-                                   Text="Search"
-                                   VerticalTextAlignment="Center" />
-                            <Label Grid.Column="2"
-                                   Opacity="0"
-                                   Text="v" />
-                        </Grid>
-                    </Border>
+                        <VerticalStackLayout Spacing="8">
+                            <Grid ColumnDefinitions="28,*,24"
+                                  ColumnSpacing="8">
+                                <Label FontFamily="FASolid"
+                                       FontSize="18"
+                                       Text="&#xF002;"
+                                       HorizontalTextAlignment="Center"
+                                       VerticalTextAlignment="Center" />
+                                <Label Grid.Column="1"
+                                       HorizontalOptions="Fill"
+                                       HorizontalTextAlignment="Start"
+                                       Text="Search"
+                                       VerticalTextAlignment="Center">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnSearchGroupTapped" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+                                <controls:ChevronIconView Grid.Column="2"
+                                                          IsExpanded="{Binding Source={x:Reference Root}, Path=SearchExpanded}"
+                                                          AnimateRotation="True"
+                                                          GlyphSize="14"
+                                                          GlyphColor="{StaticResource Gray950}"
+                                                          HorizontalOptions="End"
+                                                          VerticalOptions="Center">
+                                    <controls:ChevronIconView.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnSearchGroupTapped" />
+                                    </controls:ChevronIconView.GestureRecognizers>
+                                </controls:ChevronIconView>
+                            </Grid>
 
-                    <Border x:Name="GuildsRow"
-                            Padding="12,10"
-                            StrokeThickness="0"
-                            StrokeShape="RoundRectangle 18">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnGuildSearchTapped" />
-                        </Border.GestureRecognizers>
-                        <Grid ColumnDefinitions="28,*,24"
-                              ColumnSpacing="8">
-                            <Label FontFamily="FASolid"
-                                   FontSize="18"
-                                   Text="&#xF0C0;"
-                                   HorizontalTextAlignment="Center"
-                                   VerticalTextAlignment="Center" />
-                            <Label Grid.Column="1"
-                                   HorizontalOptions="Fill"
-                                   HorizontalTextAlignment="Start"
-                                   Text="Guilds"
-                                   VerticalTextAlignment="Center" />
-                            <Label Grid.Column="2"
-                                   Opacity="0"
-                                   Text="v" />
-                        </Grid>
+                            <controls:AnimatedExpandView IsExpanded="{Binding Source={x:Reference Root}, Path=SearchExpanded}">
+                                <VerticalStackLayout Padding="16,0,0,0"
+                                                     Spacing="6">
+                                    <Border x:Name="SearchGlobalRow"
+                                            Padding="10,8"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 14">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnGlobalSearchTapped" />
+                                        </Border.GestureRecognizers>
+                                        <Grid ColumnDefinitions="28,*"
+                                              ColumnSpacing="8">
+                                            <Label FontFamily="FASolid"
+                                                   FontSize="16"
+                                                   HorizontalTextAlignment="Center"
+                                                   Text="&#xF0AC;"
+                                                   VerticalTextAlignment="Center" />
+                                            <Label Grid.Column="1"
+                                                   HorizontalOptions="Fill"
+                                                   HorizontalTextAlignment="Start"
+                                                   Text="Global"
+                                                   VerticalTextAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+                                    <Border x:Name="SearchSpellsRow"
+                                            Padding="10,8"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 14">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnSearchSpellsTapped" />
+                                        </Border.GestureRecognizers>
+                                        <Grid ColumnDefinitions="28,*"
+                                              ColumnSpacing="8">
+                                            <Label FontFamily="FASolid"
+                                                   FontSize="16"
+                                                   HorizontalTextAlignment="Center"
+                                                   Text="&#xF72B;"
+                                                   VerticalTextAlignment="Center" />
+                                            <Label Grid.Column="1"
+                                                   HorizontalOptions="Fill"
+                                                   HorizontalTextAlignment="Start"
+                                                   Text="Spells"
+                                                   VerticalTextAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+                                    <Border x:Name="SearchMiraclesRow"
+                                            Padding="10,8"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 14">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnSearchMiraclesTapped" />
+                                        </Border.GestureRecognizers>
+                                        <Grid ColumnDefinitions="28,*"
+                                              ColumnSpacing="8">
+                                            <Label FontFamily="FASolid"
+                                                   FontSize="16"
+                                                   HorizontalTextAlignment="Center"
+                                                   Text="&#xF6A9;"
+                                                   VerticalTextAlignment="Center" />
+                                            <Label Grid.Column="1"
+                                                   HorizontalOptions="Fill"
+                                                   HorizontalTextAlignment="Start"
+                                                   Text="Miracles"
+                                                   VerticalTextAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+                                    <Border x:Name="SearchEvocationsRow"
+                                            Padding="10,8"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 14">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnSearchEvocationsTapped" />
+                                        </Border.GestureRecognizers>
+                                        <Grid ColumnDefinitions="28,*"
+                                              ColumnSpacing="8">
+                                            <Label FontFamily="FASolid"
+                                                   FontSize="16"
+                                                   HorizontalTextAlignment="Center"
+                                                   Text="&#xF1BB;"
+                                                   VerticalTextAlignment="Center" />
+                                            <Label Grid.Column="1"
+                                                   HorizontalOptions="Fill"
+                                                   HorizontalTextAlignment="Start"
+                                                   Text="Evocations"
+                                                   VerticalTextAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+                                    <Border x:Name="SearchNeuronicsRow"
+                                            Padding="10,8"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 14">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnSearchNeuronicsTapped" />
+                                        </Border.GestureRecognizers>
+                                        <Grid ColumnDefinitions="28,*"
+                                              ColumnSpacing="8">
+                                            <Label FontFamily="FASolid"
+                                                   FontSize="16"
+                                                   HorizontalTextAlignment="Center"
+                                                   Text="&#xF0E8;"
+                                                   VerticalTextAlignment="Center" />
+                                            <Label Grid.Column="1"
+                                                   HorizontalOptions="Fill"
+                                                   HorizontalTextAlignment="Start"
+                                                   Text="Neuronics"
+                                                   VerticalTextAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+                                    <Border x:Name="SearchClassesRow"
+                                            Padding="10,8"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 14">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnSearchClassesTapped" />
+                                        </Border.GestureRecognizers>
+                                        <Grid ColumnDefinitions="28,*"
+                                              ColumnSpacing="8">
+                                            <Label FontFamily="FASolid"
+                                                   FontSize="16"
+                                                   HorizontalTextAlignment="Center"
+                                                   Text="&#xF0C0;"
+                                                   VerticalTextAlignment="Center" />
+                                            <Label Grid.Column="1"
+                                                   HorizontalOptions="Fill"
+                                                   HorizontalTextAlignment="Start"
+                                                   Text="Classes"
+                                                   VerticalTextAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+                                    <Border x:Name="SearchRacesRow"
+                                            Padding="10,8"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 14">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnSearchRacesTapped" />
+                                        </Border.GestureRecognizers>
+                                        <Grid ColumnDefinitions="28,*"
+                                              ColumnSpacing="8">
+                                            <Label FontFamily="FASolid"
+                                                   FontSize="16"
+                                                   HorizontalTextAlignment="Center"
+                                                   Text="&#xF2BD;"
+                                                   VerticalTextAlignment="Center" />
+                                            <Label Grid.Column="1"
+                                                   HorizontalOptions="Fill"
+                                                   HorizontalTextAlignment="Start"
+                                                   Text="Races"
+                                                   VerticalTextAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+                                    <Border x:Name="SearchAbilitiesRow"
+                                            Padding="10,8"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 14">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnSearchAbilitiesTapped" />
+                                        </Border.GestureRecognizers>
+                                        <Grid ColumnDefinitions="28,*"
+                                              ColumnSpacing="8">
+                                            <Label FontFamily="FASolid"
+                                                   FontSize="16"
+                                                   HorizontalTextAlignment="Center"
+                                                   Text="&#xF0E7;"
+                                                   VerticalTextAlignment="Center" />
+                                            <Label Grid.Column="1"
+                                                   HorizontalOptions="Fill"
+                                                   HorizontalTextAlignment="Start"
+                                                   Text="Abilities"
+                                                   VerticalTextAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+                                    <Border x:Name="SearchGuildsRow"
+                                            Padding="10,8"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 14">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnSearchGuildsTapped" />
+                                        </Border.GestureRecognizers>
+                                        <Grid ColumnDefinitions="28,*"
+                                              ColumnSpacing="8">
+                                            <Label FontFamily="FASolid"
+                                                   FontSize="16"
+                                                   HorizontalTextAlignment="Center"
+                                                   Text="&#xF19C;"
+                                                   VerticalTextAlignment="Center" />
+                                            <Label Grid.Column="1"
+                                                   HorizontalOptions="Fill"
+                                                   HorizontalTextAlignment="Start"
+                                                   Text="Guilds"
+                                                   VerticalTextAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+                                    <Border x:Name="SearchMultiClassesRow"
+                                            Padding="10,8"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 14">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnSearchMultiClassesTapped" />
+                                        </Border.GestureRecognizers>
+                                        <Grid ColumnDefinitions="28,*"
+                                              ColumnSpacing="8">
+                                            <Label FontFamily="FASolid"
+                                                   FontSize="16"
+                                                   HorizontalTextAlignment="Center"
+                                                   Text="&#xF6CF;"
+                                                   VerticalTextAlignment="Center" />
+                                            <Label Grid.Column="1"
+                                                   HorizontalOptions="Fill"
+                                                   HorizontalTextAlignment="Start"
+                                                   Text="Multi-classes"
+                                                   VerticalTextAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+                                    <Border x:Name="SearchMultiRacesRow"
+                                            Padding="10,8"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 14">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnSearchMultiRacesTapped" />
+                                        </Border.GestureRecognizers>
+                                        <Grid ColumnDefinitions="28,*"
+                                              ColumnSpacing="8">
+                                            <Label FontFamily="FASolid"
+                                                   FontSize="16"
+                                                   HorizontalTextAlignment="Center"
+                                                   Text="&#xF500;"
+                                                   VerticalTextAlignment="Center" />
+                                            <Label Grid.Column="1"
+                                                   HorizontalOptions="Fill"
+                                                   HorizontalTextAlignment="Start"
+                                                   Text="Multi-races"
+                                                   VerticalTextAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+                                </VerticalStackLayout>
+                            </controls:AnimatedExpandView>
+                        </VerticalStackLayout>
                     </Border>
 
                     <Border x:Name="TradeRow"

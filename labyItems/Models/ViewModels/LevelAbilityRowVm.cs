@@ -16,9 +16,15 @@ public sealed class LevelAbilityRowVm
 
     public string StageText => IsTableStage ? $"T{Level}" : Level.ToString();
 
+    public string StageHeading => IsTableStage ? $"Table {Level}" : $"Level {Level}";
+
     public string AbilitiesText => string.Join(", ", AbilityNames
         .Where(name => !string.IsNullOrWhiteSpace(name))
         .Select(name => name.Trim()));
+
+    public string AbilitiesDisplayText => string.IsNullOrWhiteSpace(AbilitiesText)
+        ? "No abilities gained"
+        : AbilitiesText;
 
     public bool HasAbilityDetails =>
         AbilityNames.Any(name => !string.IsNullOrWhiteSpace(name))

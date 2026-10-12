@@ -537,6 +537,7 @@
                 </Frame>
 
                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding Sections}"
+                                     IsVisible="{Binding IsLoading, Converter={StaticResource InverseBoolConverter}}"
                                      Spacing="12">
                     <BindableLayout.ItemTemplateSelector>
                         <StaticResource Key="SectionTemplateSelector"/>

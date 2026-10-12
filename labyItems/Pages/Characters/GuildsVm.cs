@@ -1468,7 +1468,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
             : new[] { trimmed };
     }
 
-    private static string IconForType(string type)
+    public static string IconForType(string type)
     {
         var t = (type ?? "").Trim().ToLowerInvariant();
         if (t == "political") return "🏛️";

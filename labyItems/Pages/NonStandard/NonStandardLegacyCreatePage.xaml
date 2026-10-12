@@ -47,6 +47,14 @@
               <ScrollView Grid.Row="1">
                      <VerticalStackLayout Padding="16"
                                           Spacing="12">
+                            <VerticalStackLayout Spacing="3"
+                                                 IsVisible="{Binding Source={x:Reference Root}, Path=ShowWizardHeader}">
+                                   <Label Text="{Binding Source={x:Reference Root}, Path=CurrentStepTitle}"
+                                          FontSize="22" FontAttributes="Bold"/>
+                                   <Label Text="{Binding Source={x:Reference Root}, Path=CurrentStepDescription}"
+                                          FontSize="13" TextColor="{StaticResource MutedTextColor}"
+                                          LineBreakMode="WordWrap"/>
+                            </VerticalStackLayout>
                             <VerticalStackLayout x:Name="AssignmentStepSection"
                                                  Spacing="12"
                                                  IsVisible="{Binding Source={x:Reference Root}, Path=ShowAssignmentSection}">
@@ -57,9 +65,11 @@
                                                  <Label Text="Required for spell, miracle, evocation and ability entries."
                                                         FontSize="12"
                                                         Opacity="0.75"/>
-                                                 <Picker ItemsSource="{Binding AssignableCharacters}"
-                                                         ItemDisplayBinding="{Binding Display}"
-                                                         SelectedItem="{Binding SelectedAssignedCharacter, Mode=TwoWay}"/>
+                                                 <Button Text="{Binding SelectedAssignedCharacter.Display, TargetNullValue=Choose character}"
+                                                         Clicked="OnChooseAssignedCharacterClicked"
+                                                         MinimumHeightRequest="44"
+                                                         HorizontalOptions="Fill"
+                                                         SemanticProperties.Description="Choose the character for this creation"/>
                                           </VerticalStackLayout>
                                    </Frame>
                             </VerticalStackLayout>
@@ -454,10 +464,9 @@
                                                         </CollectionView.EmptyView>
                                                         <CollectionView.ItemTemplate>
                                                                <DataTemplate>
-                                                                      <Grid ColumnDefinitions="*,Auto,Auto,Auto"
-                                                                            ColumnSpacing="8"
-                                                                            Padding="10,8"
-                                                                            BackgroundColor="{Binding RowBackgroundHex}">
+                                                                      <Frame Style="{StaticResource DetailCardFrameStyle}"
+                                                                             Margin="0,0,0,8" Padding="12,10">
+                                                                       <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="4">
                                                                              <VerticalStackLayout Grid.Column="0"
                                                                                                   Spacing="2">
                                                                                     <Label Text="{Binding LevelLabel}"
@@ -470,8 +479,8 @@
                                                                              <Button Grid.Column="1"
                                                                                      Text="&#xF303;"
                                                                                      FontFamily="FASolid"
-                                                                                     WidthRequest="32"
-                                                                                     HeightRequest="32"
+                                                                                     WidthRequest="44"
+                                                                                     HeightRequest="44"
                                                                                      Padding="0"
                                                                                      BackgroundColor="Transparent"
                                                                                      TextColor="{StaticResource AccentMaroonColor}"
@@ -480,8 +489,8 @@
                                                                                   <Button Grid.Column="2"
                                                                                      Text="&#xF129;"
                                                                                      FontFamily="FASolid"
-                                                                                     WidthRequest="32"
-                                                                                     HeightRequest="32"
+                                                                                     WidthRequest="44"
+                                                                                     HeightRequest="44"
                                                                                      Padding="0"
                                                                                      BackgroundColor="Transparent"
                                                                                      TextColor="{StaticResource AccentMaroonColor}"
@@ -490,14 +499,15 @@
                                                                                   <Button Grid.Column="3"
                                                                                      Text="&#xF1F8;"
                                                                                      FontFamily="FASolid"
-                                                                                     WidthRequest="32"
-                                                                                     HeightRequest="32"
+                                                                                     WidthRequest="44"
+                                                                                     HeightRequest="44"
                                                                                      Padding="0"
                                                                                      BackgroundColor="Transparent"
                                                                                      TextColor="{StaticResource AccentMaroonColor}"
                                                                                      Clicked="OnDeleteRaceAbilityClicked"
                                                                                      CommandParameter="{Binding .}"/>
-                                                                      </Grid>
+                                                                       </Grid>
+                                                                      </Frame>
                                                                </DataTemplate>
                                                         </CollectionView.ItemTemplate>
                                                  </CollectionView>

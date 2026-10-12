@@ -9,6 +9,16 @@
     Shell.NavBarIsVisible="False"
     Title="Create New">
 
+    <ContentPage.Resources>
+        <Style TargetType="Border">
+            <Setter Property="Padding" Value="14" />
+            <Setter Property="MinimumHeightRequest" Value="76" />
+            <Setter Property="Stroke" Value="{StaticResource SurfaceBorderColor}" />
+            <Setter Property="StrokeThickness" Value="1" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 18" />
+        </Style>
+    </ContentPage.Resources>
+
     <Grid RowDefinitions="Auto,*">
         <ScrollView>
             <VerticalStackLayout Padding="16,12,16,24"
@@ -27,21 +37,18 @@
                     </VerticalStackLayout>
                 </Grid>
 
-                <VerticalStackLayout Spacing="8">
+                <VerticalStackLayout Spacing="12">
                         <Border Stroke="{StaticResource SurfaceBorderColor}"
                                 StrokeThickness="1"
-                                StrokeShape="RoundRectangle 14"
+                                StrokeShape="RoundRectangle 18"
                                 Padding="14,12">
-                            <Grid ColumnDefinitions="32,*,Auto">
-                                <Label FontFamily="FASolid"
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                <Border WidthRequest="42" HeightRequest="42" Padding="0" StrokeThickness="0" BackgroundColor="#F3E8FF" StrokeShape="RoundRectangle 14"><Label FontFamily="FASolid"
                                        Text="&#xF6E4;"
                                        FontSize="18"
                                        TextColor="{StaticResource AccentMaroonColor}"
-                                       VerticalTextAlignment="Center" />
-                                <Label Grid.Column="1"
-                                       Text="Class"
-                                       FontSize="16"
-                                       VerticalTextAlignment="Center" />
+                                       HorizontalTextAlignment="Center" VerticalTextAlignment="Center" /></Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center"><Label Text="Class" FontSize="17" FontAttributes="Bold"/><Label Text="Build a custom class and progression" FontSize="13" TextColor="{StaticResource Gray500}"/></VerticalStackLayout>
                                 <Button Grid.Column="2"
                                         Text="&#xF054;"
                                         Style="{StaticResource ListRowGlyphIconButtonStyle}"
@@ -55,18 +62,15 @@
 
                         <Border Stroke="{StaticResource SurfaceBorderColor}"
                                 StrokeThickness="1"
-                                StrokeShape="RoundRectangle 14"
+                                StrokeShape="RoundRectangle 18"
                                 Padding="14,12">
-                            <Grid ColumnDefinitions="32,*,Auto">
-                                <Label FontFamily="FASolid"
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                <Border WidthRequest="42" HeightRequest="42" Padding="0" StrokeThickness="0" BackgroundColor="#EAF4EA" StrokeShape="RoundRectangle 14"><Label FontFamily="FASolid"
                                        Text="&#xF1B0;"
                                        FontSize="18"
                                        TextColor="{StaticResource AccentMaroonColor}"
-                                       VerticalTextAlignment="Center" />
-                                <Label Grid.Column="1"
-                                       Text="Race"
-                                       FontSize="16"
-                                       VerticalTextAlignment="Center" />
+                                       HorizontalTextAlignment="Center" VerticalTextAlignment="Center" /></Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center"><Label Text="Race" FontSize="17" FontAttributes="Bold"/><Label Text="Create ancestry, traits and abilities" FontSize="13" TextColor="{StaticResource Gray500}"/></VerticalStackLayout>
                                 <Button Grid.Column="2"
                                         Text="&#xF054;"
                                         Style="{StaticResource ListRowGlyphIconButtonStyle}"
@@ -80,18 +84,15 @@
 
                         <Border Stroke="{StaticResource SurfaceBorderColor}"
                                 StrokeThickness="1"
-                                StrokeShape="RoundRectangle 14"
+                                StrokeShape="RoundRectangle 18"
                                 Padding="14,12">
-                            <Grid ColumnDefinitions="32,*,Auto">
-                                <Label FontFamily="FASolid"
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                <Border WidthRequest="42" HeightRequest="42" Padding="0" StrokeThickness="0" BackgroundColor="#F6EEE0" StrokeShape="RoundRectangle 14"><Label FontFamily="FASolid"
                                        Text="&#xF559;"
                                        FontSize="18"
                                        TextColor="{StaticResource AccentMaroonColor}"
-                                       VerticalTextAlignment="Center" />
-                                <Label Grid.Column="1"
-                                       Text="Ability"
-                                       FontSize="16"
-                                       VerticalTextAlignment="Center" />
+                                       HorizontalTextAlignment="Center" VerticalTextAlignment="Center" /></Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center"><Label Text="Ability" FontSize="17" FontAttributes="Bold"/><Label Text="Add a general character ability" FontSize="13" TextColor="{StaticResource Gray500}"/></VerticalStackLayout>
                                 <Button Grid.Column="2"
                                         Text="&#xF054;"
                                         Style="{StaticResource ListRowGlyphIconButtonStyle}"
@@ -105,18 +106,15 @@
 
                         <Border Stroke="{StaticResource SurfaceBorderColor}"
                                 StrokeThickness="1"
-                                StrokeShape="RoundRectangle 14"
+                                StrokeShape="RoundRectangle 18"
                                 Padding="14,12">
-                            <Grid ColumnDefinitions="32,*,Auto">
-                                <Label FontFamily="FASolid"
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                <Border WidthRequest="42" HeightRequest="42" Padding="0" StrokeThickness="0" BackgroundColor="#EDE9FE" StrokeShape="RoundRectangle 14"><Label FontFamily="FASolid"
                                        Text="&#xF5DA;"
                                        FontSize="18"
                                        TextColor="{StaticResource AccentMaroonColor}"
-                                       VerticalTextAlignment="Center" />
-                                <Label Grid.Column="1"
-                                       Text="Spell"
-                                       FontSize="16"
-                                       VerticalTextAlignment="Center" />
+                                       HorizontalTextAlignment="Center" VerticalTextAlignment="Center" /></Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center"><Label Text="Spell" FontSize="17" FontAttributes="Bold"/><Label Text="Create a magical spell and effects" FontSize="13" TextColor="{StaticResource Gray500}"/></VerticalStackLayout>
                                 <Button Grid.Column="2"
                                         Text="&#xF054;"
                                         Style="{StaticResource ListRowGlyphIconButtonStyle}"
@@ -130,18 +128,15 @@
 
                         <Border Stroke="{StaticResource SurfaceBorderColor}"
                                 StrokeThickness="1"
-                                StrokeShape="RoundRectangle 14"
+                                StrokeShape="RoundRectangle 18"
                                 Padding="14,12">
-                            <Grid ColumnDefinitions="32,*,Auto">
-                                <Label FontFamily="FASolid"
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                <Border WidthRequest="42" HeightRequest="42" Padding="0" StrokeThickness="0" BackgroundColor="#F3E8FF" StrokeShape="RoundRectangle 14"><Label FontFamily="FASolid"
                                        Text="&#xF72B;"
                                        FontSize="18"
                                        TextColor="{StaticResource AccentMaroonColor}"
-                                       VerticalTextAlignment="Center" />
-                                <Label Grid.Column="1"
-                                       Text="Miracle"
-                                       FontSize="16"
-                                       VerticalTextAlignment="Center" />
+                                       HorizontalTextAlignment="Center" VerticalTextAlignment="Center" /></Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center"><Label Text="Miracle" FontSize="17" FontAttributes="Bold"/><Label Text="Create a spiritual invocation" FontSize="13" TextColor="{StaticResource Gray500}"/></VerticalStackLayout>
                                 <Button Grid.Column="2"
                                         Text="&#xF054;"
                                         Style="{StaticResource ListRowGlyphIconButtonStyle}"
@@ -155,18 +150,15 @@
 
                         <Border Stroke="{StaticResource SurfaceBorderColor}"
                                 StrokeThickness="1"
-                                StrokeShape="RoundRectangle 14"
+                                StrokeShape="RoundRectangle 18"
                                 Padding="14,12">
-                            <Grid ColumnDefinitions="32,*,Auto">
-                                <Label FontFamily="FASolid"
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                <Border WidthRequest="42" HeightRequest="42" Padding="0" StrokeThickness="0" BackgroundColor="#FFE8E0" StrokeShape="RoundRectangle 14"><Label FontFamily="FASolid"
                                        Text="&#xF0E7;"
                                        FontSize="18"
                                        TextColor="{StaticResource AccentMaroonColor}"
-                                       VerticalTextAlignment="Center" />
-                                <Label Grid.Column="1"
-                                       Text="Evocation"
-                                       FontSize="16"
-                                       VerticalTextAlignment="Center" />
+                                       HorizontalTextAlignment="Center" VerticalTextAlignment="Center" /></Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center"><Label Text="Evocation" FontSize="17" FontAttributes="Bold"/><Label Text="Create an earthpower effect" FontSize="13" TextColor="{StaticResource Gray500}"/></VerticalStackLayout>
                                 <Button Grid.Column="2"
                                         Text="&#xF054;"
                                         Style="{StaticResource ListRowGlyphIconButtonStyle}"
@@ -178,10 +170,10 @@
                             </Border.GestureRecognizers>
                         </Border>
 
-                        <Border Stroke="{StaticResource SurfaceBorderColor}" StrokeThickness="1" StrokeShape="RoundRectangle 14" Padding="14,12">
-                            <Grid ColumnDefinitions="32,*,Auto">
-                                <Label FontFamily="FASolid" Text="&#xF5DC;" FontSize="18" TextColor="{StaticResource AccentMaroonColor}" VerticalTextAlignment="Center" />
-                                <Label Grid.Column="1" Text="Neuronic" FontSize="16" VerticalTextAlignment="Center" />
+                        <Border Stroke="{StaticResource SurfaceBorderColor}" StrokeThickness="1" StrokeShape="RoundRectangle 18" Padding="14,12">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                <Border WidthRequest="42" HeightRequest="42" Padding="0" StrokeThickness="0" BackgroundColor="#E7F0FF" StrokeShape="RoundRectangle 14"><Label FontFamily="FASolid" Text="&#xF5DC;" FontSize="18" TextColor="{StaticResource AccentMaroonColor}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" /></Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center"><Label Text="Neuronic" FontSize="17" FontAttributes="Bold"/><Label Text="Create a neuronic ability" FontSize="13" TextColor="{StaticResource Gray500}"/></VerticalStackLayout>
                                 <Button Grid.Column="2" Text="&#xF054;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnOpenNeuronicClicked" />
                             </Grid>
                             <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnOpenNeuronicTapped" /></Border.GestureRecognizers>

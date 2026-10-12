@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.GuildCard.GuildCard"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    xmlns:guildCard="clr-namespace:labyItems.Pages.GuildCard"
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+        <controls:DetailPageHeader x:Name="DetailHeader"
+                                   HeaderText="Guild Details" />
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16">
+                <guildCard:GuildDetailCardView x:Name="GuildDetails" />
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

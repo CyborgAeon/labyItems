@@ -1,9 +1,10 @@
 using System.ComponentModel;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Windows.Input;
 using labyItems.Pages.Calculator;
-using labyItems.Pages.EvocationCard;
 using labyItems.Services;
 using labyItems.Models.Enums;
 
@@ -18,6 +19,7 @@ public partial class NonStandardEvocationCreatePage : ContentPage, INotifyProper
     private DruidEvocationService.EvocRaw _draft = NewDraft();
     private CharacterAssignmentOptionVm? _character;
     private bool _isBusy;
+    private ObservableCollection<string> _selectedFields = new();
 
     public new event PropertyChangedEventHandler? PropertyChanged;
 
@@ -29,15 +31,36 @@ public partial class NonStandardEvocationCreatePage : ContentPage, INotifyProper
         SaveCommand = new Command(async () => await SaveAsync(), () => CanSave);
         InitializeComponent();
         BindingContext = this;
+        ReplaceSelectedFields(Draft.fields);
     }
 
     public DruidEvocationService.EvocRaw Draft
     {
         get => _draft;
-        private set { _draft = value; Raise(); Raise(nameof(CanSave)); RefreshCommands(); }
+        private set
+        {
+            _draft = value;
+            ReplaceSelectedFields(value.fields);
+            Raise(); Raise(nameof(PowerText)); Raise(nameof(PrerequisitesButtonText));
+            Raise(nameof(ImmunityButtonText)); Raise(nameof(CanSave)); RefreshCommands();
+        }
     }
 
     public string CharacterName => string.IsNullOrWhiteSpace(_character?.Name) ? "No character selected" : _character.Name;
+    public string CharacterButtonText => _character == null ? "Choose character *" : $"Assigned to {_character.Name} · Change";
+    public ObservableCollection<string> AvailableFields { get; } = new(Enum.GetValues<EvocationFields>().Select(FormatEnum));
+    public ObservableCollection<string> SelectedFields
+    {
+        get => _selectedFields;
+        private set { _selectedFields = value; Raise(); }
+    }
+    public string PowerText
+    {
+        get => Draft.power.ToString();
+        set { if (int.TryParse(value, out var power)) Draft.power = Math.Max(0, power); }
+    }
+    public string PrerequisitesButtonText => Draft.preReqs.Count == 0 ? "Choose prerequisites" : $"Prerequisites · {Draft.preReqs.Count} selected";
+    public string ImmunityButtonText => string.IsNullOrWhiteSpace(Draft.immunity) ? "Choose immunity" : $"Immunity · {Draft.immunity}";
     public bool CanSave => !IsBusy && _character != null && !string.IsNullOrWhiteSpace(Draft.name);
     public ICommand BackCommand { get; }
     public ICommand SearchCommand { get; }
@@ -60,6 +83,7 @@ public partial class NonStandardEvocationCreatePage : ContentPage, INotifyProper
         if (selected != null)
             _character = new CharacterAssignmentOptionVm(selected.Id, selected.Name, selected.PlayerName, selected.Class);
         Raise(nameof(CharacterName));
+        Raise(nameof(CharacterButtonText));
         Raise(nameof(CanSave));
         RefreshCommands();
     }
@@ -76,90 +100,65 @@ public partial class NonStandardEvocationCreatePage : ContentPage, INotifyProper
 
     private async Task ChooseCharacterAsync()
     {
-        var characters = LiteDbService.GetCharacters()
-            .OrderBy(character => character.Name, StringComparer.OrdinalIgnoreCase)
-            .ToList();
-        if (characters.Count == 0)
-        {
-            await DisplayAlert("No characters", "Create a character before assigning a custom evocation.", "OK");
-            return;
-        }
-
-        var labels = characters.Select(character => string.IsNullOrWhiteSpace(character.PlayerName)
-            ? character.Name
-            : $"{character.Name} — {character.PlayerName}").ToArray();
-        var picked = await DisplayActionSheet("Assign to character", "Cancel", null, labels);
-        var index = Array.IndexOf(labels, picked);
-        if (index < 0) return;
-        var selected = characters[index];
-        _character = new CharacterAssignmentOptionVm(selected.Id, selected.Name, selected.PlayerName, selected.Class);
+        var selected = await CharacterAssignmentPage.PickAsync(Navigation, _character?.Id);
+        if (selected == null) return;
+        _character = selected;
         Raise(nameof(CharacterName));
+        Raise(nameof(CharacterButtonText));
         Raise(nameof(CanSave));
         RefreshCommands();
     }
 
-    private async void OnFieldEditRequested(object? sender, EvocationFieldEditRequestedEventArgs e)
+    private void OnDraftTextChanged(object? sender, TextChangedEventArgs e)
     {
-        var draft = Clone(Draft);
-        switch (e.Field)
-        {
-            case "name": draft.name = await PromptAsync("Name", "Evocation name", draft.name); break;
-            case "power":
-                var power = await PromptAsync("Power", "Earthpower cost", draft.power.ToString(), Keyboard.Numeric);
-                if (int.TryParse(power, out var parsed)) draft.power = Math.Max(0, parsed);
-                break;
-            case "range": draft.range = await PromptAsync("Range", "Range", draft.range); break;
-            case "duration": draft.duration = await PromptAsync("Duration", "Duration", draft.duration); break;
-            case "description": draft.description = await PromptAsync("Description", "Description", draft.description); break;
-            case "verbal": draft.verbal = await PromptAsync("Verbal", "Verbal or gesture", draft.verbal); break;
-            case "fields":
-                draft.fields = await PickFieldsAsync(draft.fields); break;
-            case "preReqs":
-                var prereqs = await MpCatalogSearch.PickGlobalPrerequisitesAsync(Navigation, draft.preReqs);
-                draft.preReqs = prereqs.ToList();
-                break;
-            case "immunity":
-                var ability = await MpCatalogSearch.PickAbilityAsync(Navigation, await EvolutionService.GetAllAbilitiesAsync());
-                if (ability != null)
-                {
-                    var display = string.IsNullOrWhiteSpace(ability.DisplayName) ? ability.Index : ability.DisplayName;
-                    draft.immunity = display;
-                    draft.immunityName = [display];
-                    draft.immunityIndex = [ability.Index];
-                }
-                break;
-            case "isAdvanced":
-                draft.isAdvanced = !draft.isAdvanced;
-                break;
-            case "Damage":
-            case "Heal":
-                var edited = await EvocationCombatEditorPage.EditAsync(Navigation, draft, e.Field == "Damage");
-                if (edited != null) draft = edited;
-                break;
-        }
-        Draft = draft;
+        Draft.name = e.NewTextValue ?? string.Empty;
+        Raise(nameof(CanSave));
+        RefreshCommands();
     }
 
-    private async Task<List<string>> PickFieldsAsync(IEnumerable<string> current)
+    private void ReplaceSelectedFields(IEnumerable<string>? fields)
     {
-        var selected = new HashSet<string>(current ?? [], StringComparer.OrdinalIgnoreCase);
-        var standard = Enum.GetValues<EvocationFields>().Select(FormatEnum).ToList();
-        while (true)
-        {
-            var choices = standard.Select(value => $"{(selected.Contains(value) ? "✓" : "○")} {value}")
-                .Append("Add custom field…").Append("Done").ToArray();
-            var picked = await DisplayActionSheet("Evocation fields", "Cancel", null, choices);
-            if (picked is null or "Cancel" or "Done") break;
-            if (picked == "Add custom field…")
-            {
-                var custom = (await DisplayPromptAsync("Custom field", "Field name", "Add", "Cancel"))?.Trim();
-                if (!string.IsNullOrWhiteSpace(custom)) selected.Add(custom);
-                continue;
-            }
-            var value = picked.Length > 2 ? picked[2..] : picked;
-            if (!selected.Add(value)) selected.Remove(value);
-        }
-        return selected.ToList();
+        if (_selectedFields != null)
+            _selectedFields.CollectionChanged -= OnSelectedFieldsChanged;
+        SelectedFields = new ObservableCollection<string>(fields ?? []);
+        foreach (var field in SelectedFields.Where(field => !AvailableFields.Contains(field, StringComparer.OrdinalIgnoreCase)))
+            AvailableFields.Add(field);
+        SelectedFields.CollectionChanged += OnSelectedFieldsChanged;
+    }
+
+    private void OnSelectedFieldsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        => Draft.fields = SelectedFields.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+
+    private void OnAddCustomFieldClicked(object? sender, EventArgs e)
+    {
+        var value = CustomFieldEntry.Text?.Trim();
+        if (string.IsNullOrWhiteSpace(value)) return;
+        if (!AvailableFields.Contains(value, StringComparer.OrdinalIgnoreCase)) AvailableFields.Add(value);
+        if (!SelectedFields.Contains(value, StringComparer.OrdinalIgnoreCase)) SelectedFields.Add(value);
+        CustomFieldEntry.Text = string.Empty;
+    }
+
+    private async void OnPrerequisitesClicked(object? sender, EventArgs e)
+    {
+        Draft.preReqs = (await MpCatalogSearch.PickGlobalPrerequisitesAsync(Navigation, Draft.preReqs)).ToList();
+        Raise(nameof(PrerequisitesButtonText));
+    }
+
+    private async void OnImmunityClicked(object? sender, EventArgs e)
+    {
+        var ability = await MpCatalogSearch.PickAbilityAsync(Navigation, await EvolutionService.GetAllAbilitiesAsync());
+        if (ability == null) return;
+        var display = string.IsNullOrWhiteSpace(ability.DisplayName) ? ability.Index : ability.DisplayName;
+        Draft.immunity = display; Draft.immunityName = [display]; Draft.immunityIndex = [ability.Index];
+        Raise(nameof(ImmunityButtonText));
+    }
+
+    private async void OnDamageClicked(object? sender, EventArgs e) => await EditCombatAsync(true);
+    private async void OnHealClicked(object? sender, EventArgs e) => await EditCombatAsync(false);
+    private async Task EditCombatAsync(bool isDamage)
+    {
+        var edited = await EvocationCombatEditorPage.EditAsync(Navigation, Clone(Draft), isDamage);
+        if (edited != null) Draft = edited;
     }
 
     private static string FormatEnum(EvocationFields value)
@@ -167,10 +166,6 @@ public partial class NonStandardEvocationCreatePage : ContentPage, INotifyProper
         var raw = value.ToString();
         return string.Concat(raw.Select((ch, index) => index > 0 && char.IsUpper(ch) ? $" {ch}" : ch.ToString()));
     }
-
-    private async Task<string> PromptAsync(string title, string message, string initial, Keyboard? keyboard = null)
-        => (await DisplayPromptAsync(title, message, "Apply", "Cancel", initialValue: initial ?? string.Empty,
-            keyboard: keyboard ?? Keyboard.Default)) ?? initial ?? string.Empty;
 
     private async Task SaveAsync()
     {
@@ -188,7 +183,6 @@ public partial class NonStandardEvocationCreatePage : ContentPage, INotifyProper
                 AssignedCharacterName = _character.Name,
                 AssignedCharacterPlayerName = _character.PlayerName
             });
-            await DisplayAlert("Evocation saved", $"'{Draft.name.Trim()}' was saved for {_character.Name}.", "OK");
             await Navigation.PopAsync();
         }
         catch (Exception ex) { await DisplayAlert("Save failed", ex.Message, "OK"); }
@@ -198,7 +192,6 @@ public partial class NonStandardEvocationCreatePage : ContentPage, INotifyProper
     private static DruidEvocationService.EvocRaw NewDraft() => new() { nonStandard = true };
     private static DruidEvocationService.EvocRaw Clone(DruidEvocationService.EvocRaw source)
         => JsonSerializer.Deserialize<DruidEvocationService.EvocRaw>(JsonSerializer.Serialize(source, JsonOptions), JsonOptions) ?? NewDraft();
-    private static List<string> SplitList(string value) => (value ?? string.Empty).Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
     private void RefreshCommands() { ((Command)SearchCommand).ChangeCanExecute(); ((Command)ChooseCharacterCommand).ChangeCanExecute(); ((Command)SaveCommand).ChangeCanExecute(); }
     private void Raise([CallerMemberName] string? name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 }

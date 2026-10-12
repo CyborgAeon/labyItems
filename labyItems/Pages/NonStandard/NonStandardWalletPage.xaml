@@ -30,9 +30,6 @@
                             Clicked="OnCreateNewClicked" />
                 </Grid>
 
-                <controls:MultiChipGroup Items="{Binding AvailableFilters}"
-                                         SelectedItems="{Binding SelectedFilters}" />
-
                 <Label Text="{Binding SummaryText}"
                        FontSize="12"
                        Opacity="0.7" />

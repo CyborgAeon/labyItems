@@ -29,9 +29,34 @@ public partial class GuildCardView : ContentView
         set => SetValue(SelectCommandProperty, value);
     }
 
+    public static readonly BindableProperty CanExpandProperty =
+        BindableProperty.Create(nameof(CanExpand), typeof(bool), typeof(GuildCardView), true, propertyChanged: static (b, _, n) =>
+        {
+            if (b is GuildCardView view && !(bool)n)
+                view.ApplyExpandedState(false);
+        });
+
+    public bool CanExpand
+    {
+        get => (bool)GetValue(CanExpandProperty);
+        set => SetValue(CanExpandProperty, value);
+    }
+
+    public static readonly BindableProperty OpenDetailCommandProperty =
+        BindableProperty.Create(nameof(OpenDetailCommand), typeof(ICommand), typeof(GuildCardView), null);
+
+    public ICommand? OpenDetailCommand
+    {
+        get => (ICommand?)GetValue(OpenDetailCommandProperty);
+        set => SetValue(OpenDetailCommandProperty, value);
+    }
+
+    public ICommand CardTappedCommand { get; }
+
     public GuildCardView()
     {
         InitializeComponent();
+        CardTappedCommand = new Command<GuildCardVm>(OnCardTapped);
         GuildMiracleInfoCommand = new Command<GuildMiracleRowVm>(row => _ = OpenGuildMiracleInfoAsync(row));
         GuildBenefitInfoCommand = new Command<GuildBenefitRowVm>(row => _ = OpenGuildBenefitInfoAsync(row));
     }
@@ -95,10 +120,30 @@ public partial class GuildCardView : ContentView
         }
     }
 
+    private void OnCardTapped(GuildCardVm? item)
+    {
+        if (item == null)
+            return;
+
+        if (!CanExpand && OpenDetailCommand != null)
+        {
+            OpenDetailCommand.Execute(item);
+            return;
+        }
+
+        SelectCommand?.Execute(item);
+    }
+
     private void ApplyExpandedState(bool expand)
     {
         if (ExpandedContent == null)
             return;
+
+        if (!CanExpand)
+        {
+            ExpandedContent.IsVisible = false;
+            return;
+        }
 
         ExpandedContent.AbortAnimation("expand");
         ExpandedContent.IsVisible = expand;

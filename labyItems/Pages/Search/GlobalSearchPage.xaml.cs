@@ -4,26 +4,55 @@ using EvocationCardPage = labyItems.Pages.EvocationCard.EvocationCard;
 using NeuronicCardPage = labyItems.Pages.NeuronicCard.NeuronicCard;
 using AbilityCardPage = labyItems.Pages.AbilityCard.AbilityCard;
 using labyItems.Services;
+using labyItems.Helpers;
+using labyItems.Controls;
 
 namespace labyItems.Pages.Search;
 
 public partial class GlobalSearchPage : ContentPage
 {
     private readonly GlobalSearchVm _vm;
+    private readonly CollectionViewScrollPreserver _scrollPreserver;
     private bool _isNavigatingBack;
     private bool _isOpeningResult;
     private TaskCompletionSource<IReadOnlyList<GlobalSearchResultVm>>? _pickTcs;
     private bool _isCompleting;
 
-    public GlobalSearchPage() : this(null)
+    public GlobalSearchPage() : this(null, null)
     {
     }
 
-    public GlobalSearchPage(GlobalSearchPickerOptions? picker)
+    public GlobalSearchPage(GlobalSearchKind initialKind) : this(null, initialKind)
     {
-        _vm = new GlobalSearchVm(picker);
+    }
+
+    public GlobalSearchPage(GlobalSearchPickerOptions? picker) : this(picker, null)
+    {
+    }
+
+    public GlobalSearchPage(GlobalSearchPickerOptions? picker, GlobalSearchKind? initialKind)
+    {
+        _vm = new GlobalSearchVm(picker, initialKind);
         InitializeComponent();
         BindingContext = _vm;
+        _scrollPreserver = new CollectionViewScrollPreserver(ResultsCollection, this);
+
+        if (initialKind.HasValue)
+        {
+            ToolsetMenu.SelectedRoute = initialKind.Value switch
+            {
+                GlobalSearchKind.Spell => ToolsetRouteKeys.SearchSpells,
+                GlobalSearchKind.Miracle => ToolsetRouteKeys.SearchMiracles,
+                GlobalSearchKind.Evocation => ToolsetRouteKeys.SearchEvocations,
+                GlobalSearchKind.Neuronic => ToolsetRouteKeys.SearchNeuronics,
+                GlobalSearchKind.Ability => ToolsetRouteKeys.SearchAbilities,
+                _ => ToolsetRouteKeys.SearchGlobal
+            };
+        }
+        else
+        {
+            ToolsetMenu.SelectedRoute = ToolsetRouteKeys.SearchGlobal;
+        }
     }
 
     public async Task<IReadOnlyList<GlobalSearchResultVm>> PickAsync(INavigation navigation)
@@ -68,6 +97,7 @@ public partial class GlobalSearchPage : ContentPage
     {
         base.OnAppearing();
         await _vm.EnsureLoadedAsync();
+        _scrollPreserver.RestoreScrollPosition();
     }
 
     private async void OnBackClicked(object sender, EventArgs e)
@@ -98,6 +128,8 @@ public partial class GlobalSearchPage : ContentPage
         if (e.Parameter is not GlobalSearchResultVm result)
             return;
 
+        _scrollPreserver.RecordItem(result);
+
         if (_vm.IsPickerMode)
         {
             _vm.ToggleResultSelectionCommand.Execute(result);
@@ -110,7 +142,10 @@ public partial class GlobalSearchPage : ContentPage
     private async void OnResultInfoTapped(object? sender, TappedEventArgs e)
     {
         if (e.Parameter is GlobalSearchResultVm result)
+        {
+            _scrollPreserver.RecordItem(result);
             await OpenResultAsync(result);
+        }
     }
 
     private async Task OpenResultAsync(GlobalSearchResultVm result)
@@ -162,6 +197,24 @@ public partial class GlobalSearchPage : ContentPage
             case GlobalSearchKind.Neuronic:
                 var neuronic = result.Neuronic ?? await ResolveNeuronicAsync(result);
                 return neuronic == null ? null : new NeuronicCardPage(neuronic);
+
+            case GlobalSearchKind.Guild:
+                var guilds = await GuildsService.GetAllAsync();
+                if (guilds.TryGetValue(result.Name, out var guildRecord))
+                    return new Pages.GuildCard.GuildCard(guildRecord, result.Name);
+                return null;
+
+            case GlobalSearchKind.Class:
+                return new ClassSearchPage { SearchText = result.Name };
+
+            case GlobalSearchKind.Race:
+                return new RaceSearchPage { SearchText = result.Name };
+
+            case GlobalSearchKind.MultiClass:
+                return new MultiClassSearchPage { SearchText = result.Name };
+
+            case GlobalSearchKind.MultiRace:
+                return new MultiRaceSearchPage { SearchText = result.Name };
 
             default:
                 return null;

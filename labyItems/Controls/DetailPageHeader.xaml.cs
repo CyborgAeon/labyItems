@@ -5,7 +5,8 @@ using labyItems.Services;
 public partial class DetailPageHeader : ContentView
 {
     public static readonly BindableProperty HeaderTextProperty = BindableProperty.Create(
-        nameof(HeaderText), typeof(string), typeof(DetailPageHeader), string.Empty);
+        nameof(HeaderText), typeof(string), typeof(DetailPageHeader), string.Empty,
+        propertyChanged: OnHeaderTextChanged);
 
     public string HeaderText
     {
@@ -16,6 +17,20 @@ public partial class DetailPageHeader : ContentView
     public DetailPageHeader()
     {
         InitializeComponent();
+        UpdateHeaderAffordance();
+    }
+
+    private static void OnHeaderTextChanged(BindableObject bindable, object oldValue, object newValue)
+        => ((DetailPageHeader)bindable).UpdateHeaderAffordance();
+
+    private void UpdateHeaderAffordance()
+    {
+        if (HeaderLabel is null)
+            return;
+
+        HeaderLabel.TextDecorations = SourceBookPdfCatalog.TryResolve(HeaderText, out _)
+            ? TextDecorations.Underline
+            : TextDecorations.None;
     }
 
     private async void OnBackClicked(object? sender, EventArgs e)

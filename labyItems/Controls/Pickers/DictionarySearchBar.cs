@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Input;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
@@ -38,11 +39,14 @@ public partial class DictionarySearchBar<TValue> : ContentView, ILoadableSearchB
     private readonly CollectionView _resultsView;
     private readonly Border _inlineResultsContainer;
     private List<SearchResult> _filteredResults = new();
+    private IReadOnlyList<SearchResult> _materializedOptions = Array.Empty<SearchResult>();
     private Dictionary<string, TValue> _defaultOptions;
     private bool _suppressTextChanged;
     private bool _suppressSelectedTextChanged;
     private bool _overlayHostInitialized;
     private int _remoteRequestId;
+    private CancellationTokenSource? _remoteSearchCts;
+    private const int RemoteSearchDebounceMilliseconds = 180;
     private bool _isUserEditing;
     private bool _isLoadingOptions;
     private readonly ActivityIndicator _loadingIndicator;
@@ -53,6 +57,7 @@ public partial class DictionarySearchBar<TValue> : ContentView, ILoadableSearchB
         _selfDismisser = DismissLocalOverlay;
         DictionaryOverlayRegistry.Register(_selfDismisser);
         _defaultOptions = BuildDefaultOptions();
+        MaterializeOptions();
 
         _searchBar = new Entry
         {
@@ -145,6 +150,8 @@ public partial class DictionarySearchBar<TValue> : ContentView, ILoadableSearchB
     protected override void OnParentSet()
     {
         base.OnParentSet();
+        MaterializeOptions();
+        RefreshFilteredResults(_searchBar.Text);
         if (UsePageOverlay)
         {
             // Build the overlay host early so first focus doesn't re-parent and steal focus.
@@ -157,8 +164,21 @@ public partial class DictionarySearchBar<TValue> : ContentView, ILoadableSearchB
         base.OnHandlerChanging(args);
         if (args.NewHandler == null)
         {
+            CancelRemoteSearch();
+            DismissLocalOverlay();
             RestoreKeyboardAvoidancePadding();
             DictionaryOverlayRegistry.Unregister(_selfDismisser);
+        }
+    }
+
+    protected override void OnHandlerChanged()
+    {
+        base.OnHandlerChanged();
+        if (Handler != null)
+        {
+            DictionaryOverlayRegistry.Register(_selfDismisser);
+            MaterializeOptions();
+            RefreshFilteredResults(_searchBar.Text);
         }
     }
 
@@ -384,6 +404,7 @@ public partial class DictionarySearchBar<TValue> : ContentView, ILoadableSearchB
     private static void OnItemsSourceChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var control = (DictionarySearchBar<TValue>)bindable;
+        control.MaterializeOptions();
         control.RefreshFilteredResults(control._searchBar.Text);
 
         // Only sync text when we have a selection to reflect and the user is not actively editing.
@@ -442,10 +463,10 @@ public partial class DictionarySearchBar<TValue> : ContentView, ILoadableSearchB
         if (_isLoadingOptions)
             return;
 
-        if (RemoteSearchProvider != null)
-            await RefreshFromRemoteAsync(string.Empty);
-        else
-            RefreshFilteredResults(string.Empty);
+        // A bound dictionary may be populated in place after the original binding
+        // assignment. Refresh the snapshot on focus without invoking remote loading.
+        MaterializeOptions();
+        RefreshFilteredResults(string.Empty);
 
         if (KeyboardAvoidanceEnabled)
         {
@@ -522,7 +543,8 @@ public partial class DictionarySearchBar<TValue> : ContentView, ILoadableSearchB
 
             if (RemoteSearchProvider != null)
             {
-                await RefreshFromRemoteAsync(e.NewTextValue);
+                if (!await RefreshFromRemoteDebouncedAsync(e.NewTextValue))
+                    return;
                 if (_overlay != null)
                     UpdateOverlayItems();
                 else
@@ -566,11 +588,9 @@ public partial class DictionarySearchBar<TValue> : ContentView, ILoadableSearchB
     private void RefreshFilteredResults(string? query)
     {
         var text = query?.Trim() ?? string.Empty;
-        var source = ItemsSource ?? _defaultOptions ?? new Dictionary<string, TValue>();
-
-        _filteredResults = source
-            .Where(kvp => string.IsNullOrWhiteSpace(text) || kvp.Key.Contains(text, StringComparison.OrdinalIgnoreCase))
-            .Select(kvp => SearchResult.FromDictionary(kvp.Key, kvp.Value))
+        _filteredResults = _materializedOptions
+            .Where(result => string.IsNullOrWhiteSpace(text)
+                             || result.DisplayText.Contains(text, StringComparison.OrdinalIgnoreCase))
             .ToList();
 
         if (AllowCustomOptions && !string.IsNullOrWhiteSpace(text))
@@ -579,6 +599,46 @@ public partial class DictionarySearchBar<TValue> : ContentView, ILoadableSearchB
             if (!hasExactMatch)
                 _filteredResults.Insert(0, SearchResult.Custom(text));
         }
+    }
+
+    private void MaterializeOptions()
+    {
+        var source = ItemsSource ?? _defaultOptions;
+        _materializedOptions = source == null
+            ? Array.Empty<SearchResult>()
+            : source.Select(kvp => SearchResult.FromDictionary(kvp.Key, kvp.Value)).ToArray();
+    }
+
+    private async Task<bool> RefreshFromRemoteDebouncedAsync(string? query)
+    {
+        var cts = new CancellationTokenSource();
+        var previous = Interlocked.Exchange(ref _remoteSearchCts, cts);
+        previous?.Cancel();
+        previous?.Dispose();
+
+        try
+        {
+            await Task.Delay(RemoteSearchDebounceMilliseconds, cts.Token);
+            await RefreshFromRemoteAsync(query, cts.Token);
+            return !cts.IsCancellationRequested;
+        }
+        catch (OperationCanceledException) when (cts.IsCancellationRequested)
+        {
+            return false;
+        }
+        finally
+        {
+            Interlocked.CompareExchange(ref _remoteSearchCts, null, cts);
+            cts.Dispose();
+        }
+    }
+
+    private void CancelRemoteSearch()
+    {
+        var cts = Interlocked.Exchange(ref _remoteSearchCts, null);
+        cts?.Cancel();
+        cts?.Dispose();
+        Interlocked.Increment(ref _remoteRequestId);
     }
 
     private void UpdateResultsVisibility()

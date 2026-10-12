@@ -13,13 +13,34 @@
         <Grid RowDefinitions="Auto,*,Auto"
           RowSpacing="0">
                 <Grid Grid.Row="0"
-                      Padding="14,10,14,8"
+                      Padding="16,12,16,14"
+                      RowDefinitions="Auto,Auto"
+                      RowSpacing="10"
                       BackgroundColor="{StaticResource White}"
                       IsVisible="{Binding Source={x:Reference Root}, Path=ShowWizardHeader}">
-                        <controls:StepIndicator Steps="{Binding Source={x:Reference Root}, Path=StepItems}"
-                                                CurrentStep="{Binding Source={x:Reference Root}, Path=CurrentStepIndex}"
-                                                MaxAccessibleStep="{Binding Source={x:Reference Root}, Path=MaxAccessibleStep}"
-                                                StepClickCommand="{Binding Source={x:Reference Root}, Path=StepClickCommand}" />
+                    <Grid ColumnDefinitions="48,*" ColumnSpacing="12">
+                        <Border WidthRequest="48" HeightRequest="48"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 14"
+                                BackgroundColor="{StaticResource SelectedSurfaceBackgroundColor}">
+                            <Label Text="{Binding Source={x:Reference Root}, Path=CurrentStepIcon}"
+                                   FontFamily="FASolid" FontSize="19"
+                                   TextColor="{StaticResource AccentMaroonColor}"
+                                   HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
+                            <Label Text="{Binding Source={x:Reference Root}, Path=StepCounterText}"
+                                   FontSize="11" FontAttributes="Bold" TextTransform="Uppercase"
+                                   TextColor="{StaticResource AccentMaroonColor}"/>
+                            <Label Text="{Binding Source={x:Reference Root}, Path=CurrentStepTitle}"
+                                   FontSize="21" FontAttributes="Bold"/>
+                            <Label Text="{Binding Source={x:Reference Root}, Path=CurrentStepDescription}"
+                                   FontSize="12" TextColor="{StaticResource MutedTextColor}" LineBreakMode="WordWrap"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                    <ProgressBar Grid.Row="1"
+                                 Progress="{Binding Source={x:Reference Root}, Path=StepProgress}"
+                                 ProgressColor="{StaticResource AccentMaroonColor}"/>
                 </Grid>
 
                 <Grid Grid.Row="0"
@@ -336,18 +357,18 @@
                                                 HeightRequest="320">
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate>
-                                            <Grid ColumnDefinitions="34,*,Auto"
-                                                  ColumnSpacing="8"
-                                                  Padding="8,8"
-                                                  BackgroundColor="{Binding RowBackgroundHex}">
-                                                <Label Text="{Binding Level}" FontAttributes="Bold" VerticalTextAlignment="Center"/>
-                                                <Label Grid.Column="1" Text="{Binding SelectedSummary}" VerticalTextAlignment="Center"/>
+                                            <Frame Style="{StaticResource DetailCardFrameStyle}" Margin="0,0,0,8" Padding="12,10">
+                                              <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                                <Label Text="{Binding Level, StringFormat='Lv {0}'}" FontAttributes="Bold" VerticalTextAlignment="Center" TextColor="{StaticResource AccentMaroonColor}"/>
+                                                <Label Grid.Column="1" Text="{Binding SelectedSummary}" VerticalTextAlignment="Center" LineBreakMode="WordWrap"/>
                                                 <Button Grid.Column="2"
                                                         Text="&#xF1FC;"
                                                         Style="{StaticResource ListRowGlyphIconButtonStyle}"
+                                                        WidthRequest="44" HeightRequest="44"
                                                         Clicked="OnEditWeaponSkillLevelClicked"
                                                         CommandParameter="{Binding .}"/>
-                                            </Grid>
+                                              </Grid>
+                                            </Frame>
                                         </DataTemplate>
                                     </CollectionView.ItemTemplate>
                                 </CollectionView>
@@ -363,18 +384,18 @@
                                                 HeightRequest="320">
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate>
-                                            <Grid ColumnDefinitions="34,*,Auto"
-                                                  ColumnSpacing="8"
-                                                  Padding="8,8"
-                                                  BackgroundColor="{Binding RowBackgroundHex}">
-                                                <Label Text="{Binding Level}" FontAttributes="Bold" VerticalTextAlignment="Center"/>
-                                                <Label Grid.Column="1" Text="{Binding SummaryText}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation"/>
+                                            <Frame Style="{StaticResource DetailCardFrameStyle}" Margin="0,0,0,8" Padding="12,10">
+                                              <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                                <Label Text="{Binding Level, StringFormat='Lv {0}'}" FontAttributes="Bold" VerticalTextAlignment="Center" TextColor="{StaticResource AccentMaroonColor}"/>
+                                                <Label Grid.Column="1" Text="{Binding SummaryText}" VerticalTextAlignment="Center" LineBreakMode="WordWrap"/>
                                                 <Button Grid.Column="2"
                                                         Text="&#xF1FC;"
                                                         Style="{StaticResource ListRowGlyphIconButtonStyle}"
+                                                        WidthRequest="44" HeightRequest="44"
                                                         Clicked="OnEditAbilityLevelClicked"
                                                         CommandParameter="{Binding .}"/>
-                                            </Grid>
+                                              </Grid>
+                                            </Frame>
                                         </DataTemplate>
                                     </CollectionView.ItemTemplate>
                                 </CollectionView>

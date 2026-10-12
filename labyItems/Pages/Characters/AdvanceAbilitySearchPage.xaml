@@ -73,7 +73,8 @@
             </Border>
 
             <Grid Grid.Row="1">
-                <CollectionView ItemsSource="{Binding FilteredAbilities}"
+                <CollectionView x:Name="AbilitiesCollection"
+                                ItemsSource="{Binding FilteredAbilities}"
                                 IsVisible="{Binding HasResults}"
                                 ItemSizingStrategy="MeasureFirstItem"
                                 SelectionMode="None">

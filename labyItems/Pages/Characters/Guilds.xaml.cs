@@ -41,6 +41,12 @@ public partial class Guilds : ContentView
         typeof(Guilds),
         true);
 
+    public static readonly BindableProperty CanExpandGuildCardsProperty = BindableProperty.Create(
+        nameof(CanExpandGuildCards),
+        typeof(bool),
+        typeof(Guilds),
+        true);
+
     public static readonly BindableProperty HeaderLeadingViewProperty = BindableProperty.Create(
         nameof(HeaderLeadingView),
         typeof(View),
@@ -52,12 +58,24 @@ public partial class Guilds : ContentView
                 guilds.UpdateHeaderLeadingView(newValue as View);
         });
 
+    private readonly CollectionViewScrollPreserver _scrollPreserver;
+
+    public ICommand OpenDetailCommand { get; }
+
     public Guilds(GuildsVm vm)
     {
         InitializeComponent();
         BindingContext = vm;
         ToggleExpandedCommand = new Command<GuildCardVm>(item => _ = HandleToggleExpandedAsync(item));
+        OpenDetailCommand = new Command<GuildCardVm>(item => _ = OpenGuildDetailAsync(item));
         UpdateHeaderLeadingView(HeaderLeadingView);
+        _scrollPreserver = new CollectionViewScrollPreserver(GuildList);
+    }
+
+    public bool CanExpandGuildCards
+    {
+        get => (bool)GetValue(CanExpandGuildCardsProperty);
+        set => SetValue(CanExpandGuildCardsProperty, value);
     }
 
     public bool ShowBackButton
@@ -109,10 +127,33 @@ public partial class Guilds : ContentView
         HeaderLeadingHost.IsVisible = view != null;
     }
 
+    private async Task OpenGuildDetailAsync(GuildCardVm? item)
+    {
+        if (item == null)
+            return;
+
+        _scrollPreserver.RecordItem(item);
+        var page = new Pages.GuildCard.GuildCard(item);
+        if (Navigation != null)
+        {
+            await Navigation.PushAsync(page);
+        }
+        else if (Shell.Current != null)
+        {
+            await Shell.Current.Navigation.PushAsync(page);
+        }
+    }
+
     private async Task HandleToggleExpandedAsync(GuildCardVm? item)
     {
         if (item == null || BindingContext is not GuildsVm vm)
             return;
+
+        if (!CanExpandGuildCards)
+        {
+            await OpenGuildDetailAsync(item);
+            return;
+        }
 
         var shouldScrollToTop = !item.IsExpanded;
         vm.ToggleExpandedCommand.Execute(item);

@@ -60,14 +60,9 @@ public partial class NonStandardAbilityCreatePage : ContentPage, INotifyProperty
 
     private async Task ChooseCharacterAsync()
     {
-        var characters = LiteDbService.GetCharacters().OrderBy(c => c.Name, StringComparer.OrdinalIgnoreCase).ToList();
-        if (characters.Count == 0) { await DisplayAlert("No characters", "Create a character before assigning a custom ability.", "OK"); return; }
-        var labels = characters.Select(c => string.IsNullOrWhiteSpace(c.PlayerName) ? c.Name : $"{c.Name} — {c.PlayerName}").ToArray();
-        var picked = await DisplayActionSheet("Assign to character", "Cancel", null, labels);
-        var index = Array.IndexOf(labels, picked);
-        if (index < 0) return;
-        var selected = characters[index];
-        _character = new(selected.Id, selected.Name, selected.PlayerName, selected.Class);
+        var selected = await CharacterAssignmentPage.PickAsync(Navigation, _character?.Id);
+        if (selected == null) return;
+        _character = selected;
         Raise(nameof(CharacterName)); Raise(nameof(CanSave)); RefreshCommands();
     }
 
