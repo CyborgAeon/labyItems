@@ -3,8 +3,7 @@
     x:Class="labyItems.Controls.GlyphActionRowView"
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:controls="clr-namespace:labyItems.Controls">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <Grid RowDefinitions="Auto,Auto,Auto"
           RowSpacing="0"
@@ -37,13 +36,16 @@
                    VerticalTextAlignment="Center"
                    LineBreakMode="TailTruncation" />
 
-            <controls:ChevronIconView Grid.Column="2"
-                                      GlyphSize="{Binding ChevronSize, Source={x:Reference Root}}"
-                                      GlyphColor="{Binding ChevronColor, Source={x:Reference Root}}"
-                                      IconSize="18"
-                                      IsVisible="{Binding ShowChevron, Source={x:Reference Root}}"
-                                      HorizontalOptions="End"
-                                      VerticalOptions="Center" />
+            <Label Grid.Column="2"
+                   Text="{Binding ChevronGlyph, Source={x:Reference Root}}"
+                   FontFamily="{Binding ChevronFontFamily, Source={x:Reference Root}}"
+                   FontSize="{Binding ChevronSize, Source={x:Reference Root}}"
+                   TextColor="{Binding ChevronColor, Source={x:Reference Root}}"
+                   IsVisible="{Binding ShowChevron, Source={x:Reference Root}}"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center" />
         </Grid>
 
         <BoxView Grid.Row="2"

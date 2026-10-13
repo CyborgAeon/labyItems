@@ -10,6 +10,7 @@ public sealed class SourceBookPdfCatalogTests
     [InlineData("Engarde", "Engarde/Engarde.pdf")]
     [InlineData("At the sharp end", "at_the_sharp_end/At-The-Sharp-End-16.3.pdf")]
     [InlineData("Manufacturers Guide", "Manufacturers_guide/The-Manufacturers-Guide.pdf")]
+    [InlineData("Almanac", "people/Almanac.pdf")]
     [InlineData("  Words From Above  ", "words_from_above/Words-From-above-16.3.pdf")]
     public void TryResolve_KnownBook_ReturnsPackagedAsset(string title, string expectedPath)
     {

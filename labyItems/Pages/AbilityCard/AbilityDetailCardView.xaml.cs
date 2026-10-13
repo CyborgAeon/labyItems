@@ -20,7 +20,7 @@ public partial class AbilityDetailCardView : ContentView
     }
     private const int DescriptionCollapsedLines = 5;
     private const double ExpanderOverflowTolerance = 0.01;
-    private const string InfinityGlyphCode = "\uf534";
+    private const string InfinityGlyphCode = FontAwesomeGlyphs.Infinity;
 
     public static readonly BindableProperty AbilityProperty = BindableProperty.Create(
         nameof(Ability),

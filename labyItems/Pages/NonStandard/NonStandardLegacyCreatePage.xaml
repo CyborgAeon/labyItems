@@ -4,6 +4,7 @@
        x:Name="Root"
        xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
        xmlns:abilityCard="clr-namespace:labyItems.Pages.AbilityCard"
        xmlns:controls="clr-namespace:labyItems.Controls"
        xmlns:evocationCard="clr-namespace:labyItems.Pages.EvocationCard"
@@ -95,7 +96,7 @@
                                                   ItemDisplayBinding="{Binding Name}"
                                                   SelectedItem="{Binding SelectedBaseTemplate, Mode=TwoWay}"/>
                                           <Button Grid.Column="1"
-                                                  Text="&#xF002;"
+                                                  Text="{x:Static helpers:FontAwesomeGlyphs.Search}"
                                                   FontFamily="FASolid"
                                                   Clicked="OnSearchBaseClicked"
                                                   WidthRequest="42"
@@ -168,7 +169,7 @@
                                                                                            VerticalTextAlignment="Center"
                                                                                            FontAttributes="Bold"/>
                                                                                     <Button Grid.Column="1"
-                                                                                            Text="&#xF00D;"
+                                                                                            Text="{x:Static helpers:FontAwesomeGlyphs.Remove}"
                                                                                             FontFamily="FASolid"
                                                                                             WidthRequest="30"
                                                                                             HeightRequest="30"
@@ -207,7 +208,7 @@
                                                                       Style="{StaticResource SectionHeaderLabelStyle}"
                                                                       VerticalTextAlignment="Center"/>
                                                                <Button Grid.Column="1"
-                                                                       Text="&#xF067;"
+                                                                       Text="{x:Static helpers:FontAwesomeGlyphs.Add}"
                                                                        FontFamily="FASolid"
                                                                        WidthRequest="34"
                                                                        HeightRequest="34"
@@ -236,7 +237,7 @@
                                                                                            VerticalTextAlignment="Center"
                                                                                            FontAttributes="Bold"/>
                                                                                     <Button Grid.Column="1"
-                                                                                            Text="&#xF067;"
+                                                                                            Text="{x:Static helpers:FontAwesomeGlyphs.Add}"
                                                                                             FontFamily="FASolid"
                                                                                             WidthRequest="34"
                                                                                             HeightRequest="34"
@@ -274,7 +275,7 @@
                                                                                                   Placeholder="Subtype name"
                                                                                                   FontAttributes="Bold"/>
                                                                                            <Button Grid.Column="1"
-                                                                                                   Text="&#xF002;"
+                                                                                                   Text="{x:Static helpers:FontAwesomeGlyphs.Search}"
                                                                                                    FontFamily="FASolid"
                                                                                                    WidthRequest="30"
                                                                                                    HeightRequest="30"
@@ -284,7 +285,7 @@
                                                                                                    Clicked="OnSearchSubtypeCopyAbilityClicked"
                                                                                                    CommandParameter="{Binding .}"/>
                                                                                            <Button Grid.Column="2"
-                                                                                                   Text="&#xF1F8;"
+                                                                                                   Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
                                                                                                    FontFamily="FASolid"
                                                                                                    WidthRequest="30"
                                                                                                    HeightRequest="30"
@@ -316,7 +317,7 @@
                                                                                                                        VerticalTextAlignment="Center"
                                                                                                                        LineBreakMode="TailTruncation"/>
                                                                                                                 <Button Grid.Column="2"
-                                                                                                                        Text="&#xF303;"
+                                                                                                                        Text="{x:Static helpers:FontAwesomeGlyphs.Pen}"
                                                                                                                         FontFamily="FASolid"
                                                                                                                         WidthRequest="30"
                                                                                                                         HeightRequest="30"
@@ -326,7 +327,7 @@
                                                                                                                         Clicked="OnEditRaceAbilityClicked"
                                                                                                                         CommandParameter="{Binding .}"/>
                                                                                                                 <Button Grid.Column="3"
-                                                                                                                        Text="&#xF129;"
+                                                                                                                        Text="{x:Static helpers:FontAwesomeGlyphs.Question}"
                                                                                                                         FontFamily="FASolid"
                                                                                                                         WidthRequest="30"
                                                                                                                         HeightRequest="30"
@@ -336,7 +337,7 @@
                                                                                                                         Clicked="OnRaceAbilityInfoClicked"
                                                                                                                         CommandParameter="{Binding .}"/>
                                                                                                                 <Button Grid.Column="4"
-                                                                                                                        Text="&#xF1F8;"
+                                                                                                                        Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
                                                                                                                         FontFamily="FASolid"
                                                                                                                         WidthRequest="30"
                                                                                                                         HeightRequest="30"
@@ -419,7 +420,7 @@
                                                                       </VerticalStackLayout>
 
                                                                       <Button Grid.Column="1"
-                                                                              Text="&#xF002;"
+                                                                              Text="{x:Static helpers:FontAwesomeGlyphs.Search}"
                                                                               FontFamily="FASolid"
                                                                               Clicked="OnSearchFieldClicked"
                                                                               CommandParameter="{Binding .}"
@@ -445,7 +446,7 @@
                                                                Style="{StaticResource SectionHeaderLabelStyle}"
                                                                VerticalTextAlignment="Center"/>
                                                         <Button Grid.Column="1"
-                                                                Text="&#xF002;"
+                                                                Text="{x:Static helpers:FontAwesomeGlyphs.Search}"
                                                                 FontFamily="FASolid"
                                                                 WidthRequest="34"
                                                                 HeightRequest="34"
@@ -477,7 +478,7 @@
                                                                                            LineBreakMode="TailTruncation"/>
                                                                              </VerticalStackLayout>
                                                                              <Button Grid.Column="1"
-                                                                                     Text="&#xF303;"
+                                                                                     Text="{x:Static helpers:FontAwesomeGlyphs.Pen}"
                                                                                      FontFamily="FASolid"
                                                                                      WidthRequest="44"
                                                                                      HeightRequest="44"
@@ -487,7 +488,7 @@
                                                                                      Clicked="OnEditRaceAbilityClicked"
                                                                                      CommandParameter="{Binding .}"/>
                                                                                   <Button Grid.Column="2"
-                                                                                     Text="&#xF129;"
+                                                                                     Text="{x:Static helpers:FontAwesomeGlyphs.Question}"
                                                                                      FontFamily="FASolid"
                                                                                      WidthRequest="44"
                                                                                      HeightRequest="44"
@@ -497,7 +498,7 @@
                                                                                      Clicked="OnRaceAbilityInfoClicked"
                                                                                      CommandParameter="{Binding .}"/>
                                                                                   <Button Grid.Column="3"
-                                                                                     Text="&#xF1F8;"
+                                                                                     Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
                                                                                      FontFamily="FASolid"
                                                                                      WidthRequest="44"
                                                                                      HeightRequest="44"
@@ -569,7 +570,7 @@
                                                         Style="{StaticResource SectionHeaderLabelStyle}"
                                                         VerticalTextAlignment="Center"/>
                                                  <Button Grid.Column="1"
-                                                         Text="&#xF002;"
+                                                         Text="{x:Static helpers:FontAwesomeGlyphs.Search}"
                                                          FontFamily="FASolid"
                                                          WidthRequest="42"
                                                          HeightRequest="42"
@@ -596,7 +597,7 @@
                                                                                     VerticalTextAlignment="Center"
                                                                                     FontAttributes="Bold"/>
                                                                              <Button Grid.Column="1"
-                                                                                     Text="&#xF002;"
+                                                                                     Text="{x:Static helpers:FontAwesomeGlyphs.Search}"
                                                                                      FontFamily="FASolid"
                                                                                      WidthRequest="32"
                                                                                      HeightRequest="32"
@@ -604,7 +605,7 @@
                                                                                      Clicked="OnSearchRaceLifeScaleClassClicked"
                                                                                      CommandParameter="{Binding .}"/>
                                                                              <Button Grid.Column="2"
-                                                                                     Text="&#xF303;"
+                                                                                     Text="{x:Static helpers:FontAwesomeGlyphs.Pen}"
                                                                                      FontFamily="FASolid"
                                                                                      WidthRequest="32"
                                                                                      HeightRequest="32"
@@ -612,7 +613,7 @@
                                                                                      Clicked="OnToggleRaceLifeScaleEditorClicked"
                                                                                      CommandParameter="{Binding .}"/>
                                                                              <Button Grid.Column="3"
-                                                                                     Text="&#xF1F8;"
+                                                                                     Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
                                                                                      FontFamily="FASolid"
                                                                                      WidthRequest="32"
                                                                                      HeightRequest="32"
@@ -677,7 +678,7 @@
                                                                <Label Text="Base"
                                                                       Style="{StaticResource SectionHeaderLabelStyle}"/>
                                                                       <Button Grid.Column="1"
-                                                                             Text="&#xF303;"
+                                                                             Text="{x:Static helpers:FontAwesomeGlyphs.Pen}"
                                                                              FontFamily="FASolid"
                                                                              WidthRequest="32"
                                                                              HeightRequest="32"
@@ -699,7 +700,7 @@
                                                                <Label Text="Details"
                                                                       Style="{StaticResource SectionHeaderLabelStyle}"/>
                                                                       <Button Grid.Column="1"
-                                                                             Text="&#xF303;"
+                                                                             Text="{x:Static helpers:FontAwesomeGlyphs.Pen}"
                                                                              FontFamily="FASolid"
                                                                              WidthRequest="32"
                                                                              HeightRequest="32"
@@ -721,7 +722,7 @@
                                                                <Label Text="Levelled abilities"
                                                                       Style="{StaticResource SectionHeaderLabelStyle}"/>
                                                                       <Button Grid.Column="1"
-                                                                             Text="&#xF303;"
+                                                                             Text="{x:Static helpers:FontAwesomeGlyphs.Pen}"
                                                                              FontFamily="FASolid"
                                                                              WidthRequest="32"
                                                                              HeightRequest="32"
@@ -744,7 +745,7 @@
                                                                <Label Text="Life-scale"
                                                                       Style="{StaticResource SectionHeaderLabelStyle}"/>
                                                                       <Button Grid.Column="1"
-                                                                             Text="&#xF303;"
+                                                                             Text="{x:Static helpers:FontAwesomeGlyphs.Pen}"
                                                                              FontFamily="FASolid"
                                                                              WidthRequest="32"
                                                                              HeightRequest="32"

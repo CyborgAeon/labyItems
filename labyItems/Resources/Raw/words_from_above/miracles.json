@@ -1476,11 +1476,12 @@
     "name": "Agony of Pleasure",
     "description": "For the duration, the caster is not injured by any form of Pain effect, instead being cured half the life that the Pain would have caused. Must still roleplay other effects (for example writhing to Words of Pain).",
     "alignment": "Evil",
-    "sphere": "Rites",
     "isAdvanced": false,
     "verbal": "Master! Witness this poor fool as he suffers in your name! Let me feel the ecstasy that is beyond agony!",
     "gesture": "Beat fists against head",
-    "duration": "15 minutes Range: Self\nFaith: Cult of Dunatis",
+    "duration": "15 minutes Range: Self",
+    "sphere": "Denominational",
+    "faiths": ["Servants of Evil", "Cult of Dunatis"],
     "level": "5th"
   },
   {
@@ -1665,37 +1666,40 @@
   {
     "power": 4,
     "name": "Blessing of the Aspects of Hope I",
-    "description": "todo",
+    "description": "This is learnt as a 7th level (8 spirit) miracle. The caster chooses one of the aspects of Talthar and draws power from it. This causes them to gain benefits from one of the aspects as per the current guild benefits listed in the Almanac. It costs 4 spirits to gain basic tier, 8 for intermediate and 12 for advanced. The priest may only have this miracle active for one aspect at a time, and may only be cast once per aspect per day. This is a releasable miracle.",
     "alignment": "Good",
-    "sphere": "todo",
+    "sphere": "Denominational",
     "isAdvanced": true,
     "verbal": "Spirits of hope I call to thee. Grant me the watching of the aspect of ….",
     "gesture": "Kneel in prayer",
-    "duration": "24 hours Range: Self\nFaith: Talthar",
+    "duration": "24 hours Range: Self",
+    "faiths": ["Talthar"],
     "level": "See miracle Alignment: Good Duration: 24 hours Range: Self"
   },
   {
     "power": 8,
     "name": "Blessing of the Aspects of Hope II",
-    "description": "todo",
+    "description": "This is learnt as a 7th level (8 spirit) miracle. The caster chooses one of the aspects of Talthar and draws power from it. This causes them to gain benefits from one of the aspects as per the current guild benefits listed in the Almanac. It costs 4 spirits to gain basic tier, 8 for intermediate and 12 for advanced. The priest may only have this miracle active for one aspect at a time, and may only be cast once per aspect per day. This is a releasable miracle.",
     "alignment": "Good",
-    "sphere": "todo",
+    "sphere": "Denominational",
     "isAdvanced": true,
     "verbal": "Spirits of hope I call to thee. Grant me the watching of the aspect of ….",
     "gesture": "Kneel in prayer",
-    "duration": "24 hours Range: Self\nFaith: Talthar",
+    "duration": "24 hours Range: Self",
+    "faiths": ["Talthar"],
     "level": "See miracle Alignment: Good Duration: 24 hours Range: Self"
   },
   {
     "power": 12,
     "name": "Blessing of the Aspects of Hope III",
-    "description": "todo",
+    "description": "This is learnt as a 7th level (8 spirit) miracle. The caster chooses one of the aspects of Talthar and draws power from it. This causes them to gain benefits from one of the aspects as per the current guild benefits listed in the Almanac. It costs 4 spirits to gain basic tier, 8 for intermediate and 12 for advanced. The priest may only have this miracle active for one aspect at a time, and may only be cast once per aspect per day. This is a releasable miracle.",
     "alignment": "Good",
-    "sphere": "todo",
+    "sphere": "Denominational",
     "isAdvanced": true,
     "verbal": "Spirits of hope I call to thee. Grant me the watching of the aspect of ….",
     "gesture": "Kneel in prayer",
-    "duration": "24 hours Range: Self\nFaith: Talthar",
+    "duration": "24 hours Range: Self",
+    "faiths": ["Talthar"],
     "level": "See miracle Alignment: Good Duration: 24 hours Range: Self"
   },
   {
@@ -1707,7 +1711,8 @@
     "isAdvanced": false,
     "verbal": "Border bless this spirit and watch over him/her in their darkest times",
     "gesture": "Touch targets head",
-    "duration": "24 hours Range: Touch\nFaith: Border",
+    "duration": "24 hours Range: Touch",
+    "faiths": ["Border"],
     "level": "3rd"
   },
   {
@@ -1763,11 +1768,12 @@
     "name": "Broken Heart",
     "description": "May only be used on the priest's slayer, as they die, in a manner similar to Curse. This is not a Curse however, but a dying effect. The target will be completely unable to harm any living being while they have a spirit. The only way to be freed from this effect is to receive either the forgiveness of the dead priest, or the forgiveness of the High Priest of the Sacred Heart. This miracle affects the undead.  \fSt Michael",
     "alignment": "Good",
-    "sphere": "Rites",
+    "sphere": "Denominational",
     "isAdvanced": false,
     "verbal": "With my dying breath I turn thy sting, that my death not be in vain.",
     "gesture": "None",
-    "duration": "One Year Range: 20'\nFaith: Sacred Heart",
+    "duration": "One Year Range: 20'",
+    "faiths": ["Sacred Heart"],
     "level": "3rd"
   },
   {
@@ -1922,7 +1928,8 @@
     "isAdvanced": false,
     "verbal": "The Bright Lady cares for you, and her angels shield you from misery and suffering.",
     "gesture": "Touch target lightly over the heart",
-    "duration": "15 minutes Range: Touch\nFaith: Bright Lady",
+    "duration": "15 minutes Range: Touch",
+    "faiths": ["Bright Lady"],
     "level": "5th"
   },
   {
@@ -2613,7 +2620,8 @@
     "isAdvanced": true,
     "verbal": "Spirits of the Netherworld mark me against their servants",
     "gesture": "Arms raised in supplication",
-    "duration": "15 minutes Range: Self\nFaith: Servants of Evil",
+    "duration": "15 minutes Range: Self",
+    "faiths": ["Servants of Evil"],
     "level": "5th"
   },
   {
@@ -2695,11 +2703,12 @@
     "name": "Power of the Throne",
     "description": "Grants the recipient Divine Guidance and immunity to lack of faith or similar for the duration. A priest of Glass can always cast this miracle, even if they do not have Divine Guidance themselves. This miracle does not, oddly, function on Talthar priests. Lady of the Stars",
     "alignment": "Good",
-    "sphere": "Rites",
+    "sphere": "Denominational",
     "isAdvanced": false,
     "verbal": "Feel as the Power of the Throne touches your soul and grants you strength ",
     "gesture": "Kneel in short prayer with the target",
-    "duration": "One hour Range: Touch\nFaith: Glass",
+    "duration": "One hour Range: Touch",
+    "faiths": ["Glass"],
     "level": "5th"
   },
   {
@@ -3020,7 +3029,8 @@
     "isAdvanced": false,
     "verbal": "Your strength is ours now, and your blood sings as I call to it.",
     "gesture": "Pass both hands in front of eyes",
-    "duration": "15 minutes Range: 10'\nFaith: Cult of the Eternal Vampire",
+    "duration": "15 minutes Range: 10'",
+    "faiths": ["Church of the Eternal Vampire"],
     "level": "5th"
   },
   {
@@ -3409,11 +3419,12 @@
     "name": "The Touch of the Forge",
     "description": "Causes the chosen weapon to become +0 spirit for the duration. Additionally it counts as Master Status, making it immune to Shatter, Warp, Disintegrate, Melt, Magnetise, Vanish, and all similar effects.",
     "alignment": "Other",
-    "sphere": "Rites",
+    "sphere": "Denominational",
     "isAdvanced": false,
     "verbal": "Spirit of the Forge I ask thee place this weapon in perfect balance, infuse it with the spirits of power.",
     "gesture": "Pass hands over weapon",
-    "duration": "24 hours Range: Touch\nFaith: Forge",
+    "duration": "24 hours Range: Touch",
+    "faiths": ["Church of the Forge"],
     "level": "8th"
   },
   {
@@ -3471,11 +3482,12 @@
     "name": "Unified Strength",
     "description": "The priest and at least two other people who are goodly spirits must link hands in a closed chain. All those who participate in the chain then gain +1 strength (max +2), +1 level of resistance to Evil spirits, and a Spirit Shield. Only goodly people may benefit.",
     "alignment": "Good",
-    "sphere": "Rites",
+    "sphere": "Denominational",
     "isAdvanced": false,
     "verbal": "Angels of light gather here and let our spirits act as one.",
     "gesture": "Link hands in a circle",
-    "duration": "15 minutes Range: See below\nFaith: Church of Unity",
+    "duration": "15 minutes Range: See below",
+    "faiths": ["Church of Unity"] ,
     "level": "5th"
   },
   {
@@ -3526,7 +3538,8 @@
     "isAdvanced": false,
     "verbal": "Spirits of the dead I bind thee to this ward - seek not to bar your brethren entrance.",
     "gesture": "Pass hands across ward",
-    "duration": "As Ward Range: 1 inch\nFaith: Dark Deliverers",
+    "duration": "1\"",
+    "faiths": ["Dark Deliverers"],
     "level": "4th"
   },
   {
@@ -3611,13 +3624,13 @@
   {
     "power": 8,
     "name": "Wrath of the Lord",
-    "description": "This miracle may only ever be cast by the current High Priest of an existing church (with seven or more members, etc) – even if bought while High Priest, should a character lose that status it may no longer be used. Shaman may learn this miracle and apply it to the death of their tribe-members or attacks on them. It may only be cast on a target who has either harmed the High Priest or slain a member of the guild within the last 5 minutes. The target suffers 48 tblp, 8 to every location, and is knocked to the ground and is unable to act for 30 seconds or until struck, regardless of level (This stunning effect is as per a non-level based stasis). Spiritual AC applies at 6/1 per point to the damage but the only way to avoid being knocked to the ground is to have Resistance to Wrath of the Lord or half a spirit.",
+    "description": "This miracle may only ever be cast by the current High Priest of an existing church (with seven or more members, etc) – even if bought while High Priest, should a character lose that status it may no longer be used. Shaman may learn this miracle and apply it to the death of their tribe-members or attacks on them. It may only be cast on a target who has either harmed the High Priest or slain a member of the guild within the last 5 minutes. The target suffers 48 tblp, 8 to every location, and is knocked to the ground and is unable to act for 30 seconds or until struck, regardless of level (This stunning effect is as per a non-level based stasis). Spiritual AC applies at 6/1 per point to the damage but the only way to avoid being knocked to the ground is to have Resistance to Wrath of the Lord or half a spirit.\nAvailable only to the current High Priest of a church only",
     "alignment": "Other",
     "sphere": "Denominational",
     "isAdvanced": false,
     "verbal": "You anger [deity name]! Feel now his/her wrath!",
     "gesture": "Point at target with both hands",
-    "duration": "Instant / below Range: 20'\nFaith: Any High Priest only",
+    "duration": "Instant / below Range: 20'",
     "level": "7th"
   },
   {

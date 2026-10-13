@@ -1,3 +1,4 @@
+using labyItems.Helpers;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -181,7 +182,7 @@ public sealed class NonStandardTagSearchOptionVm : INotifyPropertyChanged
     public string Title => Option.Title;
     public string Value => Option.Value;
     public IReadOnlyList<string> DisplayChips => new[] { Title };
-    public string SelectionGlyph => _isSelected ? "\uf14a" : "\uf0c8";
+    public string SelectionGlyph => _isSelected ? FontAwesomeGlyphs.CheckboxChecked : FontAwesomeGlyphs.CheckboxUnchecked;
 
     public bool IsSelected
     {

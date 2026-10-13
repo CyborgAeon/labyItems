@@ -17,6 +17,7 @@ public static class SourceBookPdfCatalog
             ["Manufacturers Guide"] = "Manufacturers_guide/The-Manufacturers-Guide.pdf",
             ["Oraculum Insight"] = "o-insight/O-Insight-16.3.pdf",
             ["Races"] = "people/Races-16.3.pdf",
+            ["Almanac"] = "people/Almanac.pdf",
             ["Wizard Grimoire"] = "grimoire/Wizard-Grimoire-16.3.pdf",
             ["Words From Above"] = "words_from_above/Words-From-above-16.3.pdf",
             ["Divine Guidance"] = "words_from_above/Divine_Guidance.pdf"

@@ -4,6 +4,7 @@
        x:Name="Root"
        xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
        xmlns:controls="clr-namespace:labyItems.Controls">
 
        <ScrollView>
@@ -168,7 +169,7 @@
                                                                <HorizontalStackLayout Grid.Column="2"
                                                                                     Spacing="4"
                                                                                     HorizontalOptions="Center">
-                                                                      <Button Text="&#xF05A;"
+                                                                      <Button Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                                                               FontFamily="FASolid"
                                                                               FontSize="12"
                                                                               Padding="0"
@@ -180,7 +181,7 @@
                                                                               MinimumWidthRequest="0"
                                                                               Clicked="OnViewGuildDetailsClicked"
                                                                               CommandParameter="{Binding .}"/>
-                                                                      <Button Text="&#xF1FC;"
+                                                                      <Button Text="{x:Static helpers:FontAwesomeGlyphs.Edit}"
                                                                               FontFamily="FASolid"
                                                                               FontSize="12"
                                                                               Padding="0"
@@ -298,7 +299,7 @@
                                                  FontAttributes="Bold"
                                                  VerticalTextAlignment="Center"/>
                                           <Button Grid.Column="1"
-                                                  Text="&#xF1FC;"
+                                                  Text="{x:Static helpers:FontAwesomeGlyphs.Edit}"
                                                   FontFamily="FASolid"
                                                   FontSize="12"
                                                   Padding="0"

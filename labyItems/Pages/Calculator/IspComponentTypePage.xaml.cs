@@ -1,3 +1,4 @@
+using labyItems.Helpers;
 using Microsoft.Maui.Controls.Shapes;
 using System.Windows.Input;
 
@@ -122,7 +123,7 @@ public partial class IspComponentTypePage : ContentPage
 
             var chevron = new Label
             {
-                Text = isAvailable ? "\uF054" : "\uF023",
+                Text = isAvailable ? FontAwesomeGlyphs.Chevron : FontAwesomeGlyphs.Lock,
                 FontFamily = "FASolid",
                 FontSize = 16,
                 TextColor = Application.Current?.Resources.TryGetValue("Gray500", out var chevronText) == true

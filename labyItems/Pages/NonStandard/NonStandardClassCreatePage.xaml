@@ -4,6 +4,7 @@
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
     xmlns:controls="clr-namespace:labyItems.Controls"
     xmlns:pickers="clr-namespace:labyItems.Controls.Pickers"
     Title=""
@@ -72,7 +73,7 @@
                                            Text="{Binding BaseClassName}"
                                            IsReadOnly="True"/>
                                     <Button Grid.Column="1"
-                                            Text="&#xF002;"
+                                            Text="{x:Static helpers:FontAwesomeGlyphs.Search}"
                                             FontFamily="FASolid"
                                             WidthRequest="42"
                                             HeightRequest="42"
@@ -122,7 +123,7 @@
                                            Text="{Binding PathClassName}"
                                            IsReadOnly="True"/>
                                     <Button Grid.Column="1"
-                                            Text="&#xF002;"
+                                            Text="{x:Static helpers:FontAwesomeGlyphs.Search}"
                                             FontFamily="FASolid"
                                             WidthRequest="42"
                                             HeightRequest="42"
@@ -181,7 +182,7 @@
                                                            FontAttributes="Bold"
                                                            VerticalTextAlignment="Center"/>
                                                     <Label Grid.Column="1"
-                                                           Text="&#xF054;"
+                                                           Text="{x:Static helpers:FontAwesomeGlyphs.Chevron}"
                                                            FontFamily="FASolid"
                                                            FontSize="12"
                                                            TextColor="{StaticResource SubtleTextColor}"
@@ -189,7 +190,7 @@
                                                            HorizontalTextAlignment="Center"
                                                            IsVisible="{Binding IsSelected, Converter={StaticResource InverseBoolConverter}}"/>
                                                     <Label Grid.Column="1"
-                                                           Text="&#xF00C;"
+                                                           Text="{x:Static helpers:FontAwesomeGlyphs.Check}"
                                                            FontFamily="FASolid"
                                                            FontSize="14"
                                                            TextColor="{StaticResource AccentMaroonColor}"
@@ -233,7 +234,7 @@
                                                     <Label Text="{Binding RaceClassSummary}" FontSize="12" Opacity="0.75"/>
                                                 </VerticalStackLayout>
                                                 <Button Grid.Column="1"
-                                                        Text="&#xF1F8;"
+                                                        Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
                                                         Style="{StaticResource ListRowGlyphIconButtonStyle}"
                                                         Clicked="OnDeleteLifescaleAssignmentClicked"
                                                         CommandParameter="{Binding RaceName}"/>
@@ -333,7 +334,7 @@
                                                   BackgroundColor="{Binding RowBackgroundHex}">
                                                 <Label Text="{Binding Text}"/>
                                                 <Button Grid.Column="1"
-                                                        Text="&#xF1F8;"
+                                                        Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
                                                         Style="{StaticResource ListRowGlyphIconButtonStyle}"
                                                         Clicked="OnDeleteArmourRestrictionClicked"
                                                         CommandParameter="{Binding Text}"/>
@@ -362,7 +363,7 @@
                                                 <Label Text="{Binding Level, StringFormat='Lv {0}'}" FontAttributes="Bold" VerticalTextAlignment="Center" TextColor="{StaticResource AccentMaroonColor}"/>
                                                 <Label Grid.Column="1" Text="{Binding SelectedSummary}" VerticalTextAlignment="Center" LineBreakMode="WordWrap"/>
                                                 <Button Grid.Column="2"
-                                                        Text="&#xF1FC;"
+                                                        Text="{x:Static helpers:FontAwesomeGlyphs.Edit}"
                                                         Style="{StaticResource ListRowGlyphIconButtonStyle}"
                                                         WidthRequest="44" HeightRequest="44"
                                                         Clicked="OnEditWeaponSkillLevelClicked"
@@ -389,7 +390,7 @@
                                                 <Label Text="{Binding Level, StringFormat='Lv {0}'}" FontAttributes="Bold" VerticalTextAlignment="Center" TextColor="{StaticResource AccentMaroonColor}"/>
                                                 <Label Grid.Column="1" Text="{Binding SummaryText}" VerticalTextAlignment="Center" LineBreakMode="WordWrap"/>
                                                 <Button Grid.Column="2"
-                                                        Text="&#xF1FC;"
+                                                        Text="{x:Static helpers:FontAwesomeGlyphs.Edit}"
                                                         Style="{StaticResource ListRowGlyphIconButtonStyle}"
                                                         WidthRequest="44" HeightRequest="44"
                                                         Clicked="OnEditAbilityLevelClicked"
@@ -456,7 +457,7 @@
                                                     FontAttributes="Bold"/>
                                                </VerticalStackLayout>
                                                <Button Grid.Column="1"
-                                                    Text="&#xF1F8;"
+                                                    Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
                                                     Style="{StaticResource ListRowGlyphIconButtonStyle}"
                                                     Clicked="OnDeletePostEighthEntryClicked"
                                                     CommandParameter="{Binding .}"/>
@@ -532,7 +533,7 @@
                                     <Label Text="Base" FontAttributes="Bold"/>
                                     <Label Text="{Binding Source={x:Reference Root}, Path=ReviewBaseSummary}" FontSize="12" LineBreakMode="WordWrap"/>
                                 </VerticalStackLayout>
-                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditBaseStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
+                                <Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.Edit}" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditBaseStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                             </Grid>
                         </Frame>
 
@@ -542,7 +543,7 @@
                                     <Label Text="Life" FontAttributes="Bold"/>
                                     <Label Text="{Binding Source={x:Reference Root}, Path=ReviewLifeSummary}" FontSize="12" LineBreakMode="WordWrap"/>
                                 </VerticalStackLayout>
-                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditLifeStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
+                                <Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.Edit}" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditLifeStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                             </Grid>
                         </Frame>
 
@@ -552,7 +553,7 @@
                                     <Label Text="Armour" FontAttributes="Bold"/>
                                     <Label Text="{Binding Source={x:Reference Root}, Path=ReviewArmourSummary}" FontSize="12" LineBreakMode="WordWrap"/>
                                 </VerticalStackLayout>
-                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditArmourStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
+                                <Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.Edit}" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditArmourStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                             </Grid>
                         </Frame>
 
@@ -562,7 +563,7 @@
                                     <Label Text="Skills" FontAttributes="Bold"/>
                                     <Label Text="{Binding Source={x:Reference Root}, Path=ReviewSkillsSummary}" FontSize="12" LineBreakMode="WordWrap"/>
                                 </VerticalStackLayout>
-                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditSkillsStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
+                                <Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.Edit}" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditSkillsStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                             </Grid>
                         </Frame>
 
@@ -572,7 +573,7 @@
                                     <Label Text="Post 8th progression" FontAttributes="Bold"/>
                                     <Label Text="{Binding Source={x:Reference Root}, Path=ReviewPostEighthSummary}" FontSize="12" LineBreakMode="WordWrap"/>
                                 </VerticalStackLayout>
-                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditSkillsStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
+                                <Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.Edit}" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditSkillsStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                             </Grid>
                         </Frame>
 
@@ -582,7 +583,7 @@
                                     <Label Text="Power" FontAttributes="Bold"/>
                                     <Label Text="{Binding Source={x:Reference Root}, Path=ReviewPowerSummary}" FontSize="12" LineBreakMode="WordWrap"/>
                                 </VerticalStackLayout>
-                                <Button Grid.Column="1" Text="&#xF1FC;" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditPowerStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
+                                <Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.Edit}" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditPowerStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                             </Grid>
                         </Frame>
 

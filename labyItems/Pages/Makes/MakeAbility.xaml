@@ -4,6 +4,7 @@
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
     xmlns:controls="clr-namespace:labyItems.Controls"
     Title="Manufacture"
     BackgroundColor="{StaticResource White}">
@@ -26,7 +27,7 @@
                            BackgroundColor="Transparent"
                            TextChanged="OnSearchChanged" />
                 <Button Grid.Column="1"
-                        Text="&#xF0B0;"
+                        Text="{x:Static helpers:FontAwesomeGlyphs.Filter}"
                         FontFamily="FASolid"
                         FontSize="13"
                         Padding="0"
@@ -82,7 +83,7 @@
                                 </VerticalStackLayout>
 
                                 <Button Grid.Column="2"
-                                        Text="&#xF05A;"
+                                        Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                         FontFamily="FASolid"
                                         FontSize="12"
                                         Padding="0"

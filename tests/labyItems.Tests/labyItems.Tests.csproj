@@ -94,6 +94,7 @@
     <Compile Include="../../labyItems/Helpers/ScrollTextFormatter.cs" Link="Source/ScrollTextFormatter.cs" />
     <Compile Include="../../labyItems/Helpers/ScrollToolModels.cs" Link="Source/ScrollToolModels.cs" />
     <Compile Include="../../labyItems/Helpers/CharacterProgressionTables.cs" Link="Source/CharacterProgressionTables.cs" />
+    <Compile Include="../../labyItems/Helpers/FontAwesomeGlyphs.cs" Link="Source/FontAwesomeGlyphs.cs" />
     <Compile Include="../../labyItems/Pages/Characters/ViewModels/AdvanceAbilitySearchVm.cs" Link="Source/AdvanceAbilitySearchVm.cs" />
     <Compile Include="../../labyItems/Pages/Characters/ViewModels/IAbilitySearchHost.cs" Link="Source/IAbilitySearchHost.cs" />
     <Compile Include="../../labyItems/Pages/Characters/ViewModels/SpecialisationSummaryDedupe.cs" Link="Source/SpecialisationSummaryDedupe.cs" />

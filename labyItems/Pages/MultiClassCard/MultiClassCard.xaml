@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="labyItems.Pages.MultiClassCard.MultiClassCard" xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:controls="clr-namespace:labyItems.Controls" xmlns:local="clr-namespace:labyItems.Pages.MultiClassCard" NavigationPage.HasNavigationBar="False" Shell.NavBarIsVisible="False">
+ <Grid RowDefinitions="Auto,*"><controls:DetailPageHeader x:Name="DetailHeader" HeaderText="Multi-Class Details"/><ScrollView Grid.Row="1"><VerticalStackLayout Padding="16"><local:MultiClassDetailCardView x:Name="Details"/></VerticalStackLayout></ScrollView></Grid>
+</ContentPage>

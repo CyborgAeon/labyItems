@@ -3,6 +3,7 @@
     x:Class="labyItems.Controls.ConfigSelectionList"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
     x:Name="Root">
     <VerticalStackLayout BindableLayout.ItemsSource="{Binding Source={x:Reference Root}, Path=ItemsSource}"
                          Spacing="8">
@@ -26,7 +27,7 @@
                         </VerticalStackLayout>
 
                         <Button Grid.Column="1"
-                                Text="&#xF1FC;"
+                                Text="{x:Static helpers:FontAwesomeGlyphs.Edit}"
                                 FontFamily="FASolid"
                                 FontSize="14"
                                 Padding="0"
@@ -41,7 +42,7 @@
                                 CommandParameter="{Binding .}" />
 
                         <Button Grid.Column="2"
-                                Text="&#xF05A;"
+                                Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                 FontFamily="FASolid"
                                 FontSize="14"
                                 Padding="0"
@@ -56,7 +57,7 @@
                                 CommandParameter="{Binding .}" />
 
                         <Button Grid.Column="3"
-                                Text="&#xF2ED;"
+                                Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
                                 FontFamily="FASolid"
                                 FontSize="14"
                                 Padding="0"

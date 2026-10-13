@@ -28,7 +28,7 @@
                              Clicked="OnBackClicked">
                     <ImageButton.Source>
                         <FontImageSource FontFamily="FASolid"
-                                         Glyph="&#xf060;"
+                                         Glyph="{x:Static helpers:FontAwesomeGlyphs.Back}"
                                          Size="18"
                                          Color="{StaticResource White}" />
                     </ImageButton.Source>
@@ -47,7 +47,7 @@
                              Clicked="OnOverflowTapped">
                     <ImageButton.Source>
                         <FontImageSource FontFamily="FASolid"
-                                         Glyph="&#xf142;"
+                                         Glyph="{x:Static helpers:FontAwesomeGlyphs.MoreVertical}"
                                          Size="14"
                                          Color="{StaticResource White}" />
                     </ImageButton.Source>
@@ -78,7 +78,7 @@
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnEditPortraitTapped" />
                         </Border.GestureRecognizers>
-                        <Label Text="&#xF1FC;"
+                        <Label Text="{x:Static helpers:FontAwesomeGlyphs.Edit}"
                                FontFamily="FASolid"
                                FontSize="12"
                                TextColor="{StaticResource White}"
@@ -109,7 +109,7 @@
                     <HorizontalStackLayout Grid.Column="0"
                                            Spacing="6"
                                            VerticalOptions="Center">
-                        <Label Text="&#xF500;"
+                        <Label Text="{x:Static helpers:FontAwesomeGlyphs.MultiRace}"
                                FontFamily="FASolid"
                                FontSize="12"
                                TextColor="{StaticResource White}"
@@ -308,7 +308,7 @@
                                  BackgroundColor="#19000000">
                 <controls:GlyphActionRowView AutomationProperties.Name="Back to wallet"
                                              Text="Back to wallet"
-                                             Glyph="&#xF060;"
+                                             Glyph="{x:Static helpers:FontAwesomeGlyphs.Back}"
                                              BorderColor="White"
                                              NormalTextColor="White"
                                              ChevronColor="White"
@@ -461,7 +461,7 @@
                                                                        IsVisible="{Binding HasSecondaryText}" />
                                                             </VerticalStackLayout>
                                                             <Button Grid.Column="1"
-                                                                    Text="&#xF05A;"
+                                                                    Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                                                     FontFamily="FASolid"
                                                                     FontSize="12"
                                                                     Padding="0"
@@ -538,7 +538,7 @@
                                                                        IsVisible="{Binding HasSecondaryText}" />
                                                             </VerticalStackLayout>
                                                             <Button Grid.Column="1"
-                                                                    Text="&#xF05A;"
+                                                                    Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                                                     FontFamily="FASolid"
                                                                     FontSize="12"
                                                                     Padding="0"
@@ -615,7 +615,7 @@
                                                                        IsVisible="{Binding HasSecondaryText}" />
                                                             </VerticalStackLayout>
                                                             <Button Grid.Column="1"
-                                                                    Text="&#xF05A;"
+                                                                    Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                                                     FontFamily="FASolid"
                                                                     FontSize="12"
                                                                     Padding="0"
@@ -674,7 +674,7 @@
                                                                        IsVisible="{Binding HasSecondaryText}" />
                                                             </VerticalStackLayout>
                                                             <Button Grid.Column="1"
-                                                                    Text="&#xF05A;"
+                                                                    Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                                                     FontFamily="FASolid"
                                                                     FontSize="12"
                                                                     Padding="0"
@@ -737,7 +737,7 @@
                                                 <Label Text="{Binding PrimaryText}"
                                                        LineBreakMode="WordWrap" />
                                                 <Button Grid.Column="1"
-                                                        Text="&#xF05A;"
+                                                        Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                                         FontFamily="FASolid"
                                                         FontSize="12"
                                                         Padding="0"

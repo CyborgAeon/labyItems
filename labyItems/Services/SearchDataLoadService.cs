@@ -1,3 +1,4 @@
+using labyItems.Helpers;
 using labyItems.Pages.Search;
 
 namespace labyItems.Services;
@@ -119,7 +120,7 @@ public sealed class SearchDataLoadService
             Kind: GlobalSearchKind.Ability,
             Name: title,
             GroupText: $"Table {ability.Table}",
-            IconGlyph: "\uf014",
+            IconGlyph: FontAwesomeGlyphs.AbilitySearchResult,
             MetaText: $"Ability · Table {ability.Table} · Cost {ability.Cost}",
             DescriptionText: (ability.Description ?? string.Empty).Trim(),
             Ability: ability,
@@ -141,7 +142,7 @@ public sealed class SearchDataLoadService
             Kind: GlobalSearchKind.Spell,
             Name: (spell.name ?? string.Empty).Trim(),
             GroupText: colourDisplay,
-            IconGlyph: "\uf01d",
+            IconGlyph: FontAwesomeGlyphs.SpellSearchResult,
             MetaText: metaText,
             DescriptionText: (spell.description ?? string.Empty).Trim(),
             Ability: null,
@@ -163,7 +164,7 @@ public sealed class SearchDataLoadService
             Kind: GlobalSearchKind.Miracle,
             Name: (miracle.name ?? string.Empty).Trim(),
             GroupText: sphereDisplay,
-            IconGlyph: "\uf204",
+            IconGlyph: FontAwesomeGlyphs.Miracle,
             MetaText: metaText,
             DescriptionText: (miracle.description ?? string.Empty).Trim(),
             Ability: null,
@@ -186,7 +187,7 @@ public sealed class SearchDataLoadService
             Kind: GlobalSearchKind.Evocation,
             Name: (evocation.name ?? string.Empty).Trim(),
             GroupText: fieldsDisplay,
-            IconGlyph: "\uf06c",
+            IconGlyph: FontAwesomeGlyphs.Tree,
             MetaText: metaText,
             DescriptionText: (evocation.description ?? string.Empty).Trim(),
             Ability: null,
@@ -207,7 +208,7 @@ public sealed class SearchDataLoadService
             Kind: GlobalSearchKind.Neuronic,
             Name: (neuronic.name ?? string.Empty).Trim(),
             GroupText: type,
-            IconGlyph: "\uf5dc",
+            IconGlyph: string.Empty,
             MetaText: metaText,
             DescriptionText: (neuronic.description ?? string.Empty).Trim(),
             Ability: null,

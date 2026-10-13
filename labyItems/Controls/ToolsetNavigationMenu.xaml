@@ -4,6 +4,7 @@
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
     xmlns:controls="clr-namespace:labyItems.Controls">
 
     <ContentView.Resources>
@@ -42,7 +43,7 @@
                                 Clicked="OnCloseMenuClicked"
                                 FontSize="24"
                                 Padding="4"
-                                Text="&#x2715;"
+                                Text="{x:Static helpers:FontAwesomeGlyphs.Close}"
                                 TextColor="{StaticResource Gray950}">
                             <Button.BackgroundColor>Transparent</Button.BackgroundColor>
                         </Button>
@@ -59,7 +60,7 @@
                               ColumnSpacing="8">
                             <Label FontFamily="FASolid"
                                    FontSize="18"
-                                   Text="&#xF015;"
+                                   Text="{x:Static helpers:FontAwesomeGlyphs.Home}"
                                    HorizontalTextAlignment="Center"
                                    VerticalTextAlignment="Center" />
                             <Label Grid.Column="1"
@@ -84,7 +85,7 @@
                               ColumnSpacing="8">
                             <Label FontFamily="FASolid"
                                    FontSize="18"
-                                   Text="&#xF007;"
+                                   Text="{x:Static helpers:FontAwesomeGlyphs.User}"
                                    HorizontalTextAlignment="Center"
                                    VerticalTextAlignment="Center" />
                             <Label Grid.Column="1"
@@ -107,7 +108,7 @@
                                   ColumnSpacing="8">
                                 <Label FontFamily="FASolid"
                                        FontSize="18"
-                                       Text="&#xF468;"
+                                       Text="{x:Static helpers:FontAwesomeGlyphs.Items}"
                                        HorizontalTextAlignment="Center"
                                        VerticalTextAlignment="Center" />
                                 <Label Grid.Column="1"
@@ -147,7 +148,7 @@
                                             <Label FontFamily="FASolid"
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
-                                                   Text="&#xF1EC;"
+                                                   Text="{x:Static helpers:FontAwesomeGlyphs.Calculator}"
                                                    VerticalTextAlignment="Center" />
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
@@ -168,7 +169,7 @@
                                             <Label FontFamily="FASolid"
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
-                                                   Text="&#xF6D5;"
+                                                   Text="{x:Static helpers:FontAwesomeGlyphs.MonsterPointItem}"
                                                    VerticalTextAlignment="Center" />
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
@@ -189,7 +190,7 @@
                                             <Label FontFamily="FASolid"
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
-                                                   Text="&#xF70E;"
+                                                   Text="{x:Static helpers:FontAwesomeGlyphs.Scroll}"
                                                    VerticalTextAlignment="Center" />
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
@@ -210,7 +211,7 @@
                                             <Label FontFamily="FASolid"
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
-                                                   Text="&#xF7D9;"
+                                                   Text="{x:Static helpers:FontAwesomeGlyphs.Crafting}"
                                                    VerticalTextAlignment="Center" />
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
@@ -231,7 +232,7 @@
                                             <Label FontFamily="FASolid"
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
-                                                   Text="&#xF555;"
+                                                   Text="{x:Static helpers:FontAwesomeGlyphs.Wallet}"
                                                    VerticalTextAlignment="Center" />
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
@@ -256,7 +257,7 @@
                               ColumnSpacing="8">
                             <Label FontFamily="FASolid"
                                    FontSize="18"
-                                   Text="&#xF53F;"
+                                   Text="{x:Static helpers:FontAwesomeGlyphs.Palette}"
                                    HorizontalTextAlignment="Center"
                                    VerticalTextAlignment="Center" />
                             <Label Grid.Column="1"
@@ -281,7 +282,7 @@
                               ColumnSpacing="8">
                             <Label FontFamily="FASolid"
                                    FontSize="18"
-                                   Text="&#xF073;"
+                                   Text="{x:Static helpers:FontAwesomeGlyphs.Calendar}"
                                    HorizontalTextAlignment="Center"
                                    VerticalTextAlignment="Center" />
                             <Label Grid.Column="1"
@@ -304,7 +305,7 @@
                                   ColumnSpacing="8">
                                 <Label FontFamily="FASolid"
                                        FontSize="18"
-                                       Text="&#xF002;"
+                                       Text="{x:Static helpers:FontAwesomeGlyphs.Search}"
                                        HorizontalTextAlignment="Center"
                                        VerticalTextAlignment="Center" />
                                 <Label Grid.Column="1"
@@ -344,7 +345,7 @@
                                             <Label FontFamily="FASolid"
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
-                                                   Text="&#xF0AC;"
+                                                   Text="{x:Static helpers:FontAwesomeGlyphs.Globe}"
                                                    VerticalTextAlignment="Center" />
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
@@ -365,7 +366,7 @@
                                             <Label FontFamily="FASolid"
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
-                                                   Text="&#xF72B;"
+                                                   Text="{x:Static helpers:FontAwesomeGlyphs.Wand}"
                                                    VerticalTextAlignment="Center" />
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
@@ -386,7 +387,7 @@
                                             <Label FontFamily="FASolid"
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
-                                                   Text="&#xF6A9;"
+                                                   Text="{x:Static helpers:FontAwesomeGlyphs.Miracle}"
                                                    VerticalTextAlignment="Center" />
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
@@ -407,7 +408,7 @@
                                             <Label FontFamily="FASolid"
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
-                                                   Text="&#xF1BB;"
+                                                   Text="{x:Static helpers:FontAwesomeGlyphs.Tree}"
                                                    VerticalTextAlignment="Center" />
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
@@ -425,11 +426,11 @@
                                         </Border.GestureRecognizers>
                                         <Grid ColumnDefinitions="28,*"
                                               ColumnSpacing="8">
-                                            <Label FontFamily="FASolid"
-                                                   FontSize="16"
-                                                   HorizontalTextAlignment="Center"
-                                                   Text="&#xF0E8;"
-                                                   VerticalTextAlignment="Center" />
+                                            <Image Source="{x:Static helpers:IconAssets.Neuronic}"
+                                                   WidthRequest="17"
+                                                   HeightRequest="17"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center" />
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
                                                    HorizontalTextAlignment="Start"
@@ -449,7 +450,7 @@
                                             <Label FontFamily="FASolid"
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
-                                                   Text="&#xF0C0;"
+                                                   Text="{x:Static helpers:FontAwesomeGlyphs.CharacterClass}"
                                                    VerticalTextAlignment="Center" />
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
@@ -470,7 +471,7 @@
                                             <Label FontFamily="FASolid"
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
-                                                   Text="&#xF2BD;"
+                                                   Text="{x:Static helpers:FontAwesomeGlyphs.Race}"
                                                    VerticalTextAlignment="Center" />
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
@@ -491,7 +492,7 @@
                                             <Label FontFamily="FASolid"
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
-                                                   Text="&#xF0E7;"
+                                                   Text="{x:Static helpers:FontAwesomeGlyphs.Lightning}"
                                                    VerticalTextAlignment="Center" />
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
@@ -512,7 +513,7 @@
                                             <Label FontFamily="FASolid"
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
-                                                   Text="&#xF19C;"
+                                                   Text="{x:Static helpers:FontAwesomeGlyphs.Guild}"
                                                    VerticalTextAlignment="Center" />
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
@@ -533,7 +534,7 @@
                                             <Label FontFamily="FASolid"
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
-                                                   Text="&#xF6CF;"
+                                                   Text="{x:Static helpers:FontAwesomeGlyphs.MultiClass}"
                                                    VerticalTextAlignment="Center" />
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
@@ -554,7 +555,7 @@
                                             <Label FontFamily="FASolid"
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
-                                                   Text="&#xF500;"
+                                                   Text="{x:Static helpers:FontAwesomeGlyphs.MultiRace}"
                                                    VerticalTextAlignment="Center" />
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
@@ -579,7 +580,7 @@
                               ColumnSpacing="8">
                             <Label FontFamily="FASolid"
                                    FontSize="18"
-                                   Text="&#xF362;"
+                                   Text="{x:Static helpers:FontAwesomeGlyphs.Mobile}"
                                    HorizontalTextAlignment="Center"
                                    VerticalTextAlignment="Center" />
                             <Label Grid.Column="1"
@@ -604,7 +605,7 @@
                               ColumnSpacing="8">
                             <Label FontFamily="FASolid"
                                    FontSize="18"
-                                   Text="&#xF013;"
+                                   Text="{x:Static helpers:FontAwesomeGlyphs.Settings}"
                                    HorizontalTextAlignment="Center"
                                    VerticalTextAlignment="Center" />
                             <Label Grid.Column="1"

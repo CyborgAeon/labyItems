@@ -4,6 +4,7 @@
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
     xmlns:controls="clr-namespace:labyItems.Controls"
     xmlns:local="clr-namespace:labyItems.Pages.Characters">
 
@@ -57,7 +58,7 @@
                                ClearButtonVisibility="WhileEditing"
                                Text="{Binding SearchText}"/>
                         <Button Grid.Column="1"
-                                Text="&#xF0B0;"
+                                Text="{x:Static helpers:FontAwesomeGlyphs.Filter}"
                                 FontFamily="FASolid"
                                 FontSize="13"
                                 Padding="0"

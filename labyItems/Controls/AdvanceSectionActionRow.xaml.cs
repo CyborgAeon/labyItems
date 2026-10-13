@@ -1,3 +1,5 @@
+using labyItems.Helpers;
+
 namespace labyItems.Controls;
 
 public partial class AdvanceSectionActionRow : ContentView
@@ -6,7 +8,7 @@ public partial class AdvanceSectionActionRow : ContentView
         nameof(IconGlyph),
         typeof(string),
         typeof(AdvanceSectionActionRow),
-        defaultValue: "&#xF0C0;");
+        defaultValue: FontAwesomeGlyphs.CharacterClass);
 
     public static readonly BindableProperty HeadingProperty = BindableProperty.Create(
         nameof(Heading),
@@ -25,7 +27,7 @@ public partial class AdvanceSectionActionRow : ContentView
         nameof(ActionGlyph),
         typeof(string),
         typeof(AdvanceSectionActionRow),
-        defaultValue: "&#xF067;");
+        defaultValue: FontAwesomeGlyphs.Add);
 
     public static readonly BindableProperty ShowActionButtonProperty = BindableProperty.Create(
         nameof(ShowActionButton),

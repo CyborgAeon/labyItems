@@ -2,6 +2,7 @@
 <local:MpCalculatorPageBase x:Class="labyItems.Pages.Calculator.MpBasicPage"
                             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
                             xmlns:controls="clr-namespace:labyItems.Controls"
                             xmlns:enums="clr-namespace:labyItems.Models.Enums"
                             xmlns:local="clr-namespace:labyItems.Pages.Calculator"
@@ -43,7 +44,7 @@
               ResultSelectedCommand="{Binding AddSelectedSpellCommand}"
               KeepFocusOnResultSelection="True"
               ClearAfterResultSelection="True"/>
-          <Button Grid.Column="1" Text="&#xF002;" FontFamily="FASolid" FontSize="16" Padding="0" WidthRequest="44" HeightRequest="44" MinimumWidthRequest="0" MinimumHeightRequest="0" BackgroundColor="Transparent" TextColor="{StaticResource SubtleTextColor}" BorderColor="{StaticResource SurfaceBorderColor}" BorderWidth="1" CornerRadius="10" VerticalOptions="Center" Command="{Binding OpenSpellSearchCommand}"/>
+          <Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.Search}" FontFamily="FASolid" FontSize="16" Padding="0" WidthRequest="44" HeightRequest="44" MinimumWidthRequest="0" MinimumHeightRequest="0" BackgroundColor="Transparent" TextColor="{StaticResource SubtleTextColor}" BorderColor="{StaticResource SurfaceBorderColor}" BorderWidth="1" CornerRadius="10" VerticalOptions="Center" Command="{Binding OpenSpellSearchCommand}"/>
         </Grid>
         <controls:ConfigSelectionList ItemsSource="{Binding SpellSelections}"
                                       IsVisible="{Binding HasSpellSelections}"
@@ -65,7 +66,7 @@
               ResultSelectedCommand="{Binding AddSelectedMiracleCommand}"
               KeepFocusOnResultSelection="True"
               ClearAfterResultSelection="True"/>
-          <Button Grid.Column="1" Text="&#xF002;" FontFamily="FASolid" FontSize="16" Padding="0" WidthRequest="44" HeightRequest="44" MinimumWidthRequest="0" MinimumHeightRequest="0" BackgroundColor="Transparent" TextColor="{StaticResource SubtleTextColor}" BorderColor="{StaticResource SurfaceBorderColor}" BorderWidth="1" CornerRadius="10" VerticalOptions="Center" Command="{Binding OpenMiracleSearchCommand}"/>
+          <Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.Search}" FontFamily="FASolid" FontSize="16" Padding="0" WidthRequest="44" HeightRequest="44" MinimumWidthRequest="0" MinimumHeightRequest="0" BackgroundColor="Transparent" TextColor="{StaticResource SubtleTextColor}" BorderColor="{StaticResource SurfaceBorderColor}" BorderWidth="1" CornerRadius="10" VerticalOptions="Center" Command="{Binding OpenMiracleSearchCommand}"/>
         </Grid>
         <controls:ConfigSelectionList ItemsSource="{Binding MiracleSelections}"
                                       IsVisible="{Binding HasMiracleSelections}"
@@ -88,7 +89,7 @@
               ResultSelectedCommand="{Binding AddSelectedEvocationCommand}"
               KeepFocusOnResultSelection="True"
               ClearAfterResultSelection="True"/>
-          <Button Grid.Column="1" Text="&#xF002;" FontFamily="FASolid" FontSize="16" Padding="0" WidthRequest="44" HeightRequest="44" MinimumWidthRequest="0" MinimumHeightRequest="0" BackgroundColor="Transparent" TextColor="{StaticResource SubtleTextColor}" BorderColor="{StaticResource SurfaceBorderColor}" BorderWidth="1" CornerRadius="10" VerticalOptions="Center" Command="{Binding OpenEvocationSearchCommand}"/>
+          <Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.Search}" FontFamily="FASolid" FontSize="16" Padding="0" WidthRequest="44" HeightRequest="44" MinimumWidthRequest="0" MinimumHeightRequest="0" BackgroundColor="Transparent" TextColor="{StaticResource SubtleTextColor}" BorderColor="{StaticResource SurfaceBorderColor}" BorderWidth="1" CornerRadius="10" VerticalOptions="Center" Command="{Binding OpenEvocationSearchCommand}"/>
         </Grid>
         <controls:ConfigSelectionList ItemsSource="{Binding EvocationSelections}"
                                       IsVisible="{Binding HasEvocationSelections}"
@@ -109,7 +110,7 @@
               ResultSelectedCommand="{Binding AddSelectedNeuroCommand}"
               KeepFocusOnResultSelection="True"
               ClearAfterResultSelection="True"/>
-          <Button Grid.Column="1" Text="&#xF002;" FontFamily="FASolid" FontSize="16" Padding="0" WidthRequest="44" HeightRequest="44" MinimumWidthRequest="0" MinimumHeightRequest="0" BackgroundColor="Transparent" TextColor="{StaticResource SubtleTextColor}" BorderColor="{StaticResource SurfaceBorderColor}" BorderWidth="1" CornerRadius="10" VerticalOptions="Center" Command="{Binding OpenNeuroSearchCommand}"/>
+          <Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.Search}" FontFamily="FASolid" FontSize="16" Padding="0" WidthRequest="44" HeightRequest="44" MinimumWidthRequest="0" MinimumHeightRequest="0" BackgroundColor="Transparent" TextColor="{StaticResource SubtleTextColor}" BorderColor="{StaticResource SurfaceBorderColor}" BorderWidth="1" CornerRadius="10" VerticalOptions="Center" Command="{Binding OpenNeuroSearchCommand}"/>
         </Grid>
         <controls:ConfigSelectionList ItemsSource="{Binding NeuroSelections}"
                                       IsVisible="{Binding HasNeuroSelections}"

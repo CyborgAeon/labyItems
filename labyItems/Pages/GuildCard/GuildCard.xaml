@@ -10,7 +10,7 @@
 
     <Grid RowDefinitions="Auto,*">
         <controls:DetailPageHeader x:Name="DetailHeader"
-                                   HeaderText="Guild Details" />
+                                   HeaderText="Almanac" />
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Padding="16">
                 <guildCard:GuildDetailCardView x:Name="GuildDetails" />

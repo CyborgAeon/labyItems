@@ -253,7 +253,7 @@
                                                            FontSize="13"
                                                            VerticalTextAlignment="Center"/>
                                                     <Button Grid.Column="2"
-                                                            Text="&#xF05A;"
+                                                            Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                                             FontFamily="FASolid"
                                                             FontSize="12"
                                                             Padding="0"
@@ -474,7 +474,7 @@
                                                            LineBreakMode="WordWrap"
                                                            VerticalTextAlignment="Center"/>
                                                     <Button Grid.Column="1"
-                                                            Text="&#xF05A;"
+                                                            Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                                             FontFamily="FASolid"
                                                             FontSize="12"
                                                             Padding="0"
@@ -548,7 +548,7 @@
                                                            LineBreakMode="WordWrap"
                                                            VerticalTextAlignment="Center"/>
                                                     <Button Grid.Column="1"
-                                                            Text="&#xF05A;"
+                                                            Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                                             FontFamily="FASolid"
                                                             FontSize="12"
                                                             Padding="0"
@@ -622,7 +622,7 @@
                                                            LineBreakMode="WordWrap"
                                                            VerticalTextAlignment="Center"/>
                                                     <Button Grid.Column="1"
-                                                            Text="&#xF05A;"
+                                                            Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                                             FontFamily="FASolid"
                                                             FontSize="12"
                                                             Padding="0"

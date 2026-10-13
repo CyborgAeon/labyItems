@@ -4,6 +4,7 @@
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
     xmlns:controls="clr-namespace:labyItems.Controls"
     NavigationPage.HasNavigationBar="False"
     Shell.NavBarIsVisible="False"
@@ -57,15 +58,15 @@
                                     <HorizontalStackLayout Grid.Column="1"
                                                            Spacing="12"
                                                            VerticalOptions="Center">
-                                        <Button Text="&#xF054;"
+                                        <Button Text="{x:Static helpers:FontAwesomeGlyphs.Chevron}"
                                                 Style="{StaticResource ListRowGlyphIconButtonStyle}"
                                                 Clicked="OnReviewClicked"
                                                 CommandParameter="{Binding .}" />
-                                        <Button Text="&#xF093;"
+                                        <Button Text="{x:Static helpers:FontAwesomeGlyphs.Upload}"
                                                 Style="{StaticResource ListRowGlyphIconButtonStyle}"
                                                 Clicked="OnFilesClicked"
                                                 CommandParameter="{Binding .}" />
-                                        <Button Text="&#xF1FC;"
+                                        <Button Text="{x:Static helpers:FontAwesomeGlyphs.Edit}"
                                                 Style="{StaticResource ListRowGlyphIconButtonStyle}"
                                                 Clicked="OnEditClicked"
                                                 CommandParameter="{Binding .}" />

@@ -4,6 +4,7 @@
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
     xmlns:controls="clr-namespace:labyItems.Controls"
     xmlns:pages="clr-namespace:labyItems.Pages.Characters">
 
@@ -153,7 +154,7 @@
                                                    MaxLines="1"
                                                    Opacity="0.85"/>
                                             <Button Grid.Column="2"
-                                                    Text="&#xF05A;"
+                                                    Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                                     FontFamily="FASolid"
                                                     FontSize="12"
                                                     Padding="0"
@@ -178,7 +179,7 @@
                                        Opacity="0.75"
                                        VerticalTextAlignment="Center"/>
                                 <Button Grid.Column="1"
-                                        Text="&#xF05A;"
+                                        Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                         FontFamily="FASolid"
                                         FontSize="12"
                                         Padding="0"
@@ -442,7 +443,7 @@
                                         </VerticalStackLayout>
 
                                         <Button Grid.Column="2"
-                                                Text="&#xF05A;"
+                                                Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                                 FontFamily="FASolid"
                                                 FontSize="12"
                                                 Padding="0"
@@ -484,7 +485,7 @@
                                                    Opacity="0.85"
                                                    LineBreakMode="WordWrap"/>
                                             <Button Grid.Column="1"
-                                                    Text="&#xF05A;"
+                                                    Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                                     FontFamily="FASolid"
                                                     FontSize="12"
                                                     Padding="0"

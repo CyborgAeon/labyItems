@@ -4,6 +4,7 @@
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
     xmlns:controls="clr-namespace:labyItems.Controls"
     NavigationPage.HasNavigationBar="False"
     Shell.NavBarIsVisible="False"
@@ -83,12 +84,12 @@
                                     </VerticalStackLayout>
 
                                     <Button Grid.Column="1"
-                                            Text="&#xF08E;"
+                                            Text="{x:Static helpers:FontAwesomeGlyphs.ExternalLink}"
                                             Style="{StaticResource ListRowGlyphIconButtonStyle}"
                                             Clicked="OnOpenDocumentClicked"
                                             CommandParameter="{Binding .}" />
                                     <Button Grid.Column="2"
-                                            Text="&#xF1F8;"
+                                            Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
                                             Style="{StaticResource ListRowGlyphIconButtonStyle}"
                                             Clicked="OnDeleteDocumentClicked"
                                             CommandParameter="{Binding .}" />

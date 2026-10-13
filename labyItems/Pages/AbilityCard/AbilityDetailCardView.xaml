@@ -4,6 +4,7 @@
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
     xmlns:controls="clr-namespace:labyItems.Controls">
 
     <ContentView>
@@ -31,7 +32,7 @@
                 <Border Stroke="{StaticResource SurfaceBorderColor}" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#F9FAFB" Padding="12,10">
                     <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnAvailabilityEditTapped"/></Border.GestureRecognizers>
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
-                        <Label Text="&#xF0C0;" FontFamily="FASolid" FontSize="18" TextColor="{StaticResource SubtleTextColor}" VerticalOptions="Center"/>
+                        <Label Text="{x:Static helpers:FontAwesomeGlyphs.CharacterClass}" FontFamily="FASolid" FontSize="18" TextColor="{StaticResource SubtleTextColor}" VerticalOptions="Center"/>
                         <VerticalStackLayout Grid.Column="1" Spacing="1">
                             <Label Text="Available to" FontSize="11" TextColor="{StaticResource Gray900}" Opacity="0.7"/>
                             <Label Text="{Binding AvailabilitySummaryText, Source={x:Reference Root}}" FontSize="17" FontAttributes="Bold" TextColor="{StaticResource Gray900}" MaxLines="1" LineBreakMode="TailTruncation"/>
@@ -115,7 +116,7 @@
                                            LineBreakMode="WordWrap"
                                            VerticalTextAlignment="Center"/>
                                     <Button Grid.Column="1"
-                                            Text="&#xF05A;"
+                                            Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                             FontFamily="FASolid"
                                             FontSize="12"
                                             Padding="0"
@@ -138,7 +139,7 @@
             <VerticalStackLayout Spacing="6" IsVisible="{Binding HasAsPer, Source={x:Reference Root}}">
                 <BoxView Style="{StaticResource SectionDividerBoxStyle}"/>
                 <Label Text="RELATED / AS PER" Style="{StaticResource SectionHeaderLabelStyle}"/>
-                <VerticalStackLayout BindableLayout.ItemsSource="{Binding AsPerEntries, Source={x:Reference Root}}" Spacing="2"><BindableLayout.ItemTemplate><DataTemplate><Grid Padding="8,6" ColumnDefinitions="*,Auto"><Label Text="{Binding Name}"/><Button Grid.Column="1" Text="&#xF05A;" FontFamily="FASolid" FontSize="12" Padding="0" BackgroundColor="Transparent" WidthRequest="24" HeightRequest="24" IsVisible="{Binding HasDetails}" Clicked="OnAsPerInfoClicked" CommandParameter="{Binding .}"/></Grid></DataTemplate></BindableLayout.ItemTemplate></VerticalStackLayout>
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding AsPerEntries, Source={x:Reference Root}}" Spacing="2"><BindableLayout.ItemTemplate><DataTemplate><Grid Padding="8,6" ColumnDefinitions="*,Auto"><Label Text="{Binding Name}"/><Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}" FontFamily="FASolid" FontSize="12" Padding="0" BackgroundColor="Transparent" WidthRequest="24" HeightRequest="24" IsVisible="{Binding HasDetails}" Clicked="OnAsPerInfoClicked" CommandParameter="{Binding .}"/></Grid></DataTemplate></BindableLayout.ItemTemplate></VerticalStackLayout>
             </VerticalStackLayout>
         </VerticalStackLayout>
     </ContentView>

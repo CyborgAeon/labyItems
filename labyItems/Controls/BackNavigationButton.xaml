@@ -3,6 +3,7 @@
     x:Class="labyItems.Controls.BackNavigationButton"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
     x:Name="Root">
 
     <ImageButton AutomationProperties.Name="Back"
@@ -12,7 +13,7 @@
                  Padding="0">
         <ImageButton.Source>
             <FontImageSource FontFamily="FASolid"
-                             Glyph="&#xf060;"
+                             Glyph="{x:Static helpers:FontAwesomeGlyphs.Back}"
                              Size="18"
                              Color="{StaticResource Gray300}"/>
         </ImageButton.Source>

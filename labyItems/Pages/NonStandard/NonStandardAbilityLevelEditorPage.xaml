@@ -4,6 +4,7 @@
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
     NavigationPage.HasNavigationBar="False"
     NavigationPage.HasBackButton="False"
     Shell.NavBarIsVisible="False"
@@ -18,7 +19,7 @@
                    FontAttributes="Bold"
                    VerticalTextAlignment="Center"/>
             <Button Grid.Column="1"
-                    Text="&#xF00D;"
+                    Text="{x:Static helpers:FontAwesomeGlyphs.Remove}"
                     FontFamily="FASolid"
                     WidthRequest="36"
                     HeightRequest="36"
@@ -66,7 +67,7 @@
                             </Grid>
                         </VerticalStackLayout>
                         <Button Grid.Column="1"
-                                Text="&#xF1F8;"
+                                Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
                                 FontFamily="FASolid"
                                 WidthRequest="34"
                                 HeightRequest="34"

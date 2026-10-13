@@ -1,3 +1,4 @@
+using labyItems.Helpers;
 using labyItems.Services;
 using labyItems.Controls;
 using System.Collections.ObjectModel;
@@ -82,12 +83,12 @@ public partial class NonStandardClassCreatePage : ContentPage
     public double StepProgress => (CurrentStepIndex + 1d) / StepItems.Count;
     public string CurrentStepIcon => CurrentStepIndex switch
     {
-        0 => "\uf02b",
-        1 => "\uf201",
-        2 => "\uf3ed",
-        3 => "\uf0ae",
-        4 => "\uf0e7",
-        _ => "\uf00c"
+        0 => FontAwesomeGlyphs.Tag,
+        1 => FontAwesomeGlyphs.Progression,
+        2 => FontAwesomeGlyphs.Shield,
+        3 => FontAwesomeGlyphs.Tasks,
+        4 => FontAwesomeGlyphs.Lightning,
+        _ => FontAwesomeGlyphs.Check
     };
     public bool IsReviewOnly
     {

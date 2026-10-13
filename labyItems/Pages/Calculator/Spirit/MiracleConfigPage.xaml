@@ -2,6 +2,7 @@
 <cfg:ConfigPageBase x:Class="labyItems.Pages.Configs.MiracleConfigPage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
   xmlns:cfg="clr-namespace:labyItems.Pages.Configs"
   xmlns:controls="clr-namespace:labyItems.Controls"
   xmlns:conv="clr-namespace:labyItems.Converters"
@@ -43,7 +44,7 @@
                                       ClearAfterResultSelection="True"
                                       KeyboardAvoidanceEnabled="True"
                                       IsEnabled="{Binding Source={x:Reference RootPage}, Path=IsLoading, Converter={StaticResource InverseBoolConverter}}" />
-        <Button Grid.Column="1" Text="&#xF002;" FontFamily="FASolid" FontSize="16" Padding="0" WidthRequest="44" HeightRequest="44" MinimumWidthRequest="0" MinimumHeightRequest="0" BackgroundColor="Transparent" TextColor="{StaticResource SubtleTextColor}" BorderColor="{StaticResource SurfaceBorderColor}" BorderWidth="1" CornerRadius="10" VerticalOptions="Center" Clicked="OnSearchMiraclesClicked" />
+        <Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.Search}" FontFamily="FASolid" FontSize="16" Padding="0" WidthRequest="44" HeightRequest="44" MinimumWidthRequest="0" MinimumHeightRequest="0" BackgroundColor="Transparent" TextColor="{StaticResource SubtleTextColor}" BorderColor="{StaticResource SurfaceBorderColor}" BorderWidth="1" CornerRadius="10" VerticalOptions="Center" Clicked="OnSearchMiraclesClicked" />
         </Grid>
 
         <Label Text="No miracles selected yet."
@@ -135,7 +136,7 @@
                                              Min="0"
                                              Count="{Binding Count, Mode=TwoWay}" />
                   <Button Grid.Column="1"
-                          Text="&#xF2ED;"
+                          Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
                           FontFamily="FASolid"
                           FontSize="14"
                           Padding="0"

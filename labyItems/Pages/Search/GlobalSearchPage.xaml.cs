@@ -3,6 +3,10 @@ using MiracleCardPage = labyItems.Pages.MiracleCard.MiracleCard;
 using EvocationCardPage = labyItems.Pages.EvocationCard.EvocationCard;
 using NeuronicCardPage = labyItems.Pages.NeuronicCard.NeuronicCard;
 using AbilityCardPage = labyItems.Pages.AbilityCard.AbilityCard;
+using ClassCardPage = labyItems.Pages.ClassCard.ClassCard;
+using RaceCardPage = labyItems.Pages.RaceCard.RaceCard;
+using MultiClassCardPage = labyItems.Pages.MultiClassCard.MultiClassCard;
+using MultiRaceCardPage = labyItems.Pages.MultiRaceCard.MultiRaceCard;
 using labyItems.Services;
 using labyItems.Helpers;
 using labyItems.Controls;
@@ -205,16 +209,32 @@ public partial class GlobalSearchPage : ContentPage
                 return null;
 
             case GlobalSearchKind.Class:
-                return new ClassSearchPage { SearchText = result.Name };
+                var classes = await ClassService.GetAllAsync();
+                var classKey = string.IsNullOrWhiteSpace(result.DetailKey) ? result.Name : result.DetailKey;
+                return classes.TryGetValue(classKey, out var classRecord)
+                    ? new ClassCardPage(result.Name, classRecord)
+                    : null;
 
             case GlobalSearchKind.Race:
-                return new RaceSearchPage { SearchText = result.Name };
+                var races = await PeopleService.GetAllAsync();
+                var raceKey = string.IsNullOrWhiteSpace(result.DetailKey) ? result.Name : result.DetailKey;
+                return races.TryGetValue(raceKey, out var raceRecord)
+                    ? new RaceCardPage(result.Name, raceRecord)
+                    : null;
 
             case GlobalSearchKind.MultiClass:
-                return new MultiClassSearchPage { SearchText = result.Name };
+                var multiClasses = await MultiClassService.GetCatalogAsync();
+                var multiClassKey = string.IsNullOrWhiteSpace(result.DetailKey) ? result.Name : result.DetailKey;
+                return multiClasses.MultiClasses.TryGetValue(multiClassKey, out var multiClass)
+                    ? new MultiClassCardPage(multiClass, multiClassKey)
+                    : null;
 
             case GlobalSearchKind.MultiRace:
-                return new MultiRaceSearchPage { SearchText = result.Name };
+                var multiRaces = await MultiRaceService.GetCatalogAsync();
+                var multiRaceKey = string.IsNullOrWhiteSpace(result.DetailKey) ? result.Name : result.DetailKey;
+                return multiRaces.MultiRaces.TryGetValue(multiRaceKey, out var multiRace)
+                    ? new MultiRaceCardPage(multiRace, multiRaceKey)
+                    : null;
 
             default:
                 return null;

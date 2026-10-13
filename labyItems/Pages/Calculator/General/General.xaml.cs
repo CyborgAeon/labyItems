@@ -1,3 +1,4 @@
+using labyItems.Helpers;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -496,7 +497,7 @@ public sealed class GeneralAbilitySearchResultVm : INotifyPropertyChanged
         }
     }
 
-    public string SelectionGlyph => IsSelected ? "\uf00c" : string.Empty;
+    public string SelectionGlyph => IsSelected ? FontAwesomeGlyphs.Check : string.Empty;
     public Color SelectionGlyphColor => IsSelected ? Colors.White : Colors.Transparent;
     public Color SelectionBackgroundColor => IsSelected ? Color.FromArgb("#7F1D1D") : Colors.Transparent;
     public Color SelectionBorderColor => IsSelected ? Color.FromArgb("#530000") : Color.FromArgb("#D1D5DB");

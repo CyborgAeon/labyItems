@@ -785,6 +785,8 @@ public static class GuildsService
 
 public sealed class GuildRecord
 {
+    [JsonPropertyName("30kGift")]
+    public bool Has30KGift { get; set; }
     public string Type { get; set; } = "";
     public string Logo { get; set; } = "";
     public string PreRequisites { get; set; } = "";

@@ -976,7 +976,7 @@ public sealed class AdvanceAbilitySearchItemVm : INotifyPropertyChanged
         }
     }
 
-    public string SelectionGlyph => IsSelected ? "\uF058" : "\uF111";
+    public string SelectionGlyph => IsSelected ? FontAwesomeGlyphs.CheckCircle : FontAwesomeGlyphs.Circle;
 
     public Color SelectionColor => IsSelected
         ? Color.FromArgb("#7F1D1D")

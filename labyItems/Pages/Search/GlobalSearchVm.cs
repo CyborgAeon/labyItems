@@ -1,3 +1,4 @@
+using labyItems.Helpers;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
@@ -490,7 +491,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
                         GlobalSearchKind.Class,
                         name,
                         category.Length > 0 ? category : "Class",
-                        "\uf0c0",
+                        FontAwesomeGlyphs.CharacterClass,
                         $"Class · {bracketText}",
                         summary,
                         null, null, null, null, null)
@@ -524,7 +525,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
                         GlobalSearchKind.Race,
                         name,
                         peopleType.Length > 0 ? peopleType : "Race",
-                        "\uf2bd",
+                        FontAwesomeGlyphs.Race,
                         $"Race · {peopleType}",
                         desc,
                         null, null, null, null, null)
@@ -560,7 +561,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
                         GlobalSearchKind.Guild,
                         name,
                         type.Length > 0 ? type : "Guild",
-                        "\uf19c",
+                        FontAwesomeGlyphs.Guild,
                         $"Guild · {type}",
                         ethos.Length > 0 ? ethos : background,
                         null, null, null, null, null)
@@ -592,7 +593,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
                         GlobalSearchKind.MultiClass,
                         name,
                         powerBase.Length > 0 ? powerBase : "Multi-Class",
-                        "\uf6cf",
+                        FontAwesomeGlyphs.MultiClass,
                         $"Multi-Class · Max Level {maxLevel}",
                         $"Progress up to level {maxLevel} in {powerBase}",
                         null, null, null, null, null)
@@ -624,7 +625,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
                         GlobalSearchKind.MultiRace,
                         name,
                         powerBase.Length > 0 ? powerBase : "Multi-Race",
-                        "\uf500",
+                        FontAwesomeGlyphs.MultiRace,
                         $"Multi-Race · Max Level {maxLevel}",
                         $"Progress up to level {maxLevel} in {powerBase}",
                         null, null, null, null, null)
@@ -679,7 +680,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Kind: GlobalSearchKind.Ability,
             Name: dto.Name,
             GroupText: dto.ExtraInfo ?? string.Empty,
-            IconGlyph: "\uf013",
+            IconGlyph: FontAwesomeGlyphs.Settings,
             MetaText: $"Ability · {dto.ExtraInfo}",
             DescriptionText: dto.Description,
             Ability: null, // Loaded lazily when the card is opened.
@@ -699,7 +700,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Kind: GlobalSearchKind.Spell,
             Name: dto.Name,
             GroupText: dto.ExtraInfo ?? string.Empty,
-            IconGlyph: "\uf518",
+            IconGlyph: FontAwesomeGlyphs.Specialisation,
             MetaText: $"Spell · {dto.ExtraInfo}",
             DescriptionText: dto.Description,
             Ability: null,
@@ -718,7 +719,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Kind: GlobalSearchKind.Miracle,
             Name: dto.Name,
             GroupText: dto.ExtraInfo ?? string.Empty,
-            IconGlyph: "\uf005",
+            IconGlyph: FontAwesomeGlyphs.Star,
             MetaText: $"Miracle · {dto.ExtraInfo}",
             DescriptionText: dto.Description,
             Ability: null,
@@ -737,7 +738,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Kind: GlobalSearchKind.Evocation,
             Name: dto.Name,
             GroupText: dto.ExtraInfo ?? string.Empty,
-            IconGlyph: "\uf06c",
+            IconGlyph: FontAwesomeGlyphs.Tree,
             MetaText: $"Evocation · {dto.ExtraInfo}",
             DescriptionText: dto.Description,
             Ability: null,
@@ -756,7 +757,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Kind: GlobalSearchKind.Neuronic,
             Name: dto.Name,
             GroupText: dto.ExtraInfo ?? string.Empty,
-            IconGlyph: "\uf5dc",
+            IconGlyph: string.Empty,
             MetaText: $"Neuronic - {dto.ExtraInfo}",
             DescriptionText: dto.Description,
             Ability: null,
@@ -899,7 +900,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Kind: GlobalSearchKind.Ability,
             Name: title,
             GroupText: $"Table {ability.Table}",
-            IconGlyph: "\uf013",
+            IconGlyph: FontAwesomeGlyphs.Settings,
             MetaText: meta,
             DescriptionText: (ability.Description ?? string.Empty).Trim(),
             Ability: ability,
@@ -997,7 +998,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Kind: GlobalSearchKind.Spell,
             Name: (spell.name ?? string.Empty).Trim(),
             GroupText: colour,
-            IconGlyph: "\uf518",
+            IconGlyph: FontAwesomeGlyphs.Specialisation,
             MetaText: meta,
             DescriptionText: (spell.description ?? string.Empty).Trim(),
             Ability: null,
@@ -1026,7 +1027,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Kind: GlobalSearchKind.Miracle,
             Name: (miracle.name ?? string.Empty).Trim(),
             GroupText: sphere,
-            IconGlyph: "\uf005",
+            IconGlyph: FontAwesomeGlyphs.Star,
             MetaText: meta,
             DescriptionText: (miracle.description ?? string.Empty).Trim(),
             Ability: null,
@@ -1055,7 +1056,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Kind: GlobalSearchKind.Evocation,
             Name: (evocation.name ?? string.Empty).Trim(),
             GroupText: string.Join(", ", fields),
-            IconGlyph: "\uf06c",
+            IconGlyph: FontAwesomeGlyphs.Tree,
             MetaText: meta,
             DescriptionText: (evocation.description ?? string.Empty).Trim(),
             Ability: null,
@@ -1076,7 +1077,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Kind: GlobalSearchKind.Neuronic,
             Name: (neuronic.name ?? string.Empty).Trim(),
             GroupText: type,
-            IconGlyph: "\uf5dc",
+            IconGlyph: string.Empty,
             MetaText: meta,
             DescriptionText: (neuronic.description ?? string.Empty).Trim(),
             Ability: null,
@@ -1319,6 +1320,10 @@ public sealed record GlobalSearchResultVm(
     DruidEvocationService.EvocRaw? Evocation,
     NeuronicService.NeuronicRaw? Neuronic) : INotifyPropertyChanged
 {
+    public bool UsesImageIcon => Kind == GlobalSearchKind.Neuronic;
+    public bool UsesFontIcon => !UsesImageIcon;
+    public string? IconImageSource => UsesImageIcon ? IconAssets.Neuronic : null;
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private bool _isSelected;
@@ -1336,7 +1341,7 @@ public sealed record GlobalSearchResultVm(
         }
     }
 
-    public string SelectionGlyph => IsSelected ? "\uf14a" : "\uf0c8";
+    public string SelectionGlyph => IsSelected ? FontAwesomeGlyphs.CheckboxChecked : FontAwesomeGlyphs.CheckboxUnchecked;
 
     // Reference equality: selection state is mutable.
     public bool Equals(GlobalSearchResultVm? other) => ReferenceEquals(this, other);

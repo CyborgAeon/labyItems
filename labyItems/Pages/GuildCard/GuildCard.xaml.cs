@@ -13,14 +13,14 @@ public partial class GuildCard : ContentPage
     public GuildCard(GuildRecord guild, string? guildName = null) : this()
     {
         _ = GuildDetails.LoadFromRecordAsync(guild, guildName);
-        Title = guildName ?? guild.Type ?? "Guild Details";
-        DetailHeader.HeaderText = Title;
+        Title = "Almanac";
+        DetailHeader.HeaderText = "Almanac";
     }
 
     public GuildCard(GuildCardVm guildVm) : this()
     {
         GuildDetails.GuildVm = guildVm;
-        Title = guildVm.Name;
-        DetailHeader.HeaderText = Title;
+        Title = "Almanac";
+        DetailHeader.HeaderText = "Almanac";
     }
 }

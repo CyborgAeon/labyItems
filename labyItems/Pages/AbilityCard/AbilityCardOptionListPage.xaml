@@ -3,6 +3,7 @@
     x:Class="labyItems.Pages.AbilityCard.AbilityCardOptionListPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
     xmlns:viewModels="clr-namespace:labyItems.Pages.Characters.ViewModels"
     Title="Ability Options">
 
@@ -26,7 +27,7 @@
                                        VerticalOptions="Center"
                                        LineBreakMode="WordWrap"/>
                                 <Button Grid.Column="1"
-                                        Text="&#xF05A;"
+                                        Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                         FontFamily="FASolid"
                                         FontSize="14"
                                         Padding="0"

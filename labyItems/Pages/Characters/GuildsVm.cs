@@ -996,6 +996,9 @@ public sealed class GuildsVm : INotifyPropertyChanged
         await pendingTask;
     }
 
+    public Task LoadCardDetailsAsync(GuildCardVm card, GuildRecord? record = null)
+        => EnsureCardDetailsLoadedAsync(card, record);
+
     private async Task EnsureCardDetailsLoadedCoreAsync(GuildCardVm card, GuildRecord? record)
     {
         await MainThread.InvokeOnMainThreadAsync(() => card.IsDetailsLoading = true);
@@ -2705,7 +2708,7 @@ public sealed class GuildCardVm : INotifyPropertyChanged
     }
 
     public string DisplayName => _name.Length > 15 ? $"{_name[..12]}..." : _name;
-    public string SelectionActionGlyph => IsSelected ? "\uf068" : "\uf067";
+    public string SelectionActionGlyph => IsSelected ? FontAwesomeGlyphs.Minus : FontAwesomeGlyphs.Add;
     public bool CanToggleSelection => IsSelectable || IsSelected;
     public bool HasNotSelectableReason => !CanToggleSelection && !string.IsNullOrWhiteSpace(NotSelectableReason);
     public string Type { get; set; } = "";

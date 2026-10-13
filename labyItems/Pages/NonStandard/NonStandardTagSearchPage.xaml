@@ -4,6 +4,7 @@
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
     xmlns:controls="clr-namespace:labyItems.Controls"
     NavigationPage.HasNavigationBar="False"
     NavigationPage.HasBackButton="False"
@@ -18,7 +19,7 @@
               ColumnDefinitions="Auto,*"
               ColumnSpacing="8">
             <Button Grid.Column="0"
-                    Text="&#xF060;"
+                    Text="{x:Static helpers:FontAwesomeGlyphs.Back}"
                     FontFamily="FASolid"
                     WidthRequest="38"
                     HeightRequest="38"
@@ -54,7 +55,7 @@
                                 <Label Text="{Binding Title}"
                                        VerticalTextAlignment="Center"/>
                                 <Button Grid.Column="1"
-                                        Text="&#xF00D;"
+                                        Text="{x:Static helpers:FontAwesomeGlyphs.Remove}"
                                         FontFamily="FASolid"
                                         WidthRequest="20"
                                         HeightRequest="20"

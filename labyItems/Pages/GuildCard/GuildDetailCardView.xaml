@@ -1,345 +1,64 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentView
-    x:Class="labyItems.Pages.GuildCard.GuildDetailCardView"
-    x:Name="Root"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:controls="clr-namespace:labyItems.Controls"
-    xmlns:helpers="clr-namespace:labyItems.Helpers">
-
-    <Frame CornerRadius="16"
-           Padding="18"
-           HasShadow="True"
-           BorderColor="{StaticResource SurfaceBorderColor}"
-           BackgroundColor="{StaticResource White}">
-        <VerticalStackLayout Spacing="16">
-
-            <!-- Header Section -->
-            <Grid ColumnDefinitions="Auto,*,Auto"
-                  ColumnSpacing="12"
-                  VerticalOptions="Start">
-                <Frame Grid.Column="0"
-                       WidthRequest="48"
-                       HeightRequest="48"
-                       CornerRadius="24"
-                       Padding="0"
-                       HasShadow="False"
-                       BorderColor="{StaticResource SurfaceBorderColor}"
-                       BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}">
-                    <Grid>
-                        <Label Text="{Binding Icon, Source={x:Reference Root}}"
-                               FontSize="24"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"
-                               IsVisible="{Binding ShowIcon, Source={x:Reference Root}}" />
-                        <Image Source="{Binding Logo, Source={x:Reference Root}}"
-                               Aspect="AspectFill"
-                               WidthRequest="48"
-                               HeightRequest="48"
-                               IsVisible="{Binding ShowLogo, Source={x:Reference Root}}" />
-                    </Grid>
-                </Frame>
-
-                <VerticalStackLayout Grid.Column="1"
-                                     Spacing="4"
-                                     VerticalOptions="Center">
-                    <Label Text="{Binding Name, Source={x:Reference Root}}"
-                           FontSize="22"
-                           FontAttributes="Bold"
-                           LineBreakMode="WordWrap" />
-                    <Label Text="{Binding Type, Source={x:Reference Root}}"
-                           FontSize="14"
-                           FontAttributes="Italic"
-                           Opacity="0.75" />
-                    <Label Text="{Binding ChoiceSetNoticeText, Source={x:Reference Root}}"
-                           FontSize="12"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource AccentMaroonColor}"
-                           IsVisible="{Binding HasChoiceSetNotice, Source={x:Reference Root}}" />
-                </VerticalStackLayout>
-            </Grid>
-
-            <!-- Loading Indicator -->
-            <VerticalStackLayout Spacing="8"
-                                 IsVisible="{Binding IsDetailsLoading, Source={x:Reference Root}}">
-                <controls:LoadingIndicator IsRunning="{Binding IsDetailsLoading, Source={x:Reference Root}}"
-                                           Message="Loading guild details..." />
-            </VerticalStackLayout>
-
-            <!-- Key Info Box: Ethos / PreReqs / Restrictions -->
-            <VerticalStackLayout Spacing="8"
-                                 IsVisible="{Binding HasOverviewInfo, Source={x:Reference Root}}">
-                <BoxView HeightRequest="1" Color="{StaticResource SurfaceBorderColor}" />
-
-                <VerticalStackLayout Spacing="4"
-                                     IsVisible="{Binding HasEthos, Source={x:Reference Root}}">
-                    <Label Text="ETHOS" Style="{StaticResource KeyInfoLabelStyle}" />
-                    <Label Text="{Binding Ethos, Source={x:Reference Root}}"
-                           FontSize="13"
-                           Opacity="0.85" />
-                </VerticalStackLayout>
-
-                <VerticalStackLayout Spacing="4"
-                                     IsVisible="{Binding HasPreRequisites, Source={x:Reference Root}}">
-                    <Label Text="PREREQUISITES" Style="{StaticResource KeyInfoLabelStyle}" />
-                    <Label Text="{Binding PreRequisites, Source={x:Reference Root}}"
-                           FontSize="13"
-                           Opacity="0.85" />
-                </VerticalStackLayout>
-
-                <VerticalStackLayout Spacing="4"
-                                     IsVisible="{Binding HasRestrictions, Source={x:Reference Root}}">
-                    <Label Text="RESTRICTIONS" Style="{StaticResource KeyInfoLabelStyle}" />
-                    <Label Text="{Binding Restrictions, Source={x:Reference Root}}"
-                           FontSize="13"
-                           Opacity="0.85" />
-                </VerticalStackLayout>
-            </VerticalStackLayout>
-
-            <!-- Lore Section -->
-            <VerticalStackLayout Spacing="8"
-                                 IsVisible="{Binding HasLore, Source={x:Reference Root}}">
-                <BoxView HeightRequest="1" Color="{StaticResource SurfaceBorderColor}" />
-                <Label Text="LORE &amp; BACKGROUND"
-                       Style="{StaticResource SectionHeaderLabelStyle}" />
-                <VerticalStackLayout BindableLayout.ItemsSource="{Binding LoreSections, Source={x:Reference Root}}"
-                                     Spacing="10">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate>
-                            <VerticalStackLayout Spacing="3">
-                                <VerticalStackLayout.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding ToggleCommand}" />
-                                </VerticalStackLayout.GestureRecognizers>
-                                <Label Text="{Binding Header}"
-                                       FontAttributes="Bold"
-                                       FontSize="13"
-                                       Opacity="0.9" />
-                                <Label Text="{Binding Text}"
-                                       FontSize="13"
-                                       Opacity="0.85"
-                                       MaxLines="{Binding MaxLines}" />
-                                <Label Text="{Binding ToggleLabel}"
-                                       FontSize="12"
-                                       TextColor="{StaticResource AccentMaroonColor}"
-                                       IsVisible="{Binding ShowToggle}" />
-                            </VerticalStackLayout>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </VerticalStackLayout>
-            </VerticalStackLayout>
-
-            <!-- Miracles List Section -->
-            <VerticalStackLayout Spacing="8"
-                                 IsVisible="{Binding HasMiracles, Source={x:Reference Root}}">
-                <BoxView HeightRequest="1" Color="{StaticResource SurfaceBorderColor}" />
-                <Grid ColumnDefinitions="*,Auto"
-                      ColumnSpacing="8">
-                    <Label Text="MIRACLES"
-                           Style="{StaticResource SectionHeaderLabelStyle}"
-                           VerticalOptions="Center" />
-                    <controls:ChevronIconView Grid.Column="1"
-                                              IsExpanded="{Binding IsMiraclesExpanded, Source={x:Reference Root}}"
-                                              AnimateRotation="True"
-                                              GlyphSize="14"
-                                              GlyphColor="{StaticResource MutedTextColor}"
-                                              VerticalOptions="Center">
-                        <controls:ChevronIconView.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnToggleMiraclesTapped" />
-                        </controls:ChevronIconView.GestureRecognizers>
-                    </controls:ChevronIconView>
-                </Grid>
-
-                <controls:AnimatedExpandView IsExpanded="{Binding IsMiraclesExpanded, Source={x:Reference Root}}">
-                    <Border Stroke="{StaticResource SoftStrokeColor}"
-                            StrokeThickness="1"
-                            StrokeShape="RoundRectangle 8"
-                            BackgroundColor="#F9FAFB"
-                            Padding="8">
-                        <Grid RowDefinitions="Auto,Auto"
-                              RowSpacing="6">
-                            <Grid ColumnDefinitions="44,*,Auto"
-                                  ColumnSpacing="8"
-                                  Padding="6,2">
-                                <Label Text="Lvl" FontAttributes="Bold" FontSize="12" Opacity="0.75" />
-                                <Label Grid.Column="1" Text="Name" FontAttributes="Bold" FontSize="12" Opacity="0.75" />
-                                <Label Grid.Column="2" Text="Info" FontAttributes="Bold" FontSize="12" Opacity="0.75" HorizontalTextAlignment="Center" />
-                            </Grid>
-                            <VerticalStackLayout Grid.Row="1"
-                                                 BindableLayout.ItemsSource="{Binding MiracleRows, Source={x:Reference Root}}"
-                                                 Spacing="2">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border StrokeThickness="0"
-                                                StrokeShape="RoundRectangle 8"
-                                                BackgroundColor="{Binding RowBackgroundColor}">
-                                            <Grid Padding="8,6"
-                                                  ColumnDefinitions="44,*,Auto"
-                                                  ColumnSpacing="8">
-                                                <Label Text="{Binding LevelText}" FontSize="13" Opacity="0.85" VerticalTextAlignment="Center" />
-                                                <Label Grid.Column="1" Text="{Binding Name}" FontSize="13" VerticalTextAlignment="Center" />
-                                                <Button Grid.Column="2"
-                                                        Text="&#xF05A;"
-                                                        FontFamily="FASolid"
-                                                        FontSize="13"
-                                                        Padding="0"
-                                                        BackgroundColor="Transparent"
-                                                        TextColor="{StaticResource SubtleTextColor}"
-                                                        HeightRequest="22"
-                                                        WidthRequest="22"
-                                                        MinimumHeightRequest="0"
-                                                        MinimumWidthRequest="0"
-                                                        VerticalOptions="Center"
-                                                        Clicked="OnMiracleInfoClicked"
-                                                        CommandParameter="{Binding .}" />
-                                            </Grid>
-                                        </Border>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
-                            </VerticalStackLayout>
-                        </Grid>
-                    </Border>
-                </controls:AnimatedExpandView>
-            </VerticalStackLayout>
-
-            <!-- Basic Benefits -->
-            <VerticalStackLayout Spacing="8"
-                                 IsVisible="{Binding HasBasic, Source={x:Reference Root}}">
-                <BoxView HeightRequest="1" Color="{StaticResource SurfaceBorderColor}" />
-                <Label Text="BASIC BENEFITS"
-                       Style="{StaticResource SectionHeaderLabelStyle}" />
-                <VerticalStackLayout BindableLayout.ItemsSource="{Binding BasicBenefitRows, Source={x:Reference Root}}"
-                                     Spacing="4">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate>
-                            <Border StrokeThickness="1"
-                                    Stroke="{StaticResource SoftStrokeColor}"
-                                    StrokeShape="RoundRectangle 8"
-                                    BackgroundColor="#F9FAFB"
-                                    Padding="10,8">
-                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                                    <Label Text="{Binding DisplayText}" FontSize="13" LineBreakMode="WordWrap" VerticalTextAlignment="Center" />
-                                    <Button Grid.Column="1"
-                                            Text="&#xF05A;"
-                                            FontFamily="FASolid"
-                                            FontSize="13"
-                                            Padding="0"
-                                            BackgroundColor="Transparent"
-                                            TextColor="{StaticResource SubtleTextColor}"
-                                            HeightRequest="22"
-                                            WidthRequest="22"
-                                            MinimumHeightRequest="0"
-                                            MinimumWidthRequest="0"
-                                            VerticalOptions="Center"
-                                            Clicked="OnBenefitInfoClicked"
-                                            CommandParameter="{Binding .}" />
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </VerticalStackLayout>
-            </VerticalStackLayout>
-
-            <!-- Intermediate Benefits -->
-            <VerticalStackLayout Spacing="8"
-                                 IsVisible="{Binding HasIntermediate, Source={x:Reference Root}}">
-                <BoxView HeightRequest="1" Color="{StaticResource SurfaceBorderColor}" />
-                <Label Text="INTERMEDIATE BENEFITS"
-                       Style="{StaticResource SectionHeaderLabelStyle}" />
-                <VerticalStackLayout BindableLayout.ItemsSource="{Binding IntermediateBenefitRows, Source={x:Reference Root}}"
-                                     Spacing="4">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate>
-                            <Border StrokeThickness="1"
-                                    Stroke="{StaticResource SoftStrokeColor}"
-                                    StrokeShape="RoundRectangle 8"
-                                    BackgroundColor="#F9FAFB"
-                                    Padding="10,8">
-                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                                    <Label Text="{Binding DisplayText}" FontSize="13" LineBreakMode="WordWrap" VerticalTextAlignment="Center" />
-                                    <Button Grid.Column="1"
-                                            Text="&#xF05A;"
-                                            FontFamily="FASolid"
-                                            FontSize="13"
-                                            Padding="0"
-                                            BackgroundColor="Transparent"
-                                            TextColor="{StaticResource SubtleTextColor}"
-                                            HeightRequest="22"
-                                            WidthRequest="22"
-                                            MinimumHeightRequest="0"
-                                            MinimumWidthRequest="0"
-                                            VerticalOptions="Center"
-                                            Clicked="OnBenefitInfoClicked"
-                                            CommandParameter="{Binding .}" />
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </VerticalStackLayout>
-            </VerticalStackLayout>
-
-            <!-- Advanced Benefits -->
-            <VerticalStackLayout Spacing="8"
-                                 IsVisible="{Binding HasAdvanced, Source={x:Reference Root}}">
-                <BoxView HeightRequest="1" Color="{StaticResource SurfaceBorderColor}" />
-                <Label Text="ADVANCED BENEFITS"
-                       Style="{StaticResource SectionHeaderLabelStyle}" />
-                <VerticalStackLayout BindableLayout.ItemsSource="{Binding AdvancedBenefitRows, Source={x:Reference Root}}"
-                                     Spacing="4">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate>
-                            <Border StrokeThickness="1"
-                                    Stroke="{StaticResource SoftStrokeColor}"
-                                    StrokeShape="RoundRectangle 8"
-                                    BackgroundColor="#F9FAFB"
-                                    Padding="10,8">
-                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                                    <Label Text="{Binding DisplayText}" FontSize="13" LineBreakMode="WordWrap" VerticalTextAlignment="Center" />
-                                    <Button Grid.Column="1"
-                                            Text="&#xF05A;"
-                                            FontFamily="FASolid"
-                                            FontSize="13"
-                                            Padding="0"
-                                            BackgroundColor="Transparent"
-                                            TextColor="{StaticResource SubtleTextColor}"
-                                            HeightRequest="22"
-                                            WidthRequest="22"
-                                            MinimumHeightRequest="0"
-                                            MinimumWidthRequest="0"
-                                            VerticalOptions="Center"
-                                            Clicked="OnBenefitInfoClicked"
-                                            CommandParameter="{Binding .}" />
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </VerticalStackLayout>
-            </VerticalStackLayout>
-
-            <!-- City Benefits -->
-            <VerticalStackLayout Spacing="8"
-                                 IsVisible="{Binding HasCityBenefits, Source={x:Reference Root}}">
-                <BoxView HeightRequest="1" Color="{StaticResource SurfaceBorderColor}" />
-                <Label Text="CITY BENEFITS"
-                       Style="{StaticResource SectionHeaderLabelStyle}" />
-                <VerticalStackLayout BindableLayout.ItemsSource="{Binding CityBenefits, Source={x:Reference Root}}"
-                                     Spacing="4">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate>
-                            <Border StrokeThickness="1"
-                                    Stroke="{StaticResource SoftStrokeColor}"
-                                    StrokeShape="RoundRectangle 8"
-                                    BackgroundColor="#F9FAFB"
-                                    Padding="10,8">
-                                <VerticalStackLayout Spacing="2">
-                                    <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="13" />
-                                    <Label Text="{Binding EffectsText}" FontSize="12" Opacity="0.8" LineBreakMode="WordWrap" />
-                                </VerticalStackLayout>
-                            </Border>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </VerticalStackLayout>
-            </VerticalStackLayout>
-
-        </VerticalStackLayout>
-    </Frame>
+<ContentView x:Class="labyItems.Pages.GuildCard.GuildDetailCardView" x:Name="Root"
+ xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
+ xmlns:controls="clr-namespace:labyItems.Controls">
+ <VerticalStackLayout Spacing="14">
+  <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+   <VerticalStackLayout Spacing="3" VerticalOptions="Center">
+    <Label Text="{Binding Name, Source={x:Reference Root}}" FontSize="28" FontAttributes="Bold" LineBreakMode="WordWrap"/>
+    <Label Text="{Binding TypeDisplayText, Source={x:Reference Root}}" FontSize="15" TextColor="{StaticResource MutedTextColor}"/>
+   </VerticalStackLayout>
+   <Border Grid.Column="1" WidthRequest="52" HeightRequest="52" Padding="0" Stroke="{StaticResource SurfaceBorderColor}" StrokeShape="RoundRectangle 26" BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}">
+    <Grid><Label Text="{Binding Icon, Source={x:Reference Root}}" FontSize="25" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding ShowIcon, Source={x:Reference Root}}"/><Image Source="{Binding Logo, Source={x:Reference Root}}" Aspect="AspectFit" WidthRequest="48" HeightRequest="48" IsVisible="{Binding ShowLogo, Source={x:Reference Root}}"/></Grid>
+   </Border>
+  </Grid>
+  <Frame Padding="8,4" CornerRadius="10" HasShadow="False" HorizontalOptions="Start" BackgroundColor="#FFF3D6" BorderColor="#E8C878" IsVisible="{Binding Has30KGift, Source={x:Reference Root}}">
+   <HorizontalStackLayout Spacing="5"><Label Text="{x:Static helpers:FontAwesomeGlyphs.Star}" FontFamily="FASolid" FontSize="11"/><Label Text="Has 30K Gift" FontSize="12" FontAttributes="Bold"/></HorizontalStackLayout>
+  </Frame>
+  <Border Stroke="{StaticResource SurfaceBorderColor}" StrokeShape="RoundRectangle 10" Padding="14,10">
+   <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnAvailabilityTapped"/></Border.GestureRecognizers>
+   <VerticalStackLayout Spacing="8">
+    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+     <Label Text="{Binding PrimaryAvailability.Glyph, Source={x:Reference Root}}" FontFamily="FASolid" FontSize="21" TextColor="{StaticResource SubtleTextColor}" VerticalTextAlignment="Center"/>
+     <VerticalStackLayout Grid.Column="1" Spacing="3"><Label Text="AVAILABLE TO" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Start"/><Label Text="{Binding PrimaryAvailabilityText, Source={x:Reference Root}}" FontSize="16" FontAttributes="Bold" MaxLines="1" LineBreakMode="TailTruncation"/></VerticalStackLayout>
+     <controls:ChevronIconView Grid.Column="2" IsExpanded="{Binding IsAvailabilityExpanded, Source={x:Reference Root}}" AnimateRotation="True" GlyphSize="14" IconSize="32" IsVisible="{Binding HasMultipleAvailabilityRequirements, Source={x:Reference Root}}"/>
+    </Grid>
+    <VerticalStackLayout BindableLayout.ItemsSource="{Binding AdditionalAvailabilityRequirements, Source={x:Reference Root}}" IsVisible="{Binding IsAvailabilityExpanded, Source={x:Reference Root}}" Spacing="8">
+     <BindableLayout.ItemTemplate><DataTemplate><Grid ColumnDefinitions="32,*" ColumnSpacing="10"><Label Text="{Binding Glyph}" FontFamily="FASolid" FontSize="18" TextColor="{StaticResource SubtleTextColor}" VerticalTextAlignment="Center"/><Label Grid.Column="1" Text="{Binding Text}" FontSize="16" FontAttributes="Bold" LineBreakMode="WordWrap"/></Grid></DataTemplate></BindableLayout.ItemTemplate>
+    </VerticalStackLayout>
+   </VerticalStackLayout>
+  </Border>
+  <controls:LoadingIndicator IsRunning="{Binding IsDetailsLoading, Source={x:Reference Root}}" Message="Loading guild details..." IsVisible="{Binding IsDetailsLoading, Source={x:Reference Root}}"/>
+  <Grid x:Name="ResponsiveBody" RowDefinitions="Auto,Auto" ColumnDefinitions="*,*" RowSpacing="16" ColumnSpacing="24">
+   <VisualStateManager.VisualStateGroups><VisualStateGroup x:Name="WidthStates">
+    <VisualState x:Name="Phone"><VisualState.StateTriggers><AdaptiveTrigger MinWindowWidth="0"/></VisualState.StateTriggers><VisualState.Setters>
+     <Setter TargetName="NarrativeColumn" Property="Grid.Row" Value="0"/><Setter TargetName="NarrativeColumn" Property="Grid.Column" Value="0"/><Setter TargetName="NarrativeColumn" Property="Grid.ColumnSpan" Value="2"/>
+     <Setter TargetName="BenefitsColumn" Property="Grid.Row" Value="1"/><Setter TargetName="BenefitsColumn" Property="Grid.Column" Value="0"/><Setter TargetName="BenefitsColumn" Property="Grid.ColumnSpan" Value="2"/><Setter TargetName="WideDivider" Property="IsVisible" Value="False"/>
+    </VisualState.Setters></VisualState>
+    <VisualState x:Name="Wide"><VisualState.StateTriggers><AdaptiveTrigger MinWindowWidth="720"/></VisualState.StateTriggers><VisualState.Setters>
+     <Setter TargetName="NarrativeColumn" Property="Grid.Row" Value="0"/><Setter TargetName="NarrativeColumn" Property="Grid.Column" Value="0"/><Setter TargetName="NarrativeColumn" Property="Grid.ColumnSpan" Value="1"/>
+     <Setter TargetName="BenefitsColumn" Property="Grid.Row" Value="0"/><Setter TargetName="BenefitsColumn" Property="Grid.Column" Value="1"/><Setter TargetName="BenefitsColumn" Property="Grid.ColumnSpan" Value="1"/><Setter TargetName="WideDivider" Property="IsVisible" Value="True"/>
+    </VisualState.Setters></VisualState>
+   </VisualStateGroup></VisualStateManager.VisualStateGroups>
+   <VerticalStackLayout x:Name="NarrativeColumn" Spacing="16">
+    <VerticalStackLayout Spacing="6" IsVisible="{Binding HasPreRequisites, Source={x:Reference Root}}"><Label Text="PRE-REQUISITES" Style="{StaticResource SectionHeaderLabelStyle}"/><Label Text="{Binding PreRequisites, Source={x:Reference Root}}" FontSize="16" LineBreakMode="WordWrap"/></VerticalStackLayout>
+    <VerticalStackLayout Spacing="6" IsVisible="{Binding HasEthos, Source={x:Reference Root}}"><Label Text="ETHOS" Style="{StaticResource SectionHeaderLabelStyle}"/><Label Text="{Binding Ethos, Source={x:Reference Root}}" FontSize="16" LineBreakMode="WordWrap"/></VerticalStackLayout>
+    <VerticalStackLayout Spacing="6" IsVisible="{Binding HasRestrictions, Source={x:Reference Root}}"><Label Text="RESTRICTIONS" Style="{StaticResource SectionHeaderLabelStyle}"/><Label Text="{Binding Restrictions, Source={x:Reference Root}}" FontSize="16" LineBreakMode="WordWrap"/></VerticalStackLayout>
+    <VerticalStackLayout Spacing="8" IsVisible="{Binding HasBackground, Source={x:Reference Root}}"><Label Text="BACKGROUND" Style="{StaticResource SectionHeaderLabelStyle}"/><Label Text="{Binding Background, Source={x:Reference Root}}" FontSize="16" LineBreakMode="WordWrap"/></VerticalStackLayout>
+   </VerticalStackLayout>
+   <BoxView x:Name="WideDivider" Grid.Column="1" HorizontalOptions="Start" Margin="-12,0,0,0" WidthRequest="1" Color="{StaticResource SurfaceBorderColor}"/>
+   <VerticalStackLayout x:Name="BenefitsColumn" Grid.Column="1" Spacing="14">
+    <Label Text="BENEFITS" Style="{StaticResource SectionHeaderLabelStyle}"/>
+    <VerticalStackLayout Spacing="6" IsVisible="{Binding HasBasic, Source={x:Reference Root}}"><Label Text="Basic" FontAttributes="Bold" FontSize="16"/><VerticalStackLayout BindableLayout.ItemsSource="{Binding BasicBenefitRows, Source={x:Reference Root}}" Spacing="8"><BindableLayout.ItemTemplate><DataTemplate><controls:ListItemRowView PrimaryText="{Binding DisplayText}" PrimaryTextSize="15" ShowInfo="True" ActionCommandParameter="{Binding .}" InfoClicked="OnBenefitInfoClicked"/></DataTemplate></BindableLayout.ItemTemplate></VerticalStackLayout></VerticalStackLayout>
+    <BoxView HeightRequest="1" Color="{StaticResource SurfaceBorderColor}" IsVisible="{Binding HasIntermediate, Source={x:Reference Root}}"/>
+    <VerticalStackLayout Spacing="6" IsVisible="{Binding HasIntermediate, Source={x:Reference Root}}"><Label Text="Intermediate" FontAttributes="Bold" FontSize="16"/><VerticalStackLayout BindableLayout.ItemsSource="{Binding IntermediateBenefitRows, Source={x:Reference Root}}" Spacing="8"><BindableLayout.ItemTemplate><DataTemplate><controls:ListItemRowView PrimaryText="{Binding DisplayText}" PrimaryTextSize="15" ShowInfo="True" ActionCommandParameter="{Binding .}" InfoClicked="OnBenefitInfoClicked"/></DataTemplate></BindableLayout.ItemTemplate></VerticalStackLayout></VerticalStackLayout>
+    <BoxView HeightRequest="1" Color="{StaticResource SurfaceBorderColor}" IsVisible="{Binding HasAdvanced, Source={x:Reference Root}}"/>
+    <VerticalStackLayout Spacing="6" IsVisible="{Binding HasAdvanced, Source={x:Reference Root}}"><Label Text="Advanced" FontAttributes="Bold" FontSize="16"/><VerticalStackLayout BindableLayout.ItemsSource="{Binding AdvancedBenefitRows, Source={x:Reference Root}}" Spacing="8"><BindableLayout.ItemTemplate><DataTemplate><controls:ListItemRowView PrimaryText="{Binding DisplayText}" PrimaryTextSize="15" ShowInfo="True" ActionCommandParameter="{Binding .}" InfoClicked="OnBenefitInfoClicked"/></DataTemplate></BindableLayout.ItemTemplate></VerticalStackLayout></VerticalStackLayout>
+    <VerticalStackLayout Spacing="7" IsVisible="{Binding HasMiracles, Source={x:Reference Root}}"><Label Text="MIRACLES" Style="{StaticResource SectionHeaderLabelStyle}"/><VerticalStackLayout BindableLayout.ItemsSource="{Binding MiracleRows, Source={x:Reference Root}}" Spacing="2"><BindableLayout.ItemTemplate><DataTemplate><Grid ColumnDefinitions="42,*,32" Padding="0,4"><Label Text="{Binding LevelText}" FontAttributes="Bold"/><Label Grid.Column="1" Text="{Binding Name}" FontSize="15"/><Button Grid.Column="2" Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}" FontFamily="FASolid" Padding="0" BackgroundColor="Transparent" Clicked="OnMiracleInfoClicked" CommandParameter="{Binding .}"/></Grid></DataTemplate></BindableLayout.ItemTemplate></VerticalStackLayout></VerticalStackLayout>
+    <VerticalStackLayout Spacing="7" IsVisible="{Binding HasCityBenefits, Source={x:Reference Root}}"><Label Text="CITY BENEFITS" Style="{StaticResource SectionHeaderLabelStyle}"/><VerticalStackLayout BindableLayout.ItemsSource="{Binding CityBenefits, Source={x:Reference Root}}" Spacing="7"><BindableLayout.ItemTemplate><DataTemplate><VerticalStackLayout Spacing="2"><Label Text="{Binding Name}" FontAttributes="Bold"/><Label Text="{Binding EffectsText}" FontSize="15" LineBreakMode="WordWrap"/></VerticalStackLayout></DataTemplate></BindableLayout.ItemTemplate></VerticalStackLayout></VerticalStackLayout>
+    <VerticalStackLayout Spacing="6" IsVisible="{Binding HasDenominationalMiracle, Source={x:Reference Root}}" BindingContext="{Binding DenominationalMiracle, Source={x:Reference Root}}"><Label Text="DENOMINATIONAL MIRACLE" Style="{StaticResource SectionHeaderLabelStyle}"/><Label Text="{Binding Name}" FontAttributes="Bold" FontSize="16"/><Label Text="{Binding Description}" FontSize="15" LineBreakMode="WordWrap"/><Label Text="{Binding Note}" FontAttributes="Italic" IsVisible="{Binding HasNote}"/></VerticalStackLayout>
+   </VerticalStackLayout>
+  </Grid>
+ </VerticalStackLayout>
 </ContentView>

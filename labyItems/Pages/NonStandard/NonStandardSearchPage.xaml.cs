@@ -1,3 +1,4 @@
+using labyItems.Helpers;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -265,7 +266,7 @@ public sealed class NonStandardSearchOptionItemVm : INotifyPropertyChanged
         }
     }
 
-    public string SelectionGlyph => IsSelected ? "\uf14a" : "\uf0c8";
+    public string SelectionGlyph => IsSelected ? FontAwesomeGlyphs.CheckboxChecked : FontAwesomeGlyphs.CheckboxUnchecked;
 
     private bool Set<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {

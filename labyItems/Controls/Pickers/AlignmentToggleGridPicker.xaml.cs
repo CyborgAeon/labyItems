@@ -1,3 +1,4 @@
+using labyItems.Helpers;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -137,7 +138,7 @@ public partial class AlignmentToggleGridPicker : ContentView
 
         var lockWatermark = new Label
         {
-            Text = "\uf023",
+            Text = FontAwesomeGlyphs.Lock,
             FontFamily = "FASolid",
             FontSize = 22,
             HorizontalTextAlignment = TextAlignment.Center,

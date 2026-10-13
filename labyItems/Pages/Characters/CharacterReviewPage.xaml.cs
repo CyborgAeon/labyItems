@@ -860,13 +860,13 @@ public partial class CharacterReviewPage : ContentPage
     private static string ResolveMoralGlyph(Alignment? alignment)
     {
         if (!alignment.HasValue)
-            return "\uf24e";
+            return FontAwesomeGlyphs.Neutral;
 
         return alignment.Value.Moral switch
         {
-            MoralAxis.Good => "\uf515",
-            MoralAxis.Evil => "\uf516",
-            _ => "\uf24e"
+            MoralAxis.Good => FontAwesomeGlyphs.Goodly,
+            MoralAxis.Evil => FontAwesomeGlyphs.Evil,
+            _ => FontAwesomeGlyphs.Neutral
         };
     }
 

@@ -2569,7 +2569,7 @@
         {
           "Field": "Class",
           "Operator": "NotIn",
-          "Value": ["Pure-Priest", "Hospitaller", "Armoured Priest"]
+          "Value": ["Pure-Priest", "Hospitaller", "Armoured Priest", "Shaman"]
         }
       ]
     }
@@ -3542,6 +3542,7 @@
     "Type": "professional",
     "PreRequisites": "1st Class Wizards and High Wizards may join freely. All other 1 st or 2nd class wizard subclasses (including 2nd class Wizard, Warlock, Rogue, Power Master, Sorcerer, Vivomancer / Necromancer) may join with the Principal's (Guild Sire's) permission. This must be signed onto their character card.\n\nNo one who is outlawed for party killing may join or remain a member of the Arcanum without the direct permission of the guild master.",
     "Ethos": "The Arcanum is an independent college teaching the magical arts, closely linked to the Enclave. It is devoted to encouraging study in all aspects of magic, and seeks to produce mages who are well-rounded in their knowledge of the art in all its forms.",
+    "30kGift": true,
     "Benefits": {
       "Basic": [
         {
@@ -4131,6 +4132,7 @@
     "PreRequisites": "Be a 1st class/multi-classed Warrior or 1st class/multi-classed published Warrior Subclass.",
     "Ethos": "Whether fighting for your own beliefs or the beliefs of others there is a common bond that unites you. Through strength and honour you not only ensure your own survival but the survival of others.",
     "Restrictions": "Must follow the Warriors code:\n• Respect each other – the strength of the company aids the strength of the individual. Obey your senior officers and never leave a fallen brother on the battlefield.\n• Never compromise your dignity, your pride or your beliefs.\n• Always strive for a fair deal, and when one is made honour it.\n• Taking any life is done with honour and dignity.",
+    "30kGift": true,
     "Benefits": {
       "Basic": [
         {

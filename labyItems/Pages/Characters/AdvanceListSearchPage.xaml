@@ -4,6 +4,7 @@
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
     xmlns:controls="clr-namespace:labyItems.Controls"
     Title="List Search"
     BackgroundColor="{StaticResource White}"
@@ -54,7 +55,7 @@
                     Padding="8,4">
                 <Grid ColumnDefinitions="Auto,*"
                       ColumnSpacing="6">
-                    <Button Text="&#xF0B0;"
+                    <Button Text="{x:Static helpers:FontAwesomeGlyphs.Filter}"
                             FontFamily="FASolid"
                             FontSize="13"
                             Padding="0"
@@ -134,7 +135,7 @@
                                     </Label>
 
                                     <Label Grid.Column="2"
-                                           Text="&#xF05A;"
+                                           Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                            FontFamily="FASolid"
                                            FontSize="13"
                                            TextColor="{StaticResource SubtleTextColor}"

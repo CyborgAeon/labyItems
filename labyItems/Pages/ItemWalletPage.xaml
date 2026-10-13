@@ -4,6 +4,7 @@
     x:Name="RootPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
     xmlns:controls="clr-namespace:labyItems.Controls"
     NavigationPage.HasNavigationBar="False"
     Shell.NavBarIsVisible="False"
@@ -72,7 +73,7 @@
                                                            Text="{Binding Text}"
                                                            LineBreakMode="WordWrap"/>
                                                     <Button Grid.Column="1"
-                                                            Text="&#xF05A;"
+                                                            Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                                             FontFamily="FASolid"
                                                             FontSize="12"
                                                             Padding="0"

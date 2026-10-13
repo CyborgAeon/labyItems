@@ -34,7 +34,7 @@
                            Text="{Binding SearchText, Mode=TwoWay}"
                            VerticalOptions="Center"/>
                     <Button Grid.Column="1"
-                            Text="&#xF0B0;"
+                            Text="{x:Static helpers:FontAwesomeGlyphs.Filter}"
                             FontFamily="FASolid"
                             FontSize="13"
                             Padding="0"
@@ -93,8 +93,15 @@
                                            FontFamily="FASolid"
                                            FontSize="12"
                                            TextColor="{Binding IconColor}"
+                                           IsVisible="{Binding UsesFontIcon}"
                                            HorizontalTextAlignment="Center"
                                            VerticalTextAlignment="Center"/>
+                                    <Image Source="{Binding IconImageSource}"
+                                           IsVisible="{Binding UsesImageIcon}"
+                                           WidthRequest="15"
+                                           HeightRequest="15"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
                                 </Border>
 
                                 <VerticalStackLayout Grid.Column="1"

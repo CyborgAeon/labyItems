@@ -304,12 +304,12 @@ public partial class EvocationDetailCardView : ContentView
     {
         MetaChips.Clear();
 
-        AddMetaChip("\uf256", "Gesture", Evocation?.verbal);
-        AddMetaChip("\uf124", "Range", Evocation?.range);
-        AddMetaChip("\uf017", "Duration", Evocation?.duration);
+        AddMetaChip(FontAwesomeGlyphs.Gesture, "Gesture", Evocation?.verbal);
+        AddMetaChip(FontAwesomeGlyphs.LocationArrow, "Range", Evocation?.range);
+        AddMetaChip(FontAwesomeGlyphs.Clock, "Duration", Evocation?.duration);
 
         if (Evocation?.nonStandard == true)
-            MetaChips.Add(new EvocationMetaChipVm("\uf12a", "Non-standard"));
+            MetaChips.Add(new EvocationMetaChipVm(FontAwesomeGlyphs.Tree, "Non-standard"));
 
         OnPropertyChanged(nameof(HasMetaChips));
     }

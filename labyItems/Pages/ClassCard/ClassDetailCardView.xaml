@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView x:Class="labyItems.Pages.ClassCard.ClassDetailCardView"
+             x:Name="Root"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:labyItems.Controls">
+    <ContentView>
+        <VerticalStackLayout Spacing="12">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                <controls:ClassBracketIconView IconSize="48"
+                                               HasSplitIcon="{Binding HasSplitIcon, Source={x:Reference Root}}"
+                                               SingleGlyph="{Binding SingleGlyph, Source={x:Reference Root}}"
+                                               SplitLeftGlyph="{Binding SplitLeftGlyph, Source={x:Reference Root}}"
+                                               SplitRightGlyph="{Binding SplitRightGlyph, Source={x:Reference Root}}"
+                                               SingleBackground="{Binding SingleBackground, Source={x:Reference Root}}"
+                                               SplitLeftBackground="{Binding SplitLeftBackground, Source={x:Reference Root}}"
+                                               SplitRightBackground="{Binding SplitRightBackground, Source={x:Reference Root}}"
+                                               BorderColor="{StaticResource SurfaceBorderColor}"/>
+                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                    <Label Text="{Binding ClassName, Source={x:Reference Root}}" FontSize="28" FontAttributes="Bold" LineBreakMode="WordWrap"/>
+                    <Label Text="{Binding BracketText, Source={x:Reference Root}}" TextColor="{StaticResource MutedTextColor}"/>
+                </VerticalStackLayout>
+            </Grid>
+
+            <Label Text="Non-standard" TextColor="{StaticResource AccentMaroonColor}" FontSize="12" FontAttributes="Bold"
+                   IsVisible="{Binding IsNonStandard, Source={x:Reference Root}}"/>
+
+            <VerticalStackLayout Margin="-16,0" Padding="12,10" Spacing="10">
+                <Grid ColumnDefinitions="*,1,*,1,*">
+                    <VerticalStackLayout><Label Text="MAX AC" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding MaxAcText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+                    <BoxView Grid.Column="1" Color="{StaticResource SurfaceBorderColor}"/>
+                    <VerticalStackLayout Grid.Column="2"><Label Text="POWER / LEVEL" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding PowerPerLevelText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+                    <BoxView Grid.Column="3" Color="{StaticResource SurfaceBorderColor}"/>
+                    <VerticalStackLayout Grid.Column="4"><Label Text="CASTER LEVEL" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding CasterLevelText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+                </Grid>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding PropertyRows, Source={x:Reference Root}}" Spacing="10">
+                <BindableLayout.ItemTemplate><DataTemplate>
+                    <Grid ColumnDefinitions="110,*" ColumnSpacing="10">
+                        <Label Text="{Binding Label}" Style="{StaticResource SectionHeaderLabelStyle}"/>
+                        <Label Grid.Column="1" Text="{Binding Value}" FontSize="16" LineBreakMode="WordWrap"/>
+                    </Grid>
+                </DataTemplate></BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout IsVisible="{Binding HasLevels, Source={x:Reference Root}}" Spacing="8">
+                <Label Text="LEVELS" Style="{StaticResource SectionHeaderLabelStyle}"/>
+                <controls:LevelAbilityTableView ItemsSource="{Binding LevelRows, Source={x:Reference Root}}"
+                                                ShowBodyAndLoc="False" ShowWeaponSkillsColumn="True"
+                                                AbilitiesHeaderText="Skills/Abilities"/>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ContentView>
+</ContentView>

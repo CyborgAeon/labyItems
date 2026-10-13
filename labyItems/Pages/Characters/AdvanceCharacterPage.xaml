@@ -4,6 +4,7 @@
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
     xmlns:controls="clr-namespace:labyItems.Controls"
     xmlns:sliders="clr-namespace:labyItems.Controls.Sliders"
     xmlns:viewModels="clr-namespace:labyItems.Pages.Characters.ViewModels"
@@ -57,10 +58,10 @@
 
                     <VerticalStackLayout Spacing="8">
                         <controls:AdvanceSectionActionRow x:Name="AbilitiesActionRow"
-                                                          IconGlyph="&#xF005;"
+                                                          IconGlyph="{x:Static helpers:FontAwesomeGlyphs.Star}"
                                                           Heading="Abilities"
                                                           Subheading="Search and add advancement abilities."
-                                                          ActionGlyph="&#xF067;"
+                                                          ActionGlyph="{x:Static helpers:FontAwesomeGlyphs.Add}"
                                                           ActionClicked="OnOpenAbilitySearchClicked"/>
                         <Label Text="{Binding AbilityPointsSummary}"
                                FontSize="12"
@@ -83,7 +84,7 @@
                                                    Opacity="0.7"
                                                    VerticalTextAlignment="Center"/>
                                             <Button Grid.Column="2"
-                                                    Text="&#xF05A;"
+                                                    Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                                     FontFamily="FASolid"
                                                     FontSize="12"
                                                     Padding="0"
@@ -96,7 +97,7 @@
                                                     Clicked="OnViewAbilityDetailsClicked"
                                                     CommandParameter="{Binding .}"/>
                                             <Button Grid.Column="3"
-                                                    Text="&#xF2ED;"
+                                                    Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
                                                     FontFamily="FASolid"
                                                     FontSize="12"
                                                     Padding="0"
@@ -117,10 +118,10 @@
 
                     <VerticalStackLayout Spacing="8">
                         <controls:AdvanceSectionActionRow x:Name="MultiRaceActionRow"
-                                                          IconGlyph="&#xF0C0;"
+                                                          IconGlyph="{x:Static helpers:FontAwesomeGlyphs.MultiRace}"
                                                           Heading="Multi-Race"
                                                           Subheading="Select one path and track levels."
-                                                          ActionGlyph="&#xF067;"
+                                                          ActionGlyph="{x:Static helpers:FontAwesomeGlyphs.Add}"
                                                           ActionClicked="OnOpenMultiRaceWizardClicked"/>
                         <Label Text="{Binding MultiRaceEmptyStateText}"
                                Opacity="0.7"
@@ -179,7 +180,7 @@
                                        HorizontalTextAlignment="Center"
                                        VerticalTextAlignment="Center"/>
                                 <Button Grid.Column="3"
-                                        Text="&#xF1FC;"
+                                        Text="{x:Static helpers:FontAwesomeGlyphs.Edit}"
                                         FontFamily="FASolid"
                                         FontSize="12"
                                         Padding="0"
@@ -194,7 +195,7 @@
                                         Clicked="OnEditMultiRaceClicked"
                                         CommandParameter="{Binding MultiRaceSelection}"/>
                                 <Button Grid.Column="4"
-                                        Text="&#xF05A;"
+                                        Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                         FontFamily="FASolid"
                                         FontSize="12"
                                         Padding="0"
@@ -210,7 +211,7 @@
                                         Clicked="OnViewMultiRaceInfoClicked"
                                         CommandParameter="{Binding MultiRaceSelection}"/>
                                 <Button Grid.Column="5"
-                                        Text="&#xF2ED;"
+                                        Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
                                         FontFamily="FASolid"
                                         FontSize="12"
                                         Padding="0"
@@ -231,10 +232,10 @@
 
                     <VerticalStackLayout Spacing="8">
                         <controls:AdvanceSectionActionRow x:Name="MultiClassActionRow"
-                                                          IconGlyph="&#xF02D;"
+                                                          IconGlyph="{x:Static helpers:FontAwesomeGlyphs.Miracle}"
                                                           Heading="Multi-Class"
                                                           Subheading="Choose classes and set purchased levels."
-                                                          ActionGlyph="&#xF067;"
+                                                          ActionGlyph="{x:Static helpers:FontAwesomeGlyphs.Add}"
                                                           ActionClicked="OnOpenMultiClassWizardClicked"/>
                         <Label Text="{Binding MultiClassEmptyStateText}"
                                Opacity="0.7"
@@ -296,7 +297,7 @@
                                                    HorizontalTextAlignment="Center"
                                                    VerticalTextAlignment="Center"/>
                                             <Button Grid.Column="3"
-                                                    Text="&#xF1FC;"
+                                                    Text="{x:Static helpers:FontAwesomeGlyphs.Edit}"
                                                     FontFamily="FASolid"
                                                     FontSize="12"
                                                     Padding="0"
@@ -311,7 +312,7 @@
                                                     Clicked="OnEditMultiClassClicked"
                                                     CommandParameter="{Binding .}"/>
                                             <Button Grid.Column="4"
-                                                    Text="&#xF05A;"
+                                                    Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                                     FontFamily="FASolid"
                                                     FontSize="12"
                                                     Padding="0"
@@ -327,7 +328,7 @@
                                                     Clicked="OnViewMultiClassInfoClicked"
                                                     CommandParameter="{Binding .}"/>
                                             <Button Grid.Column="5"
-                                                    Text="&#xF2ED;"
+                                                    Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
                                                     FontFamily="FASolid"
                                                     FontSize="12"
                                                     Padding="0"
@@ -351,16 +352,16 @@
 
                     <VerticalStackLayout Spacing="8">
                         <controls:AdvanceSectionActionRow x:Name="IspItemActionRow"
-                                                          IconGlyph="&#xF187;"
+                                                          IconGlyph="{x:Static helpers:FontAwesomeGlyphs.IspItem}"
                                                           Heading="Items"
                                                           Subheading="Create and assign an ISP item."
-                                                          ActionGlyph="&#xF067;"
+                                                          ActionGlyph="{x:Static helpers:FontAwesomeGlyphs.Add}"
                                                           ActionClicked="OnOpenIspItemCalculatorClicked"/>
                         <controls:AdvanceSectionActionRow x:Name="MpItemActionRow"
-                                                          IconGlyph="&#xF279;"
+                                                          IconGlyph="{x:Static helpers:FontAwesomeGlyphs.AssignedMonsterPointItem}"
                                                           Heading="Add Monster Point Item"
                                                           Subheading="Use the MP item builder and assign it to this character."
-                                                          ActionGlyph="&#xF067;"
+                                                          ActionGlyph="{x:Static helpers:FontAwesomeGlyphs.Add}"
                                                           ActionClicked="OnOpenMonsterPointCalculatorClicked"/>
 
                         <Label Text="No assigned items yet."
@@ -410,7 +411,7 @@
                                                    HorizontalTextAlignment="Center"
                                                    VerticalTextAlignment="Center"/>
                                             <Button Grid.Column="2"
-                                                    Text="&#xF1FC;"
+                                                    Text="{x:Static helpers:FontAwesomeGlyphs.Edit}"
                                                     FontFamily="FASolid"
                                                     FontSize="12"
                                                     Padding="0"
@@ -425,7 +426,7 @@
                                                     Clicked="OnEditItemClicked"
                                                     CommandParameter="{Binding .}"/>
                                             <Button Grid.Column="3"
-                                                    Text="&#xF05A;"
+                                                    Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                                     FontFamily="FASolid"
                                                     FontSize="12"
                                                     Padding="0"
@@ -440,7 +441,7 @@
                                                     Clicked="OnViewItemInfoClicked"
                                                     CommandParameter="{Binding .}"/>
                                             <Button Grid.Column="4"
-                                                    Text="&#xF2ED;"
+                                                    Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
                                                     FontFamily="FASolid"
                                                     FontSize="12"
                                                     Padding="0"
@@ -591,7 +592,7 @@
                                                                            HorizontalTextAlignment="End"
                                                                            VerticalTextAlignment="Center"/>
                                                                     <Button Grid.Column="2"
-                                                                            Text="&#xF05A;"
+                                                                            Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                                                             FontFamily="FASolid"
                                                                             FontSize="12"
                                                                             Padding="0"
@@ -605,7 +606,7 @@
                                                                             Clicked="OnViewSpellDetailsClicked"
                                                                             CommandParameter="{Binding .}"/>
                                                                     <Button Grid.Column="3"
-                                                                            Text="&#xF2ED;"
+                                                                            Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
                                                                             FontFamily="FASolid"
                                                                             FontSize="12"
                                                                             Padding="0"
@@ -993,7 +994,7 @@
                                                                                HorizontalTextAlignment="End"
                                                                                VerticalTextAlignment="Center"/>
                                                                         <Button Grid.Column="2"
-                                                                                Text="&#xF05A;"
+                                                                                Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                                                                 FontFamily="FASolid"
                                                                                 FontSize="12"
                                                                                 Padding="0"
@@ -1007,7 +1008,7 @@
                                                                                 Clicked="OnViewMiracleDetailsClicked"
                                                                                 CommandParameter="{Binding .}"/>
                                                                         <Button Grid.Column="3"
-                                                                                Text="&#xF2ED;"
+                                                                                Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
                                                                                 FontFamily="FASolid"
                                                                                 FontSize="12"
                                                                                 Padding="0"
@@ -1313,7 +1314,7 @@
                                                                            HorizontalTextAlignment="End"
                                                                            VerticalTextAlignment="Center"/>
                                                                     <Button Grid.Column="2"
-                                                                            Text="&#xF05A;"
+                                                                            Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
                                                                             FontFamily="FASolid"
                                                                             FontSize="12"
                                                                             Padding="0"
@@ -1327,7 +1328,7 @@
                                                                             Clicked="OnViewEvocationDetailsClicked"
                                                                             CommandParameter="{Binding .}"/>
                                                                     <Button Grid.Column="3"
-                                                                            Text="&#xF2ED;"
+                                                                            Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
                                                                             FontFamily="FASolid"
                                                                             FontSize="12"
                                                                             Padding="0"
