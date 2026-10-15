@@ -10,6 +10,7 @@
 	<ItemGroup>
 		<Compile Include="../../labyItems/Pages/ClassCard/ClassPowerCalculationFormatter.cs" Link="Source/ClassPowerCalculationFormatter.cs" />
 		<Compile Include="../../labyItems/Pages/ClassCard/ClassProgressionProjector.cs" Link="Source/ClassProgressionProjector.cs" />
+		<Compile Include="../../labyItems/Pages/ClassCard/ClassPostEighthFilter.cs" Link="Source/ClassPostEighthFilter.cs" />
 		<Compile Include="../../labyItems/Pages/RaceCard/RacePostEighthFilter.cs" Link="Source/RacePostEighthFilter.cs" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit" />

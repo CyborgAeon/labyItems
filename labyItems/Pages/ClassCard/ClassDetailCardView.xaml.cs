@@ -22,6 +22,7 @@ public partial class ClassDetailCardView : ContentView
     public ObservableCollection<ClassProgressionRow> ProgressionRows { get; } = new();
     public ObservableCollection<ClassProgressionRow> WeaponSkillRows { get; } = new();
     public ObservableCollection<ClassWeaponSkillLevelRow> WeaponSkillLevelRows { get; } = new();
+    public ObservableCollection<ClassPostEighthRow> PostEighthRows { get; } = new();
     private int _rebuildVersion;
     public string LifeScaleValue { get; private set; } = "—";
     public string LifeScaleSubtitle { get; private set; } = "8th Lifescale";
@@ -34,6 +35,7 @@ public partial class ClassDetailCardView : ContentView
     public bool IsNonStandard => ClassRecord?.NonStandard == true;
     public bool HasProgression => ProgressionRows.Count > 0;
     public bool HasWeaponSkills => WeaponSkillRows.Count > 0;
+    public bool HasPostEighth => PostEighthRows.Count > 0;
     public string WeaponSkillsSummary => ClassProgressionProjector.BuildWeaponSkillSummary(WeaponSkillRows);
     public string BracketText => ClassBracketIconHelper.BuildBracketSubheading(ClassRecord?.Brackets ?? [], "Unbracketed");
     public bool HasSplitIcon => (ClassRecord?.Brackets?.Count ?? 0) > 1;
@@ -49,7 +51,7 @@ public partial class ClassDetailCardView : ContentView
     private async void Rebuild()
     {
         var rebuildVersion = ++_rebuildVersion;
-        FactCells.Clear(); FactRows.Clear(); NarrativeRows.Clear(); ProgressionRows.Clear(); WeaponSkillRows.Clear(); WeaponSkillLevelRows.Clear();
+        FactCells.Clear(); FactRows.Clear(); NarrativeRows.Clear(); ProgressionRows.Clear(); WeaponSkillRows.Clear(); WeaponSkillLevelRows.Clear(); PostEighthRows.Clear();
         IsProgressionExpanded = true; IsWeaponSkillsExpanded = false;
         var record = ClassRecord;
         LifeScaleValue = "—";
@@ -67,13 +69,21 @@ public partial class ClassDetailCardView : ContentView
 
             try
             {
-                var lifeScale = await LifeScalesService.GetDefaultForClassAsync(ClassName);
+                var lifeScaleTask = LifeScalesService.GetDefaultForClassAsync(ClassName);
+                var abilitiesTask = EvolutionService.GetAllAbilitiesAsync();
+                var classesTask = ClassService.GetAllAsync();
+                var racesTask = PeopleService.GetAllAsync();
+                await Task.WhenAll(lifeScaleTask, abilitiesTask, classesTask, racesTask);
                 if (rebuildVersion != _rebuildVersion) return;
+                var lifeScale = lifeScaleTask.Result;
                 if (lifeScale != null)
                 {
                     LifeScaleValue = $"{lifeScale.LevelEight.Body} / {lifeScale.LevelEight.Loc}";
                     LifeScaleSubtitle = $" 8th level {lifeScale.RaceName}";
                 }
+                var draft = new CharacterDraft { Class = ClassName };
+                foreach (var ability in ClassPostEighthFilter.Filter(abilitiesTask.Result, draft, classesTask.Result, racesTask.Result, new AbilityAvailabilityService()))
+                    PostEighthRows.Add(new ClassPostEighthRow(ability, RowColor(PostEighthRows.Count)));
             }
             catch (Exception ex)
             {
@@ -86,7 +96,7 @@ public partial class ClassDetailCardView : ContentView
     }
     private void AddFact(string label, string value) => FactCells.Add(new(label, string.IsNullOrWhiteSpace(value) ? "—" : value));
     private void AddNarrative(string label, string? value) { if (!string.IsNullOrWhiteSpace(value)) NarrativeRows.Add(new(label, value)); }
-    private void Raise() { foreach (var name in new[] { nameof(ClassName), nameof(LifeScaleValue), nameof(LifeScaleSubtitle), nameof(MaxAcText), nameof(AlignmentText), nameof(ArmourTypesText), nameof(BuyAsText), nameof(IsNonStandard), nameof(HasProgression), nameof(HasWeaponSkills), nameof(WeaponSkillsSummary), nameof(IsProgressionExpanded), nameof(IsWeaponSkillsExpanded), nameof(BracketText), nameof(HasSplitIcon), nameof(SingleGlyph), nameof(SplitLeftGlyph), nameof(SplitRightGlyph), nameof(SingleBackground), nameof(SplitLeftBackground), nameof(SplitRightBackground) }) OnPropertyChanged(name); }
+    private void Raise() { foreach (var name in new[] { nameof(ClassName), nameof(LifeScaleValue), nameof(LifeScaleSubtitle), nameof(MaxAcText), nameof(AlignmentText), nameof(ArmourTypesText), nameof(BuyAsText), nameof(IsNonStandard), nameof(HasProgression), nameof(HasWeaponSkills), nameof(HasPostEighth), nameof(WeaponSkillsSummary), nameof(IsProgressionExpanded), nameof(IsWeaponSkillsExpanded), nameof(BracketText), nameof(HasSplitIcon), nameof(SingleGlyph), nameof(SplitLeftGlyph), nameof(SplitRightGlyph), nameof(SingleBackground), nameof(SplitLeftBackground), nameof(SplitRightBackground) }) OnPropertyChanged(name); }
     private void OnProgressionTapped(object? sender, TappedEventArgs e) { IsProgressionExpanded = !IsProgressionExpanded; OnPropertyChanged(nameof(IsProgressionExpanded)); }
     private void OnWeaponSkillsTapped(object? sender, TappedEventArgs e) { IsWeaponSkillsExpanded = !IsWeaponSkillsExpanded; OnPropertyChanged(nameof(IsWeaponSkillsExpanded)); }
     private async void OnLifescalesClicked(object? sender, EventArgs e) { if (GetParentPage() is Page page) await page.DisplayAlert("Lifescales", "todo", "OK"); }
@@ -114,10 +124,16 @@ public partial class ClassDetailCardView : ContentView
         var ability = detail?.Ability ?? DetailCardLookupService.ToAbilityResult(row.Definition, lookupKey, row.Name);
         await page.Navigation.PushAsync(new AbilityCardPage(ability));
     }
+    private async void OnPostEighthInfoClicked(object? sender, EventArgs e)
+    {
+        if (sender is ListItemRowView { ActionCommandParameter: ClassPostEighthRow row } && GetParentPage() is Page page)
+            await page.Navigation.PushAsync(new AbilityCardPage(row.Ability));
+    }
     private Page? GetParentPage() { Element? current = this; while (current != null) { if (current is Page page) return page; current = current.Parent; } return null; }
     private static string Join(IEnumerable<string>? values) => string.Join(", ", values?.Where(v => !string.IsNullOrWhiteSpace(v)) ?? []);
     private static string ValueOrDash(params string?[] values) => values.FirstOrDefault(v => !string.IsNullOrWhiteSpace(v)) ?? "—";
     private static string JsonText(JsonElement value) => value.ValueKind is JsonValueKind.Undefined or JsonValueKind.Null ? "—" : value.ToString();
+    private static Color RowColor(int index) => index % 2 == 0 ? Colors.White : Color.FromArgb("#FAF8F3");
     internal static string FormatGuilds(GuildOverrideRules? rules) { if (rules == null) return ""; var values = new List<string>(); if (rules.IsCityBound) values.Add("City bound"); AddChannel(values, "Social", rules.Social); AddChannel(values, "Professional", rules.Professional); AddChannel(values, "Political", rules.Political); return string.Join("; ", values); }
     private static void AddChannel(List<string> values, string name, GuildOverrideChannel channel) { if (channel.CanJoin == false) values.Add($"No {name.ToLowerInvariant()} guild"); if (!string.IsNullOrWhiteSpace(channel.GuildPeople)) values.Add($"{name}: {channel.GuildPeople}"); if (channel.ReplacedBy.Count > 0) values.Add($"{name}: {Join(channel.ReplacedBy)}"); }
     public sealed record DetailRow(string Label, string Value);
@@ -127,6 +143,16 @@ public partial class ClassDetailCardView : ContentView
         public bool HasSingle => Right == null;
     }
 
-    public string ResolveArmourTypes(IEnumerable<string>? armourTypes) => 
-    armourTypes.Count() > 2 ? "Any" : ValueOrDash(Join(armourTypes));
+    public string ResolveArmourTypes(IEnumerable<string>? armourTypes)
+    {
+        var values = armourTypes?.Where(value => !string.IsNullOrWhiteSpace(value)).ToList() ?? [];
+        return values.Count > 2 ? "Any" : ValueOrDash(Join(values));
+    }
+}
+
+public sealed record ClassPostEighthRow(EvolutionService.AbilityResult Ability, Color RowBackgroundColor)
+{
+    public string DisplayName => Ability.DisplayName;
+    public string CostText => Ability.Cost.ToString();
+    public string TableText => Ability.Table.ToString();
 }

@@ -82,6 +82,8 @@ public sealed class MultiRaceAvailabilityOption : IMultiPathAvailabilityOption
     public string Display { get; set; } = string.Empty;
     public List<RuleClause> Rules { get; set; } = new();
     public Dictionary<string, int> CostsByLevel { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+    public List<string> PreReqs { get; set; } = new();
+    public JsonElement Notes { get; set; }
 }
 
 public sealed class MultiRaceSystemEffect : IMultiPathSystemEffect<MultiRaceLifeScaleReference>

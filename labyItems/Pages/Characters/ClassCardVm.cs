@@ -34,6 +34,7 @@ public sealed class ClassCardVm : INotifyPropertyChanged
     public string Key { get; init; } = "";
     public string Name { get; init; } = "";
     public string Category { get; init; } = "";
+    public string Subtitle => Category;
     public string Icon { get; init; } = "🛡️";
     public string IconGlyph { get; init; } = "";
     public string IconBackground { get; init; } = "";

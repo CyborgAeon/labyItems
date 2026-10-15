@@ -1,22 +1,52 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentView x:Class="labyItems.Pages.RaceCard.RaceDetailCardView" x:Name="Root" xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:controls="clr-namespace:labyItems.Controls">
-    <ContentView>
-        <VerticalStackLayout Spacing="12">
-            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                <Frame WidthRequest="48" HeightRequest="48" CornerRadius="24" Padding="0" HasShadow="False" BorderColor="{StaticResource SurfaceBorderColor}" BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}"><Label Text="{Binding Icon, Source={x:Reference Root}}" FontSize="22" HorizontalOptions="Center" VerticalOptions="Center"/></Frame>
-                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center"><Label Text="{Binding RaceName, Source={x:Reference Root}}" FontSize="28" FontAttributes="Bold" LineBreakMode="WordWrap"/><Label Text="{Binding PeopleTypeText, Source={x:Reference Root}}" TextColor="{StaticResource MutedTextColor}"/></VerticalStackLayout>
-            </Grid>
-            <Label Text="Non-standard" TextColor="{StaticResource AccentMaroonColor}" FontSize="12" FontAttributes="Bold" IsVisible="{Binding IsNonStandard, Source={x:Reference Root}}"/>
-
-            <VerticalStackLayout IsVisible="{Binding HasTags, Source={x:Reference Root}}" Spacing="8"><Label Text="TAGS" Style="{StaticResource SectionHeaderLabelStyle}"/><controls:ChipGroup Items="{Binding Tags, Source={x:Reference Root}}" InputTransparent="True"/></VerticalStackLayout>
-
-            <VerticalStackLayout IsVisible="{Binding HasDescription, Source={x:Reference Root}}" Spacing="8"><Label Text="DESCRIPTION" Style="{StaticResource SectionHeaderLabelStyle}"/><Label Text="{Binding DescriptionText, Source={x:Reference Root}}" FontSize="16" LineBreakMode="WordWrap"/></VerticalStackLayout>
-
-            <VerticalStackLayout BindableLayout.ItemsSource="{Binding PropertyRows, Source={x:Reference Root}}" Spacing="10">
-                <BindableLayout.ItemTemplate><DataTemplate><Grid ColumnDefinitions="110,*" ColumnSpacing="10"><Label Text="{Binding Label}" Style="{StaticResource SectionHeaderLabelStyle}"/><Label Grid.Column="1" Text="{Binding Value}" FontSize="16" LineBreakMode="WordWrap"/></Grid></DataTemplate></BindableLayout.ItemTemplate>
-            </VerticalStackLayout>
-
-            <VerticalStackLayout IsVisible="{Binding HasLevels, Source={x:Reference Root}}" Spacing="8"><Label Text="LEVELS" Style="{StaticResource SectionHeaderLabelStyle}"/><controls:LevelAbilityTableView ItemsSource="{Binding LevelRows, Source={x:Reference Root}}" ShowBodyAndLoc="False" AbilitiesHeaderText="Abilities"/></VerticalStackLayout>
-        </VerticalStackLayout>
-    </ContentView>
+<ContentView x:Class="labyItems.Pages.RaceCard.RaceDetailCardView" x:Name="Root"
+ xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+ xmlns:controls="clr-namespace:labyItems.Controls">
+ <VerticalStackLayout Spacing="14">
+  <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+   <VerticalStackLayout Spacing="2" VerticalOptions="Center"><Label Text="{Binding RaceName, Source={x:Reference Root}}" FontSize="28" FontAttributes="Bold" LineBreakMode="WordWrap"/><Label Text="{Binding PeopleTypeText, Source={x:Reference Root}}" FontSize="15" TextColor="{StaticResource MutedTextColor}"/></VerticalStackLayout>
+   <Frame Grid.Column="1" WidthRequest="48" HeightRequest="48" CornerRadius="24" Padding="0" HasShadow="False" BorderColor="{StaticResource SurfaceBorderColor}" BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}"><Label Text="{Binding Icon, Source={x:Reference Root}}" FontSize="22" HorizontalOptions="Center" VerticalOptions="Center"/></Frame>
+  </Grid>
+  <Label Text="Non-standard" TextColor="{StaticResource AccentMaroonColor}" FontSize="12" FontAttributes="Bold" IsVisible="{Binding IsNonStandard, Source={x:Reference Root}}"/>
+  <VerticalStackLayout Margin="-16,0" Padding="12,10" Spacing="10">
+   <Grid ColumnDefinitions="*,1,*,1,*" ColumnSpacing="12" IsVisible="{Binding HasSubtypeOptions, Source={x:Reference Root}}">
+    <VerticalStackLayout Spacing="2"><Label Text="BUY AS" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding BuyAsText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}" LineBreakMode="WordWrap"/></VerticalStackLayout>
+    <BoxView Grid.Column="1" Color="{StaticResource SurfaceBorderColor}"/>
+    <VerticalStackLayout Grid.Column="2" Spacing="2"><Label Text="ALIGNMENT" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding AlignmentText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}" LineBreakMode="WordWrap"/></VerticalStackLayout>
+    <BoxView Grid.Column="3" Color="{StaticResource SurfaceBorderColor}"/>
+    <Grid Grid.Column="4" ColumnDefinitions="*,Auto">
+     <Grid.GestureRecognizers><TapGestureRecognizer Tapped="OnSubtypeTapped"/></Grid.GestureRecognizers>
+     <VerticalStackLayout Spacing="2"><Label Text="SUBTYPE" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding SelectedSubtype.DisplayName, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}" MaxLines="1" LineBreakMode="TailTruncation"/></VerticalStackLayout>
+     <controls:ChevronIconView Grid.Column="1" Rotation="90" GlyphSize="11" IconSize="18" InputTransparent="True" VerticalOptions="Center"/>
+    </Grid>
+   </Grid>
+   <Grid ColumnDefinitions="*,1,*" ColumnSpacing="12" IsVisible="{Binding HasNoSubtypeOptions, Source={x:Reference Root}}">
+    <VerticalStackLayout Spacing="2"><Label Text="BUY AS" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding BuyAsText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}" LineBreakMode="WordWrap"/></VerticalStackLayout>
+    <BoxView Grid.Column="1" Color="{StaticResource SurfaceBorderColor}"/>
+    <VerticalStackLayout Grid.Column="2" Spacing="2"><Label Text="ALIGNMENT" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding AlignmentText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}" LineBreakMode="WordWrap"/></VerticalStackLayout>
+   </Grid>
+  </VerticalStackLayout>
+  <VerticalStackLayout Spacing="7" IsVisible="{Binding HasLevels, Source={x:Reference Root}}">
+   <Label Text="PROGRESSION BY LEVEL" Style="{StaticResource SectionHeaderLabelStyle}"/>
+   <Grid ColumnDefinitions="54,*,72,32" Padding="10,0" ColumnSpacing="8"><Label Text="LVL" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center"/><Label Grid.Column="1" Text="ABILITY" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center"/><Label Grid.Column="2" Text="ARMOUR" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center"/><Label Grid.Column="3" Text="INFO" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center"/></Grid>
+   <VerticalStackLayout BindableLayout.ItemsSource="{Binding LevelRows, Source={x:Reference Root}}" Spacing="0"><BindableLayout.ItemTemplate><DataTemplate><controls:ListItemRowView PrimaryText="{Binding Row.StageText}" SecondaryText="{Binding Row.AbilitiesDisplayText}" TertiaryText="{Binding Row.ArmourText}" PrimaryColumnWidth="44" SecondaryColumnWidth="*" TertiaryColumnWidth="64" InfoColumnWidth="18" PrimaryTextAlignment="Center" SecondaryTextAlignment="Center" RowBackgroundColor="{Binding RowBackgroundColor}" ShowSecondaryText="True" ShowTertiaryText="True" ShowInfo="{Binding Row.HasAbilityDetails}" ActionCommandParameter="{Binding .}" InfoClicked="OnProgressionInfoClicked" RowClicked="OnProgressionInfoClicked"/></DataTemplate></BindableLayout.ItemTemplate></VerticalStackLayout>
+  </VerticalStackLayout>
+  <VerticalStackLayout Spacing="7" IsVisible="{Binding HasPostEighth, Source={x:Reference Root}}">
+   <Label Text="POST-8TH" Style="{StaticResource SectionHeaderLabelStyle}"/>
+   <Grid ColumnDefinitions="*,64,54,32" Padding="10,0" ColumnSpacing="8"><Label Text="ABILITY" Style="{StaticResource KeyInfoLabelStyle}"/><Label Grid.Column="1" Text="COST" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center"/><Label Grid.Column="2" Text="TABLE" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center"/><Label Grid.Column="3" Text="INFO" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center"/></Grid>
+   <VerticalStackLayout BindableLayout.ItemsSource="{Binding PostEighthRows, Source={x:Reference Root}}" Spacing="0"><BindableLayout.ItemTemplate><DataTemplate><controls:ListItemRowView PrimaryText="{Binding DisplayName}" SecondaryText="{Binding CostText}" TertiaryText="{Binding TableText}" PrimaryColumnWidth="*" SecondaryColumnWidth="56" TertiaryColumnWidth="46" InfoColumnWidth="18" SecondaryTextAlignment="Center" RowBackgroundColor="{Binding RowBackgroundColor}" ShowSecondaryText="True" ShowTertiaryText="True" ShowInfo="True" ActionCommandParameter="{Binding .}" InfoClicked="OnPostEighthInfoClicked" RowClicked="OnPostEighthInfoClicked"/></DataTemplate></BindableLayout.ItemTemplate></VerticalStackLayout>
+  </VerticalStackLayout>
+  <VerticalStackLayout Spacing="7" IsVisible="{Binding HasAvailableClasses, Source={x:Reference Root}}">
+   <Grid ColumnDefinitions="*,Auto"><Grid.GestureRecognizers><TapGestureRecognizer Tapped="OnAvailableClassesTapped"/></Grid.GestureRecognizers><Label Text="AVAILABLE CLASSES" Style="{StaticResource SectionHeaderLabelStyle}"/><controls:ChevronIconView Grid.Column="1" IsExpanded="{Binding IsAvailableClassesExpanded, Source={x:Reference Root}}" AnimateRotation="True" GlyphSize="13" IconSize="24" InputTransparent="True" VerticalOptions="Center"/></Grid>
+   <controls:AnimatedExpandView IsExpanded="{Binding IsAvailableClassesExpanded, Source={x:Reference Root}}"><VerticalStackLayout Spacing="7">
+    <Grid ColumnDefinitions="*,92,32" Padding="10,0" ColumnSpacing="8"><Label Text="CLASS" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center"/><Label Grid.Column="1" Text="LIFESCALE" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center"/><Label Grid.Column="2" Text="INFO" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center"/></Grid>
+    <VerticalStackLayout BindableLayout.ItemsSource="{Binding AvailableClassRows, Source={x:Reference Root}}" Spacing="0"><BindableLayout.ItemTemplate><DataTemplate><controls:ListItemRowView PrimaryText="{Binding ClassName}" SecondaryText="{Binding LifeScaleText}" PrimaryColumnWidth="*" SecondaryColumnWidth="84" InfoColumnWidth="18" PrimaryTextAlignment="Center" SecondaryTextAlignment="Center" RowBackgroundColor="{Binding RowBackgroundColor}" ShowSecondaryText="True" ShowInfo="True" ActionCommandParameter="{Binding .}" InfoClicked="OnClassInfoClicked" RowClicked="OnClassInfoClicked"/></DataTemplate></BindableLayout.ItemTemplate></VerticalStackLayout>
+   </VerticalStackLayout></controls:AnimatedExpandView>
+  </VerticalStackLayout>
+  <VerticalStackLayout Spacing="5" IsVisible="{Binding HasDescription, Source={x:Reference Root}}">
+   <Label Text="DESCRIPTION" Style="{StaticResource SectionHeaderLabelStyle}"/>
+   <VerticalStackLayout Spacing="2"><VerticalStackLayout.GestureRecognizers><TapGestureRecognizer Tapped="OnDescriptionTapped"/></VerticalStackLayout.GestureRecognizers><Label x:Name="DescriptionLabel" Text="{Binding DescriptionText, Source={x:Reference Root}}" MaxLines="{Binding DescriptionMaxLines, Source={x:Reference Root}}" LineBreakMode="WordWrap" SizeChanged="OnDescriptionSizeChanged"/><Label Text="... more" TextColor="{StaticResource MutedTextColor}" FontSize="12" IsVisible="{Binding ShowDescriptionMore, Source={x:Reference Root}}"/></VerticalStackLayout>
+  </VerticalStackLayout>
+  <VerticalStackLayout BindableLayout.ItemsSource="{Binding PropertyRows, Source={x:Reference Root}}" Spacing="12"><BindableLayout.ItemTemplate><DataTemplate><VerticalStackLayout Spacing="5"><Label Text="{Binding Label}" Style="{StaticResource SectionHeaderLabelStyle}"/><Label Text="{Binding Value}" FontSize="16" LineBreakMode="WordWrap"/></VerticalStackLayout></DataTemplate></BindableLayout.ItemTemplate></VerticalStackLayout>
+ </VerticalStackLayout>
 </ContentView>

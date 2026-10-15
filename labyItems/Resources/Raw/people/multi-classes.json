@@ -2878,7 +2878,7 @@
           },
           {
             "EffectType": "MaxAcOverride",
-            "Display": "Max AC 9 Berserk Rage: As per the Warrior Specialist skill 'Cold Rage', but gains a 50% reduction from damage suffered.",
+            "Display": "Max AC 9",
             "Value": 9,
             "SourceCategory": "base",
             "LinkedAbilityRefs": [

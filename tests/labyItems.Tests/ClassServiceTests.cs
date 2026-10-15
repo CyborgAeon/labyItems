@@ -1,4 +1,5 @@
 using System.Linq;
+using labyItems.Models.ViewModels;
 using labyItems.Pages.ClassCard;
 using labyItems.Services;
 using Xunit;
@@ -92,6 +93,16 @@ public sealed class ClassServiceTests : ServiceTestBase
         Assert.Contains(progression, row => row.Level == 8
             && row.Name == "Immunity to Poison, Immunity to Bless/Curse, Monk Specialist"
             && row.ArmourText == string.Empty);
+    }
+
+    [Fact]
+    public async Task AlfarProgression_IncludesArmourAmountAndType()
+    {
+        var alfar = (await PeopleService.GetAllAsync())["Alfar"];
+        var row = LevelAbilityRowBuilder.Build(6, alfar.LevelledAbilities["6"]);
+
+        Assert.Equal("1 DAC", row.ArmourText);
+        Assert.Equal("No abilities gained", row.AbilitiesDisplayText);
     }
 
 }

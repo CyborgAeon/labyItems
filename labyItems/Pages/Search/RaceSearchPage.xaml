@@ -15,15 +15,19 @@
         <ResourceDictionary>
             <DataTemplate x:Key="RaceCardTemplate"
                           x:DataType="characters:RaceCardVm">
-                <characters:RaceCardView
-                    SelectCommand="{Binding ToggleRaceExpandedCommand, Source={x:Reference Root}}"
-                    ToggleRaceExpandedCommand="{Binding ToggleRaceExpandedCommand, Source={x:Reference Root}}"/>
+                <Border Padding="12" Margin="0,0,0,8" Stroke="{StaticResource SubtleTextColor}" StrokeThickness="1" StrokeShape="RoundRectangle 12" BackgroundColor="{StaticResource White}">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                        <Frame WidthRequest="34" HeightRequest="34" CornerRadius="17" Padding="0" HasShadow="False" BorderColor="{StaticResource SurfaceBorderColor}" BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}"><Label Text="{Binding Icon}" FontSize="16" HorizontalOptions="Center" VerticalOptions="Center"/></Frame>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2"><Label Text="{Binding Name}" FontSize="18" FontAttributes="Bold"/><Label Text="{Binding PeopleTypeDisplay}" FontSize="12" TextColor="{StaticResource MutedTextColor}"/><Label Text="{Binding Description}" FontSize="12" Opacity="0.8" MaxLines="2" LineBreakMode="TailTruncation"/></VerticalStackLayout>
+                        <Button Grid.Column="2" Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}" FontFamily="FASolid" FontSize="13" Padding="0" BackgroundColor="Transparent" TextColor="{StaticResource SubtleTextColor}" HeightRequest="28" WidthRequest="28" MinimumHeightRequest="0" MinimumWidthRequest="0" Clicked="OnRaceInfoClicked" CommandParameter="{Binding .}"/>
+                    </Grid>
+                </Border>
             </DataTemplate>
         </ResourceDictionary>
     </ContentPage.Resources>
 
     <Grid>
-        <Grid RowDefinitions="Auto,Auto,*"
+        <Grid RowDefinitions="Auto,*"
               RowSpacing="8"
               Padding="16,12,16,8">
 
@@ -34,58 +38,14 @@
                   VerticalOptions="Center">
                 <controls:BurgerMenuButton Grid.Column="0"
                                            Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
-                <Border Grid.Column="1"
-                        Stroke="{StaticResource SurfaceBorderColor}"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 10"
-                        BackgroundColor="#F9FAFB"
-                        Padding="8,4">
-                    <Grid ColumnDefinitions="*,Auto"
-                          ColumnSpacing="6">
-                        <Entry Placeholder="Search races..."
-                               ClearButtonVisibility="WhileEditing"
-                               Text="{Binding SearchText, Mode=TwoWay}"
-                               FontSize="14" />
-                        <Button Grid.Column="1"
-                                Text="{x:Static helpers:FontAwesomeGlyphs.Search}"
-                                FontFamily="FASolid"
-                                FontSize="13"
-                                Padding="0"
-                                BackgroundColor="Transparent"
-                                TextColor="{StaticResource SubtleTextColor}"
-                                HeightRequest="24"
-                                WidthRequest="24"
-                                MinimumHeightRequest="0"
-                                MinimumWidthRequest="0"
-                                VerticalOptions="Center" />
-                    </Grid>
-                </Border>
+                <controls:SearchFilterBar Grid.Column="1"
+                                          Placeholder="Search races..."
+                                          SearchText="{Binding SearchText, Mode=TwoWay}"
+                                          OpenFiltersCommand="{Binding OpenFiltersCommand}" />
             </Grid>
 
-            <!-- Filter Chips Row -->
-            <ScrollView Grid.Row="1"
-                        Orientation="Horizontal"
-                        HorizontalScrollBarVisibility="Never">
-                <HorizontalStackLayout BindableLayout.ItemsSource="{Binding FilterChips}"
-                                       Spacing="8"
-                                       Padding="0,2">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate>
-                            <Border Style="{StaticResource SelectableFilterPillBorderStyle}">
-                                <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=ToggleFilterChipCommand}"
-                                                          CommandParameter="{Binding .}" />
-                                </Border.GestureRecognizers>
-                                <Label Text="{Binding Label}"
-                                       Style="{StaticResource FilterPillLabelStyle}" />
-                            </Border>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </HorizontalStackLayout>
-            </ScrollView>
-
             <!-- Race Cards CollectionView -->
-            <Grid Grid.Row="2">
+            <Grid Grid.Row="1">
                 <CollectionView x:Name="RacesCollection"
                                 ItemsSource="{Binding FilteredRaces}"
                                 ItemTemplate="{StaticResource RaceCardTemplate}"
@@ -111,5 +71,31 @@
         <!-- Slide-out Burger Menu -->
         <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
                                         SelectedRoute="{x:Static controls:ToolsetRouteKeys.SearchRaces}" />
+        <Grid IsVisible="{Binding IsFilterModalOpen}" BackgroundColor="#66000000">
+            <Grid.GestureRecognizers><TapGestureRecognizer Command="{Binding CancelFiltersCommand}"/></Grid.GestureRecognizers>
+            <Border HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="360" MaximumWidthRequest="420" MaximumHeightRequest="560" Stroke="{StaticResource SurfaceBorderColor}" StrokeThickness="1" StrokeShape="RoundRectangle 12" BackgroundColor="{StaticResource White}" Padding="14">
+                <Border.GestureRecognizers><TapGestureRecognizer/></Border.GestureRecognizers>
+                <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10">
+                    <Label Text="Filters" FontAttributes="Bold" FontSize="18"/>
+                    <ScrollView Grid.Row="1">
+                        <VerticalStackLayout Spacing="12">
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Categories" FontAttributes="Bold" FontSize="13"/>
+                                <FlexLayout BindableLayout.ItemsSource="{Binding CategoryChips}" Wrap="Wrap" Direction="Row" AlignItems="Start" JustifyContent="Start">
+                                    <BindableLayout.ItemTemplate><DataTemplate><Border Style="{StaticResource SelectableFilterPillBorderStyle}" Margin="0,0,8,8"><Label Text="{Binding Label}" Style="{StaticResource FilterPillLabelStyle}"/></Border></DataTemplate></BindableLayout.ItemTemplate>
+                                </FlexLayout>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="People types" FontAttributes="Bold" FontSize="13"/>
+                                <FlexLayout BindableLayout.ItemsSource="{Binding FilterChips}" Wrap="Wrap" Direction="Row" AlignItems="Start" JustifyContent="Start">
+                                    <BindableLayout.ItemTemplate><DataTemplate><Border Style="{StaticResource SelectableFilterPillBorderStyle}" Margin="0,0,8,8"><Border.GestureRecognizers><TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ToggleFilterChipCommand}" CommandParameter="{Binding .}"/></Border.GestureRecognizers><Label Text="{Binding Label}" Style="{StaticResource FilterPillLabelStyle}"/></Border></DataTemplate></BindableLayout.ItemTemplate>
+                                </FlexLayout>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </ScrollView>
+                    <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10"><Button Text="Cancel" Command="{Binding CancelFiltersCommand}"/><Button Grid.Column="2" Text="Search" Command="{Binding ApplyFiltersCommand}"/></Grid>
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </ContentPage>

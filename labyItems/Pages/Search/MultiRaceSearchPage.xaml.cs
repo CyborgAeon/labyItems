@@ -13,18 +13,24 @@ namespace labyItems.Pages.Search;
 
 public partial class MultiRaceSearchPage : ContentPage, INotifyPropertyChanged
 {
+    private readonly Dictionary<string, MultiRaceDefinition> _definitions = new(StringComparer.OrdinalIgnoreCase);
     private readonly List<ClassCardVm> _allMultiRaces = new();
     private readonly CollectionViewScrollPreserver _scrollPreserver;
     private bool _isLoading = true;
     private string _searchText = string.Empty;
     private string _selectedFilter = "All";
     private bool _loaded;
+    private bool _isFilterModalOpen;
 
     public ObservableCollection<ClassCardVm> FilteredMultiRaces { get; } = new();
     public ObservableCollection<SearchFilterChipVm> FilterChips { get; } = new();
 
     public ICommand ToggleExpandedCommand { get; }
     public ICommand ToggleFilterChipCommand { get; }
+    public ICommand OpenFiltersCommand { get; }
+    public ICommand CancelFiltersCommand { get; }
+    public ICommand ApplyFiltersCommand { get; }
+    public bool IsFilterModalOpen { get => _isFilterModalOpen; private set { if (_isFilterModalOpen == value) return; _isFilterModalOpen = value; OnPropertyChanged(); } }
 
     public bool IsLoading
     {
@@ -53,6 +59,9 @@ public partial class MultiRaceSearchPage : ContentPage, INotifyPropertyChanged
 
         ToggleExpandedCommand = new Command<ClassCardVm>(OnToggleExpanded);
         ToggleFilterChipCommand = new Command<SearchFilterChipVm>(OnToggleFilterChip);
+        OpenFiltersCommand = new Command(() => IsFilterModalOpen = true);
+        CancelFiltersCommand = new Command(() => IsFilterModalOpen = false);
+        ApplyFiltersCommand = new Command(() => { IsFilterModalOpen = false; Refilter(); });
 
         FilterChips.Add(new SearchFilterChipVm("All", true));
         _scrollPreserver = new CollectionViewScrollPreserver(MultiRacesCollection, this);
@@ -102,6 +111,7 @@ public partial class MultiRaceSearchPage : ContentPage, INotifyPropertyChanged
         try
         {
             _allMultiRaces.Clear();
+            _definitions.Clear();
             var catalog = await MultiRaceService.GetCatalogAsync();
             var id = 1;
             var categories = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -109,6 +119,7 @@ public partial class MultiRaceSearchPage : ContentPage, INotifyPropertyChanged
             foreach (var pair in catalog.MultiRaces.OrderBy(entry => entry.Key, StringComparer.OrdinalIgnoreCase))
             {
                 var def = pair.Value;
+                _definitions[pair.Key] = def;
                 var displayName = !string.IsNullOrWhiteSpace(def.DisplayName) ? def.DisplayName.Trim() : pair.Key;
                 var powerBase = MultiPathWizardHelpers.ResolvePowerBase<
                     MultiRaceDefinition,
@@ -227,5 +238,12 @@ public partial class MultiRaceSearchPage : ContentPage, INotifyPropertyChanged
             FilteredMultiRaces.Add(m);
 
         OnPropertyChanged(nameof(HasNoResults));
+    }
+
+    private async void OnInfoClicked(object? sender, EventArgs e)
+    {
+        if (sender is not Button { CommandParameter: ClassCardVm item } || !_definitions.TryGetValue(item.Key, out var definition)) return;
+        _scrollPreserver.RecordItem(item);
+        await Navigation.PushAsync(new Pages.MultiRaceCard.MultiRaceCard(definition, item.Key));
     }
 }

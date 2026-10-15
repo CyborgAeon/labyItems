@@ -6,23 +6,31 @@ using labyItems.Helpers;
 using labyItems.Models.Characters;
 using labyItems.Pages.Characters;
 using labyItems.Services;
+using RaceCardPage = labyItems.Pages.RaceCard.RaceCard;
 
 namespace labyItems.Pages.Search;
 
 public partial class RaceSearchPage : ContentPage, INotifyPropertyChanged
 {
     private readonly List<RaceCardVm> _allRaces = new();
+    private readonly Dictionary<string, PeopleRecord> _recordsByName = new(StringComparer.OrdinalIgnoreCase);
     private readonly CollectionViewScrollPreserver _scrollPreserver;
     private bool _isLoading = true;
     private string _searchText = string.Empty;
-    private string _selectedFilter = "All";
+    private HashSet<string> _selectedFilters = new(StringComparer.OrdinalIgnoreCase);
+    private HashSet<string> _pendingFilters = new(StringComparer.OrdinalIgnoreCase);
+    private bool _isFilterModalOpen;
     private bool _loaded;
 
     public ObservableCollection<RaceCardVm> FilteredRaces { get; } = new();
+    public ObservableCollection<SearchFilterChipVm> CategoryChips { get; } = new();
     public ObservableCollection<SearchFilterChipVm> FilterChips { get; } = new();
 
-    public ICommand ToggleRaceExpandedCommand { get; }
     public ICommand ToggleFilterChipCommand { get; }
+    public ICommand OpenFiltersCommand { get; }
+    public ICommand CancelFiltersCommand { get; }
+    public ICommand ApplyFiltersCommand { get; }
+    public bool IsFilterModalOpen { get => _isFilterModalOpen; private set { if (_isFilterModalOpen == value) return; _isFilterModalOpen = value; OnPropertyChanged(); } }
 
     public bool IsLoading
     {
@@ -46,13 +54,20 @@ public partial class RaceSearchPage : ContentPage, INotifyPropertyChanged
 
     public RaceSearchPage()
     {
+        ToggleFilterChipCommand = new Command<SearchFilterChipVm>(OnToggleFilterChip);
+        OpenFiltersCommand = new Command(OpenFilters);
+        CancelFiltersCommand = new Command(() => IsFilterModalOpen = false);
+        ApplyFiltersCommand = new Command(() =>
+        {
+            _selectedFilters = new HashSet<string>(_pendingFilters, StringComparer.OrdinalIgnoreCase);
+            IsFilterModalOpen = false;
+            Refilter();
+        });
+
         InitializeComponent();
         BindingContext = this;
 
-        ToggleRaceExpandedCommand = new Command<RaceCardVm>(OnToggleExpanded);
-        ToggleFilterChipCommand = new Command<SearchFilterChipVm>(OnToggleFilterChip);
-
-        FilterChips.Add(new SearchFilterChipVm("All", true));
+        CategoryChips.Add(new SearchFilterChipVm("Races", true));
         _scrollPreserver = new CollectionViewScrollPreserver(RacesCollection, this);
     }
 
@@ -73,25 +88,29 @@ public partial class RaceSearchPage : ContentPage, INotifyPropertyChanged
     private void OnToggleFilterChip(SearchFilterChipVm? chip)
     {
         if (chip == null) return;
-        _selectedFilter = chip.Label;
-        foreach (var c in FilterChips)
-            c.IsSelected = c.Label.Equals(_selectedFilter, StringComparison.OrdinalIgnoreCase);
-
-        Refilter();
+        if (!_pendingFilters.Add(chip.Label))
+            _pendingFilters.Remove(chip.Label);
+        chip.IsSelected = _pendingFilters.Contains(chip.Label);
     }
 
-    private void OnToggleExpanded(RaceCardVm? item)
+    private void OpenFilters()
     {
-        if (item == null) return;
-        _scrollPreserver.RecordItem(item);
+        _pendingFilters = new HashSet<string>(_selectedFilters, StringComparer.OrdinalIgnoreCase);
+        BuildFilterChips();
+        IsFilterModalOpen = true;
+    }
 
-        foreach (var r in _allRaces)
-        {
-            if (!ReferenceEquals(r, item) && r.IsExpanded)
-                r.IsExpanded = false;
-        }
-
-        item.IsExpanded = !item.IsExpanded;
+    private void BuildFilterChips()
+    {
+        FilterChips.Clear();
+        var options = _allRaces
+            .SelectMany(item => item.PeopleTypes ?? [])
+            .Where(type => !string.IsNullOrWhiteSpace(type))
+            .Select(type => type.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(type => type, StringComparer.OrdinalIgnoreCase);
+        foreach (var option in options)
+            FilterChips.Add(new SearchFilterChipVm(option, _pendingFilters.Contains(option)));
     }
 
     private async Task LoadRacesAsync()
@@ -100,19 +119,17 @@ public partial class RaceSearchPage : ContentPage, INotifyPropertyChanged
         try
         {
             _allRaces.Clear();
+            _recordsByName.Clear();
             var all = await PeopleService.GetAllAsync();
-            var types = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
             var ordered = all.OrderBy(k => k.Key, StringComparer.OrdinalIgnoreCase).ToList();
             for (var idx = 0; idx < ordered.Count; idx++)
             {
                 var name = ordered[idx].Key;
                 var record = ordered[idx].Value;
                 if (record == null) continue;
+                _recordsByName[name] = record;
 
                 var peopleTypes = PeopleTypeFormatting.NormalizePeopleTypes(record.PeopleType);
-                types.UnionWith(peopleTypes);
-
                 var displayPeopleType = PeopleTypeFormatting.FormatPeopleTypes(peopleTypes);
                 var primaryPeopleType = PeopleTypeFormatting.SelectPrimaryPeopleType(peopleTypes);
 
@@ -134,13 +151,7 @@ public partial class RaceSearchPage : ContentPage, INotifyPropertyChanged
                 _allRaces.Add(vm);
             }
 
-            FilterChips.Clear();
-            FilterChips.Add(new SearchFilterChipVm("All", _selectedFilter == "All"));
-            foreach (var t in types.OrderBy(x => x, StringComparer.OrdinalIgnoreCase))
-            {
-                FilterChips.Add(new SearchFilterChipVm(t, t.Equals(_selectedFilter, StringComparison.OrdinalIgnoreCase)));
-            }
-
+            BuildFilterChips();
             Refilter();
         }
         catch (Exception ex)
@@ -172,17 +183,14 @@ public partial class RaceSearchPage : ContentPage, INotifyPropertyChanged
     private void Refilter()
     {
         var q = (SearchText ?? string.Empty).Trim().ToLowerInvariant();
-        var filter = _selectedFilter;
+        var filters = _selectedFilters;
 
         var matches = _allRaces.Where(r =>
         {
-            if (filter != "All")
+            if (filters.Count > 0)
             {
-                if (r.PeopleTypes == null || !r.PeopleTypes.Any(t => t.Equals(filter, StringComparison.OrdinalIgnoreCase)))
-                {
-                    if (!r.PeopleType.Contains(filter, StringComparison.OrdinalIgnoreCase))
-                        return false;
-                }
+                if (r.PeopleTypes == null || !r.PeopleTypes.Any(filters.Contains))
+                    return false;
             }
 
             if (q.Length == 0) return true;
@@ -194,9 +202,19 @@ public partial class RaceSearchPage : ContentPage, INotifyPropertyChanged
         });
 
         FilteredRaces.Clear();
-        foreach (var m in matches)
+        foreach (var m in matches.OrderBy(item => item.Name, StringComparer.OrdinalIgnoreCase))
             FilteredRaces.Add(m);
 
         OnPropertyChanged(nameof(HasNoResults));
+    }
+
+    private async void OnRaceInfoClicked(object? sender, EventArgs e)
+    {
+        if (sender is not Button { CommandParameter: RaceCardVm item }
+            || !_recordsByName.TryGetValue(item.Name, out var record))
+            return;
+
+        _scrollPreserver.RecordItem(item);
+        await Navigation.PushAsync(new RaceCardPage(item.Name, record));
     }
 }

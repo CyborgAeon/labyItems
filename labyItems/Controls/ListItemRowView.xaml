@@ -26,20 +26,17 @@
                        FontAttributes="{Binding PrimaryTextAttributes, Source={x:Reference Root}}"
                        MaxLines="{Binding PrimaryTextMaxLines, Source={x:Reference Root}}"
                        LineBreakMode="TailTruncation"
+                       HorizontalTextAlignment="{Binding PrimaryTextAlignment, Source={x:Reference Root}}"
                        VerticalTextAlignment="Center" />
                 <Label Grid.Column="1"
                        Text="{Binding SecondaryText, Source={x:Reference Root}}"
                        FontSize="{Binding SecondaryTextSize, Source={x:Reference Root}}"
-                       FontAttributes="Bold"
-                       Opacity="0.75"
                        IsVisible="{Binding ShowSecondaryText, Source={x:Reference Root}}"
                        HorizontalTextAlignment="{Binding SecondaryTextAlignment, Source={x:Reference Root}}"
                        VerticalTextAlignment="Center" />
                 <Label Grid.Column="2"
                        Text="{Binding TertiaryText, Source={x:Reference Root}}"
                        FontSize="{Binding SecondaryTextSize, Source={x:Reference Root}}"
-                       FontAttributes="Bold"
-                       Opacity="0.75"
                        IsVisible="{Binding ShowTertiaryText, Source={x:Reference Root}}"
                        HorizontalTextAlignment="Center"
                        VerticalTextAlignment="Center" />

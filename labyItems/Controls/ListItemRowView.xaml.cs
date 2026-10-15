@@ -31,6 +31,7 @@ public partial class ListItemRowView : ContentView
     public static readonly BindableProperty TertiaryColumnWidthProperty = Create(nameof(TertiaryColumnWidth), GridLength.Auto);
     public static readonly BindableProperty InfoColumnWidthProperty = Create(nameof(InfoColumnWidth), GridLength.Auto);
     public static readonly BindableProperty SecondaryTextAlignmentProperty = Create(nameof(SecondaryTextAlignment), TextAlignment.End);
+    public static readonly BindableProperty PrimaryTextAlignmentProperty = Create(nameof(PrimaryTextAlignment), TextAlignment.Start);
     public static readonly BindableProperty CustomContentProperty = BindableProperty.Create(
         nameof(CustomContent), typeof(View), typeof(ListItemRowView), null,
         propertyChanged: static (bindable, _, _) =>
@@ -77,6 +78,7 @@ public partial class ListItemRowView : ContentView
     public GridLength TertiaryColumnWidth { get => (GridLength)GetValue(TertiaryColumnWidthProperty); set => SetValue(TertiaryColumnWidthProperty, value); }
     public GridLength InfoColumnWidth { get => (GridLength)GetValue(InfoColumnWidthProperty); set => SetValue(InfoColumnWidthProperty, value); }
     public TextAlignment SecondaryTextAlignment { get => (TextAlignment)GetValue(SecondaryTextAlignmentProperty); set => SetValue(SecondaryTextAlignmentProperty, value); }
+    public TextAlignment PrimaryTextAlignment { get => (TextAlignment)GetValue(PrimaryTextAlignmentProperty); set => SetValue(PrimaryTextAlignmentProperty, value); }
     public View? CustomContent { get => (View?)GetValue(CustomContentProperty); set => SetValue(CustomContentProperty, value); }
     public bool HasCustomContent => CustomContent != null;
     public bool UsesStandardContent => !HasCustomContent;

@@ -13,6 +13,7 @@ public sealed class LevelAbilityRowVm
     public string WeaponSkills { get; set; } = string.Empty;
     public IReadOnlyList<string> AbilityNames { get; set; } = Array.Empty<string>();
     public IReadOnlyList<string> AbilityDetailKeys { get; set; } = Array.Empty<string>();
+    public string ArmourText { get; set; } = string.Empty;
 
     public string StageText => IsTableStage ? $"T{Level}" : Level.ToString();
 
@@ -58,9 +59,15 @@ public static class LevelAbilityRowBuilder
         var weaponSkillCodes = new List<string>();
         var abilityNames = new List<string>();
         var abilityDetailKeys = new List<string>();
+        var armourValues = new List<string>();
 
         foreach (var definition in abilityDefinitions ?? Enumerable.Empty<AbilityDefinition>())
         {
+            if (IsArmourGrant(definition))
+            {
+                AddUnique(armourValues, $"{definition!.Count} {definition.Type.Trim().ToUpperInvariant()}");
+                continue;
+            }
             if (TryExtractWeaponSkillCode(definition, out var weaponCode))
             {
                 AddUnique(weaponSkillCodes, weaponCode);
@@ -86,8 +93,17 @@ public static class LevelAbilityRowBuilder
             Loc = (loc ?? string.Empty).Trim(),
             WeaponSkills = string.Join(", ", weaponSkillCodes),
             AbilityNames = abilityNames,
-            AbilityDetailKeys = abilityDetailKeys
+            AbilityDetailKeys = abilityDetailKeys,
+            ArmourText = string.Join(", ", armourValues)
         };
+    }
+
+    private static bool IsArmourGrant(AbilityDefinition? definition)
+    {
+        var type = (definition?.Type ?? string.Empty).Trim();
+        return definition?.Count.HasValue == true
+            && type.Length is 2 or 3
+            && type.EndsWith("AC", StringComparison.OrdinalIgnoreCase);
     }
 
     public static string ToDisplayName(AbilityDefinition? definition)

@@ -13,18 +13,24 @@ namespace labyItems.Pages.Search;
 
 public partial class MultiClassSearchPage : ContentPage, INotifyPropertyChanged
 {
+    private readonly Dictionary<string, MultiClassDefinition> _definitions = new(StringComparer.OrdinalIgnoreCase);
     private readonly List<ClassCardVm> _allMultiClasses = new();
     private readonly CollectionViewScrollPreserver _scrollPreserver;
     private bool _isLoading = true;
     private string _searchText = string.Empty;
     private string _selectedFilter = "All";
     private bool _loaded;
+    private bool _isFilterModalOpen;
 
     public ObservableCollection<ClassCardVm> FilteredMultiClasses { get; } = new();
     public ObservableCollection<SearchFilterChipVm> FilterChips { get; } = new();
 
     public ICommand ToggleExpandedCommand { get; }
     public ICommand ToggleFilterChipCommand { get; }
+    public ICommand OpenFiltersCommand { get; }
+    public ICommand CancelFiltersCommand { get; }
+    public ICommand ApplyFiltersCommand { get; }
+    public bool IsFilterModalOpen { get => _isFilterModalOpen; private set { if (_isFilterModalOpen == value) return; _isFilterModalOpen = value; OnPropertyChanged(); } }
 
     public bool IsLoading
     {
@@ -53,6 +59,9 @@ public partial class MultiClassSearchPage : ContentPage, INotifyPropertyChanged
 
         ToggleExpandedCommand = new Command<ClassCardVm>(OnToggleExpanded);
         ToggleFilterChipCommand = new Command<SearchFilterChipVm>(OnToggleFilterChip);
+        OpenFiltersCommand = new Command(() => IsFilterModalOpen = true);
+        CancelFiltersCommand = new Command(() => IsFilterModalOpen = false);
+        ApplyFiltersCommand = new Command(() => { IsFilterModalOpen = false; Refilter(); });
 
         BuildFilterChips();
         _scrollPreserver = new CollectionViewScrollPreserver(MultiClassesCollection, this);
@@ -112,12 +121,14 @@ public partial class MultiClassSearchPage : ContentPage, INotifyPropertyChanged
         try
         {
             _allMultiClasses.Clear();
+            _definitions.Clear();
             var catalog = await MultiClassService.GetCatalogAsync();
             var id = 1;
 
             foreach (var pair in catalog.MultiClasses.OrderBy(entry => entry.Key, StringComparer.OrdinalIgnoreCase))
             {
                 var def = pair.Value;
+                _definitions[pair.Key] = def;
                 var displayName = !string.IsNullOrWhiteSpace(def.DisplayName) ? def.DisplayName.Trim() : pair.Key;
                 var powerBase = MultiPathWizardHelpers.ResolvePowerBase<
                     MultiClassDefinition,
@@ -227,5 +238,12 @@ public partial class MultiClassSearchPage : ContentPage, INotifyPropertyChanged
             FilteredMultiClasses.Add(m);
 
         OnPropertyChanged(nameof(HasNoResults));
+    }
+
+    private async void OnInfoClicked(object? sender, EventArgs e)
+    {
+        if (sender is not Button { CommandParameter: ClassCardVm item } || !_definitions.TryGetValue(item.Key, out var definition)) return;
+        _scrollPreserver.RecordItem(item);
+        await Navigation.PushAsync(new Pages.MultiClassCard.MultiClassCard(definition, item.Key));
     }
 }
