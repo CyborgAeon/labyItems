@@ -344,11 +344,7 @@ public sealed class WizardVm : INotifyPropertyChanged
                 index: 2,
                 label: "Guilds",
                 canEnter: () => WizardStepRules.CanEnterGuilds(Draft, CharacterBuilderVm.SpecialisationVm),
-                createView: () => new Guilds(GuildsVm)
-                {
-                    UseTypePills = true,
-                    ShowSelectedChips = false
-                },
+                createView: () => new GuildPickerSearchView(GuildsVm),
                 onEnterAsync: async () => await GuildsVm.ReloadAsync(),
                 onExitAsync: async () => await GuildsVm.ReleaseScreenCacheAsync()),
             new(

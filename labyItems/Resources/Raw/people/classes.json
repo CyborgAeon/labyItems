@@ -1,9 +1,19 @@
 {
   "Warrior": {
-    "Brackets": ["🛡️ Warrior"],
-    "Tags": ["MaxAC 9", "Versatile", "Simple"],
+    "Brackets": [
+      "🛡️ Warrior"
+    ],
+    "Tags": [
+      "MaxAC 9",
+      "Versatile",
+      "Simple"
+    ],
     "Armour": {
-      "Wearable": ["heavy", "light", "medium"],
+      "Wearable": [
+        "heavy",
+        "light",
+        "medium"
+      ],
       "Restrictions": []
     },
     "Levels": {
@@ -62,13 +72,25 @@
       ]
     },
     "Max AC": 9,
-    "Buy as": ["1st class Warrior"]
+    "Buy as": [
+      "1st class Warrior"
+    ],
+    "SourceBook": "engarde"
   },
   "Ranger": {
-    "Brackets": ["🛡️ Warrior"],
-    "Tags": ["MaxAC 9", "Versatile", "Simple"],
+    "Brackets": [
+      "🛡️ Warrior"
+    ],
+    "Tags": [
+      "MaxAC 9",
+      "Versatile",
+      "Simple"
+    ],
     "Armour": {
-      "Wearable": ["light", "medium"],
+      "Wearable": [
+        "light",
+        "medium"
+      ],
       "Restrictions": []
     },
     "Levels": {
@@ -95,9 +117,17 @@
           "Name": "MP",
           "Type": "WeaponSkill"
         },
-        { "Name": "Tracking", "Type": "AtWill" }
+        {
+          "Name": "Tracking",
+          "Type": "AtWill"
+        }
       ],
-      "3": [{ "Name": "Survival", "Type": "AtWill" }],
+      "3": [
+        {
+          "Name": "Survival",
+          "Type": "AtWill"
+        }
+      ],
       "4": [
         {
           "Name": "B",
@@ -131,13 +161,26 @@
       ]
     },
     "Max AC": 9,
-    "Buy as": ["1st class Warrior"]
+    "Buy as": [
+      "1st class Warrior"
+    ],
+    "SourceBook": "engarde"
   },
   "Archer": {
-    "Brackets": ["🛡️ Warrior"],
-    "Tags": ["MaxAC 8", "Huge damage", "Fire & Forget"],
+    "Brackets": [
+      "🛡️ Warrior"
+    ],
+    "SourceBook": "engarde",
+    "Tags": [
+      "MaxAC 8",
+      "Huge damage",
+      "Fire & Forget"
+    ],
     "Armour": {
-      "Wearable": ["light", "medium"],
+      "Wearable": [
+        "light",
+        "medium"
+      ],
       "Restrictions": []
     },
     "Levels": {
@@ -156,9 +199,17 @@
           "Name": "E",
           "Type": "WeaponSkill"
         },
-        { "Name": "1st Weapon Mastery (Bows)", "Type": "Static" }
+        {
+          "Name": "1st Weapon Mastery (Bows)",
+          "Type": "Static"
+        }
       ],
-      "3": [{ "Name": "Survival", "Type": "AtWill" }],
+      "3": [
+        {
+          "Name": "Survival",
+          "Type": "AtWill"
+        }
+      ],
       "4": [],
       "5": [],
       "6": [
@@ -183,11 +234,19 @@
       ]
     },
     "Max AC": 9,
-    "Buy as": ["1st class Warrior"]
+    "Buy as": [
+      "1st class Warrior"
+    ]
   },
   "Monk": {
-    "Brackets": ["🛡️ Warrior"],
-    "Tags": ["MaxAC 9", "Kung fu", "Simple"],
+    "Brackets": [
+      "🛡️ Warrior"
+    ],
+    "Tags": [
+      "MaxAC 9",
+      "Kung fu",
+      "Simple"
+    ],
     "Armour": {
       "Wearable": [],
       "Restrictions": []
@@ -195,10 +254,20 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": ["Good", "Neutral", "Evil"],
-        "order": ["Lawful"]
+        "moral": [
+          "Good",
+          "Neutral",
+          "Evil"
+        ],
+        "order": [
+          "Lawful"
+        ]
       },
-      "allowedPairs": ["Lawful Good", "Lawful Neutral", "Lawful Evil"]
+      "allowedPairs": [
+        "Lawful Good",
+        "Lawful Neutral",
+        "Lawful Evil"
+      ]
     },
     "Levels": {
       "1": [
@@ -216,19 +285,29 @@
         }
       ],
       "2": [
-        { "Name": "DAC", "Type": "DAC", "Count": 1 },
+        {
+          "Name": "DAC",
+          "Type": "DAC",
+          "Count": 1
+        },
         {
           "Name": "H",
           "Type": "WeaponSkill"
         },
-        { "Name": "Detect Possible Neuronic Activity", "Type": "AtWill" }
+        {
+          "Name": "Detect Possible Neuronic Activity",
+          "Type": "AtWill"
+        }
       ],
       "3": [
         {
           "Name": "B",
           "Type": "WeaponSkill"
         },
-        { "Name": "Immunity to Disease", "Type": "Immunity" }
+        {
+          "Name": "Immunity to Disease",
+          "Type": "Immunity"
+        }
       ],
       "4": [
         {
@@ -237,34 +316,74 @@
         },
         {
           "Name": "1st Weapon Mastery (O)",
-          "Type": "WeaponSkill"
+          "Type": "Static",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
         },
-        { "Name": "DAC", "Type": "DAC", "Count": 2 }
+        {
+          "Name": "DAC",
+          "Type": "DAC",
+          "Count": 2
+        }
       ],
       "5": [
-        { "Name": "DAC", "Type": "DAC", "Count": 3 },
+        {
+          "Name": "DAC",
+          "Type": "DAC",
+          "Count": 3
+        },
         {
           "Name": "UAC",
           "Type": "WeaponSkill"
         }
       ],
       "6": [
-        { "Name": "DAC", "Type": "DAC", "Count": 4 },
+        {
+          "Name": "DAC",
+          "Type": "DAC",
+          "Count": 4
+        },
         {
           "Name": "1st Weapon Mastery (H)",
-          "Type": "WeaponSkill"
+          "Type": "Static",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
         },
-        { "Name": "Immunity to Befriend", "Type": "Immunity" },
-        { "Name": "Immunity to Beguile", "Type": "Immunity" },
-        { "Name": "Immunity to Spiritual Mastery", "Type": "Immunity" }
+        {
+          "Name": "Immunity to Befriend",
+          "Type": "Immunity"
+        },
+        {
+          "Name": "Immunity to Beguile",
+          "Type": "Immunity"
+        },
+        {
+          "Name": "Immunity to Spiritual Mastery",
+          "Type": "Immunity"
+        }
       ],
       "7": [
-        { "Name": "DAC", "Type": "DAC", "Count": 5 },
+        {
+          "Name": "DAC",
+          "Type": "DAC",
+          "Count": 5
+        },
         {
           "Name": "1st Weapon Mastery (B)",
-          "Type": "WeaponSkill"
+          "Type": "Static",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
         },
-        { "Name": "Immunity to Fear", "Type": "Immunity" },
+        {
+          "Name": "Immunity to Fear",
+          "Type": "Immunity"
+        },
         {
           "Name": "Monk Specialist",
           "Type": "Overwrite",
@@ -272,12 +391,22 @@
         }
       ],
       "8": [
-        { "Name": "DAC", "Type": "DAC", "Count": 6 },
-        { "Name": "Immunity to Poison", "Type": "Immunity" },
-        { "Name": "Immunity to Bless/Curse", "Type": "Immunity" },
+        {
+          "Name": "DAC",
+          "Type": "DAC",
+          "Count": 6
+        },
+        {
+          "Name": "Immunity to Poison",
+          "Type": "Immunity"
+        },
+        {
+          "Name": "Immunity to Bless/Curse",
+          "Type": "Immunity"
+        },
         {
           "Name": "2nd Weapon Mastery (O)",
-          "Type": "WeaponSkill"
+          "Type": "Static"
         },
         {
           "Name": "Monk Specialist",
@@ -287,13 +416,24 @@
       ]
     },
     "Max AC": 9,
-    "Buy as": ["1st class Warrior"]
+    "Buy as": [
+      "1st class Warrior"
+    ],
+    "SourceBook": "engarde"
   },
   "Duellist": {
-    "Brackets": ["🛡️ Warrior"],
-    "Tags": ["MaxAC 9", "Kung fu", "Simple"],
+    "Brackets": [
+      "🛡️ Warrior"
+    ],
+    "Tags": [
+      "MaxAC 9",
+      "Kung fu",
+      "Simple"
+    ],
     "Armour": {
-      "Wearable": ["light"],
+      "Wearable": [
+        "light"
+      ],
       "Restrictions": []
     },
     "Levels": {
@@ -310,7 +450,11 @@
         }
       ],
       "3": [
-        { "Name": "DAC", "Type": "DAC", "Count": 1 },
+        {
+          "Name": "DAC",
+          "Type": "DAC",
+          "Count": 1
+        },
         {
           "Name": "H (Dagger only)",
           "Type": "WeaponSkill"
@@ -323,8 +467,11 @@
         }
       ],
       "5": [
-        { "Name": "DAC", "Type": "DAC", "Count": 2 },
-
+        {
+          "Name": "DAC",
+          "Type": "DAC",
+          "Count": 2
+        },
         {
           "Name": "UAC",
           "Type": "WeaponSkill"
@@ -336,7 +483,11 @@
       ],
       "6": [],
       "7": [
-        { "Name": "DAC", "Type": "DAC", "Count": 3 },
+        {
+          "Name": "DAC",
+          "Type": "DAC",
+          "Count": 3
+        },
         {
           "Name": "Duellist Specialist",
           "Type": "Overwrite",
@@ -352,22 +503,43 @@
       ]
     },
     "Max AC": 9,
-    "Buy as": ["1st class Warrior"]
+    "Buy as": [
+      "1st class Warrior"
+    ],
+    "SourceBook": "engarde"
   },
   "Cavalier": {
-    "Brackets": ["🛡️ Warrior"],
-    "Tags": ["MaxAC 9", "Cavalier Code"],
+    "Brackets": [
+      "🛡️ Warrior"
+    ],
+    "Tags": [
+      "MaxAC 9",
+      "Cavalier Code"
+    ],
     "Armour": {
-      "Wearable": ["medium", "heavy"],
+      "Wearable": [
+        "medium",
+        "heavy"
+      ],
       "Restrictions": []
     },
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": ["Good", "Neutral", "Evil"],
-        "order": ["Lawful"]
+        "moral": [
+          "Good",
+          "Neutral",
+          "Evil"
+        ],
+        "order": [
+          "Lawful"
+        ]
       },
-      "allowedPairs": ["Lawful Good", "Lawful Neutral", "Lawful Evil"]
+      "allowedPairs": [
+        "Lawful Good",
+        "Lawful Neutral",
+        "Lawful Evil"
+      ]
     },
     "Levels": {
       "1": [
@@ -401,16 +573,38 @@
         }
       ],
       "4": [
-        { "Name": "Perm Bless", "Type": "DAC", "Count": 2, "Source": "Bless" }
+        {
+          "Name": "Perm Bless",
+          "Type": "DAC",
+          "Count": 2,
+          "Source": "Bless"
+        }
       ],
-      "5": [{ "Name": "Immunity to Alignment Change", "Type": "Immunity" }],
+      "5": [
+        {
+          "Name": "Immunity to Alignment Change",
+          "Type": "Immunity"
+        }
+      ],
       "6": [
-        { "Name": "Immunity to Befriend", "Type": "Immunity" },
-        { "Name": "Immunity to Beguile", "Type": "Immunity" },
-        { "Name": "Immunity to Spiritual Mastery", "Type": "Immunity" }
+        {
+          "Name": "Immunity to Befriend",
+          "Type": "Immunity"
+        },
+        {
+          "Name": "Immunity to Beguile",
+          "Type": "Immunity"
+        },
+        {
+          "Name": "Immunity to Spiritual Mastery",
+          "Type": "Immunity"
+        }
       ],
       "7": [
-        { "Name": "Immunity to Domination", "Type": "Immunity" },
+        {
+          "Name": "Immunity to Domination",
+          "Type": "Immunity"
+        },
         {
           "Name": "Cavalier Specialist",
           "Type": "Overwrite",
@@ -423,22 +617,66 @@
           "Type": "Overwrite",
           "OverwriteKey": "Duellist Specialist"
         },
-        { "Name": "Cold Rage", "Type": "Innate", "Count": 1 },
-        { "Name": "Live to Minus", "Type": "LiveToMinus", "Count": 16 }
+        {
+          "Name": "Cold Rage",
+          "Type": "Innate",
+          "Count": 1
+        },
+        {
+          "Name": "Live to Minus",
+          "Type": "LiveToMinus",
+          "Count": 16
+        }
       ]
     },
     "Max AC": 9,
-    "Buy as": ["1st class Warrior"]
+    "Buy as": [
+      "1st class Warrior"
+    ],
+    "SourceBook": "engarde"
   },
   "Warrior-Priest": {
-    "Brackets": ["🙏 Priest"],
-    "Tags": ["Spiritual caster", "𐂫 Armoured", "Combatant"],
+    "Brackets": [
+      "🙏 Priest"
+    ],
+    "Tags": [
+      "Spiritual caster",
+      "𐂫 Armoured",
+      "Combatant"
+    ],
     "Armour": {
-      "Wearable": ["light", "medium"],
+      "Wearable": [
+        "light",
+        "medium"
+      ],
       "Restrictions": []
     },
+    "Max AC": 7,
+    "Powerbase": [
+      "示 Spirit"
+    ],
+    "PowerPerLevel": 3,
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Spirit",
+        "Calculation": "CL*3"
+      }
+    ],
     "Levels": {
       "1": [
+        {
+          "Name": "Recognise Spirit",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Wounds",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Undead",
+          "Type": "AtWill"
+        },
         {
           "Name": "O",
           "Type": "WeaponSkill"
@@ -448,14 +686,32 @@
           "Type": "WeaponSkill"
         }
       ],
-      "2": [],
+      "2": [
+        {
+          "Name": "Read Runes",
+          "Type": "Static"
+        }
+      ],
       "3": [
+        {
+          "Name": "Discern Bless/Curse",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Use Spirit Items",
+          "Type": "AtWill"
+        },
         {
           "Name": "E",
           "Type": "WeaponSkill"
         }
       ],
-      "4": [],
+      "4": [
+        {
+          "Name": "Discern Disease",
+          "Type": "AtWill"
+        }
+      ],
       "5": [
         {
           "Name": "B",
@@ -463,6 +719,10 @@
         }
       ],
       "6": [
+        {
+          "Name": "Discern Spiritual Mastery",
+          "Type": "AtWill"
+        },
         {
           "Name": "H",
           "Type": "WeaponSkill"
@@ -486,67 +746,23 @@
         }
       ]
     },
-    "Max AC": 7,
-    "Powerbase": ["示 Spirit"],
-    "PowerPerLevel": 3,
-    "CasterLevel": 8,
-    "PowerCalculations": [
-      {
-        "PowerBase": "Spirit",
-        "Calculation": "CL*3"
-      }
-    ],
-    "levels": {
-      "1": [
-        {
-          "Name": "Recognise Spirit",
-          "Type": "AtWill"
-        },
-        {
-          "Name": "Discern Nature of Wounds",
-          "Type": "AtWill"
-        },
-        {
-          "Name": "Discern Nature of Undead",
-          "Type": "AtWill"
-        }
-      ],
-      "2": [
-        {
-          "Name": "Read Runes",
-          "Type": "Static"
-        }
-      ],
-      "3": [
-        {
-          "Name": "Discern Bless/Curse",
-          "Type": "AtWill"
-        },
-        {
-          "Name": "Use Spirit Items",
-          "Type": "AtWill"
-        }
-      ],
-      "4": [
-        {
-          "Name": "Discern Disease",
-          "Type": "AtWill"
-        }
-      ],
-      "5": [],
-      "6": [
-        {
-          "Name": "Discern Spiritual Mastery",
-          "Type": "AtWill"
-        }
-      ]
-    }
+    "SourceBook": "Words From Above"
   },
   "Power Warrior": {
-    "Brackets": ["🛡️ Warrior"],
-    "Tags": ["Magical protection", "Combatant", "Simple"],
+    "Brackets": [
+      "🛡️ Warrior"
+    ],
+    "Tags": [
+      "Magical protection",
+      "Combatant",
+      "Simple"
+    ],
     "Armour": {
-      "Wearable": ["light", "medium", "heavy"],
+      "Wearable": [
+        "light",
+        "medium",
+        "heavy"
+      ],
       "Restrictions": []
     },
     "Levels": {
@@ -607,15 +823,32 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": ["Good", "Neutral", "Evil"],
-        "order": ["Lawful"]
+        "moral": [
+          "Good",
+          "Neutral",
+          "Evil"
+        ],
+        "order": [
+          "Lawful"
+        ]
       },
-      "allowedPairs": ["Lawful Good", "Lawful Evil"]
-    }
+      "allowedPairs": [
+        "Lawful Good",
+        "Lawful Evil"
+      ]
+    },
+    "SourceBook": "engarde"
   },
   "Power Master": {
-    "Brackets": ["🛡️ Warrior", "🧙 Wizard"],
-    "Tags": ["Magical Caster", "4 DAC", "Combatant"],
+    "Brackets": [
+      "🛡️ Warrior",
+      "🧙 Wizard"
+    ],
+    "Tags": [
+      "Magical Caster",
+      "4 DAC",
+      "Combatant"
+    ],
     "Levels": {
       "1": [
         {
@@ -715,7 +948,9 @@
       ]
     },
     "Max AC": "8",
-    "Powerbase": ["🪄 Magic"],
+    "Powerbase": [
+      "🪄 Magic"
+    ],
     "PowerPerLevel": "3",
     "CasterLevel": 8,
     "PowerCalculations": [
@@ -727,17 +962,36 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": ["Good", "Neutral", "Evil"],
-        "order": ["Lawful"]
+        "moral": [
+          "Good",
+          "Neutral",
+          "Evil"
+        ],
+        "order": [
+          "Lawful"
+        ]
       },
-      "allowedPairs": ["Lawful Good", "Lawful Neutral", "Lawful Evil"]
-    }
+      "allowedPairs": [
+        "Lawful Good",
+        "Lawful Neutral",
+        "Lawful Evil"
+      ]
+    },
+    "SourceBook": "engarde"
   },
   "Wind Dancer": {
-    "Brackets": ["🛡️ Warrior"],
-    "Tags": ["3 DAC", "Combatant", "Ishmaic"],
+    "Brackets": [
+      "🛡️ Warrior"
+    ],
+    "Tags": [
+      "3 DAC",
+      "Combatant",
+      "Ishmaic"
+    ],
     "Armour": {
-      "Wearable": ["light"],
+      "Wearable": [
+        "light"
+      ],
       "Restrictions": []
     },
     "Levels": {
@@ -807,17 +1061,38 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": ["Good", "Neutral", "Evil"],
-        "order": ["Lawful"]
+        "moral": [
+          "Good",
+          "Neutral",
+          "Evil"
+        ],
+        "order": [
+          "Lawful"
+        ]
       },
-      "allowedPairs": ["Lawful Good", "Lawful Neutral", "Lawful Evil"]
-    }
+      "allowedPairs": [
+        "Lawful Good",
+        "Lawful Neutral",
+        "Lawful Evil"
+      ]
+    },
+    "SourceBook": "engarde"
   },
   "Valdstayn": {
-    "Brackets": ["🛡️ Warrior"],
-    "Tags": ["High Roleplay", "Defender", "Combatant"],
+    "Brackets": [
+      "🛡️ Warrior"
+    ],
+    "Tags": [
+      "High Roleplay",
+      "Defender",
+      "Combatant"
+    ],
     "Armour": {
-      "Wearable": ["light", "medium", "heavy"],
+      "Wearable": [
+        "light",
+        "medium",
+        "heavy"
+      ],
       "Restrictions": []
     },
     "Levels": {
@@ -896,11 +1171,18 @@
         }
       ]
     },
-    "Max AC": 8
+    "Max AC": 8,
+    "SourceBook": "engarde"
   },
   "Rovfuger": {
-    "Brackets": ["🛡️ Warrior"],
-    "Tags": ["Suicidal", "Combatant", "MaxAC 9"],
+    "Brackets": [
+      "🛡️ Warrior"
+    ],
+    "Tags": [
+      "Suicidal",
+      "Combatant",
+      "MaxAC 9"
+    ],
     "Levels": {
       "1": [
         {
@@ -988,13 +1270,22 @@
         }
       ]
     },
-    "Max AC": 9
+    "Max AC": 9,
+    "SourceBook": "engarde"
   },
   "Kensai / Blade Master": {
-    "Brackets": ["🛡️ Warrior"],
-    "Tags": ["High Damage", "Combatant", "4 DAC"],
+    "Brackets": [
+      "🛡️ Warrior"
+    ],
+    "Tags": [
+      "High Damage",
+      "Combatant",
+      "4 DAC"
+    ],
     "Armour": {
-      "Wearable": ["light"],
+      "Wearable": [
+        "light"
+      ],
       "Restrictions": []
     },
     "Levels": {
@@ -1070,14 +1361,28 @@
       ]
     },
     "Max AC": 9,
-    "Buy as": ["Kensai", "2nd class Warrior"]
+    "Buy as": [
+      "Kensai",
+      "2nd class Warrior"
+    ],
+    "SourceBook": "engarde"
   },
   "Forest Guardian": {
-    "Brackets": ["🌿 Druid"],
-    "Tags": ["EP Caster", "Combatant", "Heal & Harm"],
+    "Brackets": [
+      "🌿 Druid"
+    ],
+    "Tags": [
+      "EP Caster",
+      "Combatant",
+      "Heal & Harm"
+    ],
     "Armour": {
-      "Wearable": ["light"],
-      "Restrictions": ["No metal"]
+      "Wearable": [
+        "light"
+      ],
+      "Restrictions": [
+        "No metal"
+      ]
     },
     "Levels": {
       "1": [
@@ -1171,23 +1476,37 @@
       ]
     },
     "Max AC": 8,
-    "Powerbase": ["🌍 Earthpower"],
+    "Powerbase": [
+      "🌍 Earthpower"
+    ],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
         "PowerBase": "Earthpower",
         "Calculation": "CL*2"
       }
-    ]
+    ],
+    "SourceBook": "Druids Way"
   },
   "Kallah Beggar": {
-    "Brackets": ["⚔ Scout", "🛡️ Warrior"],
-    "Tags": ["City Bound", "Combatant", "3 DAC"],
+    "Brackets": [
+      "⚔ Scout",
+      "🛡️ Warrior"
+    ],
+    "Tags": [
+      "City Bound",
+      "Combatant",
+      "3 DAC"
+    ],
     "Armour": {
-      "Wearable": ["light"],
+      "Wearable": [
+        "light"
+      ],
       "Restrictions": []
     },
-    "GuildOverrides": ["City bound"],
+    "GuildOverrides": [
+      "City bound"
+    ],
     "Levels": {
       "1": [
         {
@@ -1272,16 +1591,32 @@
       ]
     },
     "Max AC": 7,
-    "Buy as": ["Kallah Beggar", "2nd class Assassin", "2nd class Warrior"]
+    "Buy as": [
+      "Kallah Beggar",
+      "2nd class Assassin",
+      "2nd class Warrior"
+    ],
+    "SourceBook": "At the Sharp End"
   },
   "Hanot Beggar": {
-    "Brackets": ["⚔ Scout", "🛡️ Warrior"],
-    "Tags": ["City Bound", "Combatant", "5 PAC"],
+    "Brackets": [
+      "⚔ Scout",
+      "🛡️ Warrior"
+    ],
+    "Tags": [
+      "City Bound",
+      "Combatant",
+      "5 PAC"
+    ],
     "Armour": {
-      "Wearable": ["light"],
+      "Wearable": [
+        "light"
+      ],
       "Restrictions": []
     },
-    "GuildOverrides": ["City bound"],
+    "GuildOverrides": [
+      "City bound"
+    ],
     "Levels": {
       "1": [
         {
@@ -1372,14 +1707,29 @@
       ]
     },
     "Max AC": 8,
-    "Buy as": ["Hanot Beggar", "2nd class Pathfinder", "2nd class Warrior"]
+    "Buy as": [
+      "Hanot Beggar",
+      "2nd class Pathfinder",
+      "2nd class Warrior"
+    ],
+    "SourceBook": "At the Sharp End"
   },
   "Paladin": {
-    "Brackets": ["🛡️ Warrior"],
-    "Tags": ["Spiritual Caster", "Combatant", "MaxAC 9"],
+    "Brackets": [
+      "🛡️ Warrior"
+    ],
+    "Tags": [
+      "Spiritual Caster",
+      "Combatant",
+      "MaxAC 9"
+    ],
     "Max AC": 9,
     "Armour": {
-      "Wearable": ["light", "medium", "heavy"],
+      "Wearable": [
+        "light",
+        "medium",
+        "heavy"
+      ],
       "Restrictions": []
     },
     "Levels": {
@@ -1494,18 +1844,35 @@
     "alignmentRule": {
       "mode": "set",
       "allowed": {
-        "moral": ["Good"],
-        "order": ["Lawful"]
+        "moral": [
+          "Good"
+        ],
+        "order": [
+          "Lawful"
+        ]
       },
-      "allowedPairs": ["Lawful Good"]
-    }
+      "allowedPairs": [
+        "Lawful Good"
+      ]
+    },
+    "SourceBook": "engarde"
   },
   "Unholy Champion": {
-    "Brackets": ["🛡️ Warrior"],
-    "Tags": ["Spiritual Caster", "Combatant", "MaxAC 9"],
+    "Brackets": [
+      "🛡️ Warrior"
+    ],
+    "Tags": [
+      "Spiritual Caster",
+      "Combatant",
+      "MaxAC 9"
+    ],
     "Max AC": 9,
     "Armour": {
-      "Wearable": ["light", "medium", "heavy"],
+      "Wearable": [
+        "light",
+        "medium",
+        "heavy"
+      ],
       "Restrictions": []
     },
     "Levels": {
@@ -1588,18 +1955,39 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": ["Evil"],
-        "order": ["Lawful", "Neutral", "Chaotic"]
+        "moral": [
+          "Evil"
+        ],
+        "order": [
+          "Lawful",
+          "Neutral",
+          "Chaotic"
+        ]
       },
-      "allowedPairs": ["Lawful Evil", "Neutral Evil", "Chaotic Evil"]
-    }
+      "allowedPairs": [
+        "Lawful Evil",
+        "Neutral Evil",
+        "Chaotic Evil"
+      ]
+    },
+    "SourceBook": "engarde"
   },
   "Grey Knight": {
-    "Brackets": ["🛡️ Warrior"],
-    "Tags": ["Spiritual Caster", "Combatant", "MaxAC 9"],
+    "Brackets": [
+      "🛡️ Warrior"
+    ],
+    "Tags": [
+      "Spiritual Caster",
+      "Combatant",
+      "MaxAC 9"
+    ],
     "Max AC": 9,
     "Armour": {
-      "Wearable": ["light", "medium", "heavy"],
+      "Wearable": [
+        "light",
+        "medium",
+        "heavy"
+      ],
       "Restrictions": []
     },
     "Levels": {
@@ -1685,15 +2073,32 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": ["Neutral"],
-        "order": ["Lawful", "Neutral", "Chaotic"]
+        "moral": [
+          "Neutral"
+        ],
+        "order": [
+          "Lawful",
+          "Neutral",
+          "Chaotic"
+        ]
       },
-      "allowedPairs": ["Lawful Neutral", "True Neutral", "Chaotic Neutral"]
-    }
+      "allowedPairs": [
+        "Lawful Neutral",
+        "True Neutral",
+        "Chaotic Neutral"
+      ]
+    },
+    "SourceBook": "engarde"
   },
   "Budoka": {
-    "Brackets": ["🛡️ Warrior"],
-    "Tags": ["4 DAC", "Combatant", "MaxAC 9"],
+    "Brackets": [
+      "🛡️ Warrior"
+    ],
+    "Tags": [
+      "4 DAC",
+      "Combatant",
+      "MaxAC 9"
+    ],
     "Max AC": 9,
     "Levels": {
       "1": [
@@ -1770,12 +2175,22 @@
           "Count": 4
         }
       ]
-    }
+    },
+    "SourceBook": "engarde"
   },
   "Sorcerer": {
-    "Brackets": ["🛡️ Warrior", "🧙 Wizard"],
-    "Tags": ["Magical Caster", "Combatant", "Sorcorial Arts"],
-    "Buy as": ["1st class Sorcerer"],
+    "Brackets": [
+      "🛡️ Warrior",
+      "🧙 Wizard"
+    ],
+    "Tags": [
+      "Magical Caster",
+      "Combatant",
+      "Sorcorial Arts"
+    ],
+    "Buy as": [
+      "1st class Sorcerer"
+    ],
     "Levels": {
       "1": [
         {
@@ -1822,19 +2237,31 @@
       ]
     },
     "Max AC": 8,
-    "Powerbase": ["🪄 Magic"],
+    "Powerbase": [
+      "🪄 Magic"
+    ],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
         "PowerBase": "Magic",
         "Calculation": "(CL^2+CL)/2"
       }
-    ]
+    ],
+    "SourceBook": "wizard's grimoire"
   },
   "Vivomancer": {
-    "Brackets": ["🧙 Wizard", "🙏 Priest"],
-    "Buy as": ["1st class Vivomancer"],
-    "Tags": ["Spiritual Caster", "Magical Caster", "Mantics"],
+    "Brackets": [
+      "🧙 Wizard",
+      "🙏 Priest"
+    ],
+    "Buy as": [
+      "1st class Vivomancer"
+    ],
+    "Tags": [
+      "Spiritual Caster",
+      "Magical Caster",
+      "Mantics"
+    ],
     "Levels": {
       "1": [
         {
@@ -1901,12 +2328,23 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": ["Good"],
-        "order": ["Lawful", "Neutral"]
+        "moral": [
+          "Good"
+        ],
+        "order": [
+          "Lawful",
+          "Neutral"
+        ]
       },
-      "allowedPairs": ["Lawful Good", "Neutral Good"]
+      "allowedPairs": [
+        "Lawful Good",
+        "Neutral Good"
+      ]
     },
-    "Powerbase": ["🪄 Magic", "示 Spirit"],
+    "Powerbase": [
+      "🪄 Magic",
+      "示 Spirit"
+    ],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
@@ -1917,12 +2355,22 @@
         "PowerBase": "Spirit",
         "Calculation": "CL*3"
       }
-    ]
+    ],
+    "SourceBook": "wizard's grimoire"
   },
   "Vochstelen": {
-    "Brackets": ["🛡️ Warrior", "🧙 Wizard"],
-    "Tags": ["Magical Caster", "Combatant", "MaxAC 9"],
-    "Buy as": ["1st class Vochstelen"],
+    "Brackets": [
+      "🛡️ Warrior",
+      "🧙 Wizard"
+    ],
+    "Tags": [
+      "Magical Caster",
+      "Combatant",
+      "MaxAC 9"
+    ],
+    "Buy as": [
+      "1st class Vochstelen"
+    ],
     "Levels": {
       "1": [
         {
@@ -1987,12 +2435,21 @@
         }
       ]
     },
-    "Max AC": 9
+    "Max AC": 9,
+    "SourceBook": "wizard's grimoire"
   },
   "Warlock": {
-    "Brackets": ["🛡️ Warrior", "🧙 Wizard"],
-    "Tags": ["Magical Caster", "Combatant"],
-    "Buy as": ["1st class Warlock"],
+    "Brackets": [
+      "🛡️ Warrior",
+      "🧙 Wizard"
+    ],
+    "Tags": [
+      "Magical Caster",
+      "Combatant"
+    ],
+    "Buy as": [
+      "1st class Warlock"
+    ],
     "Levels": {
       "1": [
         {
@@ -2054,23 +2511,37 @@
       ]
     },
     "Max AC": 8,
-    "Powerbase": ["🪄 Magic"],
+    "Powerbase": [
+      "🪄 Magic"
+    ],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
         "PowerBase": "Magic",
         "Calculation": "(CL^2+CL)/2"
       }
-    ]
+    ],
+    "SourceBook": "wizard's grimoire"
   },
   "Wizard": {
-    "Brackets": ["🧙 Wizard"],
+    "Brackets": [
+      "🧙 Wizard"
+    ],
     "Armour": {
-      "Wearable": ["light", "medium"],
+      "Wearable": [
+        "light",
+        "medium"
+      ],
       "Restrictions": []
     },
-    "Tags": ["Magical Caster", "72 Mana", "High Versatility"],
-    "Buy as": ["1st class Wizard"],
+    "Tags": [
+      "Magical Caster",
+      "72 Mana",
+      "High Versatility"
+    ],
+    "Buy as": [
+      "1st class Wizard"
+    ],
     "Levels": {
       "1": [
         {
@@ -2127,23 +2598,37 @@
       ]
     },
     "Max AC": 6,
-    "Powerbase": ["🪄 Magic"],
+    "Powerbase": [
+      "🪄 Magic"
+    ],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
         "PowerBase": "Magic",
         "Calculation": "CL^2+CL"
       }
-    ]
+    ],
+    "SourceBook": "wizard's grimoire"
   },
   "Witch Doctor": {
-    "Brackets": ["🧙 Wizard"],
+    "Brackets": [
+      "🧙 Wizard"
+    ],
     "Armour": {
-      "Wearable": ["light", "medium"],
+      "Wearable": [
+        "light",
+        "medium"
+      ],
       "Restrictions": []
     },
-    "Tags": ["Magical Caster", "Variable mana", "Tribal"],
-    "Buy as": ["1st class Wizard"],
+    "Tags": [
+      "Magical Caster",
+      "Variable mana",
+      "Tribal"
+    ],
+    "Buy as": [
+      "1st class Wizard"
+    ],
     "Levels": {
       "1": [
         {
@@ -2200,19 +2685,30 @@
       ]
     },
     "Max AC": 6,
-    "Powerbase": ["🪄 Magic"],
+    "Powerbase": [
+      "🪄 Magic"
+    ],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
         "PowerBase": "Magic",
         "Calculation": "TM*2+CL"
       }
-    ]
+    ],
+    "SourceBook": "wizard's grimoire"
   },
   "High-Wizard": {
-    "Brackets": ["🧙 Wizard"],
-    "Tags": ["Magical Caster", "Non-Combat", "90 Mana"],
-    "Buy as": ["1st class Wizard"],
+    "Brackets": [
+      "🧙 Wizard"
+    ],
+    "Tags": [
+      "Magical Caster",
+      "Non-Combat",
+      "90 Mana"
+    ],
+    "Buy as": [
+      "1st class Wizard"
+    ],
     "Levels": {
       "1": [
         {
@@ -2256,24 +2752,38 @@
       ]
     },
     "Max AC": 6,
-    "Powerbase": ["🪄 Magic"],
+    "Powerbase": [
+      "🪄 Magic"
+    ],
     "CasterLevel": 9,
     "PowerCalculations": [
       {
         "PowerBase": "Magic",
         "Calculation": "CL^2+CL"
       }
-    ]
+    ],
+    "SourceBook": "wizard's grimoire"
   },
   "Pathfinder": {
-    "Brackets": ["⚔ Scout"],
-    "Tags": ["Jack of all Trades", "Soft-Combatant", "High Versatility"],
+    "Brackets": [
+      "⚔ Scout"
+    ],
+    "Tags": [
+      "Jack of all Trades",
+      "Soft-Combatant",
+      "High Versatility"
+    ],
     "Armour": {
-      "Wearable": ["light", "medium"],
+      "Wearable": [
+        "light",
+        "medium"
+      ],
       "Restrictions": []
     },
     "Max AC": 7,
-    "Post8th": "Buys as 1st Class Pathfinder.",
+    "Buy As": [
+      "1st Class Pathfinder"
+    ],
     "Levels": {
       "1": [
         {
@@ -2351,13 +2861,21 @@
           "OverwriteKey": "Specialist Scout skill"
         }
       ]
-    }
+    },
+    "SourceBook": "At the Sharp End"
   },
   "Thug": {
-    "Brackets": ["⚔ Scout"],
-    "Tags": ["Combatant"],
+    "Brackets": [
+      "⚔ Scout"
+    ],
+    "Tags": [
+      "Combatant"
+    ],
     "Armour": {
-      "Wearable": ["light", "medium"],
+      "Wearable": [
+        "light",
+        "medium"
+      ],
       "Restrictions": []
     },
     "Max AC": 8,
@@ -2430,14 +2948,24 @@
           "OverwriteKey": "Specialist Scout skill"
         }
       ]
-    }
+    },
+    "SourceBook": "At the Sharp End"
   },
   "Assassin": {
-    "Brackets": ["⚔ Scout"],
-    "Tags": ["High Damage", "Combatant"],
+    "Brackets": [
+      "⚔ Scout"
+    ],
+    "Tags": [
+      "High Damage",
+      "Combatant"
+    ],
     "Max AC": 7,
     "Armour": {
-      "Wearable": ["light", "medium", "heavy"],
+      "Wearable": [
+        "light",
+        "medium",
+        "heavy"
+      ],
       "Restrictions": []
     },
     "Levels": {
@@ -2525,18 +3053,39 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": ["Evil"],
-        "order": ["Lawful", "Neutral", "Chaotic"]
+        "moral": [
+          "Evil"
+        ],
+        "order": [
+          "Lawful",
+          "Neutral",
+          "Chaotic"
+        ]
       },
-      "allowedPairs": ["Lawful Evil", "Neutral Evil", "Chaotic Evil"]
-    }
+      "allowedPairs": [
+        "Lawful Evil",
+        "Neutral Evil",
+        "Chaotic Evil"
+      ]
+    },
+    "SourceBook": "At the Sharp End"
   },
   "Rogue": {
-    "Brackets": ["⚔ Scout", "🧙 Wizard"],
-    "Tags": ["Magical Caster", "Soft-Combatant", "Versatile"],
+    "Brackets": [
+      "⚔ Scout",
+      "🧙 Wizard"
+    ],
+    "Tags": [
+      "Magical Caster",
+      "Soft-Combatant",
+      "Versatile"
+    ],
     "Max AC": 7,
     "Armour": {
-      "Wearable": ["light", "medium"],
+      "Wearable": [
+        "light",
+        "medium"
+      ],
       "Restrictions": []
     },
     "Levels": {
@@ -2612,21 +3161,33 @@
         }
       ]
     },
-    "Powerbase": ["🪄 Magic"],
+    "Powerbase": [
+      "🪄 Magic"
+    ],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
         "PowerBase": "Magic",
         "Calculation": "(CL^2+CL)/2"
       }
-    ]
+    ],
+    "SourceBook": "At the Sharp End"
   },
   "Wayfinder": {
-    "Brackets": ["⚔ Scout", "🙏 Priest"],
-    "Tags": ["Spiritual Caster", "Combatant"],
+    "Brackets": [
+      "⚔ Scout",
+      "🙏 Priest"
+    ],
+    "Tags": [
+      "Spiritual Caster",
+      "Combatant"
+    ],
     "Max AC": 7,
     "Armour": {
-      "Wearable": ["light", "medium"],
+      "Wearable": [
+        "light",
+        "medium"
+      ],
       "Restrictions": []
     },
     "Levels": {
@@ -2662,70 +3223,80 @@
           "Type": "Overwrite",
           "OverwriteKey": "Standard Scout skill"
         }
+      ],
+      "3": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Discern Bless/Curse",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Use Spirit Items",
+          "Type": "AtWill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "Discern Disease",
+          "Type": "AtWill"
+        }
+      ],
+      "5": [
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "6": [
+        {
+          "Name": "Discern Spiritual Mastery",
+          "Type": "AtWill"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "8": [
+        {
+          "Name": "1st weapon mastery (O)",
+          "Type": "Static",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
+        },
+        {
+          "Name": "Specialist Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Specialist Scout skill"
+        }
       ]
     },
-    "3": [
-      {
-        "Name": "E",
-        "Type": "WeaponSkill"
-      },
-      {
-        "Name": "Discern Bless/Curse",
-        "Type": "AtWill"
-      },
-      {
-        "Name": "Use Spirit Items",
-        "Type": "AtWill"
-      }
-    ],
-    "4": [
-      {
-        "Name": "Discern Disease",
-        "Type": "AtWill"
-      }
-    ],
-    "5": [
-      {
-        "Name": "Standard Scout skill",
-        "Type": "Overwrite",
-        "OverwriteKey": "Standard Scout skill"
-      }
-    ],
-    "6": [
-      {
-        "Name": "Discern Spiritual Mastery",
-        "Type": "AtWill"
-      }
-    ],
-    "7": [
-      {
-        "Name": "Standard Scout skill",
-        "Type": "Overwrite",
-        "OverwriteKey": "Standard Scout skill"
-      }
-    ],
-    "8": [
-      {
-        "Name": "1st weapon mastery (O)",
-        "Type": "Static",
-        "Customisation": {
-          "OptionEnum": "WeaponType",
-          "CustomValuesPermitted": true
-        }
-      },
-      {
-        "Name": "Specialist Scout skill",
-        "Type": "Overwrite",
-        "OverwriteKey": "Specialist Scout skill"
-      }
-    ]
+    "SourceBook": "At the Sharp End"
   },
   "Leywalker": {
-    "Brackets": ["⚔ Scout", "🌿 Druid"],
-    "Tags": ["EP Caster", "Combatant", "Versatile"],
+    "Brackets": [
+      "⚔ Scout",
+      "🌿 Druid"
+    ],
+    "Tags": [
+      "EP Caster",
+      "Combatant",
+      "Versatile"
+    ],
     "Max AC": 7,
     "Armour": {
-      "Wearable": ["light"],
+      "Wearable": [
+        "light"
+      ],
       "Restrictions": []
     },
     "Levels": {
@@ -2801,21 +3372,33 @@
         }
       ]
     },
-    "Powerbase": ["🌍 Earthpower"],
+    "Powerbase": [
+      "🌍 Earthpower"
+    ],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
         "PowerBase": "Earthpower",
         "Calculation": "CL*2"
       }
-    ]
+    ],
+    "SourceBook": "At the Sharp End"
   },
   "Spy": {
-    "Brackets": ["⚔ Scout"],
-    "Tags": ["Neuronic Caster", "Combatant"],
+    "Brackets": [
+      "⚔ Scout"
+    ],
+    "Tags": [
+      "Neuronic Caster",
+      "Combatant"
+    ],
     "Max AC": 7,
     "Armour": {
-      "Wearable": ["light", "medium", "heavy"],
+      "Wearable": [
+        "light",
+        "medium",
+        "heavy"
+      ],
       "Restrictions": []
     },
     "Levels": {
@@ -2908,14 +3491,25 @@
           "OverwriteKey": "Specialist Scout skill"
         }
       ]
-    }
+    },
+    "SourceBook": "At the Sharp End"
   },
   "Artificer": {
-    "Brackets": ["⚔ Scout"],
-    "Tags": ["Neuronic Caster", "Combatant", "3 PAC"],
+    "Brackets": [
+      "⚔ Scout"
+    ],
+    "Tags": [
+      "Neuronic Caster",
+      "Combatant",
+      "3 PAC"
+    ],
     "Max AC": 7,
     "Armour": {
-      "Wearable": ["light", "medium", "heavy"],
+      "Wearable": [
+        "light",
+        "medium",
+        "heavy"
+      ],
       "Restrictions": []
     },
     "Levels": {
@@ -3008,14 +3602,23 @@
           "OverwriteKey": "Specialist Scout skill"
         }
       ]
-    }
+    },
+    "SourceBook": "At the Sharp End"
   },
   "Pure-Priest": {
-    "Brackets": ["🙏 Priest"],
-    "Tags": ["Spiritual Caster", "Heal Or Harm", "40 Spirits"],
+    "Brackets": [
+      "🙏 Priest"
+    ],
+    "Tags": [
+      "Spiritual Caster",
+      "Heal Or Harm",
+      "40 Spirits"
+    ],
     "Armour": {
       "Wearable": [],
-      "Restrictions": ["No physical"]
+      "Restrictions": [
+        "No physical"
+      ]
     },
     "Levels": {
       "1": [
@@ -3065,34 +3668,37 @@
       "8": []
     },
     "Max AC": 7,
-    "Powerbase": ["示 Spirit"],
+    "Powerbase": [
+      "示 Spirit"
+    ],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
         "PowerBase": "Spirit",
         "Calculation": "CL*5"
       }
-    ]
+    ],
+    "SourceBook": "Words From Above"
   },
   "Armoured-Priest": {
-    "Brackets": ["🙏 Priest"],
-    "Tags": ["Spiritual Caster", "32 Spirits"],
+    "Brackets": [
+      "🙏 Priest"
+    ],
+    "Tags": [
+      "Spiritual Caster",
+      "32 Spirits"
+    ],
     "Armour": {
-      "Wearable": ["light", "medium"],
+      "Wearable": [
+        "light",
+        "medium"
+      ],
       "Restrictions": []
     },
-    "Levels": {
-      "1": [],
-      "2": [],
-      "3": [],
-      "4": [],
-      "5": [],
-      "6": [],
-      "7": [],
-      "8": []
-    },
     "Max AC": 7,
-    "Powerbase": ["示 Spirit"],
+    "Powerbase": [
+      "示 Spirit"
+    ],
     "PowerPerLevel": 4,
     "CasterLevel": 8,
     "PowerCalculations": [
@@ -3101,7 +3707,7 @@
         "Calculation": "CL*4"
       }
     ],
-    "levels": {
+    "Levels": {
       "1": [
         {
           "Name": "Recognise Spirit",
@@ -3145,13 +3751,23 @@
           "Type": "AtWill"
         }
       ]
-    }
+    },
+    "SourceBook": "Words From Above"
   },
   "Battle-Priest": {
-    "Brackets": ["🙏 Priest"],
-    "Tags": ["Spiritual Caster", "Combatant", "16 Spirits"],
+    "Brackets": [
+      "🙏 Priest"
+    ],
+    "Tags": [
+      "Spiritual Caster",
+      "Combatant",
+      "16 Spirits"
+    ],
     "Armour": {
-      "Wearable": ["light", "medium"],
+      "Wearable": [
+        "light",
+        "medium"
+      ],
       "Restrictions": []
     },
     "Levels": {
@@ -3163,16 +3779,46 @@
         {
           "Name": "U",
           "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Recognise Spirit",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Wounds",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Undead",
+          "Type": "AtWill"
         }
       ],
-      "2": [],
+      "2": [
+        {
+          "Name": "Read Runes",
+          "Type": "Static"
+        }
+      ],
       "3": [
         {
           "Name": "E",
           "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Discern Bless/Curse",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Use Spirit Items",
+          "Type": "AtWill"
         }
       ],
-      "4": [],
+      "4": [
+        {
+          "Name": "Discern Disease",
+          "Type": "AtWill"
+        }
+      ],
       "5": [
         {
           "Name": "B",
@@ -3183,6 +3829,10 @@
         {
           "Name": "H",
           "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Discern Spiritual Mastery",
+          "Type": "AtWill"
         }
       ],
       "7": [
@@ -3201,7 +3851,9 @@
       ]
     },
     "Max AC": 8,
-    "Powerbase": ["示 Spirit"],
+    "Powerbase": [
+      "示 Spirit"
+    ],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
@@ -3209,7 +3861,37 @@
         "Calculation": "CL*2"
       }
     ],
-    "levels": {
+    "SourceBook": "Words From Above"
+  },
+  "Crusading-Priest": {
+    "Brackets": [
+      "🙏 Priest"
+    ],
+    "Tags": [
+      "Spiritual Caster",
+      "Combatant",
+      "MaxAC 9"
+    ],
+    "Armour": {
+      "Wearable": [
+        "light",
+        "medium",
+        "heavy"
+      ],
+      "Restrictions": []
+    },
+    "Max AC": 9,
+    "Powerbase": [
+      "示 Spirit"
+    ],
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Spirit",
+        "Calculation": "CL*1"
+      }
+    ],
+    "Levels": {
       "1": [
         {
           "Name": "Recognise Spirit",
@@ -3222,48 +3904,7 @@
         {
           "Name": "Discern Nature of Undead",
           "Type": "AtWill"
-        }
-      ],
-      "2": [
-        {
-          "Name": "Read Runes",
-          "Type": "Static"
-        }
-      ],
-      "3": [
-        {
-          "Name": "Discern Bless/Curse",
-          "Type": "AtWill"
         },
-        {
-          "Name": "Use Spirit Items",
-          "Type": "AtWill"
-        }
-      ],
-      "4": [
-        {
-          "Name": "Discern Disease",
-          "Type": "AtWill"
-        }
-      ],
-      "5": [],
-      "6": [
-        {
-          "Name": "Discern Spiritual Mastery",
-          "Type": "AtWill"
-        }
-      ]
-    }
-  },
-  "Crusading-Priest": {
-    "Brackets": ["🙏 Priest"],
-    "Tags": ["Spiritual Caster", "Combatant", "MaxAC 9"],
-    "Armour": {
-      "Wearable": ["light", "medium", "heavy"],
-      "Restrictions": []
-    },
-    "Levels": {
-      "1": [
         {
           "Name": "O",
           "Type": "WeaponSkill"
@@ -3275,24 +3916,45 @@
       ],
       "2": [
         {
+          "Name": "Read Runes",
+          "Type": "Static"
+        },
+        {
           "Name": "E",
           "Type": "WeaponSkill"
         }
       ],
       "3": [
         {
+          "Name": "Discern Bless/Curse",
+          "Type": "AtWill"
+        },
+        {
           "Name": "H",
           "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Use Spirit Items",
+          "Type": "AtWill"
         }
       ],
       "4": [
+        {
+          "Name": "Discern Disease",
+          "Type": "AtWill"
+        },
         {
           "Name": "B",
           "Type": "WeaponSkill"
         }
       ],
       "5": [],
-      "6": [],
+      "6": [
+        {
+          "Name": "Discern Spiritual Mastery",
+          "Type": "AtWill"
+        }
+      ],
       "7": [
         {
           "Name": "Crusading-Priest Specialist",
@@ -3308,16 +3970,27 @@
         }
       ]
     },
-    "Max AC": 9,
-    "Powerbase": ["示 Spirit"],
-    "CasterLevel": 8,
-    "PowerCalculations": [
-      {
-        "PowerBase": "Spirit",
-        "Calculation": "CL*1"
-      }
+    "SourceBook": "Words From Above"
+  },
+  "Spiritual Warrior": {
+    "Brackets": [
+      "🙏 Priest"
     ],
-    "levels": {
+    "Tags": [
+      "Spiritual Caster",
+      "heavy armour",
+      "MaxAC 9"
+    ],
+    "Armour": {
+      "Wearable": [
+        "light",
+        "medium",
+        "heavy"
+      ],
+      "Restrictions": []
+    },
+    "Max AC": 9,
+    "Levels": {
       "1": [
         {
           "Name": "Recognise Spirit",
@@ -3330,48 +4003,7 @@
         {
           "Name": "Discern Nature of Undead",
           "Type": "AtWill"
-        }
-      ],
-      "2": [
-        {
-          "Name": "Read Runes",
-          "Type": "Static"
-        }
-      ],
-      "3": [
-        {
-          "Name": "Discern Bless/Curse",
-          "Type": "AtWill"
         },
-        {
-          "Name": "Use Spirit Items",
-          "Type": "AtWill"
-        }
-      ],
-      "4": [
-        {
-          "Name": "Discern Disease",
-          "Type": "AtWill"
-        }
-      ],
-      "5": [],
-      "6": [
-        {
-          "Name": "Discern Spiritual Mastery",
-          "Type": "AtWill"
-        }
-      ]
-    }
-  },
-  "Spiritual Warrior": {
-    "Brackets": ["🙏 Priest"],
-    "Tags": ["Spiritual Caster", "heavy armour", "MaxAC 9"],
-    "Armour": {
-      "Wearable": ["light", "medium", "heavy"],
-      "Restrictions": []
-    },
-    "Levels": {
-      "1": [
         {
           "Name": "O",
           "Type": "WeaponSkill"
@@ -3382,6 +4014,10 @@
         }
       ],
       "2": [
+        {
+          "Name": "Read Runes",
+          "Type": "Static"
+        },
         {
           "Name": "E",
           "Type": "WeaponSkill"
@@ -3395,15 +4031,33 @@
           "Type": "WeaponSkill"
         }
       ],
-      "3": [],
+      "3": [
+        {
+          "Name": "Discern Bless/Curse",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Use Spirit Items",
+          "Type": "AtWill"
+        }
+      ],
       "4": [
+        {
+          "Name": "Discern Disease",
+          "Type": "AtWill"
+        },
         {
           "Name": "B",
           "Type": "WeaponSkill"
         }
       ],
       "5": [],
-      "6": [],
+      "6": [
+        {
+          "Name": "Discern Spiritual Mastery",
+          "Type": "AtWill"
+        }
+      ],
       "7": [
         {
           "Name": "Warrior Specialist",
@@ -3419,72 +4073,27 @@
         }
       ]
     },
-    "Max AC": 9,
-    "levels": {
-      "1": [
-        {
-          "Name": "Recognise Spirit",
-          "Type": "AtWill"
-        },
-        {
-          "Name": "Discern Nature of Wounds",
-          "Type": "AtWill"
-        },
-        {
-          "Name": "Discern Nature of Undead",
-          "Type": "AtWill"
-        }
-      ],
-      "2": [
-        {
-          "Name": "Read Runes",
-          "Type": "Static"
-        }
-      ],
-      "3": [
-        {
-          "Name": "Discern Bless/Curse",
-          "Type": "AtWill"
-        },
-        {
-          "Name": "Use Spirit Items",
-          "Type": "AtWill"
-        }
-      ],
-      "4": [
-        {
-          "Name": "Discern Disease",
-          "Type": "AtWill"
-        }
-      ],
-      "5": [],
-      "6": [
-        {
-          "Name": "Discern Spiritual Mastery",
-          "Type": "AtWill"
-        }
-      ]
-    }
+    "SourceBook": "Words From Above"
   },
   "Hospitaller": {
-    "Brackets": ["🙏 Priest"],
-    "Tags": ["Spiritual Caster", "Pacifist", "48"],
+    "Brackets": [
+      "🙏 Priest"
+    ],
+    "Tags": [
+      "Spiritual Caster",
+      "Pacifist",
+      "48"
+    ],
     "Armour": {
       "Wearable": [],
-      "Restrictions": ["No physical"]
-    },
-    "Levels": {
-      "1": [],
-      "2": [],
-      "3": [],
-      "4": [],
-      "5": [],
-      "6": [],
-      "7": [],
-      "8": []
+      "Restrictions": [
+        "No physical"
+      ]
     },
     "Max AC": 7,
-    "Powerbase": ["示 Spirit"],
+    "Powerbase": [
+      "示 Spirit"
+    ],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
@@ -3495,12 +4104,22 @@
     "alignmentRule": {
       "mode": "set",
       "allowed": {
-        "moral": ["Good"],
-        "order": ["Lawful", "Neutral", "Chaotic"]
+        "moral": [
+          "Good"
+        ],
+        "order": [
+          "Lawful",
+          "Neutral",
+          "Chaotic"
+        ]
       },
-      "allowedPairs": ["Lawful Good", "Neutral Good", "Chaotic Good"]
+      "allowedPairs": [
+        "Lawful Good",
+        "Neutral Good",
+        "Chaotic Good"
+      ]
     },
-    "levels": {
+    "Levels": {
       "1": [
         {
           "Name": "Recognise Spirit",
@@ -3544,17 +4163,47 @@
           "Type": "AtWill"
         }
       ]
-    }
+    },
+    "SourceBook": "Words From Above"
   },
   "Witch": {
-    "Brackets": ["🙏 Priest"],
-    "Tags": ["Spiritual Caster", "Combatant", "Potion Brewing"],
+    "Brackets": [
+      "🙏 Priest"
+    ],
+    "Tags": [
+      "Spiritual Caster",
+      "Combatant",
+      "Potion Brewing"
+    ],
     "Armour": {
       "Wearable": [],
       "Restrictions": []
     },
+    "Max AC": 6,
+    "Powerbase": [
+      "示 Spirit"
+    ],
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Spirit",
+        "Calculation": "CL*3"
+      }
+    ],
     "Levels": {
       "1": [
+        {
+          "Name": "Recognise Spirit",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Wounds",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Undead",
+          "Type": "AtWill"
+        },
         {
           "Name": "O (Cudgel)",
           "Type": "WeaponSkill"
@@ -3563,13 +4212,13 @@
           "Name": "Potion-related skill/recipe",
           "Type": "Overwrite",
           "OverwriteKey": "PotionSkill"
-        },
-        {
-          "Name": "Priestly Discerns",
-          "Type": "Replace"
         }
       ],
       "2": [
+        {
+          "Name": "Read Runes",
+          "Type": "Static"
+        },
         {
           "Name": "Potion-related skill/recipe",
           "Type": "Overwrite",
@@ -3578,12 +4227,24 @@
       ],
       "3": [
         {
+          "Name": "Discern Bless/Curse",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Use Spirit Items",
+          "Type": "AtWill"
+        },
+        {
           "Name": "Potion-related skill/recipe",
           "Type": "Overwrite",
           "OverwriteKey": "PotionSkill"
         }
       ],
       "4": [
+        {
+          "Name": "Discern Disease",
+          "Type": "AtWill"
+        },
         {
           "Name": "Potion-related skill/recipe",
           "Type": "Overwrite",
@@ -3598,6 +4259,10 @@
         }
       ],
       "6": [
+        {
+          "Name": "Discern Spiritual Mastery",
+          "Type": "AtWill"
+        },
         {
           "Name": "Potion-related skill/recipe",
           "Type": "Overwrite",
@@ -3617,67 +4282,24 @@
       ],
       "8": []
     },
-    "Max AC": 6,
-    "Powerbase": ["示 Spirit"],
-    "CasterLevel": 8,
-    "PowerCalculations": [
-      {
-        "PowerBase": "Spirit",
-        "Calculation": "CL*3"
-      }
-    ],
-    "levels": {
-      "1": [
-        {
-          "Name": "Recognise Spirit",
-          "Type": "AtWill"
-        },
-        {
-          "Name": "Discern Nature of Wounds",
-          "Type": "AtWill"
-        },
-        {
-          "Name": "Discern Nature of Undead",
-          "Type": "AtWill"
-        }
-      ],
-      "2": [
-        {
-          "Name": "Read Runes",
-          "Type": "Static"
-        }
-      ],
-      "3": [
-        {
-          "Name": "Discern Bless/Curse",
-          "Type": "AtWill"
-        },
-        {
-          "Name": "Use Spirit Items",
-          "Type": "AtWill"
-        }
-      ],
-      "4": [
-        {
-          "Name": "Discern Disease",
-          "Type": "AtWill"
-        }
-      ],
-      "5": [],
-      "6": [
-        {
-          "Name": "Discern Spiritual Mastery",
-          "Type": "AtWill"
-        }
-      ]
-    }
+    "SourceBook": "Words From Above"
   },
   "Friar": {
-    "Brackets": ["🙏 Priest"],
-    "Tags": ["Spiritual Caster", "Combatant", "24 Spirits"],
+    "Brackets": [
+      "🙏 Priest"
+    ],
+    "Tags": [
+      "Spiritual Caster",
+      "Combatant",
+      "24 Spirits"
+    ],
     "Armour": {
-      "Wearable": ["light"],
-      "Restrictions": ["May never wear heavier"]
+      "Wearable": [
+        "light"
+      ],
+      "Restrictions": [
+        "May never wear heavier"
+      ]
     },
     "Levels": {
       "1": [
@@ -3744,36 +4366,29 @@
       ]
     },
     "Max AC": 6,
-    "Powerbase": ["示 Spirit"],
+    "Powerbase": [
+      "示 Spirit"
+    ],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
         "PowerBase": "Spirit",
         "Calculation": "CL*3"
       }
-    ]
+    ],
+    "SourceBook": "Words From Above"
   },
   "Shaman": {
-    "Brackets": ["🙏 Priest"],
-    "Tags": ["Spiritual Caster", "Variant Spirits"],
+    "Brackets": [
+      "🙏 Priest"
+    ],
+    "Tags": [
+      "Spiritual Caster",
+      "Variant Spirits"
+    ],
     "Armour": {
       "Wearable": [],
       "Restrictions": []
-    },
-    "Levels": {
-      "1": [
-        {
-          "Name": "Priestly Discerns",
-          "Type": "Replace"
-        }
-      ],
-      "2": [],
-      "3": [],
-      "4": [],
-      "5": [],
-      "6": [],
-      "7": [],
-      "8": []
     },
     "Max AC": 7,
     "CasterLevel": 8,
@@ -3783,7 +4398,7 @@
         "Calculation": "CL*3*TM"
       }
     ],
-    "levels": {
+    "Levels": {
       "1": [
         {
           "Name": "Recognise Spirit",
@@ -3827,14 +4442,25 @@
           "Type": "AtWill"
         }
       ]
-    }
+    },
+    "SourceBook": "Words From Above"
   },
   "Druid": {
-    "Brackets": ["🌿 Druid"],
-    "Tags": ["EP Caster", "Combatant", "Heal & Harm"],
+    "Brackets": [
+      "🌿 Druid"
+    ],
+    "Tags": [
+      "EP Caster",
+      "Combatant",
+      "Heal & Harm"
+    ],
     "Armour": {
-      "Wearable": ["light"],
-      "Restrictions": ["No metal"]
+      "Wearable": [
+        "light"
+      ],
+      "Restrictions": [
+        "No metal"
+      ]
     },
     "Levels": {
       "1": [
@@ -3921,21 +4547,33 @@
       ]
     },
     "Max AC": 7,
-    "Powerbase": ["🌍 Earthpower"],
+    "Powerbase": [
+      "🌍 Earthpower"
+    ],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
         "PowerBase": "Earthpower",
         "Calculation": "CL*4"
       }
-    ]
+    ],
+    "SourceBook": "Druids Way"
   },
   "High Druid": {
-    "Brackets": ["🌿 Druid"],
-    "Tags": ["EP Caster", "Heal & Harm", "72 Earthpower"],
+    "Brackets": [
+      "🌿 Druid"
+    ],
+    "Tags": [
+      "EP Caster",
+      "Heal & Harm",
+      "72 Earthpower"
+    ],
     "Armour": {
       "Wearable": [],
-      "Restrictions": ["No armour", "No shields"]
+      "Restrictions": [
+        "No armour",
+        "No shields"
+      ]
     },
     "Levels": {
       "1": [
@@ -4001,22 +4639,33 @@
       "8": []
     },
     "Max AC": 7,
-    "Powerbase": ["🌍 Earthpower"],
+    "Powerbase": [
+      "🌍 Earthpower"
+    ],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
         "PowerBase": "Earthpower",
         "Calculation": "CL*6"
       }
-    ]
+    ],
+    "SourceBook": "Druids Way"
   },
   "Psi-Master": {
     "Armour": {
-      "Wearable": ["light"],
+      "Wearable": [
+        "light"
+      ],
       "Restrictions": []
     },
-    "Brackets": ["🧠 Neuro", "🛡️ Warrior"],
-    "Tags": ["Neuronic Caster", "Combatant"],
+    "Brackets": [
+      "🧠 Neuro",
+      "🛡️ Warrior"
+    ],
+    "Tags": [
+      "Neuronic Caster",
+      "Combatant"
+    ],
     "Levels": {
       "1": [
         {
@@ -4126,19 +4775,38 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": ["Evil", "Neutral", "Good"],
-        "order": ["Lawful"]
+        "moral": [
+          "Evil",
+          "Neutral",
+          "Good"
+        ],
+        "order": [
+          "Lawful"
+        ]
       },
-      "allowedPairs": ["Lawful Evil", "Lawful Neutral", "Lawful Good"]
-    }
+      "allowedPairs": [
+        "Lawful Evil",
+        "Lawful Neutral",
+        "Lawful Good"
+      ]
+    },
+    "SourceBook": "Oraculum Insight"
   },
   "Seer": {
     "Armour": {
-      "Wearable": ["light"],
-      "Restrictions": ["No shields"]
+      "Wearable": [
+        "light"
+      ],
+      "Restrictions": [
+        "No shields"
+      ]
     },
-    "Tags": ["Neuronic Caster"],
-    "Brackets": ["🧠 Neuro"],
+    "Tags": [
+      "Neuronic Caster"
+    ],
+    "Brackets": [
+      "🧠 Neuro"
+    ],
     "Levels": {
       "1": [
         {
@@ -4226,19 +4894,38 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": ["Evil", "Neutral", "Good"],
-        "order": ["Lawful"]
+        "moral": [
+          "Evil",
+          "Neutral",
+          "Good"
+        ],
+        "order": [
+          "Lawful"
+        ]
       },
-      "allowedPairs": ["Lawful Evil", "Lawful Neutral", "Lawful Good"]
-    }
+      "allowedPairs": [
+        "Lawful Evil",
+        "Lawful Neutral",
+        "Lawful Good"
+      ]
+    },
+    "SourceBook": "Oraculum Insight"
   },
   "Mystic": {
     "Armour": {
-      "Wearable": ["light"],
-      "Restrictions": ["No shields"]
+      "Wearable": [
+        "light"
+      ],
+      "Restrictions": [
+        "No shields"
+      ]
     },
-    "Tags": ["Neuronic Caster"],
-    "Brackets": ["🧠 Neuro"],
+    "Tags": [
+      "Neuronic Caster"
+    ],
+    "Brackets": [
+      "🧠 Neuro"
+    ],
     "Levels": {
       "1": [
         {
@@ -4312,19 +4999,39 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": ["Evil", "Neutral", "Good"],
-        "order": ["Lawful"]
+        "moral": [
+          "Evil",
+          "Neutral",
+          "Good"
+        ],
+        "order": [
+          "Lawful"
+        ]
       },
-      "allowedPairs": ["Lawful Evil", "Lawful Neutral", "Lawful Good"]
-    }
+      "allowedPairs": [
+        "Lawful Evil",
+        "Lawful Neutral",
+        "Lawful Good"
+      ]
+    },
+    "SourceBook": "Oraculum Insight"
   },
   "Silver Warden": {
     "Armour": {
-      "Wearable": ["light", "medium", "heavy"],
+      "Wearable": [
+        "light",
+        "medium",
+        "heavy"
+      ],
       "Restrictions": []
     },
-    "Tags": ["Neuronic Caster"],
-    "Brackets": ["🧠 Neuro", "🛡️ Warrior"],
+    "Tags": [
+      "Neuronic Caster"
+    ],
+    "Brackets": [
+      "🧠 Neuro",
+      "🛡️ Warrior"
+    ],
     "Levels": {
       "1": [
         {
@@ -4430,19 +5137,38 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": ["Evil", "Neutral", "Good"],
-        "order": ["Lawful"]
+        "moral": [
+          "Evil",
+          "Neutral",
+          "Good"
+        ],
+        "order": [
+          "Lawful"
+        ]
       },
-      "allowedPairs": ["Lawful Evil", "Lawful Neutral", "Lawful Good"]
-    }
+      "allowedPairs": [
+        "Lawful Evil",
+        "Lawful Neutral",
+        "Lawful Good"
+      ]
+    },
+    "SourceBook": "Oraculum Insight"
   },
   "Psionic Drowe": {
     "Armour": {
-      "Wearable": ["light"],
-      "Restrictions": ["No shields"]
+      "Wearable": [
+        "light"
+      ],
+      "Restrictions": [
+        "No shields"
+      ]
     },
-    "Tags": ["Neuronic Caster"],
-    "Brackets": ["🧠 Neuro"],
+    "Tags": [
+      "Neuronic Caster"
+    ],
+    "Brackets": [
+      "🧠 Neuro"
+    ],
     "Levels": {
       "1": [
         {
@@ -4504,19 +5230,38 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": ["Evil", "Neutral", "Good"],
-        "order": ["Lawful"]
+        "moral": [
+          "Evil",
+          "Neutral",
+          "Good"
+        ],
+        "order": [
+          "Lawful"
+        ]
       },
-      "allowedPairs": ["Lawful Evil", "Lawful Neutral", "Lawful Good"]
-    }
+      "allowedPairs": [
+        "Lawful Evil",
+        "Lawful Neutral",
+        "Lawful Good"
+      ]
+    },
+    "SourceBook": "Oraculum Insight"
   },
   "Mind Weaver": {
     "Armour": {
-      "Wearable": ["light"],
-      "Restrictions": ["No shields"]
+      "Wearable": [
+        "light"
+      ],
+      "Restrictions": [
+        "No shields"
+      ]
     },
-    "Tags": ["Neuronic Caster"],
-    "Brackets": ["🧠 Neuro"],
+    "Tags": [
+      "Neuronic Caster"
+    ],
+    "Brackets": [
+      "🧠 Neuro"
+    ],
     "Levels": {
       "1": [
         {
@@ -4594,19 +5339,37 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": ["Evil", "Neutral", "Good"],
-        "order": ["Lawful"]
+        "moral": [
+          "Evil",
+          "Neutral",
+          "Good"
+        ],
+        "order": [
+          "Lawful"
+        ]
       },
-      "allowedPairs": ["Lawful Evil", "Lawful Neutral", "Lawful Good"]
-    }
+      "allowedPairs": [
+        "Lawful Evil",
+        "Lawful Neutral",
+        "Lawful Good"
+      ]
+    },
+    "SourceBook": "Oraculum Insight"
   },
   "Awakener": {
     "Armour": {
-      "Wearable": ["light"],
+      "Wearable": [
+        "light"
+      ],
       "Restrictions": []
     },
-    "Tags": ["Neuronic Caster"],
-    "Brackets": ["🧠 Neuro", "⚔ Scout"],
+    "Tags": [
+      "Neuronic Caster"
+    ],
+    "Brackets": [
+      "🧠 Neuro",
+      "⚔ Scout"
+    ],
     "Levels": {
       "1": [
         {
@@ -4698,15 +5461,24 @@
         }
       ]
     },
-    "Max AC": 7
+    "Max AC": 7,
+    "SourceBook": "Oraculum Insight"
   },
   "Psycher": {
     "Armour": {
-      "Wearable": ["light"],
-      "Restrictions": ["No shields"]
+      "Wearable": [
+        "light"
+      ],
+      "Restrictions": [
+        "No shields"
+      ]
     },
-    "Tags": ["Neuronic Caster"],
-    "Brackets": ["🧠 Neuro"],
+    "Tags": [
+      "Neuronic Caster"
+    ],
+    "Brackets": [
+      "🧠 Neuro"
+    ],
     "Levels": {
       "1": [
         {
@@ -4776,15 +5548,23 @@
         }
       ]
     },
-    "Max AC": 6
+    "Max AC": 6,
+    "SourceBook": "Oraculum Insight"
   },
   "Slayer": {
     "Armour": {
-      "Wearable": ["light"],
+      "Wearable": [
+        "light"
+      ],
       "Restrictions": []
     },
-    "Tags": ["Neuronic Caster"],
-    "Brackets": ["🧠 Neuro", "🛡️ Warrior"],
+    "Tags": [
+      "Neuronic Caster"
+    ],
+    "Brackets": [
+      "🧠 Neuro",
+      "🛡️ Warrior"
+    ],
     "Levels": {
       "1": [
         {
@@ -4882,6 +5662,7 @@
         }
       ]
     },
-    "Max AC": 8
+    "Max AC": 8,
+    "SourceBook": "Oraculum Insight"
   }
 }

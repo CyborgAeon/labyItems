@@ -37,7 +37,7 @@ public partial class RaceDetailCardView : ContentView
                 Add("SUBTYPE", subtype);
             }
             Add("BUY AS", record.BuyAs);
-            Add("ALIGNMENT", ClassCard.ClassDetailCardView.FormatAlignment(record.AlignmentRule));
+            Add("ALIGNMENT", NotationHelper.FormatAlignment(record.AlignmentRule));
             Add("GUILDS", ClassCard.ClassDetailCardView.FormatGuilds(record.GuildOverrides));
             foreach (var entry in record.LevelledAbilities.OrderBy(e => StageSort(e.Key)))
                 if (TryStage(entry.Key, out var level, out var table)) LevelRows.Add(LevelAbilityRowBuilder.Build(level, entry.Value, isTableStage: table));

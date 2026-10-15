@@ -313,10 +313,13 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
 
     private async void OnViewSpellDetailsClicked(object sender, EventArgs e)
     {
-        if (sender is not Microsoft.Maui.Controls.Button button)
-            return;
-
-        if (button.CommandParameter is not SpellEntryVm entry)
+        var parameter = sender switch
+        {
+            Microsoft.Maui.Controls.Button button => button.CommandParameter,
+            ListItemRowView row => row.ActionCommandParameter,
+            _ => null
+        };
+        if (parameter is not SpellEntryVm entry)
             return;
 
         var spell = _vm.FindSpellByName(entry.Draft.Name);
@@ -328,10 +331,13 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
 
     private async void OnViewMiracleDetailsClicked(object sender, EventArgs e)
     {
-        if (sender is not Microsoft.Maui.Controls.Button button)
-            return;
-
-        if (button.CommandParameter is not MiracleEntryVm entry)
+        var parameter = sender switch
+        {
+            Microsoft.Maui.Controls.Button button => button.CommandParameter,
+            ListItemRowView row => row.ActionCommandParameter,
+            _ => null
+        };
+        if (parameter is not MiracleEntryVm entry)
             return;
 
         var miracle = _vm.FindMiracleByName(entry.Draft.Name);
@@ -343,10 +349,13 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
 
     private async void OnViewEvocationDetailsClicked(object sender, EventArgs e)
     {
-        if (sender is not Microsoft.Maui.Controls.Button button)
-            return;
-
-        if (button.CommandParameter is not EvocationEntryVm entry)
+        var parameter = sender switch
+        {
+            Microsoft.Maui.Controls.Button button => button.CommandParameter,
+            ListItemRowView row => row.ActionCommandParameter,
+            _ => null
+        };
+        if (parameter is not EvocationEntryVm entry)
             return;
 
         var evocation = _vm.FindEvocationByName(entry.Draft.Name);
@@ -358,10 +367,13 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
 
     private async void OnViewAbilityDetailsClicked(object sender, EventArgs e)
     {
-        if (sender is not Microsoft.Maui.Controls.Button button)
-            return;
-
-        if (button.CommandParameter is not AbilityEntryVm entry)
+        var parameter = sender switch
+        {
+            Microsoft.Maui.Controls.Button button => button.CommandParameter,
+            ListItemRowView row => row.ActionCommandParameter,
+            _ => null
+        };
+        if (parameter is not AbilityEntryVm entry)
             return;
 
         var ability = await _vm.FindAbilityByNameAsync(entry.Name);

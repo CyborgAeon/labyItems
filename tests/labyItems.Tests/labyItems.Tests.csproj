@@ -7,7 +7,10 @@
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
-  <ItemGroup>
+	<ItemGroup>
+		<Compile Include="../../labyItems/Pages/ClassCard/ClassPowerCalculationFormatter.cs" Link="Source/ClassPowerCalculationFormatter.cs" />
+		<Compile Include="../../labyItems/Pages/ClassCard/ClassProgressionProjector.cs" Link="Source/ClassProgressionProjector.cs" />
+		<Compile Include="../../labyItems/Pages/RaceCard/RacePostEighthFilter.cs" Link="Source/RacePostEighthFilter.cs" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio">
@@ -46,7 +49,7 @@
     <Compile Include="../../labyItems/Services/DruidEvocationService.cs" Link="Source/DruidEvocationService.cs" />
     <Compile Include="../../labyItems/Services/EvolutionService.cs" Link="Source/EvolutionService.cs" />
     <Compile Include="../../labyItems/Services/EvolutionDataSynchronizer.cs" Link="Source/EvolutionDataSynchronizer.cs" />
-    <Compile Include="../../labyItems/Services/SourceBookPdfCatalog.cs" Link="Source/SourceBookPdfCatalog.cs" />
+    <Compile Include="../../labyItems/Services/BookDirectory.cs" Link="Source/BookDirectory.cs" />
     <Compile Include="../../labyItems/Services/ManuAbilityService.cs" Link="Source/ManuAbilityService.cs" />
     <Compile Include="../../labyItems/Services/AbilityDetailsLookupService.cs" Link="Source/AbilityDetailsLookupService.cs" />
     <Compile Include="../../labyItems/Services/ClassService.cs" Link="Source/ClassService.cs" />

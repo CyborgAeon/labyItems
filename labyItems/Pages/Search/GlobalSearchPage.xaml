@@ -19,35 +19,10 @@
             <controls:BurgerMenuButton Grid.Column="0"
                                        IsVisible="{Binding ShowKindChips}"
                                        Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
-            <Border Grid.Column="1"
-                    Stroke="{StaticResource SurfaceBorderColor}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 10"
-                    BackgroundColor="#F9FAFB"
-                    Padding="8,4"
-                    VerticalOptions="Center">
-                <Grid ColumnDefinitions="*,Auto"
-                      ColumnSpacing="6">
-                    <Entry Grid.Column="0"
-                           ClearButtonVisibility="WhileEditing"
-                           Placeholder="{Binding SearchPlaceholder}"
-                           Text="{Binding SearchText, Mode=TwoWay}"
-                           VerticalOptions="Center"/>
-                    <Button Grid.Column="1"
-                            Text="{x:Static helpers:FontAwesomeGlyphs.Filter}"
-                            FontFamily="FASolid"
-                            FontSize="13"
-                            Padding="0"
-                            BackgroundColor="Transparent"
-                            TextColor="{StaticResource SubtleTextColor}"
-                            HeightRequest="24"
-                            WidthRequest="24"
-                            MinimumHeightRequest="0"
-                            MinimumWidthRequest="0"
-                            VerticalOptions="Center"
-                            Command="{Binding OpenFiltersCommand}"/>
-                </Grid>
-            </Border>
+            <controls:SearchFilterBar Grid.Column="1"
+                                      Placeholder="{Binding SearchPlaceholder}"
+                                      SearchText="{Binding SearchText, Mode=TwoWay}"
+                                      OpenFiltersCommand="{Binding OpenFiltersCommand}" />
         </Grid>
         <Grid Grid.Row="1">
             <CollectionView x:Name="ResultsCollection"

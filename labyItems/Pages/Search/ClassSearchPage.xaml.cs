@@ -6,26 +6,32 @@ using System.Windows.Input;
 using labyItems.Helpers;
 using labyItems.Models.Characters;
 using labyItems.Models.ViewModels;
-using labyItems.Pages.Characters;
-using labyItems.Pages.Characters.ViewModels;
 using labyItems.Services;
+using Microsoft.Maui.Graphics;
+using ClassCardPage = labyItems.Pages.ClassCard.ClassCard;
 
 namespace labyItems.Pages.Search;
 
 public partial class ClassSearchPage : ContentPage, INotifyPropertyChanged
 {
-    private readonly List<ClassCardVm> _allClasses = new();
+    private readonly List<ClassSearchResultVm> _allClasses = new();
     private readonly CollectionViewScrollPreserver _scrollPreserver;
     private bool _isLoading = true;
     private string _searchText = string.Empty;
-    private string _selectedFilter = "All";
+    private HashSet<string> _selectedFilters = new(StringComparer.OrdinalIgnoreCase);
+    private HashSet<string> _pendingFilters = new(StringComparer.OrdinalIgnoreCase);
+    private bool _isFilterModalOpen;
     private bool _loaded;
 
-    public ObservableCollection<ClassCardVm> FilteredClasses { get; } = new();
+    public ObservableCollection<ClassSearchResultVm> FilteredClasses { get; } = new();
+    public ObservableCollection<SearchFilterChipVm> CategoryChips { get; } = new();
     public ObservableCollection<SearchFilterChipVm> FilterChips { get; } = new();
 
-    public ICommand ToggleExpandedCommand { get; }
     public ICommand ToggleFilterChipCommand { get; }
+    public ICommand OpenFiltersCommand { get; }
+    public ICommand CancelFiltersCommand { get; }
+    public ICommand ApplyFiltersCommand { get; }
+    public bool IsFilterModalOpen { get => _isFilterModalOpen; private set { if (_isFilterModalOpen == value) return; _isFilterModalOpen = value; OnPropertyChanged(); } }
 
     public bool IsLoading
     {
@@ -49,13 +55,20 @@ public partial class ClassSearchPage : ContentPage, INotifyPropertyChanged
 
     public ClassSearchPage()
     {
+        ToggleFilterChipCommand = new Command<SearchFilterChipVm>(OnToggleFilterChip);
+        OpenFiltersCommand = new Command(OpenFilters);
+        CancelFiltersCommand = new Command(() => IsFilterModalOpen = false);
+        ApplyFiltersCommand = new Command(() =>
+        {
+            _selectedFilters = new HashSet<string>(_pendingFilters, StringComparer.OrdinalIgnoreCase);
+            IsFilterModalOpen = false;
+            Refilter();
+        });
+
         InitializeComponent();
         BindingContext = this;
 
-        ToggleExpandedCommand = new Command<ClassCardVm>(OnToggleExpanded);
-        ToggleFilterChipCommand = new Command<SearchFilterChipVm>(OnToggleFilterChip);
-
-        BuildFilterChips();
+        CategoryChips.Add(new SearchFilterChipVm("Classes", true));
         _scrollPreserver = new CollectionViewScrollPreserver(ClassesCollection, this);
     }
 
@@ -76,35 +89,29 @@ public partial class ClassSearchPage : ContentPage, INotifyPropertyChanged
     private void BuildFilterChips()
     {
         FilterChips.Clear();
-        var options = new[] { "All", "Warrior", "Priest", "Wizard", "Scout", "Druid", "Neuro" };
-        foreach (var opt in options)
-        {
-            FilterChips.Add(new SearchFilterChipVm(opt, opt.Equals(_selectedFilter, StringComparison.OrdinalIgnoreCase)));
-        }
+        var options = _allClasses
+            .SelectMany(item => item.Record.Brackets ?? [])
+            .Where(bracket => !string.IsNullOrWhiteSpace(bracket))
+            .Select(bracket => bracket.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(bracket => bracket, StringComparer.OrdinalIgnoreCase);
+        foreach (var option in options)
+            FilterChips.Add(new SearchFilterChipVm(option, _pendingFilters.Contains(option)));
     }
 
     private void OnToggleFilterChip(SearchFilterChipVm? chip)
     {
         if (chip == null) return;
-        _selectedFilter = chip.Label;
-        foreach (var c in FilterChips)
-            c.IsSelected = c.Label.Equals(_selectedFilter, StringComparison.OrdinalIgnoreCase);
-
-        Refilter();
+        if (!_pendingFilters.Add(chip.Label))
+            _pendingFilters.Remove(chip.Label);
+        chip.IsSelected = _pendingFilters.Contains(chip.Label);
     }
 
-    private void OnToggleExpanded(ClassCardVm? item)
+    private void OpenFilters()
     {
-        if (item == null) return;
-        _scrollPreserver.RecordItem(item);
-
-        foreach (var c in _allClasses)
-        {
-            if (!ReferenceEquals(c, item) && c.IsExpanded)
-                c.IsExpanded = false;
-        }
-
-        item.IsExpanded = !item.IsExpanded;
+        _pendingFilters = new HashSet<string>(_selectedFilters, StringComparer.OrdinalIgnoreCase);
+        BuildFilterChips();
+        IsFilterModalOpen = true;
     }
 
     private async Task LoadClassesAsync()
@@ -114,57 +121,21 @@ public partial class ClassSearchPage : ContentPage, INotifyPropertyChanged
         {
             _allClasses.Clear();
             var dict = await ClassService.GetAllAsync();
-            var id = 1;
-
-            foreach (var kvp in dict)
+            if (dict.Count == 0)
+            {
+                ClassService.InvalidateCache();
+                dict = await ClassService.GetAllAsync();
+            }
+            foreach (var kvp in dict.OrderBy(entry => entry.Key, StringComparer.OrdinalIgnoreCase))
             {
                 var key = kvp.Key;
                 var rec = kvp.Value;
                 if (rec == null) continue;
 
-                var (icon, category, bracketTags) = ClassCardVm.ParseBrackets(rec.Brackets);
-
-                var maxAc = rec.MaxAC.ValueKind switch
-                {
-                    JsonValueKind.Number => rec.MaxAC.GetInt32(),
-                    JsonValueKind.String => int.TryParse(rec.MaxAC.GetString(), out var n) ? n : 0,
-                    _ => 0
-                };
-
-                var tblp = rec.PowerPerLevel.ValueKind switch
-                {
-                    JsonValueKind.Number => rec.PowerPerLevel.GetInt32(),
-                    JsonValueKind.String => int.TryParse(rec.PowerPerLevel.GetString(), out var n) ? n : 0,
-                    _ => 0
-                };
-
-                var levelRows = new ObservableCollection<LevelAbilityRowVm>(
-                    Enumerable.Range(1, 8).Select(lvl =>
-                    {
-                        rec.Levels.TryGetValue(lvl.ToString(), out var arr);
-                        arr ??= new List<AbilityDefinition>();
-                        return LevelAbilityRowBuilder.Build(lvl, arr);
-                    })
-                );
-
-                var vm = new ClassCardVm
-                {
-                    Id = id++,
-                    Key = key,
-                    Name = key,
-                    Category = category,
-                    Icon = icon,
-                    Summary = ClassCardVm.BuildSummaryFromLevels(rec.Levels),
-                    MaxAc = maxAc,
-                    TBLP = tblp,
-                    PowerBase = ClassCardVm.ExtractPowerBase(rec),
-                    LevelRows = levelRows,
-                    BracketTags = rec.Brackets ?? bracketTags
-                };
-
-                _allClasses.Add(vm);
+                _allClasses.Add(new ClassSearchResultVm(key, rec));
             }
 
+            BuildFilterChips();
             Refilter();
         }
         catch (Exception ex)
@@ -174,44 +145,64 @@ public partial class ClassSearchPage : ContentPage, INotifyPropertyChanged
         finally
         {
             IsLoading = false;
+            if (_allClasses.Count == 0)
+                _loaded = false;
         }
     }
 
     private void Refilter()
     {
         var q = (SearchText ?? string.Empty).Trim().ToLowerInvariant();
-        var filter = _selectedFilter;
+        var filters = _selectedFilters;
 
         var matches = _allClasses.Where(c =>
         {
-            if (filter != "All")
+            if (filters.Count > 0)
             {
-                var cat = c.Category ?? string.Empty;
-                var tags = c.BracketTags ?? Array.Empty<string>();
-                if (!cat.Contains(filter, StringComparison.OrdinalIgnoreCase) &&
-                    !tags.Any(t => t.Contains(filter, StringComparison.OrdinalIgnoreCase)) &&
-                    !c.Name.Contains(filter, StringComparison.OrdinalIgnoreCase))
-                {
+                var tags = c.Record.Brackets ?? [];
+                if (!tags.Any(tag => filters.Contains(tag)))
                     return false;
-                }
             }
 
             if (q.Length == 0) return true;
 
-            var bracketString = c.BracketTags != null ? string.Join(" ", c.BracketTags) : string.Empty;
+            var bracketString = string.Join(" ", c.Record.Brackets);
 
             return c.Name.ToLowerInvariant().Contains(q) ||
-                   (c.Category?.ToLowerInvariant().Contains(q) ?? false) ||
+                   c.BracketText.ToLowerInvariant().Contains(q) ||
                    bracketString.ToLowerInvariant().Contains(q) ||
-                   (c.Summary?.ToLowerInvariant().Contains(q) ?? false);
+                   c.Overview.ToLowerInvariant().Contains(q);
         });
 
         FilteredClasses.Clear();
-        foreach (var m in matches)
+        foreach (var m in matches.OrderBy(item => item.Name, StringComparer.OrdinalIgnoreCase))
             FilteredClasses.Add(m);
 
         OnPropertyChanged(nameof(HasNoResults));
     }
+
+    private async void OnClassInfoClicked(object? sender, EventArgs e)
+    {
+        if (sender is not Button { CommandParameter: ClassSearchResultVm item }) return;
+        _scrollPreserver.RecordItem(item);
+        await Navigation.PushAsync(new ClassCardPage(item.Name, item.Record));
+    }
+}
+
+public sealed class ClassSearchResultVm
+{
+    public ClassSearchResultVm(string name, CharacterClassRecord record) { Name = name; Record = record; }
+    public string Name { get; }
+    public CharacterClassRecord Record { get; }
+    public string BracketText => ClassBracketIconHelper.BuildBracketSubheading(Record.Brackets, "Unbracketed");
+    public string Overview => string.Join(" · ", new[] { $"Max AC {Record.MaxAC}", string.Join(", ", Record.Armour?.Wearable ?? []), string.Join(", ", Record.BuyAs ?? []) }.Where(x => !string.IsNullOrWhiteSpace(x)));
+    public bool HasSplitIcon => Record.Brackets.Count > 1;
+    public string SingleGlyph => ClassBracketIconHelper.GetBracketGlyph(Record.Brackets.FirstOrDefault());
+    public string SplitLeftGlyph => ClassBracketIconHelper.GetBracketGlyph(Record.Brackets.ElementAtOrDefault(0));
+    public string SplitRightGlyph => ClassBracketIconHelper.GetBracketGlyph(Record.Brackets.ElementAtOrDefault(1));
+    public Color SingleBackground => ClassBracketIconHelper.GetBracketColor(Record.Brackets.FirstOrDefault());
+    public Color SplitLeftBackground => ClassBracketIconHelper.GetBracketColor(Record.Brackets.ElementAtOrDefault(0));
+    public Color SplitRightBackground => ClassBracketIconHelper.GetBracketColor(Record.Brackets.ElementAtOrDefault(1));
 }
 
 public sealed class SearchFilterChipVm : INotifyPropertyChanged

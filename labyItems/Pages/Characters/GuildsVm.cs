@@ -2733,7 +2733,7 @@ public sealed class GuildCardVm : INotifyPropertyChanged
     }
 
     public bool HasLogo => !string.IsNullOrWhiteSpace(Logo);
-    public bool ShowLogo => HasLogo && (IsExpanded || IsSelected);
+    public bool ShowLogo => HasLogo;
     public bool ShowIcon => !ShowLogo;
 
     private bool _detailsLoaded;
@@ -3247,7 +3247,7 @@ public sealed class GuildLoreSectionVm : INotifyPropertyChanged
     public int MaxLines => IsExpanded ? -1 : CollapsedLines;
 
     public bool ShowToggle => CanExpand || IsExpanded;
-    public string ToggleLabel => IsExpanded ? "... see less" : "... see more";
+    public string ToggleLabel => IsExpanded ? "... less" : "... more";
 
     private bool CanExpand
     {

@@ -744,3 +744,21 @@ Directory.Build.props):
 e.g.:
 
 `AndroidSigningKeyPass=<keypass> AndroidSigningStorePass=<storepass> $HOME/.dotnet/dotnet publish labyItems/labyItems.csproj -f net10.0-android -c Release -clp:ErrorsOnly -p:AndroidSigningKeyAlias=labyItemsSigningKey -p:AndroidPackageFormat=apk -p:GenerateAppBundle=false`
+
+
+# ANDROID PUSH DB
+```bash
+PKG=bard.uk.labyitems
+DB=output/laby.db
+
+adb push "$DB" /data/local/tmp/laby.db
+
+adb shell run-as "$PKG" sh -c \
+  'mkdir -p files &&
+   cp /data/local/tmp/laby.db files/laby.db &&
+   chmod 600 files/laby.db &&
+   rm -f files/laby.db-wal files/laby.db-shm'
+
+adb shell am force-stop "$PKG"
+adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1
+```

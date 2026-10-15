@@ -39,14 +39,6 @@ public sealed class CharacterReferenceDataSynchronizer : ICharacterReferenceData
         EnsureSeedMetadataTable(conn);
 
         var existingChecksum = GetExistingChecksum(conn);
-        var existingBuildId = GetExistingBuildId(conn);
-        if (!string.IsNullOrWhiteSpace(existingChecksum)
-            && string.Equals(existingBuildId, buildId, StringComparison.OrdinalIgnoreCase))
-        {
-            _logger.LogInformation("Skipped character reference sync: packaged build id '{BuildId}' already applied.", buildId);
-            return;
-        }
-
         var classesJson = await TryReadAssetTextAsync("people/classes.json").ConfigureAwait(false);
         var racesJson = await TryReadAssetTextAsync("people/people.json").ConfigureAwait(false);
         var lifeScalesJson = await TryReadAssetTextAsync("people/lifescales.json").ConfigureAwait(false);

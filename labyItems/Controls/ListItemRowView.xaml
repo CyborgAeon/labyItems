@@ -11,51 +11,71 @@
             StrokeShape="RoundRectangle 8"
             Stroke="{Binding BorderColor, Source={x:Reference Root}}"
             BackgroundColor="{Binding RowBackgroundColor, Source={x:Reference Root}}">
-        <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="8">
-            <Label Text="{Binding PrimaryText, Source={x:Reference Root}}"
-                   FontSize="{Binding PrimaryTextSize, Source={x:Reference Root}}"
-                   FontAttributes="{Binding PrimaryTextAttributes, Source={x:Reference Root}}"
-                   MaxLines="{Binding PrimaryTextMaxLines, Source={x:Reference Root}}"
-                   LineBreakMode="TailTruncation"
-                   VerticalTextAlignment="Center" />
-            <Label Grid.Column="1"
-                   Text="{Binding SecondaryText, Source={x:Reference Root}}"
-                   FontSize="{Binding SecondaryTextSize, Source={x:Reference Root}}"
-                   FontAttributes="Bold"
-                   Opacity="0.75"
-                   IsVisible="{Binding ShowSecondaryText, Source={x:Reference Root}}"
-                   HorizontalTextAlignment="End"
-                   VerticalTextAlignment="Center" />
-            <Button Grid.Column="2"
-                    Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
-                    FontFamily="FASolid"
-                    FontSize="12"
-                    Padding="0"
-                    BackgroundColor="Transparent"
-                    TextColor="{StaticResource SubtleTextColor}"
-                    HeightRequest="18"
-                    WidthRequest="18"
-                    MinimumHeightRequest="0"
-                    MinimumWidthRequest="0"
-                    IsVisible="{Binding ShowInfo, Source={x:Reference Root}}"
-                    Command="{Binding InfoCommand, Source={x:Reference Root}}"
-                    CommandParameter="{Binding ActionCommandParameter, Source={x:Reference Root}}"
-                    Clicked="OnInfoClicked" />
-            <Button Grid.Column="3"
-                    Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
-                    FontFamily="FASolid"
-                    FontSize="12"
-                    Padding="0"
-                    BackgroundColor="Transparent"
-                    TextColor="{StaticResource SubtleTextColor}"
-                    HeightRequest="18"
-                    WidthRequest="18"
-                    MinimumHeightRequest="0"
-                    MinimumWidthRequest="0"
-                    IsVisible="{Binding ShowDelete, Source={x:Reference Root}}"
-                    Command="{Binding DeleteCommand, Source={x:Reference Root}}"
-                    CommandParameter="{Binding ActionCommandParameter, Source={x:Reference Root}}"
-                    Clicked="OnDeleteClicked" />
+        <Grid>
+            <Grid ColumnSpacing="8"
+                  IsVisible="{Binding UsesStandardContent, Source={x:Reference Root}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{Binding PrimaryColumnWidth, Source={x:Reference Root}}" />
+                    <ColumnDefinition Width="{Binding SecondaryColumnWidth, Source={x:Reference Root}}" />
+                    <ColumnDefinition Width="{Binding TertiaryColumnWidth, Source={x:Reference Root}}" />
+                    <ColumnDefinition Width="{Binding InfoColumnWidth, Source={x:Reference Root}}" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Label Text="{Binding PrimaryText, Source={x:Reference Root}}"
+                       FontSize="{Binding PrimaryTextSize, Source={x:Reference Root}}"
+                       FontAttributes="{Binding PrimaryTextAttributes, Source={x:Reference Root}}"
+                       MaxLines="{Binding PrimaryTextMaxLines, Source={x:Reference Root}}"
+                       LineBreakMode="TailTruncation"
+                       VerticalTextAlignment="Center" />
+                <Label Grid.Column="1"
+                       Text="{Binding SecondaryText, Source={x:Reference Root}}"
+                       FontSize="{Binding SecondaryTextSize, Source={x:Reference Root}}"
+                       FontAttributes="Bold"
+                       Opacity="0.75"
+                       IsVisible="{Binding ShowSecondaryText, Source={x:Reference Root}}"
+                       HorizontalTextAlignment="{Binding SecondaryTextAlignment, Source={x:Reference Root}}"
+                       VerticalTextAlignment="Center" />
+                <Label Grid.Column="2"
+                       Text="{Binding TertiaryText, Source={x:Reference Root}}"
+                       FontSize="{Binding SecondaryTextSize, Source={x:Reference Root}}"
+                       FontAttributes="Bold"
+                       Opacity="0.75"
+                       IsVisible="{Binding ShowTertiaryText, Source={x:Reference Root}}"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center" />
+                <Button Grid.Column="3"
+                        Text="{Binding InfoGlyph, Source={x:Reference Root}}"
+                        FontFamily="FASolid"
+                        FontSize="12"
+                        Padding="0"
+                        BackgroundColor="Transparent"
+                        TextColor="{StaticResource SubtleTextColor}"
+                        HeightRequest="18"
+                        WidthRequest="18"
+                        MinimumHeightRequest="0"
+                        MinimumWidthRequest="0"
+                        IsVisible="{Binding ShowInfo, Source={x:Reference Root}}"
+                        Command="{Binding InfoCommand, Source={x:Reference Root}}"
+                        CommandParameter="{Binding ActionCommandParameter, Source={x:Reference Root}}"
+                        Clicked="OnInfoClicked" />
+                <Button Grid.Column="4"
+                        Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
+                        FontFamily="FASolid"
+                        FontSize="12"
+                        Padding="0"
+                        BackgroundColor="Transparent"
+                        TextColor="{StaticResource SubtleTextColor}"
+                        HeightRequest="18"
+                        WidthRequest="18"
+                        MinimumHeightRequest="0"
+                        MinimumWidthRequest="0"
+                        IsVisible="{Binding ShowDelete, Source={x:Reference Root}}"
+                        Command="{Binding DeleteCommand, Source={x:Reference Root}}"
+                        CommandParameter="{Binding ActionCommandParameter, Source={x:Reference Root}}"
+                        Clicked="OnDeleteClicked" />
+            </Grid>
+            <ContentPresenter Content="{Binding CustomContent, Source={x:Reference Root}}"
+                              IsVisible="{Binding HasCustomContent, Source={x:Reference Root}}" />
         </Grid>
     </Border>
 </ContentView>

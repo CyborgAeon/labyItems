@@ -24,11 +24,9 @@
               <ScrollView>
                      <VerticalStackLayout Padding="16"
                                           Spacing="16">
-                            <Frame Padding="12"
-                                   CornerRadius="12"
-                                   HasShadow="False"
-                                   BorderColor="{StaticResource SurfaceBorderColor}">
-                                   <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                            <controls:ListItemRowView BorderThickness="1" BorderColor="{StaticResource SurfaceBorderColor}" ContentPadding="12">
+                              <controls:ListItemRowView.CustomContent>
+                                   <Grid ColumnDefinitions="*,*,*,*,*,*,*,*,*,*"
                                          ColumnSpacing="8">
                                           <Label Text="PAC"
                                                  FontAttributes="Bold"/>
@@ -49,8 +47,11 @@
                                                  FontAttributes="Bold"/>
                                           <Label Grid.Column="7"
                                                  Text="{Binding Mac}"/>
+                                          <Label Grid.Column="8" Text="NAC" FontAttributes="Bold"/>
+                                          <Label Grid.Column="9" Text="{Binding Nac}"/>
                                    </Grid>
-                            </Frame>
+                              </controls:ListItemRowView.CustomContent>
+                            </controls:ListItemRowView>
 
                             <Frame Padding="12"
                                    CornerRadius="12"
@@ -406,7 +407,14 @@
                                                  IsVisible="{Binding HasInnates}">
                                    <BindableLayout.ItemTemplate>
                                           <DataTemplate>
-                                                 <controls:InnateUseRow/>
+                                                 <controls:ListItemRowView PrimaryText="{Binding Name}"
+                                                                           PrimaryTextAttributes="Bold"
+                                                                           SecondaryText="{Binding UsesLabel}"
+                                                                           ShowSecondaryText="True"
+                                                                           RowBackgroundColor="{Binding RowBackgroundColor}"
+                                                                           ShowInfo="True"
+                                                                           InfoGlyph="{x:Static helpers:FontAwesomeGlyphs.Lightning}"
+                                                                           InfoCommand="{Binding UseCommand}"/>
                                           </DataTemplate>
                                    </BindableLayout.ItemTemplate>
                             </VerticalStackLayout>
@@ -460,10 +468,8 @@
                                                  Spacing="8">
                                    <BindableLayout.ItemTemplate>
                                           <DataTemplate>
-                                                 <Frame Padding="12"
-                                                        CornerRadius="12"
-                                                        HasShadow="False"
-                                                        BorderColor="{StaticResource SurfaceBorderColor}">
+                                                 <controls:ListItemRowView ContentPadding="12" BorderThickness="1" BorderColor="{StaticResource SurfaceBorderColor}">
+                                                   <controls:ListItemRowView.CustomContent>
                                                         <Grid ColumnDefinitions="*,Auto,Auto,Auto"
                                                               ColumnSpacing="8">
                                                                <Label Text="{Binding Name}"
@@ -486,7 +492,8 @@
                                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.IncreaseResistanceCommand}"
                                                                        CommandParameter="{Binding .}"/>
                                                         </Grid>
-                                                 </Frame>
+                                                   </controls:ListItemRowView.CustomContent>
+                                                 </controls:ListItemRowView>
                                           </DataTemplate>
                                    </BindableLayout.ItemTemplate>
                             </VerticalStackLayout>
@@ -509,23 +516,13 @@
                                                  IsVisible="{Binding HasImmunities}">
                                    <BindableLayout.ItemTemplate>
                                           <DataTemplate>
-                                                 <Border StrokeThickness="1"
-                                                         Stroke="{StaticResource SurfaceBorderColor}"
-                                                         StrokeShape="RoundRectangle 10"
-                                                         BackgroundColor="{Binding RowBackgroundColor}"
-                                                         Padding="12,10">
-                                                        <Grid ColumnDefinitions="*,Auto"
-                                                              ColumnSpacing="8">
-                                                               <Label Text="{Binding Name}"
-                                                                      VerticalTextAlignment="Center"/>
-                                                               <Label Grid.Column="1"
-                                                                      Text="IMM"
-                                                                      FontSize="11"
-                                                                      Opacity="0.55"
-                                                                      VerticalTextAlignment="Center"
-                                                                      HorizontalTextAlignment="End"/>
-                                                        </Grid>
-                                                 </Border>
+                                                 <controls:ListItemRowView PrimaryText="{Binding Name}"
+                                                                           SecondaryText="IMM"
+                                                                           ShowSecondaryText="True"
+                                                                           RowBackgroundColor="{Binding RowBackgroundColor}"
+                                                                           BorderThickness="1"
+                                                                           BorderColor="{StaticResource SurfaceBorderColor}"
+                                                                           ContentPadding="12,10"/>
                                           </DataTemplate>
                                    </BindableLayout.ItemTemplate>
                             </VerticalStackLayout>

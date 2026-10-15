@@ -37,6 +37,11 @@ public static class ClassService
 #else
             _cache = await Task.Run(LoadFromDb).ConfigureAwait(false);
 #endif
+            if (_cache.Count == 0)
+            {
+                _cache = null;
+                throw new InvalidOperationException("No class definitions were available from either the packaged data or the database.");
+            }
         }
         catch (Exception ex)
         {
@@ -131,80 +136,8 @@ public static class ClassService
     }
 
     private static CharacterClassRecord DeserializeClassRecord(JsonElement element)
-    {
-        var record = JsonSerializer.Deserialize<CharacterClassRecord>(element.GetRawText(), _jsonOptions)
-                     ?? new CharacterClassRecord();
-
-        record.Levels = MergeLevels(element, record.Levels);
-        return record;
-    }
-
-    private static Dictionary<string, List<AbilityDefinition>> MergeLevels(
-        JsonElement classElement,
-        Dictionary<string, List<AbilityDefinition>>? existingLevels)
-    {
-        var merged = new Dictionary<string, List<AbilityDefinition>>(StringComparer.OrdinalIgnoreCase);
-
-        if (existingLevels != null)
-        {
-            foreach (var kvp in existingLevels)
-            {
-                var key = (kvp.Key ?? string.Empty).Trim();
-                if (key.Length == 0)
-                    continue;
-
-                merged[key] = kvp.Value?.Where(a => a != null).ToList() ?? new List<AbilityDefinition>();
-            }
-        }
-
-        MergeLevelsFromProperty(classElement, "Levels", merged);
-        MergeLevelsFromProperty(classElement, "levels", merged);
-
-        return merged;
-    }
-
-    private static void MergeLevelsFromProperty(
-        JsonElement classElement,
-        string propertyName,
-        Dictionary<string, List<AbilityDefinition>> target)
-    {
-        if (!classElement.TryGetProperty(propertyName, out var levelsElement)
-            || levelsElement.ValueKind != JsonValueKind.Object)
-            return;
-
-        foreach (var level in levelsElement.EnumerateObject())
-        {
-            if (level.Value.ValueKind != JsonValueKind.Array)
-                continue;
-
-            var levelKey = (level.Name ?? string.Empty).Trim();
-            if (levelKey.Length == 0)
-                continue;
-
-            var incoming = JsonSerializer.Deserialize<List<AbilityDefinition>>(level.Value.GetRawText(), _jsonOptions)
-                           ?? new List<AbilityDefinition>();
-
-            if (!target.TryGetValue(levelKey, out var existing))
-            {
-                target[levelKey] = incoming.Where(a => a != null).ToList();
-                continue;
-            }
-
-            foreach (var ability in incoming)
-            {
-                if (ability == null)
-                    continue;
-
-                var alreadyPresent = existing.Any(a =>
-                    string.Equals(a?.Name ?? string.Empty, ability.Name ?? string.Empty, StringComparison.OrdinalIgnoreCase)
-                    && string.Equals(a?.Type ?? string.Empty, ability.Type ?? string.Empty, StringComparison.OrdinalIgnoreCase)
-                    && string.Equals(a?.OverwriteKey ?? string.Empty, ability.OverwriteKey ?? string.Empty, StringComparison.OrdinalIgnoreCase));
-
-                if (!alreadyPresent)
-                    existing.Add(ability);
-            }
-        }
-    }
+        => JsonSerializer.Deserialize<CharacterClassRecord>(element.GetRawText(), _jsonOptions)
+           ?? new CharacterClassRecord();
 
     private sealed class ClassRow
     {
@@ -215,6 +148,11 @@ public static class ClassService
 
 public sealed class CharacterClassRecord
 {
+    [JsonPropertyName("SourceBook")]
+    public string? SourceBook { get; set; }
+    public string? Lifescale { get; set; }
+    public string? Description { get; set; }
+    public List<string>? Tags { get; set; }
     public bool NonStandard { get; set; }
     public List<string> Brackets { get; set; } = new();
     public Dictionary<string, List<AbilityDefinition>> Levels { get; set; } = new();

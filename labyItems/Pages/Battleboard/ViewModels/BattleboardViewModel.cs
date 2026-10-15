@@ -270,6 +270,7 @@ public sealed class BattleboardViewModel : ObservableObject
     public int Dac { get; }
     public int Sac { get; }
     public int Mac { get; }
+    public int Nac => 0;
     public int MaxAc
     {
         get => _maxAc;

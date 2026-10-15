@@ -174,6 +174,38 @@ public static class LifeScalesService
         return races.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).ToList();
     }
 
+    public static async Task<DefaultClassLifeScale?> GetDefaultForClassAsync(string className)
+    {
+        var all = await GetAllAsync();
+        var candidates = new List<DefaultClassLifeScale>();
+        foreach (var (race, classMap) in all)
+        {
+            var classKey = FindBestKey(classMap.Keys, className);
+            if (classKey == null)
+                continue;
+
+            var points = classMap[classKey]
+                .Where(pair => pair.Length >= 2)
+                .Select(pair => new LifeScalePoint(pair[0], pair[1]))
+                .ToList();
+            if (points.Count == 0)
+                continue;
+
+            candidates.Add(new DefaultClassLifeScale(ExtractBaseRaceName(race), points));
+        }
+
+        var human = candidates.FirstOrDefault(candidate =>
+            NormalizeKey(candidate.RaceName).Equals(NormalizeKey("Human"), StringComparison.Ordinal));
+        if (human != null)
+            return human;
+
+        return candidates
+            .OrderByDescending(candidate => candidate.LevelEight.Body)
+            .ThenByDescending(candidate => candidate.LevelEight.Loc)
+            .ThenBy(candidate => candidate.RaceName, StringComparer.OrdinalIgnoreCase)
+            .FirstOrDefault();
+    }
+
     public static async Task<IReadOnlyList<LifeScalePoint>> GetLifeScaleAsync(string raceName, string className)
     {
         var all = await GetAllAsync();
@@ -311,6 +343,11 @@ public static class LifeScalesService
 }
 
 public readonly record struct LifeScalePoint(int Body, int Loc);
+
+public sealed record DefaultClassLifeScale(string RaceName, IReadOnlyList<LifeScalePoint> Points)
+{
+    public LifeScalePoint LevelEight => Points[Math.Min(7, Points.Count - 1)];
+}
 
 internal sealed class LifeScaleRow
 {

@@ -45,7 +45,7 @@
                                 Padding="14,12">
                             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
                                 <Border WidthRequest="42" HeightRequest="42" Padding="0" StrokeThickness="0" BackgroundColor="#F3E8FF" StrokeShape="RoundRectangle 14"><Label FontFamily="FASolid"
-                                       Text="{x:Static helpers:FontAwesomeGlyphs.CustomClass}"
+                                       Text="{x:Static helpers:FontAwesomeGlyphs.CharacterClass}"
                                        FontSize="18"
                                        TextColor="{StaticResource AccentMaroonColor}"
                                        HorizontalTextAlignment="Center" VerticalTextAlignment="Center" /></Border>
@@ -67,7 +67,7 @@
                                 Padding="14,12">
                             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
                                 <Border WidthRequest="42" HeightRequest="42" Padding="0" StrokeThickness="0" BackgroundColor="#EAF4EA" StrokeShape="RoundRectangle 14"><Label FontFamily="FASolid"
-                                       Text="{x:Static helpers:FontAwesomeGlyphs.Paw}"
+                                       Text="{x:Static helpers:FontAwesomeGlyphs.Race}"
                                        FontSize="18"
                                        TextColor="{StaticResource AccentMaroonColor}"
                                        HorizontalTextAlignment="Center" VerticalTextAlignment="Center" /></Border>
@@ -111,7 +111,7 @@
                                 Padding="14,12">
                             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
                                 <Border WidthRequest="42" HeightRequest="42" Padding="0" StrokeThickness="0" BackgroundColor="#EDE9FE" StrokeShape="RoundRectangle 14"><Label FontFamily="FASolid"
-                                       Text="{x:Static helpers:FontAwesomeGlyphs.Spell}"
+                                       Text="{x:Static helpers:FontAwesomeGlyphs.Wand}"
                                        FontSize="18"
                                        TextColor="{StaticResource AccentMaroonColor}"
                                        HorizontalTextAlignment="Center" VerticalTextAlignment="Center" /></Border>
@@ -133,7 +133,7 @@
                                 Padding="14,12">
                             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
                                 <Border WidthRequest="42" HeightRequest="42" Padding="0" StrokeThickness="0" BackgroundColor="#F3E8FF" StrokeShape="RoundRectangle 14"><Label FontFamily="FASolid"
-                                       Text="{x:Static helpers:FontAwesomeGlyphs.Wand}"
+                                       Text="{x:Static helpers:FontAwesomeGlyphs.Miracle}"
                                        FontSize="18"
                                        TextColor="{StaticResource AccentMaroonColor}"
                                        HorizontalTextAlignment="Center" VerticalTextAlignment="Center" /></Border>
@@ -155,7 +155,7 @@
                                 Padding="14,12">
                             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
                                 <Border WidthRequest="42" HeightRequest="42" Padding="0" StrokeThickness="0" BackgroundColor="#FFE8E0" StrokeShape="RoundRectangle 14"><Label FontFamily="FASolid"
-                                       Text="{x:Static helpers:FontAwesomeGlyphs.Lightning}"
+                                       Text="{x:Static helpers:FontAwesomeGlyphs.Tree}"
                                        FontSize="18"
                                        TextColor="{StaticResource AccentMaroonColor}"
                                        HorizontalTextAlignment="Center" VerticalTextAlignment="Center" /></Border>

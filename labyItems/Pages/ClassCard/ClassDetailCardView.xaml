@@ -1,55 +1,80 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentView x:Class="labyItems.Pages.ClassCard.ClassDetailCardView"
-             x:Name="Root"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:controls="clr-namespace:labyItems.Controls">
-    <ContentView>
-        <VerticalStackLayout Spacing="12">
-            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                <controls:ClassBracketIconView IconSize="48"
-                                               HasSplitIcon="{Binding HasSplitIcon, Source={x:Reference Root}}"
-                                               SingleGlyph="{Binding SingleGlyph, Source={x:Reference Root}}"
-                                               SplitLeftGlyph="{Binding SplitLeftGlyph, Source={x:Reference Root}}"
-                                               SplitRightGlyph="{Binding SplitRightGlyph, Source={x:Reference Root}}"
-                                               SingleBackground="{Binding SingleBackground, Source={x:Reference Root}}"
-                                               SplitLeftBackground="{Binding SplitLeftBackground, Source={x:Reference Root}}"
-                                               SplitRightBackground="{Binding SplitRightBackground, Source={x:Reference Root}}"
-                                               BorderColor="{StaticResource SurfaceBorderColor}"/>
-                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                    <Label Text="{Binding ClassName, Source={x:Reference Root}}" FontSize="28" FontAttributes="Bold" LineBreakMode="WordWrap"/>
-                    <Label Text="{Binding BracketText, Source={x:Reference Root}}" TextColor="{StaticResource MutedTextColor}"/>
-                </VerticalStackLayout>
-            </Grid>
-
-            <Label Text="Non-standard" TextColor="{StaticResource AccentMaroonColor}" FontSize="12" FontAttributes="Bold"
-                   IsVisible="{Binding IsNonStandard, Source={x:Reference Root}}"/>
-
-            <VerticalStackLayout Margin="-16,0" Padding="12,10" Spacing="10">
-                <Grid ColumnDefinitions="*,1,*,1,*">
-                    <VerticalStackLayout><Label Text="MAX AC" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding MaxAcText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
-                    <BoxView Grid.Column="1" Color="{StaticResource SurfaceBorderColor}"/>
-                    <VerticalStackLayout Grid.Column="2"><Label Text="POWER / LEVEL" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding PowerPerLevelText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
-                    <BoxView Grid.Column="3" Color="{StaticResource SurfaceBorderColor}"/>
-                    <VerticalStackLayout Grid.Column="4"><Label Text="CASTER LEVEL" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding CasterLevelText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
-                </Grid>
-            </VerticalStackLayout>
-
-            <VerticalStackLayout BindableLayout.ItemsSource="{Binding PropertyRows, Source={x:Reference Root}}" Spacing="10">
-                <BindableLayout.ItemTemplate><DataTemplate>
-                    <Grid ColumnDefinitions="110,*" ColumnSpacing="10">
-                        <Label Text="{Binding Label}" Style="{StaticResource SectionHeaderLabelStyle}"/>
-                        <Label Grid.Column="1" Text="{Binding Value}" FontSize="16" LineBreakMode="WordWrap"/>
-                    </Grid>
-                </DataTemplate></BindableLayout.ItemTemplate>
-            </VerticalStackLayout>
-
-            <VerticalStackLayout IsVisible="{Binding HasLevels, Source={x:Reference Root}}" Spacing="8">
-                <Label Text="LEVELS" Style="{StaticResource SectionHeaderLabelStyle}"/>
-                <controls:LevelAbilityTableView ItemsSource="{Binding LevelRows, Source={x:Reference Root}}"
-                                                ShowBodyAndLoc="False" ShowWeaponSkillsColumn="True"
-                                                AbilitiesHeaderText="Skills/Abilities"/>
-            </VerticalStackLayout>
+<ContentView x:Class="labyItems.Pages.ClassCard.ClassDetailCardView" x:Name="Root" xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:controls="clr-namespace:labyItems.Controls" xmlns:helpers="clr-namespace:labyItems.Helpers">
+ <VerticalStackLayout Spacing="14">
+  <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12"><VerticalStackLayout Spacing="2" VerticalOptions="Center"><Label Text="{Binding ClassName, Source={x:Reference Root}}" FontSize="28" FontAttributes="Bold" LineBreakMode="WordWrap"/><Label Text="{Binding BracketText, Source={x:Reference Root}}" FontSize="15" TextColor="{StaticResource MutedTextColor}"/></VerticalStackLayout><controls:ClassBracketIconView Grid.Column="1" IconSize="48" HasSplitIcon="{Binding HasSplitIcon, Source={x:Reference Root}}" SingleGlyph="{Binding SingleGlyph, Source={x:Reference Root}}" SplitLeftGlyph="{Binding SplitLeftGlyph, Source={x:Reference Root}}" SplitRightGlyph="{Binding SplitRightGlyph, Source={x:Reference Root}}" SingleBackground="{Binding SingleBackground, Source={x:Reference Root}}" SplitLeftBackground="{Binding SplitLeftBackground, Source={x:Reference Root}}" SplitRightBackground="{Binding SplitRightBackground, Source={x:Reference Root}}" BorderColor="{StaticResource SurfaceBorderColor}"/></Grid>
+  <Label Text="Non-standard" TextColor="{StaticResource AccentMaroonColor}" FontSize="12" FontAttributes="Bold" IsVisible="{Binding IsNonStandard, Source={x:Reference Root}}"/>
+  <VerticalStackLayout Margin="-16,0" Padding="12,10" Spacing="10">
+   <Grid ColumnDefinitions="*,1,*,1,*" ColumnSpacing="10">
+    <VerticalStackLayout Spacing="2">
+     <Label Text="LIFESCALE" Style="{StaticResource KeyInfoLabelStyle}"/>
+     <Label Text="{Binding LifeScaleValue, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/>
+     <Label Text="{Binding LifeScaleSubtitle, Source={x:Reference Root}}" FontSize="11" TextColor="{StaticResource MutedTextColor}" LineBreakMode="WordWrap" HorizontalTextAlignment="Center"/>
+    </VerticalStackLayout>
+    <BoxView Grid.Column="1" Color="{StaticResource SurfaceBorderColor}"/>
+    <VerticalStackLayout Grid.Column="2" Spacing="2">
+     <Label Text="ARMOUR TYPES" Style="{StaticResource KeyInfoLabelStyle}"/>
+     <Label Text="{Binding ArmourTypesText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}" LineBreakMode="WordWrap"/>
+    </VerticalStackLayout>
+    <BoxView Grid.Column="3" Color="{StaticResource SurfaceBorderColor}"/>
+    <VerticalStackLayout Grid.Column="4" Spacing="2">
+     <Label Text="ALIGNMENT" Style="{StaticResource KeyInfoLabelStyle}"/>
+     <Label Text="{Binding AlignmentText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}" LineBreakMode="WordWrap"/>
+    </VerticalStackLayout>
+   </Grid>
+   <VerticalStackLayout Spacing="10" BindableLayout.ItemsSource="{Binding FactRows, Source={x:Reference Root}}">
+    <BindableLayout.ItemTemplate>
+     <DataTemplate>
+      <VerticalStackLayout Spacing="10">
+       <BoxView HeightRequest="1" Color="{StaticResource SurfaceBorderColor}"/>
+       <VerticalStackLayout Spacing="2" IsVisible="{Binding HasSingle}">
+        <Label Text="{Binding Left.Label}" Style="{StaticResource KeyInfoLabelStyle}"/>
+        <Label Text="{Binding Left.Value}" Style="{StaticResource KeyInfoValueStyle}" LineBreakMode="WordWrap"/>
+       </VerticalStackLayout>
+       <Grid ColumnDefinitions="*,1,*" ColumnSpacing="12" IsVisible="{Binding HasRight}">
+        <VerticalStackLayout Spacing="2">
+         <Label Text="{Binding Left.Label}" Style="{StaticResource KeyInfoLabelStyle}"/>
+         <Label Text="{Binding Left.Value}" Style="{StaticResource KeyInfoValueStyle}" LineBreakMode="WordWrap"/>
         </VerticalStackLayout>
-    </ContentView>
+        <BoxView Grid.Column="1" Color="{StaticResource SurfaceBorderColor}"/>
+        <VerticalStackLayout Grid.Column="2" Spacing="2">
+         <Label Text="{Binding Right.Label}" Style="{StaticResource KeyInfoLabelStyle}"/>
+         <Label Text="{Binding Right.Value}" Style="{StaticResource KeyInfoValueStyle}" LineBreakMode="WordWrap"/>
+        </VerticalStackLayout>
+       </Grid>
+      </VerticalStackLayout>
+     </DataTemplate>
+    </BindableLayout.ItemTemplate>
+   </VerticalStackLayout>
+   <BoxView HeightRequest="1" Color="{StaticResource SurfaceBorderColor}"/>
+   <Grid ColumnDefinitions="*,1,*,1,Auto" ColumnSpacing="10">
+    <VerticalStackLayout Spacing="2">
+     <Label Text="MAX AC" Style="{StaticResource KeyInfoLabelStyle}"/>
+     <Label Text="{Binding MaxAcText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/>
+    </VerticalStackLayout>
+    <BoxView Grid.Column="1" Color="{StaticResource SurfaceBorderColor}"/>
+    <VerticalStackLayout Grid.Column="2" Spacing="2">
+     <Label Text="BUY AS" Style="{StaticResource KeyInfoLabelStyle}"/>
+     <Label Text="{Binding BuyAsText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}" LineBreakMode="WordWrap"/>
+    </VerticalStackLayout>
+    <BoxView Grid.Column="3" Color="{StaticResource SurfaceBorderColor}" IsVisible="{Binding HasWeaponSkills, Source={x:Reference Root}}"/>
+    <Grid Grid.Column="4" ColumnDefinitions="Auto,Auto" ColumnSpacing="4" IsVisible="{Binding HasWeaponSkills, Source={x:Reference Root}}">
+     <Grid.GestureRecognizers><TapGestureRecognizer Tapped="OnWeaponSkillsTapped"/></Grid.GestureRecognizers>
+     <VerticalStackLayout Spacing="2">
+      <Label Text="WEAPON SKILLS" Style="{StaticResource KeyInfoLabelStyle}"/>
+      <Label Text="{Binding WeaponSkillsSummary, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}" LineBreakMode="WordWrap"/>
+     </VerticalStackLayout>
+     <controls:ChevronIconView Grid.Column="1" IsExpanded="{Binding IsWeaponSkillsExpanded, Source={x:Reference Root}}" AnimateRotation="True" GlyphSize="13" IconSize="24" InputTransparent="True" VerticalOptions="Center"/>
+    </Grid>
+   </Grid>
+  </VerticalStackLayout>
+  <controls:AnimatedExpandView IsExpanded="{Binding IsWeaponSkillsExpanded, Source={x:Reference Root}}">
+   <VerticalStackLayout Spacing="7" IsVisible="{Binding HasWeaponSkills, Source={x:Reference Root}}">
+    <Grid ColumnDefinitions="72,*" Padding="10,0"><Label Text="LVL" Style="{StaticResource KeyInfoLabelStyle}"/><Label Grid.Column="1" Text="WEAPON SKILLS" Style="{StaticResource KeyInfoLabelStyle}"/></Grid>
+    <VerticalStackLayout BindableLayout.ItemsSource="{Binding WeaponSkillLevelRows, Source={x:Reference Root}}" Spacing="6"><BindableLayout.ItemTemplate><DataTemplate><controls:ListItemRowView PrimaryText="{Binding LevelText}" SecondaryText="{Binding Names}" PrimaryColumnWidth="54" SecondaryColumnWidth="*" SecondaryTextAlignment="Start" ShowSecondaryText="True"/></DataTemplate></BindableLayout.ItemTemplate></VerticalStackLayout>
+   </VerticalStackLayout>
+  </controls:AnimatedExpandView>
+  <VerticalStackLayout Spacing="7" IsVisible="{Binding HasProgression, Source={x:Reference Root}}"><Grid ColumnDefinitions="*,Auto"><Grid.GestureRecognizers><TapGestureRecognizer Tapped="OnProgressionTapped"/></Grid.GestureRecognizers><Label Text="PROGRESSION BY LEVEL" Style="{StaticResource SectionHeaderLabelStyle}"/><controls:ChevronIconView Grid.Column="1" IsExpanded="{Binding IsProgressionExpanded, Source={x:Reference Root}}" AnimateRotation="True" GlyphSize="13" IconSize="24" InputTransparent="True" VerticalOptions="Center"/></Grid><controls:AnimatedExpandView IsExpanded="{Binding IsProgressionExpanded, Source={x:Reference Root}}"><VerticalStackLayout Spacing="7"><Grid ColumnDefinitions="62,*,72,32" Padding="10,0"><Label Text="LVL" Style="{StaticResource KeyInfoLabelStyle}"/><Label Grid.Column="1" Text="ABILITY" Style="{StaticResource KeyInfoLabelStyle}"/><Label Grid.Column="2" Text="ARMOUR" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center"/><Label Grid.Column="3" Text="INFO" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center"/></Grid><VerticalStackLayout BindableLayout.ItemsSource="{Binding ProgressionRows, Source={x:Reference Root}}" Spacing="6"><BindableLayout.ItemTemplate><DataTemplate><controls:ListItemRowView PrimaryText="{Binding LevelText}" SecondaryText="{Binding Name}" TertiaryText="{Binding ArmourText}" PrimaryColumnWidth="44" SecondaryColumnWidth="*" TertiaryColumnWidth="64" InfoColumnWidth="18" SecondaryTextAlignment="Start" ShowSecondaryText="True" ShowTertiaryText="True" ShowInfo="{Binding HasDetails}" ActionCommandParameter="{Binding .}" InfoClicked="OnAbilityInfoClicked" RowClicked="OnAbilityInfoClicked"/></DataTemplate></BindableLayout.ItemTemplate></VerticalStackLayout></VerticalStackLayout></controls:AnimatedExpandView></VerticalStackLayout>
+  <controls:AdvanceSectionActionRow IconGlyph="{x:Static helpers:FontAwesomeGlyphs.Lifescale}" Heading="Lifescales" Subheading="View this class's life progression." ActionGlyph="{x:Static helpers:FontAwesomeGlyphs.ChevronRight}" ActionClicked="OnLifescalesClicked"/>
+  <VerticalStackLayout BindableLayout.ItemsSource="{Binding NarrativeRows, Source={x:Reference Root}}" Spacing="12"><BindableLayout.ItemTemplate><DataTemplate><VerticalStackLayout Spacing="5"><Label Text="{Binding Label}" Style="{StaticResource SectionHeaderLabelStyle}"/><Label Text="{Binding Value}" FontSize="16" LineBreakMode="WordWrap"/></VerticalStackLayout></DataTemplate></BindableLayout.ItemTemplate></VerticalStackLayout>
+ </VerticalStackLayout>
 </ContentView>

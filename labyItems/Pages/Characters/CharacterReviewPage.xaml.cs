@@ -3,6 +3,7 @@ using System.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Graphics;
 using labyItems.Helpers;
+using labyItems.Controls;
 using labyItems.Models;
 using labyItems.Models.Characters;
 using labyItems.Pages;
@@ -556,7 +557,13 @@ public partial class CharacterReviewPage : ContentPage
 
     private async void OnReviewEntryInfoClicked(object sender, EventArgs e)
     {
-        if (sender is not Button button || button.CommandParameter is not ReviewEntryVm entry)
+        var parameter = sender switch
+        {
+            Button button => button.CommandParameter,
+            ListItemRowView row => row.ActionCommandParameter,
+            _ => null
+        };
+        if (parameter is not ReviewEntryVm entry)
             return;
 
         switch (entry.Kind)

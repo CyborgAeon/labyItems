@@ -1,4 +1,5 @@
 using System.Linq;
+using labyItems.Pages.ClassCard;
 using labyItems.Services;
 using Xunit;
 
@@ -13,6 +14,20 @@ public sealed class ClassServiceTests : ServiceTestBase
 
         Assert.NotEmpty(all);
         Assert.Contains(all, kvp => kvp.Value != null && kvp.Value.Levels.Count > 0);
+    }
+
+    [Fact]
+    public async Task EveryClass_HasResolvableSourceBook()
+    {
+        var all = await ClassService.GetAllAsync();
+
+        Assert.All(all, entry =>
+        {
+            Assert.False(string.IsNullOrWhiteSpace(entry.Value.SourceBook), $"{entry.Key} has no SourceBook.");
+            Assert.True(
+                BookDirectory.TryResolve(entry.Value.SourceBook, out _),
+                $"{entry.Key} has unmapped SourceBook '{entry.Value.SourceBook}'.");
+        });
     }
 
     [Fact]
@@ -52,4 +67,31 @@ public sealed class ClassServiceTests : ServiceTestBase
         Assert.Equal("Unholy Champion Devotion", devotion.OverwriteKey);
         Assert.DoesNotContain(level3, a => a.Name == "Repel Good");
     }
+
+    [Fact]
+    public async Task MonkProgression_SeparatesWeaponSkillsAndArmourGrants()
+    {
+        var monk = (await ClassService.GetAllAsync())["Monk"];
+
+        var progression = ClassProgressionProjector.BuildProgressionRows(monk.Levels);
+        var weaponSkills = ClassProgressionProjector.BuildWeaponSkillRows(monk.Levels);
+
+        Assert.Equal(new[] { "O", "E", "H", "B", "MP", "UAC" }, weaponSkills.Select(row => row.Name));
+        Assert.Contains(progression, row => row.Level == 2
+            && row.Name == "Detect Possible Neuronic Activity"
+            && row.ArmourText == "1 DAC");
+        Assert.Contains(progression, row => row.Level == 5
+            && row.Name == string.Empty
+            && row.ArmourText == "3 DAC");
+        Assert.Contains(progression, row => row.Level == 6
+            && row.Name == "1st Weapon Mastery (H)"
+            && row.ArmourText == "4 DAC");
+        Assert.Contains(progression, row => row.Level == 6
+            && row.Name == "Immunity to Befriend, Immunity to Beguile, Immunity to Spiritual Mastery"
+            && row.ArmourText == string.Empty);
+        Assert.Contains(progression, row => row.Level == 8
+            && row.Name == "Immunity to Poison, Immunity to Bless/Curse, Monk Specialist"
+            && row.ArmourText == string.Empty);
+    }
+
 }

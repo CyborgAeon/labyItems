@@ -154,6 +154,8 @@
                                                         BindableLayout.ItemsSource="{Binding GuildReviewRows}">
                                           <BindableLayout.ItemTemplate>
                                                  <DataTemplate>
+                                                                 <controls:ListItemRowView RowBackgroundColor="{Binding RowBackgroundColor}" ContentPadding="0">
+                                                                   <controls:ListItemRowView.CustomContent>
                                                                  <Grid ColumnDefinitions="96,*,64"
                                                               ColumnSpacing="8"
                                                                         RowDefinitions="Auto"
@@ -196,6 +198,8 @@
                                                                               CommandParameter="{Binding .}"/>
                                                                </HorizontalStackLayout>
                                                         </Grid>
+                                                                   </controls:ListItemRowView.CustomContent>
+                                                                 </controls:ListItemRowView>
                                                  </DataTemplate>
                                           </BindableLayout.ItemTemplate>
                                    </VerticalStackLayout>
@@ -258,6 +262,8 @@
 
                                                  <BindableLayout.ItemTemplate>
                                                         <DataTemplate>
+                                                               <controls:ListItemRowView ContentPadding="0,2">
+                                                                 <controls:ListItemRowView.CustomContent>
                                                                <Grid ColumnDefinitions="*,Auto,Auto"
                                                                      ColumnSpacing="8"
                                                                      Padding="0,2">
@@ -274,6 +280,8 @@
                                                                              Opacity="0.7"
                                                                              VerticalTextAlignment="Center"/>
                                                                </Grid>
+                                                                 </controls:ListItemRowView.CustomContent>
+                                                               </controls:ListItemRowView>
                                                         </DataTemplate>
                                                  </BindableLayout.ItemTemplate>
                                           </VerticalStackLayout>

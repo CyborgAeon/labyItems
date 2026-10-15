@@ -429,6 +429,8 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             if (extraResults.Count > 0)
             {
                 converted.AddRange(extraResults);
+                if (_picker?.AllowedNames is { } allowed)
+                    converted = converted.Where(result => allowed.Contains(result.Name)).ToList();
                 converted = converted
                     .OrderBy(result => result.Name, StringComparer.OrdinalIgnoreCase)
                     .ThenBy(result => result.Kind)

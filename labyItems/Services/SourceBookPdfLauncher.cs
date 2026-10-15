@@ -4,7 +4,7 @@ public static class SourceBookPdfLauncher
 {
     public static async Task OpenAsync(string? sourceBookName, CancellationToken cancellationToken = default)
     {
-        if (!SourceBookPdfCatalog.TryResolve(sourceBookName, out var assetPath))
+        if (!BookDirectory.TryResolve(sourceBookName, out var assetPath))
             throw new InvalidOperationException($"No PDF is available for '{sourceBookName}'.");
 
         var fileName = Path.GetFileName(assetPath);

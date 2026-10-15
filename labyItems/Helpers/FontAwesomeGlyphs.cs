@@ -27,7 +27,6 @@ public static class FontAwesomeGlyphs
     public const string Lightning = "\uf0e7";
     public const string Upload = "\uf093";
     public const string ExternalLink = "\uf08e";
-    // public const string Book = "\uf5da";
     public const string Home = "\uf015";
     public const string User = "\uf007";
     public const string CharacterClass = "\uf19d";
@@ -73,8 +72,6 @@ public static class FontAwesomeGlyphs
     public const string Scroll = "\uf70e";
     public const string Wallet = "\uf555";
     public const string Miracle = "\uf5da";
-    public const string CustomClass = "\uf6e4";
-    public const string Spell = "\uf5da";
     public const string Ability = "\uf559";
     public const string Ghost = "\uf54c";
     public const string IspItem = "\uf187";
@@ -101,6 +98,7 @@ public static class FontAwesomeGlyphs
     public const string Control = "\ue4f8";
     public const string Communication = "\uf086";
     public const string Wayfinder = "\uf14e";
+    public const string Lifescale = "\uf44b";
     public static string GetSphereIcon(string? sphere)
     {
         var token = NormalizeSphereToken(sphere);

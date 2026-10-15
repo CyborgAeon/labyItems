@@ -28,7 +28,7 @@ public partial class DetailPageHeader : ContentView
         if (HeaderLabel is null)
             return;
 
-        HeaderLabel.TextDecorations = SourceBookPdfCatalog.TryResolve(HeaderText, out _)
+        HeaderLabel.TextDecorations = BookDirectory.TryResolve(HeaderText, out _)
             ? TextDecorations.Underline
             : TextDecorations.None;
     }
@@ -47,7 +47,7 @@ public partial class DetailPageHeader : ContentView
 
     private async void OnHeaderTapped(object? sender, TappedEventArgs e)
     {
-        if (!SourceBookPdfCatalog.TryResolve(HeaderText, out _))
+        if (!BookDirectory.TryResolve(HeaderText, out _))
             return;
 
         HeaderLabel.InputTransparent = true;

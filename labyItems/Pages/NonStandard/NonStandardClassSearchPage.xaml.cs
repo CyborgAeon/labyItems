@@ -6,6 +6,8 @@ using System.Text.Json;
 using System.Windows.Input;
 using labyItems.Pages.Characters;
 using labyItems.Services;
+using labyItems.Helpers;
+using ClassCardPage = labyItems.Pages.ClassCard.ClassCard;
 
 namespace labyItems.Pages.NonStandard;
 
@@ -14,6 +16,8 @@ public partial class NonStandardClassSearchPage : ContentPage
     private readonly TaskCompletionSource<string?> _completion = new();
     private readonly NonStandardClassSearchVm _vm;
     private bool _presentedModally;
+    private bool _isOpeningDetail;
+    private readonly CollectionViewScrollPreserver _scrollPreserver;
 
     public ICommand SelectClassCommand { get; }
     public ICommand ToggleExpandedCommand { get; }
@@ -26,9 +30,10 @@ public partial class NonStandardClassSearchPage : ContentPage
         _vm = new NonStandardClassSearchVm(currentValue);
         BindingContext = _vm;
 
-        SelectClassCommand = new Command<ClassCardVm>(OnSelectClass);
+        SelectClassCommand = new Command<ClassCardVm>(card => { if (card != null) _vm.SetSelected(card.Key); });
         ToggleExpandedCommand = new Command<ClassCardVm>(item => _ = OnToggleExpandedAsync(item));
         ToggleFilterChipCommand = new Command<NonStandardClassFilterChipVm>(_vm.ToggleFilterChip);
+        _scrollPreserver = new CollectionViewScrollPreserver(ClassesCollection, this);
     }
 
     public static async Task<string?> PickAsync(INavigation navigation, string? currentValue)
@@ -71,15 +76,30 @@ public partial class NonStandardClassSearchPage : ContentPage
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
-        _completion.TrySetResult(null);
+        if (!_isOpeningDetail)
+            _completion.TrySetResult(null);
     }
 
-    private async void OnSelectClass(ClassCardVm? card)
+    protected override void OnAppearing()
     {
-        if (card == null)
-            return;
+        base.OnAppearing();
+        _isOpeningDetail = false;
+        _scrollPreserver.RestoreScrollPosition();
+    }
 
-        _vm.SetSelected(card.Key);
+    private void OnClassTapped(object? sender, TappedEventArgs e)
+    {
+        if (e.Parameter is ClassCardVm card) _vm.SetSelected(card.Key);
+    }
+
+    private async void OnClassInfoClicked(object? sender, EventArgs e)
+    {
+        if (sender is not Button { CommandParameter: ClassCardVm card } || !_vm.TryGetRecord(card.Key, out var record)) return;
+        _scrollPreserver.RecordItem(card);
+        _isOpeningDetail = true;
+        var detail = new ClassCardPage(card.Name, record);
+        if (Navigation.NavigationStack.Contains(this)) await Navigation.PushAsync(detail);
+        else await Navigation.PushModalAsync(detail);
     }
 
     private async void OnBackClicked(object? sender, EventArgs e)
@@ -138,12 +158,19 @@ internal sealed class NonStandardClassSearchVm : INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private readonly ObservableCollection<ClassCardVm> _allClasses = new();
+    private readonly Dictionary<string, CharacterClassRecord> _recordsByKey = new(StringComparer.OrdinalIgnoreCase);
+    private HashSet<string> _appliedFilters = new(StringComparer.OrdinalIgnoreCase);
+    private bool _isFilterModalOpen;
     private readonly string _initialSelection;
     private string _searchText = string.Empty;
     private string _selectedClassKey = string.Empty;
 
     public ObservableCollection<ClassCardVm> FilteredClasses { get; } = new();
     public ObservableCollection<NonStandardClassFilterChipVm> FilterChips { get; } = new();
+    public ICommand OpenFiltersCommand { get; }
+    public ICommand CancelFiltersCommand { get; }
+    public ICommand ApplyFiltersCommand { get; }
+    public bool IsFilterModalOpen { get => _isFilterModalOpen; private set => Set(ref _isFilterModalOpen, value); }
 
     public string SelectedClassKey
     {
@@ -174,15 +201,21 @@ internal sealed class NonStandardClassSearchVm : INotifyPropertyChanged
     public NonStandardClassSearchVm(string? currentSelection)
     {
         _initialSelection = (currentSelection ?? string.Empty).Trim();
+        OpenFiltersCommand = new Command(() => { SyncChipSelection(_appliedFilters); IsFilterModalOpen = true; });
+        CancelFiltersCommand = new Command(() => { SyncChipSelection(_appliedFilters); IsFilterModalOpen = false; });
+        ApplyFiltersCommand = new Command(() => { _appliedFilters = FilterChips.Where(item => item.IsSelected && !item.IsAll).Select(item => item.Key).ToHashSet(StringComparer.OrdinalIgnoreCase); IsFilterModalOpen = false; Refilter(); });
     }
 
     public async Task LoadAsync()
     {
         _allClasses.Clear();
+        _recordsByKey.Clear();
 
         var classes = await ClassService.GetAllAsync();
-        foreach (var entry in classes.OrderBy(x => x.Key, StringComparer.OrdinalIgnoreCase))
+        foreach (var entry in classes.OrderBy(x => x.Key, StringComparer.OrdinalIgnoreCase)) {
+            _recordsByKey[entry.Key] = entry.Value;
             _allClasses.Add(BuildClassCard(entry.Key, entry.Value));
+        }
 
         BuildFilterChips();
         Refilter();
@@ -207,7 +240,6 @@ internal sealed class NonStandardClassSearchVm : INotifyPropertyChanged
         {
             foreach (var item in FilterChips)
                 item.IsSelected = item.IsAll;
-            Refilter();
             return;
         }
 
@@ -219,8 +251,10 @@ internal sealed class NonStandardClassSearchVm : INotifyPropertyChanged
         if (!FilterChips.Any(item => !item.IsAll && item.IsSelected) && allChip != null)
             allChip.IsSelected = true;
 
-        Refilter();
     }
+
+    public bool TryGetRecord(string key, out CharacterClassRecord record) => _recordsByKey.TryGetValue(key, out record!);
+    private void SyncChipSelection(IReadOnlySet<string> selected) { foreach (var chip in FilterChips) chip.IsSelected = chip.IsAll ? selected.Count == 0 : selected.Contains(chip.Key); }
 
     private void BuildFilterChips()
     {
@@ -250,10 +284,7 @@ internal sealed class NonStandardClassSearchVm : INotifyPropertyChanged
     private void Refilter()
     {
         var query = (_searchText ?? string.Empty).Trim();
-        var selectedFilters = FilterChips
-            .Where(item => item.IsSelected && !item.IsAll)
-            .Select(item => item.Key)
-            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var selectedFilters = _appliedFilters;
 
         var allSelected = selectedFilters.Count == 0
             || FilterChips.FirstOrDefault(item => item.IsAll)?.IsSelected == true;

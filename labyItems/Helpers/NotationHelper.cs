@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using labyItems.Models;
+using labyItems.Models.Characters;
 
 namespace labyItems.Helpers;
 
@@ -17,6 +18,42 @@ public static class NotationHelper
     public static string ToKNotation(this int number) => Format(number);
 
     public static string ToKNotation(this long number) => Format(number);
+
+    public static string FormatAlignment(AlignmentRule? rule)
+    {
+        if (rule == null)
+            return string.Empty;
+
+        var orders = rule.Allowed?.Order?.Select(value => value.ToString()).ToList() ?? [];
+        var morals = rule.Allowed?.Moral?.Select(value => value.ToString()).ToList() ?? [];
+        var formatted = FormatAlignment(orders, morals);
+        if (formatted.Length > 0)
+            return formatted;
+
+        return rule.AllowedPairs is { Count: > 0 }
+            ? string.Join(", ", rule.AllowedPairs.Where(value => !string.IsNullOrWhiteSpace(value)).Select(value => value.Trim()))
+            : string.Empty;
+    }
+
+    public static string FormatAlignment(
+        IReadOnlyCollection<string>? orders,
+        IReadOnlyCollection<string>? morals)
+    {
+        orders ??= Array.Empty<string>();
+        morals ??= Array.Empty<string>();
+
+        var allOrders = ContainsAll(orders, "Lawful", "Neutral", "Chaotic");
+        var allMorals = ContainsAll(morals, "Good", "Neutral", "Evil");
+        if (orders.Count == 0 && morals.Count == 0)
+            return string.Empty;
+        if ((orders.Count == 0 || allOrders) && (morals.Count == 0 || allMorals))
+            return "Any alignment";
+        if (orders.Count == 0 || allOrders)
+            return $"Any {string.Join("/", morals)}";
+        if (morals.Count == 0 || allMorals)
+            return $"Any {string.Join("/", orders)}";
+        return $"{string.Join("/", orders)} · {string.Join("/", morals)}";
+    }
 
     public static string BuildGrantSummary(IEnumerable<CalcResult>? abilities)
     {
@@ -61,6 +98,9 @@ public static class NotationHelper
         long rounded = number / 1000; // rounds to nearest 1000
         return $"{rounded}k";
     }
+
+    private static bool ContainsAll(IReadOnlyCollection<string> values, params string[] expected)
+        => expected.All(item => values.Contains(item, StringComparer.OrdinalIgnoreCase));
 
     private static List<string> BuildHumanReadableAbilityTextFromDetails(CalcResult ability)
     {

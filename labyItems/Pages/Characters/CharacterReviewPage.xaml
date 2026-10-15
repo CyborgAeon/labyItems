@@ -450,30 +450,7 @@
                                                                  Spacing="6">
                                                 <BindableLayout.ItemTemplate>
                                                     <DataTemplate>
-                                                        <Grid ColumnDefinitions="*,Auto"
-                                                              ColumnSpacing="8">
-                                                            <VerticalStackLayout Spacing="2">
-                                                                <Label Text="{Binding PrimaryText}"
-                                                                       LineBreakMode="WordWrap" />
-                                                                <Label Text="{Binding SecondaryText}"
-                                                                       FontSize="11"
-                                                                       TextColor="{StaticResource MutedTextColor}"
-                                                                       IsVisible="{Binding HasSecondaryText}" />
-                                                            </VerticalStackLayout>
-                                                            <Button Grid.Column="1"
-                                                                    Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
-                                                                    FontFamily="FASolid"
-                                                                    FontSize="12"
-                                                                    Padding="0"
-                                                                    BackgroundColor="Transparent"
-                                                                    TextColor="{StaticResource SubtleTextColor}"
-                                                                    HeightRequest="18"
-                                                                    WidthRequest="18"
-                                                                    MinimumHeightRequest="0"
-                                                                    MinimumWidthRequest="0"
-                                                                    Clicked="OnReviewEntryInfoClicked"
-                                                                    CommandParameter="{Binding .}" />
-                                                        </Grid>
+                                                        <controls:ListItemRowView PrimaryText="{Binding PrimaryText}" SecondaryText="{Binding SecondaryText}" ShowSecondaryText="{Binding HasSecondaryText}" ShowInfo="True" ActionCommandParameter="{Binding .}" InfoClicked="OnReviewEntryInfoClicked"/>
                                                     </DataTemplate>
                                                 </BindableLayout.ItemTemplate>
                                             </VerticalStackLayout>
@@ -527,30 +504,7 @@
                                                                  Spacing="6">
                                                 <BindableLayout.ItemTemplate>
                                                     <DataTemplate>
-                                                        <Grid ColumnDefinitions="*,Auto"
-                                                              ColumnSpacing="8">
-                                                            <VerticalStackLayout Spacing="2">
-                                                                <Label Text="{Binding PrimaryText}"
-                                                                       LineBreakMode="WordWrap" />
-                                                                <Label Text="{Binding SecondaryText}"
-                                                                       FontSize="11"
-                                                                       TextColor="{StaticResource MutedTextColor}"
-                                                                       IsVisible="{Binding HasSecondaryText}" />
-                                                            </VerticalStackLayout>
-                                                            <Button Grid.Column="1"
-                                                                    Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
-                                                                    FontFamily="FASolid"
-                                                                    FontSize="12"
-                                                                    Padding="0"
-                                                                    BackgroundColor="Transparent"
-                                                                    TextColor="{StaticResource SubtleTextColor}"
-                                                                    HeightRequest="18"
-                                                                    WidthRequest="18"
-                                                                    MinimumHeightRequest="0"
-                                                                    MinimumWidthRequest="0"
-                                                                    Clicked="OnReviewEntryInfoClicked"
-                                                                    CommandParameter="{Binding .}" />
-                                                        </Grid>
+                                                        <controls:ListItemRowView PrimaryText="{Binding PrimaryText}" SecondaryText="{Binding SecondaryText}" ShowSecondaryText="{Binding HasSecondaryText}" ShowInfo="True" ActionCommandParameter="{Binding .}" InfoClicked="OnReviewEntryInfoClicked"/>
                                                     </DataTemplate>
                                                 </BindableLayout.ItemTemplate>
                                             </VerticalStackLayout>
@@ -604,30 +558,7 @@
                                                                  Spacing="6">
                                                 <BindableLayout.ItemTemplate>
                                                     <DataTemplate>
-                                                        <Grid ColumnDefinitions="*,Auto"
-                                                              ColumnSpacing="8">
-                                                            <VerticalStackLayout Spacing="2">
-                                                                <Label Text="{Binding PrimaryText}"
-                                                                       LineBreakMode="WordWrap" />
-                                                                <Label Text="{Binding SecondaryText}"
-                                                                       FontSize="11"
-                                                                       TextColor="{StaticResource MutedTextColor}"
-                                                                       IsVisible="{Binding HasSecondaryText}" />
-                                                            </VerticalStackLayout>
-                                                            <Button Grid.Column="1"
-                                                                    Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
-                                                                    FontFamily="FASolid"
-                                                                    FontSize="12"
-                                                                    Padding="0"
-                                                                    BackgroundColor="Transparent"
-                                                                    TextColor="{StaticResource SubtleTextColor}"
-                                                                    HeightRequest="18"
-                                                                    WidthRequest="18"
-                                                                    MinimumHeightRequest="0"
-                                                                    MinimumWidthRequest="0"
-                                                                    Clicked="OnReviewEntryInfoClicked"
-                                                                    CommandParameter="{Binding .}" />
-                                                        </Grid>
+                                                        <controls:ListItemRowView PrimaryText="{Binding PrimaryText}" SecondaryText="{Binding SecondaryText}" ShowSecondaryText="{Binding HasSecondaryText}" ShowInfo="True" ActionCommandParameter="{Binding .}" InfoClicked="OnReviewEntryInfoClicked"/>
                                                     </DataTemplate>
                                                 </BindableLayout.ItemTemplate>
                                             </VerticalStackLayout>
@@ -663,30 +594,7 @@
                                                                  Spacing="6">
                                                 <BindableLayout.ItemTemplate>
                                                     <DataTemplate>
-                                                        <Grid ColumnDefinitions="*,Auto"
-                                                              ColumnSpacing="8">
-                                                            <VerticalStackLayout Spacing="2">
-                                                                <Label Text="{Binding PrimaryText}"
-                                                                       LineBreakMode="WordWrap" />
-                                                                <Label Text="{Binding SecondaryText}"
-                                                                       FontSize="11"
-                                                                       TextColor="{StaticResource MutedTextColor}"
-                                                                       IsVisible="{Binding HasSecondaryText}" />
-                                                            </VerticalStackLayout>
-                                                            <Button Grid.Column="1"
-                                                                    Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
-                                                                    FontFamily="FASolid"
-                                                                    FontSize="12"
-                                                                    Padding="0"
-                                                                    BackgroundColor="Transparent"
-                                                                    TextColor="{StaticResource SubtleTextColor}"
-                                                                    HeightRequest="18"
-                                                                    WidthRequest="18"
-                                                                    MinimumHeightRequest="0"
-                                                                    MinimumWidthRequest="0"
-                                                                    Clicked="OnReviewEntryInfoClicked"
-                                                                    CommandParameter="{Binding .}" />
-                                                        </Grid>
+                                                        <controls:ListItemRowView PrimaryText="{Binding PrimaryText}" SecondaryText="{Binding SecondaryText}" ShowSecondaryText="{Binding HasSecondaryText}" ShowInfo="True" ActionCommandParameter="{Binding .}" InfoClicked="OnReviewEntryInfoClicked"/>
                                                     </DataTemplate>
                                                 </BindableLayout.ItemTemplate>
                                             </VerticalStackLayout>
@@ -732,24 +640,7 @@
                                                      Spacing="6">
                                     <BindableLayout.ItemTemplate>
                                         <DataTemplate>
-                                            <Grid ColumnDefinitions="*,Auto"
-                                                  ColumnSpacing="8">
-                                                <Label Text="{Binding PrimaryText}"
-                                                       LineBreakMode="WordWrap" />
-                                                <Button Grid.Column="1"
-                                                        Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
-                                                        FontFamily="FASolid"
-                                                        FontSize="12"
-                                                        Padding="0"
-                                                        BackgroundColor="Transparent"
-                                                        TextColor="{StaticResource SubtleTextColor}"
-                                                        HeightRequest="18"
-                                                        WidthRequest="18"
-                                                        MinimumHeightRequest="0"
-                                                        MinimumWidthRequest="0"
-                                                        Clicked="OnReviewEntryInfoClicked"
-                                                        CommandParameter="{Binding .}" />
-                                            </Grid>
+                                            <controls:ListItemRowView PrimaryText="{Binding PrimaryText}" SecondaryText="{Binding SecondaryText}" ShowSecondaryText="{Binding HasSecondaryText}" ShowInfo="True" ActionCommandParameter="{Binding .}" InfoClicked="OnReviewEntryInfoClicked"/>
                                         </DataTemplate>
                                     </BindableLayout.ItemTemplate>
                                 </VerticalStackLayout>

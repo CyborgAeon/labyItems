@@ -48,6 +48,7 @@ public partial class GuildDetailCardView : ContentView, INotifyPropertyChanged
     private GuildCardVm? _internalVm;
     private GuildRecord? _guildRecord;
     private bool _isMiraclesExpanded = true;
+    private bool _isBenefitsExpanded = true;
     private bool _isLoadingDetails;
 
     public GuildDetailCardView()
@@ -190,6 +191,17 @@ public partial class GuildDetailCardView : ContentView, INotifyPropertyChanged
         }
     }
 
+    public bool IsBenefitsExpanded
+    {
+        get => _isBenefitsExpanded;
+        set
+        {
+            if (_isBenefitsExpanded == value) return;
+            _isBenefitsExpanded = value;
+            OnPropertyChanged();
+        }
+    }
+
     public IReadOnlyList<GuildBenefitRowVm> BasicBenefitRows => _internalVm?.BasicBenefitRows ?? (IReadOnlyList<GuildBenefitRowVm>)Array.Empty<GuildBenefitRowVm>();
     public bool HasBasic => BasicBenefitRows.Count > 0;
 
@@ -276,7 +288,7 @@ public partial class GuildDetailCardView : ContentView, INotifyPropertyChanged
         var rows = new List<AvailabilityRequirementVm>();
         var orders = ValuesFor(availability.Rules, "Alignment.Order");
         var morals = ValuesFor(availability.Rules, "Alignment.Moral");
-        var alignment = FormatAlignment(orders, morals);
+        var alignment = NotationHelper.FormatAlignment(orders, morals);
         if (alignment.Length > 0)
             rows.Add(new AvailabilityRequirementVm(AlignmentGlyph(morals), alignment));
         AddExcludedAlignment(rows, availability.Rules, "Alignment.Order");
@@ -306,24 +318,6 @@ public partial class GuildDetailCardView : ContentView, INotifyPropertyChanged
             .Where(value => !string.IsNullOrWhiteSpace(value))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
-
-    private static string FormatAlignment(IReadOnlyCollection<string> orders, IReadOnlyCollection<string> morals)
-    {
-        var allOrders = ContainsAll(orders, "Lawful", "Neutral", "Chaotic");
-        var allMorals = ContainsAll(morals, "Good", "Neutral", "Evil");
-        if (orders.Count == 0 && morals.Count == 0)
-            return string.Empty;
-        if ((orders.Count == 0 || allOrders) && (morals.Count == 0 || allMorals))
-            return "Any alignment";
-        if (orders.Count == 0 || allOrders)
-            return $"Any {string.Join("/", morals)}";
-        if (morals.Count == 0 || allMorals)
-            return $"Any {string.Join("/", orders)}";
-        return $"{string.Join("/", orders)} · {string.Join("/", morals)}";
-    }
-
-    private static bool ContainsAll(IReadOnlyCollection<string> values, params string[] expected) =>
-        expected.All(item => values.Contains(item, StringComparer.OrdinalIgnoreCase));
 
     private static void AddExcludedAlignment(
         ICollection<AvailabilityRequirementVm> output,
@@ -397,9 +391,20 @@ public partial class GuildDetailCardView : ContentView, INotifyPropertyChanged
         IsMiraclesExpanded = !IsMiraclesExpanded;
     }
 
+    private void OnToggleBenefitsTapped(object? sender, TappedEventArgs e)
+    {
+        IsBenefitsExpanded = !IsBenefitsExpanded;
+    }
+
     private async void OnMiracleInfoClicked(object? sender, EventArgs e)
     {
-        if (sender is not Button button || button.CommandParameter is not GuildMiracleRowVm row)
+        var row = sender switch
+        {
+            Button { CommandParameter: GuildMiracleRowVm buttonRow } => buttonRow,
+            ListItemRowView { ActionCommandParameter: GuildMiracleRowVm listRow } => listRow,
+            _ => null
+        };
+        if (row == null)
             return;
 
         var miracleName = (row.Name ?? string.Empty).Trim();
@@ -432,9 +437,9 @@ public partial class GuildDetailCardView : ContentView, INotifyPropertyChanged
         if (abilityName.Length == 0)
             return;
 
-        var abilityKey = (abilityDef?.AbilityRef ?? abilityDef?.Key ?? abilityName).Trim();
-        var ability = await DetailCardLookupService.ResolveAbilityAsync(abilityKey)
-            ?? await DetailCardLookupService.ResolveAbilityAsync(abilityName)
+        var abilityKey = (abilityDef?.AbilityRef ?? abilityDef?.Key ?? string.Empty).Trim();
+        var ability = await DetailCardLookupService.ResolveAbilityAsync(abilityName)
+            ?? await DetailCardLookupService.ResolveAbilityAsync(abilityKey)
             ?? await EvolutionService.FindAbilityAsync(abilityName);
 
         if (ability != null)
