@@ -39,7 +39,7 @@ public partial class MultiClassDetailCardView : ContentView
         if (definition != null)
         {
             _selectedAvailability = (definition.AvailabilityOptions ?? []).OrderBy(TotalCost).ThenBy(x => x.Display, StringComparer.OrdinalIgnoreCase).FirstOrDefault();
-            foreach (var option in definition.AvailabilityOptions ?? []) AvailabilityRows.Add(new(option.Display, $"{TotalCost(option)} pts", RowColor(AvailabilityRows.Count)));
+            BuildAvailabilityRows();
             foreach (var level in definition.Levels.Keys.Select(ParseLevel).Where(x => x > 0).OrderBy(x => x))
                 foreach (var ability in definition.Levels.GetValueOrDefault(level.ToString()) ?? []) LevelRows.Add(new(level, ability.Name, ability.Effect, ability.AbilityRef, RowColor(LevelRows.Count)));
             foreach (var level in Enumerable.Range(1, Math.Clamp(definition.MaxLevel, 0, 8)))
@@ -56,8 +56,21 @@ public partial class MultiClassDetailCardView : ContentView
     {
         CostCells.Clear();
         for (var level = 1; level <= Math.Clamp(Definition?.MaxLevel ?? 0, 0, 8); level++)
-            CostCells.Add(new(level, _selectedAvailability?.CostsByLevel.GetValueOrDefault(level.ToString()).ToString() ?? "—"));
+            CostCells.Add(new(level, _selectedAvailability?.CostsByLevel.GetValueOrDefault(level.ToString()).ToString() ?? "—", level > 1));
     }
+
+    private void BuildAvailabilityRows()
+    {
+        AvailabilityRows.Clear();
+        foreach (var option in Definition?.AvailabilityOptions ?? [])
+        {
+            var selected = ReferenceEquals(option, _selectedAvailability);
+            AvailabilityRows.Add(new(option, $"{TotalCost(option)} pts", selected ? Color.FromArgb("#F4E7C4") : RowColor(AvailabilityRows.Count), selected ? Color.FromArgb("#8F2634") : Colors.Transparent, selected ? 1d : 0d));
+        }
+    }
+
+    private void SelectAvailability(MultiClassAvailabilityOption option) { _selectedAvailability = option; BuildAvailabilityRows(); BuildCostCells(); RaiseAll(); }
+    private void OnAvailabilityRowClicked(object? sender, EventArgs e) { if (sender is ListItemRowView { ActionCommandParameter: AvailabilityRow row }) SelectAvailability(row.Option); }
 
     private async void OnCostTapped(object? sender, TappedEventArgs e)
     {
@@ -67,7 +80,7 @@ public partial class MultiClassDetailCardView : ContentView
         var chosen = await page.DisplayActionSheet("Select availability", "Cancel", null, labels);
         var index = Array.IndexOf(labels, chosen);
         if (index < 0) return;
-        _selectedAvailability = options[index]; BuildCostCells(); RaiseAll();
+        SelectAvailability(options[index]);
     }
 
     private async void OnLevelInfoClicked(object? sender, EventArgs e)
@@ -85,7 +98,7 @@ public partial class MultiClassDetailCardView : ContentView
     private static string Join(IEnumerable<string>? values) => string.Join(", ", values?.Where(x => !string.IsNullOrWhiteSpace(x)) ?? []);
     private static string NotesText(JsonElement value) => value.ValueKind switch { JsonValueKind.String => value.GetString() ?? string.Empty, JsonValueKind.Array => string.Join(", ", value.EnumerateArray().Select(x => x.ToString())), _ => string.Empty };
     private static Color RowColor(int index) => index % 2 == 0 ? Colors.White : Color.FromArgb("#FAF8F3");
-    public sealed record ValueCell(int Level, string Value) { public string LevelText => $"L{Level}"; public string CostText => Value; }
-    public sealed record AvailabilityRow(string Display, string TotalText, Color RowBackgroundColor);
+    public sealed record ValueCell(int Level, string Value, bool ShowDivider = false) { public string LevelText => $"L{Level}"; public string CostText => Value; }
+    public sealed record AvailabilityRow(MultiClassAvailabilityOption Option, string TotalText, Color RowBackgroundColor, Color BorderColor, double BorderThickness) { public string Display => Option.Display; }
     public sealed record LevelRow(int Level, string Name, string Detail, string AbilityRef, Color RowBackgroundColor) { public string LevelText => Level.ToString(); public bool HasDetails => !string.IsNullOrWhiteSpace(AbilityRef) || !string.IsNullOrWhiteSpace(Detail); }
 }

@@ -109,7 +109,9 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Elf"]
+              "Value": [
+                "Elf"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -219,12 +221,16 @@
             {
               "Field": "Bracket",
               "Operator": "In",
-              "Value": ["🙏 Priest"]
+              "Value": [
+                "🙏 Priest"
+              ]
             },
             {
               "Field": "Alignment.Moral",
               "Operator": "In",
-              "Value": ["Good"]
+              "Value": [
+                "Good"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -245,7 +251,9 @@
         "5": [],
         "6": []
       },
-      "Notes": ["Characters with half a spirit pay double for this race."],
+      "Notes": [
+        "Characters with half a spirit pay double for this race."
+      ],
       "IconGlyph": ""
     },
     "Angel of War": {
@@ -329,12 +337,16 @@
             {
               "Field": "Alignment.Moral",
               "Operator": "In",
-              "Value": ["Good"]
+              "Value": [
+                "Good"
+              ]
             },
             {
               "Field": "AnyClass",
               "Operator": "In",
-              "Value": ["Devout Believer"]
+              "Value": [
+                "Devout Believer"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -353,7 +365,9 @@
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Paladin"]
+              "Value": [
+                "Paladin"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -372,12 +386,16 @@
             {
               "Field": "Bracket",
               "Operator": "In",
-              "Value": ["🙏 Priest"]
+              "Value": [
+                "🙏 Priest"
+              ]
             },
             {
               "Field": "Alignment.Moral",
               "Operator": "In",
-              "Value": ["Good"]
+              "Value": [
+                "Good"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -422,7 +440,9 @@
             "AbilityRef": "ability.mr.angel-touched.l2",
             "Type": "Static",
             "Effect": "Choose one Angel Touched Minor power.",
-            "ChoiceSetRefs": ["choice.multi-race.angel-touched.minor"]
+            "ChoiceSetRefs": [
+              "choice.multi-race.angel-touched.minor"
+            ]
           }
         ],
         "3": [
@@ -439,7 +459,9 @@
             "AbilityRef": "ability.mr.angel-touched.l4",
             "Type": "Static",
             "Effect": "Choose one Angel Touched Medium power.",
-            "ChoiceSetRefs": ["choice.multi-race.angel-touched.medium"]
+            "ChoiceSetRefs": [
+              "choice.multi-race.angel-touched.medium"
+            ]
           }
         ],
         "5": [
@@ -457,7 +479,9 @@
             "AbilityRef": "ability.mr.angel-touched.l6",
             "Type": "Static",
             "Effect": "Choose one Angel Touched Major power.",
-            "ChoiceSetRefs": ["choice.multi-race.angel-touched.major"]
+            "ChoiceSetRefs": [
+              "choice.multi-race.angel-touched.major"
+            ]
           }
         ]
       },
@@ -600,7 +624,9 @@
             {
               "Field": "Alignment.Moral",
               "Operator": "In",
-              "Value": ["Neutral"]
+              "Value": [
+                "Neutral"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -619,7 +645,9 @@
             {
               "Field": "Bracket",
               "Operator": "In",
-              "Value": ["🌿 Druid"]
+              "Value": [
+                "🌿 Druid"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -638,7 +666,9 @@
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Ranger"]
+              "Value": [
+                "Ranger"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -682,7 +712,9 @@
             "AbilityRef": "ability.mr.demon-bound.l2",
             "Type": "Static",
             "Effect": "Choose one Demon Bound Minor power.",
-            "ChoiceSetRefs": ["choice.multi-race.demon-bound.minor"]
+            "ChoiceSetRefs": [
+              "choice.multi-race.demon-bound.minor"
+            ]
           }
         ],
         "3": [
@@ -699,7 +731,9 @@
             "AbilityRef": "ability.mr.demon-bound.l4",
             "Type": "Static",
             "Effect": "Choose one Demon Bound Medium power.",
-            "ChoiceSetRefs": ["choice.multi-race.demon-bound.medium"]
+            "ChoiceSetRefs": [
+              "choice.multi-race.demon-bound.medium"
+            ]
           }
         ],
         "5": [
@@ -717,14 +751,16 @@
             "AbilityRef": "ability.mr.demon-bound.l6",
             "Type": "Static",
             "Effect": "Choose one Demon Bound Major power.",
-            "ChoiceSetRefs": ["choice.multi-race.demon-bound.major"]
+            "ChoiceSetRefs": [
+              "choice.multi-race.demon-bound.major"
+            ]
           }
         ]
       },
       "AvailabilityOptions": [
         {
-          "Source": "All",
-          "Display": "All",
+          "Source": "Any",
+          "Display": "Any",
           "Rules": [],
           "CostsByLevel": {
             "1": 50,
@@ -784,7 +820,9 @@
             "AbilityRef": "ability.mr.elder-fey.l3",
             "Type": "Static",
             "Effect": "Choose one Elder Fey Minor talent.",
-            "ChoiceSetRefs": ["choice.multi-race.elder-fey.minor"]
+            "ChoiceSetRefs": [
+              "choice.multi-race.elder-fey.minor"
+            ]
           }
         ],
         "4": [
@@ -809,7 +847,9 @@
             "AbilityRef": "ability.mr.elder-fey.l6",
             "Type": "Static",
             "Effect": "Choose one Elder Fey Major talent.",
-            "ChoiceSetRefs": ["choice.multi-race.elder-fey.major"]
+            "ChoiceSetRefs": [
+              "choice.multi-race.elder-fey.major"
+            ]
           }
         ]
       },
@@ -834,7 +874,9 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Alfar"]
+              "Value": [
+                "Alfar"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -853,12 +895,14 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Elf"]
+              "Value": [
+                "Elf"
+              ]
             }
           ],
           "CostsByLevel": {
             "1": 50,
-            "2": 80,
+            "2": 10,
             "3": 60,
             "4": 50,
             "5": 50,
@@ -872,7 +916,9 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Elf"]
+              "Value": [
+                "Elf"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -891,12 +937,35 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Faerie"]
+              "Value": [
+                "Faerie"
+              ]
             }
           ],
           "CostsByLevel": {
             "1": 50,
             "2": 80,
+            "3": 60,
+            "4": 50,
+            "5": 50,
+            "6": 150
+          }
+        },
+        {
+          "Source": "Faerie",
+          "Display": "Faerie",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": [
+                "Faerie"
+              ]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 50,
+            "2": 10,
             "3": 60,
             "4": 50,
             "5": 50,
@@ -910,7 +979,10 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Half Elf", "Half-Elf"]
+              "Value": [
+                "Half Elf",
+                "Half-Elf"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -954,7 +1026,9 @@
             "AbilityRef": "ability.mr.elements-bound.l1.2",
             "Type": "Static",
             "Effect": "Choose an elemental colour (not grey) that is not opposite any owned colour.",
-            "ChoiceSetRefs": ["choice.multi-race.elements-bound.colour"]
+            "ChoiceSetRefs": [
+              "choice.multi-race.elements-bound.colour"
+            ]
           },
           {
             "Name": "Elemental Markings",
@@ -969,7 +1043,9 @@
             "AbilityRef": "ability.mr.elements-bound.l2",
             "Type": "Static",
             "Effect": "Choose one Elements Bound Minor talent.",
-            "ChoiceSetRefs": ["choice.multi-race.elements-bound.minor"]
+            "ChoiceSetRefs": [
+              "choice.multi-race.elements-bound.minor"
+            ]
           },
           {
             "Name": "Elemental Resistance (Own Colour)",
@@ -996,7 +1072,9 @@
             "AbilityRef": "ability.mr.elements-bound.l4",
             "Type": "Static",
             "Effect": "Choose one Elements Bound Medium talent.",
-            "ChoiceSetRefs": ["choice.multi-race.elements-bound.medium"]
+            "ChoiceSetRefs": [
+              "choice.multi-race.elements-bound.medium"
+            ]
           }
         ],
         "5": [
@@ -1017,7 +1095,9 @@
             "AbilityRef": "ability.mr.elements-bound.l6",
             "Type": "Static",
             "Effect": "Choose one Elements Bound Major talent.",
-            "ChoiceSetRefs": ["choice.multi-race.elements-bound.major"]
+            "ChoiceSetRefs": [
+              "choice.multi-race.elements-bound.major"
+            ]
           }
         ]
       },
@@ -1029,7 +1109,10 @@
             {
               "Field": "OriginalClass",
               "Operator": "In",
-              "Value": ["Wizard", "High-Wizard"]
+              "Value": [
+                "Wizard",
+                "High-Wizard"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -1048,7 +1131,9 @@
             {
               "Field": "Bracket",
               "Operator": "In",
-              "Value": ["🧙 Wizard"]
+              "Value": [
+                "🧙 Wizard"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -1182,7 +1267,9 @@
             {
               "Field": "ManaColour",
               "Operator": "In",
-              "Value": ["Red"]
+              "Value": [
+                "Red"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -1201,7 +1288,9 @@
             {
               "Field": "Alignment.Moral",
               "Operator": "In",
-              "Value": ["Evil"]
+              "Value": [
+                "Evil"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -1326,7 +1415,9 @@
             "Display": "Base life is calculated as if one level higher.",
             "LevelOffset": 1,
             "SourceCategory": "base",
-            "LinkedAbilityRefs": ["ability.mr.frost-giant.l1.2"]
+            "LinkedAbilityRefs": [
+              "ability.mr.frost-giant.l1.2"
+            ]
           }
         ],
         "2": [],
@@ -1401,7 +1492,17 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Half Drowe", "Half-Drowe"]
+              "Value": [
+                "Half Elf"
+              ]
+            },
+            {
+              "Field": "Specialisation",
+              "Operator": "In",
+              "Value": [
+                "Drowe"
+              ],
+              "SpecialisationKey": "Race Subtype"
             }
           ],
           "CostsByLevel": {
@@ -1488,7 +1589,10 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Half Elf", "Half-Elf"]
+              "Value": [
+                "Half Elf",
+                "Half-Elf"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -1525,7 +1629,9 @@
             "AbilityRef": "ability.mr.golem.l1",
             "Type": "Static",
             "Effect": "Choose one construct type (Iron, Stone, Ice, Bronze).",
-            "ChoiceSetRefs": ["choice.multi-race.golem.construct-type"]
+            "ChoiceSetRefs": [
+              "choice.multi-race.golem.construct-type"
+            ]
           },
           {
             "Name": "Construct Form",
@@ -1546,7 +1652,9 @@
             "AbilityRef": "ability.mr.golem.l2",
             "Type": "Static",
             "Effect": "May bond a metal weapon so it cannot be removed and is immune to destruction; 30s concentration to bind/unbind.",
-            "PreReqs": ["ability.mr.golem.type.iron"]
+            "PreReqs": [
+              "ability.mr.golem.type.iron"
+            ]
           },
           {
             "Name": "Stone Minor Power",
@@ -1554,7 +1662,9 @@
             "Type": "Innate",
             "Effect": "Statue x1/day: become invulnerable and inactive for up to 15 minutes.",
             "Count": 1,
-            "PreReqs": ["ability.mr.golem.type.stone"]
+            "PreReqs": [
+              "ability.mr.golem.type.stone"
+            ]
           },
           {
             "Name": "Ice Minor Power",
@@ -1565,14 +1675,18 @@
               "Amount": 1,
               "PerLevels": 2
             },
-            "PreReqs": ["ability.mr.golem.type.ice"]
+            "PreReqs": [
+              "ability.mr.golem.type.ice"
+            ]
           },
           {
             "Name": "Bronze Minor Power",
             "AbilityRef": "ability.mr.golem.l2.4",
             "Type": "Static",
             "Effect": "+0/3 locational life per 2 levels (to +0/9 at 6th).",
-            "PreReqs": ["ability.mr.golem.type.bronze"]
+            "PreReqs": [
+              "ability.mr.golem.type.bronze"
+            ]
           },
           {
             "Name": "+1 PAC",
@@ -1593,28 +1707,36 @@
             "AbilityRef": "ability.mr.golem.l3",
             "Type": "Static",
             "Effect": "+1 stacking Strength (max +3).",
-            "PreReqs": ["ability.mr.golem.type.iron"]
+            "PreReqs": [
+              "ability.mr.golem.type.iron"
+            ]
           },
           {
             "Name": "Stone Medium Power",
             "AbilityRef": "ability.mr.golem.l3.2",
             "Type": "Static",
             "Effect": "Now takes one-quarter less effect from sharp weapons (not purely supernatural weapons).",
-            "PreReqs": ["ability.mr.golem.type.stone"]
+            "PreReqs": [
+              "ability.mr.golem.type.stone"
+            ]
           },
           {
             "Name": "Ice Medium Power",
             "AbilityRef": "ability.mr.golem.l3.3",
             "Type": "Static",
             "Effect": "Complete Immunity to Cold as Winter Elf.",
-            "PreReqs": ["ability.mr.golem.type.ice"]
+            "PreReqs": [
+              "ability.mr.golem.type.ice"
+            ]
           },
           {
             "Name": "Bronze Medium Power",
             "AbilityRef": "ability.mr.golem.l3.4",
             "Type": "Static",
             "Effect": "Now takes one-quarter less effect from all solely physical damage.",
-            "PreReqs": ["ability.mr.golem.type.bronze"]
+            "PreReqs": [
+              "ability.mr.golem.type.bronze"
+            ]
           }
         ],
         "4": [
@@ -1635,28 +1757,36 @@
               "Amount": 1,
               "PerLevels": 3
             },
-            "PreReqs": ["ability.mr.golem.type.iron"]
+            "PreReqs": [
+              "ability.mr.golem.type.iron"
+            ]
           },
           {
             "Name": "Stone Major Power",
             "AbilityRef": "ability.mr.golem.l5.2",
             "Type": "AtWill",
             "Effect": "May inflict Knockback by weapon blow at will; costs 6 TBLP per blow if 2nd grade of Strength or greater, otherwise 9 TBLP.",
-            "PreReqs": ["ability.mr.golem.type.stone"]
+            "PreReqs": [
+              "ability.mr.golem.type.stone"
+            ]
           },
           {
             "Name": "Ice Major Power",
             "AbilityRef": "ability.mr.golem.l5.3",
             "Type": "AtWill",
             "Effect": "May inflict Snowball-equivalent touch damage (12/12 magical cold) at will for 6 TBLP per touch.",
-            "PreReqs": ["ability.mr.golem.type.ice"]
+            "PreReqs": [
+              "ability.mr.golem.type.ice"
+            ]
           },
           {
             "Name": "Bronze Major Power",
             "AbilityRef": "ability.mr.golem.l5.4",
             "Type": "Static",
             "Effect": "Immunity to Bruising and may round damage fractions down rather than up.",
-            "PreReqs": ["ability.mr.golem.type.bronze"]
+            "PreReqs": [
+              "ability.mr.golem.type.bronze"
+            ]
           },
           {
             "Name": "Immunity to Ageing",
@@ -1694,7 +1824,9 @@
             {
               "Field": "AnyClassBracket",
               "Operator": "In",
-              "Value": ["🧙 Wizard"]
+              "Value": [
+                "🧙 Wizard"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -1800,7 +1932,11 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Ogre", "Ogres", "Half-Ogre"]
+              "Value": [
+                "Ogre",
+                "Ogres",
+                "Half-Ogre"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -1823,7 +1959,9 @@
               "PerLocation": 2
             },
             "SourceCategory": "base",
-            "LinkedAbilityRefs": ["ability.mr.great-ogre.l1.2"]
+            "LinkedAbilityRefs": [
+              "ability.mr.great-ogre.l1.2"
+            ]
           }
         ],
         "2": [],
@@ -1836,7 +1974,9 @@
               "PerLocation": 4
             },
             "SourceCategory": "base",
-            "LinkedAbilityRefs": ["ability.mr.great-ogre.l3.2"]
+            "LinkedAbilityRefs": [
+              "ability.mr.great-ogre.l3.2"
+            ]
           }
         ],
         "4": [],
@@ -1849,7 +1989,9 @@
               "PerLocation": 6
             },
             "SourceCategory": "base",
-            "LinkedAbilityRefs": ["ability.mr.great-ogre.l5"]
+            "LinkedAbilityRefs": [
+              "ability.mr.great-ogre.l5"
+            ]
           }
         ],
         "6": []
@@ -1935,12 +2077,16 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Drowe"]
+              "Value": [
+                "Drowe"
+              ]
             },
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Archer"]
+              "Value": [
+                "Archer"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -1959,12 +2105,16 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Drowe"]
+              "Value": [
+                "Drowe"
+              ]
             },
             {
               "Field": "Bracket",
               "Operator": "In",
-              "Value": ["⚔ Scout"]
+              "Value": [
+                "⚔ Scout"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -1983,12 +2133,16 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Drowe"]
+              "Value": [
+                "Drowe"
+              ]
             },
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Warrior"]
+              "Value": [
+                "Warrior"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -2007,12 +2161,128 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Drowe"]
+              "Value": [
+                "Drowe"
+              ]
             },
             {
               "Field": "Bracket",
               "Operator": "In",
-              "Value": ["🧙 Wizard"]
+              "Value": [
+                "🧙 Wizard"
+              ]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 95,
+            "3": 20,
+            "4": 50,
+            "5": 180,
+            "6": 80
+          }
+        },
+        {
+          "Source": "Faerie Archer",
+          "Display": "Faerie Archer",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": [
+                "Faerie"
+              ]
+            },
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": [
+                "Archer"
+              ]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 60,
+            "2": 40,
+            "3": 20,
+            "4": 40,
+            "5": 260,
+            "6": 250
+          }
+        },
+        {
+          "Source": "Faerie Scout Subclass",
+          "Display": "Faerie Scout Subclass",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": [
+                "Faerie"
+              ]
+            },
+            {
+              "Field": "Bracket",
+              "Operator": "In",
+              "Value": [
+                "⚔ Scout"
+              ]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 60,
+            "2": 40,
+            "3": 20,
+            "4": 40,
+            "5": 260,
+            "6": 110
+          }
+        },
+        {
+          "Source": "Faerie Warrior",
+          "Display": "Faerie Warrior",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": [
+                "Faerie"
+              ]
+            },
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": [
+                "Warrior"
+              ]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 60,
+            "2": 40,
+            "3": 20,
+            "4": 40,
+            "5": 260,
+            "6": 380
+          }
+        },
+        {
+          "Source": "Faerie Wizard",
+          "Display": "Faerie Wizard",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": [
+                "Faerie"
+              ]
+            },
+            {
+              "Field": "Bracket",
+              "Operator": "In",
+              "Value": [
+                "🧙 Wizard"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -2031,12 +2301,16 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Elf"]
+              "Value": [
+                "Elf"
+              ]
             },
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Archer"]
+              "Value": [
+                "Archer"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -2047,7 +2321,9 @@
             "5": 260,
             "6": 200
           },
-          "Notes": ["Not Drowe"]
+          "Notes": [
+            "Not Drowe"
+          ]
         },
         {
           "Source": "Elven Scout Subclass",
@@ -2056,12 +2332,16 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Elf"]
+              "Value": [
+                "Elf"
+              ]
             },
             {
               "Field": "Bracket",
               "Operator": "In",
-              "Value": ["⚔ Scout"]
+              "Value": [
+                "⚔ Scout"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -2072,7 +2352,9 @@
             "5": 260,
             "6": 60
           },
-          "Notes": ["Not Drowe"]
+          "Notes": [
+            "Not Drowe"
+          ]
         },
         {
           "Source": "Elven Warrior",
@@ -2081,12 +2363,16 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Elf"]
+              "Value": [
+                "Elf"
+              ]
             },
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Warrior"]
+              "Value": [
+                "Warrior"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -2097,7 +2383,9 @@
             "5": 260,
             "6": 310
           },
-          "Notes": ["Not Drowe / Winter"]
+          "Notes": [
+            "Not Drowe / Winter"
+          ]
         },
         {
           "Source": "Elven Wizard",
@@ -2106,12 +2394,16 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Elf"]
+              "Value": [
+                "Elf"
+              ]
             },
             {
               "Field": "Bracket",
               "Operator": "In",
-              "Value": ["🧙 Wizard"]
+              "Value": [
+                "🧙 Wizard"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -2122,7 +2414,9 @@
             "5": 180,
             "6": 60
           },
-          "Notes": ["Not Drowe"]
+          "Notes": [
+            "Not Drowe"
+          ]
         },
         {
           "Source": "Half Elf Priest Subclass",
@@ -2131,12 +2425,17 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Half Elf", "Half-Elf"]
+              "Value": [
+                "Half Elf",
+                "Half-Elf"
+              ]
             },
             {
               "Field": "Bracket",
               "Operator": "In",
-              "Value": ["🙏 Priest"]
+              "Value": [
+                "🙏 Priest"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -2155,12 +2454,16 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Half Elf", "Half-Elf"]
+              "Value": [
+                "Half Elf"
+              ]
             },
             {
               "Field": "Bracket",
               "Operator": "In",
-              "Value": ["⚔ Scout"]
+              "Value": [
+                "⚔ Scout"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -2179,12 +2482,16 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Half Elf", "Half-Elf"]
+              "Value": [
+                "Half Elf"
+              ]
             },
             {
               "Field": "Bracket",
               "Operator": "In",
-              "Value": ["🛡️ Warrior"]
+              "Value": [
+                "🛡️ Warrior"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -2203,12 +2510,16 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Half Elf", "Half-Elf"]
+              "Value": [
+                "Half Elf"
+              ]
             },
             {
               "Field": "Bracket",
               "Operator": "In",
-              "Value": ["🧙 Wizard"]
+              "Value": [
+                "🧙 Wizard"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -2227,12 +2538,53 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Winter Elf"]
+              "Value": [
+                "Elf"
+              ]
+            },
+            {
+              "Field": "Specialisation",
+              "Operator": "In",
+              "Value": [
+                "Winter"
+              ],
+              "SpecialisationKey": "Race Subtype"
             },
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Warrior"]
+              "Value": [
+                "Warrior"
+              ]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 60,
+            "2": 40,
+            "3": 20,
+            "4": 40,
+            "5": 260,
+            "6": 220
+          }
+        },
+        {
+          "Source": "Ivory Elf",
+          "Display": "Ivory Elf",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": [
+                "Elf"
+              ]
+            },
+            {
+              "Field": "Specialisation",
+              "Operator": "In",
+              "Value": [
+                "Ivory"
+              ],
+              "SpecialisationKey": "Race Subtype"
             }
           ],
           "CostsByLevel": {
@@ -2253,9 +2605,6 @@
         "5": [],
         "6": []
       },
-      "Notes": [
-        "Faeries pay same cost as Drowe; Ivory Elves pay same as Winter Elves."
-      ],
       "IconGlyph": ""
     },
     "Hobgoblin": {
@@ -2326,12 +2675,16 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Goblin"]
+              "Value": [
+                "Goblin"
+              ]
             },
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Assassin"]
+              "Value": [
+                "Assassin"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -2350,12 +2703,16 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Goblin"]
+              "Value": [
+                "Goblin"
+              ]
             },
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Pathfinder"]
+              "Value": [
+                "Pathfinder"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -2374,12 +2731,16 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Goblin"]
+              "Value": [
+                "Goblin"
+              ]
             },
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Shaman"]
+              "Value": [
+                "Shaman"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -2398,12 +2759,16 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Goblin"]
+              "Value": [
+                "Goblin"
+              ]
             },
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Warrior"]
+              "Value": [
+                "Warrior"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -2422,12 +2787,16 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Goblin"]
+              "Value": [
+                "Goblin"
+              ]
             },
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Witch"]
+              "Value": [
+                "Witch"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -2789,7 +3158,11 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Ogre", "Ogres", "Half-Ogre"]
+              "Value": [
+                "Ogre",
+                "Ogres",
+                "Half-Ogre"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -2825,7 +3198,9 @@
             "AbilityRef": "ability.mr.primal-soul.l1",
             "Type": "Static",
             "Effect": "Choose Primal Bound, Predator, or Prey as the character’s primal tree.",
-            "ChoiceSetRefs": ["choice.multi-race.primal-soul.tree"]
+            "ChoiceSetRefs": [
+              "choice.multi-race.primal-soul.tree"
+            ]
           },
           {
             "Name": "Primal Markings",
@@ -2846,7 +3221,9 @@
             "AbilityRef": "ability.mr.primal-soul.l2",
             "Type": "Static",
             "Effect": "Choose one Minor talent from Primal Bound.",
-            "PreReqs": ["ability.mr.primal-soul.tree.primal-bound"],
+            "PreReqs": [
+              "ability.mr.primal-soul.tree.primal-bound"
+            ],
             "ChoiceSetRefs": [
               "choice.multi-race.primal-soul.primal-bound.minor"
             ]
@@ -2856,16 +3233,24 @@
             "AbilityRef": "ability.mr.primal-soul.l2.2",
             "Type": "Static",
             "Effect": "Choose one Minor talent from Predator.",
-            "PreReqs": ["ability.mr.primal-soul.tree.predator"],
-            "ChoiceSetRefs": ["choice.multi-race.primal-soul.predator.minor"]
+            "PreReqs": [
+              "ability.mr.primal-soul.tree.predator"
+            ],
+            "ChoiceSetRefs": [
+              "choice.multi-race.primal-soul.predator.minor"
+            ]
           },
           {
             "Name": "Prey Minor Talent",
             "AbilityRef": "ability.mr.primal-soul.l2.3",
             "Type": "Static",
             "Effect": "Choose one Minor talent from Prey.",
-            "PreReqs": ["ability.mr.primal-soul.tree.prey"],
-            "ChoiceSetRefs": ["choice.multi-race.primal-soul.prey.minor"]
+            "PreReqs": [
+              "ability.mr.primal-soul.tree.prey"
+            ],
+            "ChoiceSetRefs": [
+              "choice.multi-race.primal-soul.prey.minor"
+            ]
           }
         ],
         "3": [
@@ -2882,7 +3267,9 @@
             "AbilityRef": "ability.mr.primal-soul.l4",
             "Type": "Static",
             "Effect": "Choose one Medium talent from Primal Bound.",
-            "PreReqs": ["ability.mr.primal-soul.tree.primal-bound"],
+            "PreReqs": [
+              "ability.mr.primal-soul.tree.primal-bound"
+            ],
             "ChoiceSetRefs": [
               "choice.multi-race.primal-soul.primal-bound.medium"
             ]
@@ -2892,16 +3279,24 @@
             "AbilityRef": "ability.mr.primal-soul.l4.2",
             "Type": "Static",
             "Effect": "Choose one Medium talent from Predator.",
-            "PreReqs": ["ability.mr.primal-soul.tree.predator"],
-            "ChoiceSetRefs": ["choice.multi-race.primal-soul.predator.medium"]
+            "PreReqs": [
+              "ability.mr.primal-soul.tree.predator"
+            ],
+            "ChoiceSetRefs": [
+              "choice.multi-race.primal-soul.predator.medium"
+            ]
           },
           {
             "Name": "Prey Medium Talent",
             "AbilityRef": "ability.mr.primal-soul.l4.3",
             "Type": "Static",
             "Effect": "Choose one Medium talent from Prey.",
-            "PreReqs": ["ability.mr.primal-soul.tree.prey"],
-            "ChoiceSetRefs": ["choice.multi-race.primal-soul.prey.medium"]
+            "PreReqs": [
+              "ability.mr.primal-soul.tree.prey"
+            ],
+            "ChoiceSetRefs": [
+              "choice.multi-race.primal-soul.prey.medium"
+            ]
           }
         ],
         "5": [
@@ -2918,7 +3313,9 @@
             "AbilityRef": "ability.mr.primal-soul.l6",
             "Type": "Static",
             "Effect": "Choose one Major talent from Primal Bound.",
-            "PreReqs": ["ability.mr.primal-soul.tree.primal-bound"],
+            "PreReqs": [
+              "ability.mr.primal-soul.tree.primal-bound"
+            ],
             "ChoiceSetRefs": [
               "choice.multi-race.primal-soul.primal-bound.major"
             ]
@@ -2928,16 +3325,24 @@
             "AbilityRef": "ability.mr.primal-soul.l6.2",
             "Type": "Static",
             "Effect": "Choose one Major talent from Predator.",
-            "PreReqs": ["ability.mr.primal-soul.tree.predator"],
-            "ChoiceSetRefs": ["choice.multi-race.primal-soul.predator.major"]
+            "PreReqs": [
+              "ability.mr.primal-soul.tree.predator"
+            ],
+            "ChoiceSetRefs": [
+              "choice.multi-race.primal-soul.predator.major"
+            ]
           },
           {
             "Name": "Prey Major Talent",
             "AbilityRef": "ability.mr.primal-soul.l6.3",
             "Type": "Static",
             "Effect": "Choose one Major talent from Prey.",
-            "PreReqs": ["ability.mr.primal-soul.tree.prey"],
-            "ChoiceSetRefs": ["choice.multi-race.primal-soul.prey.major"]
+            "PreReqs": [
+              "ability.mr.primal-soul.tree.prey"
+            ],
+            "ChoiceSetRefs": [
+              "choice.multi-race.primal-soul.prey.major"
+            ]
           }
         ]
       },
@@ -3079,7 +3484,9 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Troll"]
+              "Value": [
+                "Troll"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -3101,7 +3508,9 @@
             "AmountPerClassLevel": 3,
             "DamageType": "Any",
             "SourceCategory": "base",
-            "LinkedAbilityRefs": ["ability.mr.rock-troll.l2.2"]
+            "LinkedAbilityRefs": [
+              "ability.mr.rock-troll.l2.2"
+            ]
           }
         ],
         "3": [],
@@ -3192,12 +3601,16 @@
             {
               "Field": "Bracket",
               "Operator": "In",
-              "Value": ["🙏 Priest"]
+              "Value": [
+                "🙏 Priest"
+              ]
             },
             {
               "Field": "Alignment.Moral",
               "Operator": "In",
-              "Value": ["Neutral"]
+              "Value": [
+                "Neutral"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -3319,7 +3732,9 @@
             {
               "Field": "Alignment.Moral",
               "Operator": "In",
-              "Value": ["Evil"]
+              "Value": [
+                "Evil"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -3338,7 +3753,9 @@
             {
               "Field": "ManaColour",
               "Operator": "In",
-              "Value": ["Black"]
+              "Value": [
+                "Black"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -3444,12 +3861,17 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Orc", "Half-Orc"]
+              "Value": [
+                "Orc",
+                "Half-Orc"
+              ]
             },
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Assassin"]
+              "Value": [
+                "Assassin"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -3468,12 +3890,17 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Orc", "Half-Orc"]
+              "Value": [
+                "Orc",
+                "Half-Orc"
+              ]
             },
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Pathfinder"]
+              "Value": [
+                "Pathfinder"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -3584,12 +4011,16 @@
             {
               "Field": "Bracket",
               "Operator": "In",
-              "Value": ["🙏 Priest"]
+              "Value": [
+                "🙏 Priest"
+              ]
             },
             {
               "Field": "PriestStyle",
               "Operator": "In",
-              "Value": ["Weapon"]
+              "Value": [
+                "Weapon"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -3608,12 +4039,16 @@
             {
               "Field": "Bracket",
               "Operator": "In",
-              "Value": ["🙏 Priest"]
+              "Value": [
+                "🙏 Priest"
+              ]
             },
             {
               "Field": "PriestStyle",
               "Operator": "In",
-              "Value": ["NonWeapon"]
+              "Value": [
+                "NonWeapon"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -3736,12 +4171,16 @@
             {
               "Field": "Bracket",
               "Operator": "In",
-              "Value": ["🛡️ Warrior"]
+              "Value": [
+                "🛡️ Warrior"
+              ]
             },
             {
               "Field": "FirstClassBracket",
               "Operator": "In",
-              "Value": ["🛡️ Warrior"]
+              "Value": [
+                "🛡️ Warrior"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -3760,7 +4199,9 @@
             {
               "Field": "SecondClassBracket",
               "Operator": "In",
-              "Value": ["🛡️ Warrior"]
+              "Value": [
+                "🛡️ Warrior"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -3779,7 +4220,9 @@
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Spiritual Warrior"]
+              "Value": [
+                "Spiritual Warrior"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -3803,7 +4246,9 @@
               "PerLocation": 1
             },
             "SourceCategory": "base",
-            "LinkedAbilityRefs": ["ability.mr.titan.l2"]
+            "LinkedAbilityRefs": [
+              "ability.mr.titan.l2"
+            ]
           }
         ],
         "3": [],
@@ -3816,7 +4261,9 @@
               "PerLocation": 2
             },
             "SourceCategory": "base",
-            "LinkedAbilityRefs": ["ability.mr.titan.l4"]
+            "LinkedAbilityRefs": [
+              "ability.mr.titan.l4"
+            ]
           }
         ],
         "5": [],
@@ -3829,7 +4276,9 @@
               "PerLocation": 3
             },
             "SourceCategory": "base",
-            "LinkedAbilityRefs": ["ability.mr.titan.l6"]
+            "LinkedAbilityRefs": [
+              "ability.mr.titan.l6"
+            ]
           }
         ]
       },
@@ -3848,7 +4297,9 @@
             "AbilityRef": "ability.mr.undead.l1",
             "Type": "Static",
             "Effect": "Select undead type: Ghoul, Mummy, Wight, Wraith, or Vampire.",
-            "ChoiceSetRefs": ["choice.multi-race.undead.type"]
+            "ChoiceSetRefs": [
+              "choice.multi-race.undead.type"
+            ]
           },
           {
             "Name": "L1 Lesser Type Unknown",
@@ -3972,7 +4423,9 @@
             {
               "Field": "Alignment.Moral",
               "Operator": "In",
-              "Value": ["Evil"]
+              "Value": [
+                "Evil"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -3991,12 +4444,16 @@
             {
               "Field": "Bracket",
               "Operator": "In",
-              "Value": ["🙏 Priest"]
+              "Value": [
+                "🙏 Priest"
+              ]
             },
             {
               "Field": "Alignment.Moral",
               "Operator": "In",
-              "Value": ["Evil"]
+              "Value": [
+                "Evil"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -4015,7 +4472,9 @@
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Unholy Champion"]
+              "Value": [
+                "Unholy Champion"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -4152,12 +4611,17 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Orc", "Half-Orc"]
+              "Value": [
+                "Orc",
+                "Half-Orc"
+              ]
             },
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Thug"]
+              "Value": [
+                "Thug"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -4176,12 +4640,17 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Orc", "Half-Orc"]
+              "Value": [
+                "Orc",
+                "Half-Orc"
+              ]
             },
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Warrior"]
+              "Value": [
+                "Warrior"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -4204,7 +4673,9 @@
               "PerLocation": 11
             },
             "SourceCategory": "base",
-            "LinkedAbilityRefs": ["ability.mr.uruk-hai.l1"]
+            "LinkedAbilityRefs": [
+              "ability.mr.uruk-hai.l1"
+            ]
           }
         ],
         "2": [
@@ -4216,7 +4687,9 @@
               "PerLocation": 13
             },
             "SourceCategory": "base",
-            "LinkedAbilityRefs": ["ability.mr.uruk-hai.l2"]
+            "LinkedAbilityRefs": [
+              "ability.mr.uruk-hai.l2"
+            ]
           }
         ],
         "3": [
@@ -4228,7 +4701,9 @@
               "PerLocation": 16
             },
             "SourceCategory": "base",
-            "LinkedAbilityRefs": ["ability.mr.uruk-hai.l3"]
+            "LinkedAbilityRefs": [
+              "ability.mr.uruk-hai.l3"
+            ]
           }
         ],
         "4": [
@@ -4240,7 +4715,9 @@
               "PerLocation": 18
             },
             "SourceCategory": "base",
-            "LinkedAbilityRefs": ["ability.mr.uruk-hai.l4"]
+            "LinkedAbilityRefs": [
+              "ability.mr.uruk-hai.l4"
+            ]
           }
         ],
         "5": [
@@ -4252,7 +4729,9 @@
               "PerLocation": 20
             },
             "SourceCategory": "base",
-            "LinkedAbilityRefs": ["ability.mr.uruk-hai.l5"]
+            "LinkedAbilityRefs": [
+              "ability.mr.uruk-hai.l5"
+            ]
           }
         ],
         "6": [
@@ -4264,7 +4743,9 @@
               "PerLocation": 23
             },
             "SourceCategory": "base",
-            "LinkedAbilityRefs": ["ability.mr.uruk-hai.l6"]
+            "LinkedAbilityRefs": [
+              "ability.mr.uruk-hai.l6"
+            ]
           }
         ]
       },
@@ -4333,8 +4814,8 @@
       },
       "AvailabilityOptions": [
         {
-          "Source": "All",
-          "Display": "All",
+          "Source": "Any",
+          "Display": "Any",
           "Rules": [],
           "CostsByLevel": {
             "1": 40,
@@ -4438,12 +4919,18 @@
             {
               "Field": "FirstClass",
               "Operator": "In",
-              "Value": ["Wizard", "High-Wizard"]
+              "Value": [
+                "Wizard",
+                "High-Wizard"
+              ]
             },
             {
               "Field": "Race|RaceTag",
               "Operator": "In",
-              "Value": ["Elf", "Spiritless"]
+              "Value": [
+                "Elf",
+                "Spiritless"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -4462,7 +4949,9 @@
             {
               "Field": "RaceTag",
               "Operator": "In",
-              "Value": ["Spiritless"]
+              "Value": [
+                "Spiritless"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -4481,12 +4970,18 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Half-Elf", "Half Elf"]
+              "Value": [
+                "Half-Elf",
+                "Half Elf"
+              ]
             },
             {
               "Field": "FirstClass",
               "Operator": "In",
-              "Value": ["Wizard", "High-Wizard"]
+              "Value": [
+                "Wizard",
+                "High-Wizard"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -4505,17 +5000,25 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Half-Elf", "Half Elf"]
+              "Value": [
+                "Half-Elf",
+                "Half Elf"
+              ]
             },
             {
               "Field": "AnyClassBracket",
               "Operator": "In",
-              "Value": ["🧙 Wizard"]
+              "Value": [
+                "🧙 Wizard"
+              ]
             },
             {
               "Field": "FirstClass",
               "Operator": "NotIn",
-              "Value": ["Wizard", "High-Wizard"]
+              "Value": [
+                "Wizard",
+                "High-Wizard"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -4534,7 +5037,10 @@
             {
               "Field": "OriginalClass",
               "Operator": "In",
-              "Value": ["Wizard", "High-Wizard"]
+              "Value": [
+                "Wizard",
+                "High-Wizard"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -4553,7 +5059,9 @@
             {
               "Field": "Bracket",
               "Operator": "In",
-              "Value": ["🧙 Wizard"]
+              "Value": [
+                "🧙 Wizard"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -4655,12 +5163,24 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Winter Elf"]
+              "Value": [
+                "Elf"
+              ]
+            },
+            {
+              "Field": "Specialisation",
+              "Operator": "In",
+              "Value": [
+                "Winter"
+              ],
+              "SpecialisationKey": "Race Subtype"
             },
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Archer"]
+              "Value": [
+                "Archer"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -4679,12 +5199,24 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Winter Elf"]
+              "Value": [
+                "Elf"
+              ]
+            },
+            {
+              "Field": "Specialisation",
+              "Operator": "In",
+              "Value": [
+                "Winter"
+              ],
+              "SpecialisationKey": "Race Subtype"
             },
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Pathfinder"]
+              "Value": [
+                "Pathfinder"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -4703,12 +5235,24 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Winter Elf"]
+              "Value": [
+                "Elf"
+              ]
+            },
+            {
+              "Field": "Specialisation",
+              "Operator": "In",
+              "Value": [
+                "Winter"
+              ],
+              "SpecialisationKey": "Race Subtype"
             },
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Rogue"]
+              "Value": [
+                "Rogue"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -4727,12 +5271,24 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Winter Elf"]
+              "Value": [
+                "Elf"
+              ]
+            },
+            {
+              "Field": "Specialisation",
+              "Operator": "In",
+              "Value": [
+                "Winter"
+              ],
+              "SpecialisationKey": "Race Subtype"
             },
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Warrior"]
+              "Value": [
+                "Warrior"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -4751,12 +5307,25 @@
             {
               "Field": "Race",
               "Operator": "In",
-              "Value": ["Winter Elf"]
+              "Value": [
+                "Elf"
+              ]
+            },
+            {
+              "Field": "Specialisation",
+              "Operator": "In",
+              "Value": [
+                "Winter"
+              ],
+              "SpecialisationKey": "Race Subtype"
             },
             {
               "Field": "Class",
               "Operator": "In",
-              "Value": ["Wizard", "High-Wizard"]
+              "Value": [
+                "Wizard",
+                "High-Wizard"
+              ]
             }
           ],
           "CostsByLevel": {
@@ -4776,7 +5345,9 @@
             "Display": "Use Human life scale for current base class by level.",
             "Race": "Human",
             "SourceCategory": "base",
-            "LinkedAbilityRefs": ["ability.mr.winter-barbarian.l1.2"]
+            "LinkedAbilityRefs": [
+              "ability.mr.winter-barbarian.l1.2"
+            ]
           }
         ],
         "2": [],

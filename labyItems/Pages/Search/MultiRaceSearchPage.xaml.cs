@@ -18,12 +18,13 @@ public partial class MultiRaceSearchPage : ContentPage, INotifyPropertyChanged
     private readonly CollectionViewScrollPreserver _scrollPreserver;
     private bool _isLoading = true;
     private string _searchText = string.Empty;
-    private string _selectedFilter = "All";
+    private readonly HashSet<string> _selectedFilterKeys = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _pendingFilterKeys = new(StringComparer.OrdinalIgnoreCase);
     private bool _loaded;
     private bool _isFilterModalOpen;
 
     public ObservableCollection<ClassCardVm> FilteredMultiRaces { get; } = new();
-    public ObservableCollection<SearchFilterChipVm> FilterChips { get; } = new();
+    public ObservableCollection<MultiPathFilterSectionVm> FilterSections { get; } = new();
 
     public ICommand ToggleExpandedCommand { get; }
     public ICommand ToggleFilterChipCommand { get; }
@@ -58,12 +59,14 @@ public partial class MultiRaceSearchPage : ContentPage, INotifyPropertyChanged
         BindingContext = this;
 
         ToggleExpandedCommand = new Command<ClassCardVm>(OnToggleExpanded);
-        ToggleFilterChipCommand = new Command<SearchFilterChipVm>(OnToggleFilterChip);
-        OpenFiltersCommand = new Command(() => IsFilterModalOpen = true);
-        CancelFiltersCommand = new Command(() => IsFilterModalOpen = false);
-        ApplyFiltersCommand = new Command(() => { IsFilterModalOpen = false; Refilter(); });
+        ToggleFilterChipCommand = new Command<MultiPathFilterChipVm>(OnToggleFilterChip);
+        OpenFiltersCommand = new Command(OpenFilters);
+        CancelFiltersCommand = new Command(CancelFilters);
+        ApplyFiltersCommand = new Command(ApplyFilters);
+        OnPropertyChanged(nameof(OpenFiltersCommand));
+        OnPropertyChanged(nameof(CancelFiltersCommand));
+        OnPropertyChanged(nameof(ApplyFiltersCommand));
 
-        FilterChips.Add(new SearchFilterChipVm("All", true));
         _scrollPreserver = new CollectionViewScrollPreserver(MultiRacesCollection, this);
     }
 
@@ -81,15 +84,17 @@ public partial class MultiRaceSearchPage : ContentPage, INotifyPropertyChanged
         _scrollPreserver.RestoreScrollPosition();
     }
 
-    private void OnToggleFilterChip(SearchFilterChipVm? chip)
+    private void OnToggleFilterChip(MultiPathFilterChipVm? chip)
     {
         if (chip == null) return;
-        _selectedFilter = chip.Label;
-        foreach (var c in FilterChips)
-            c.IsSelected = c.Label.Equals(_selectedFilter, StringComparison.OrdinalIgnoreCase);
-
-        Refilter();
+        chip.IsSelected = !chip.IsSelected;
+        if (chip.IsSelected) _pendingFilterKeys.Add(chip.Key); else _pendingFilterKeys.Remove(chip.Key);
     }
+
+    private void OpenFilters() { _pendingFilterKeys.Clear(); _pendingFilterKeys.UnionWith(_selectedFilterKeys); SyncFilterChips(_pendingFilterKeys); IsFilterModalOpen = true; }
+    private void CancelFilters() { SyncFilterChips(_selectedFilterKeys); IsFilterModalOpen = false; }
+    private void ApplyFilters() { _selectedFilterKeys.Clear(); _selectedFilterKeys.UnionWith(_pendingFilterKeys); IsFilterModalOpen = false; Refilter(); }
+    private void SyncFilterChips(IReadOnlySet<string> keys) { foreach (var chip in FilterSections.SelectMany(x => x.Chips)) chip.IsSelected = keys.Contains(chip.Key); }
 
     private void OnToggleExpanded(ClassCardVm? item)
     {
@@ -173,6 +178,7 @@ public partial class MultiRaceSearchPage : ContentPage, INotifyPropertyChanged
                     Name = displayName,
                     Category = category.Length > 0 ? category : (powerBase.Length > 0 ? powerBase : "Multi-Race"),
                     Icon = icon.Length > 0 ? icon : "🧬",
+                    IconGlyph = string.IsNullOrWhiteSpace(def.IconGlyph) ? FontAwesomeGlyphs.Shield : def.IconGlyph,
                     Summary = $"Multi-race up to level {maxLevel}",
                     PowerBase = powerBase,
                     LevelRows = levelRows,
@@ -182,12 +188,8 @@ public partial class MultiRaceSearchPage : ContentPage, INotifyPropertyChanged
                 _allMultiRaces.Add(card);
             }
 
-            FilterChips.Clear();
-            FilterChips.Add(new SearchFilterChipVm("All", _selectedFilter == "All"));
-            foreach (var c in categories.OrderBy(x => x, StringComparer.OrdinalIgnoreCase))
-            {
-                FilterChips.Add(new SearchFilterChipVm(c, c.Equals(_selectedFilter, StringComparison.OrdinalIgnoreCase)));
-            }
+            FilterSections.Clear();
+            foreach (var section in MultiPathSearchFilters.Build(catalog.MultiRaces.Values.SelectMany(x => x.AvailabilityOptions ?? []).SelectMany(x => x.Rules ?? []))) FilterSections.Add(section);
 
             Refilter();
         }
@@ -204,23 +206,9 @@ public partial class MultiRaceSearchPage : ContentPage, INotifyPropertyChanged
     private void Refilter()
     {
         var q = (SearchText ?? string.Empty).Trim().ToLowerInvariant();
-        var filter = _selectedFilter;
-
         var matches = _allMultiRaces.Where(c =>
         {
-            if (filter != "All")
-            {
-                var cat = c.Category ?? string.Empty;
-                var tags = c.BracketTags ?? Array.Empty<string>();
-                var power = c.PowerBase ?? string.Empty;
-                if (!cat.Contains(filter, StringComparison.OrdinalIgnoreCase) &&
-                    !tags.Any(t => t.Contains(filter, StringComparison.OrdinalIgnoreCase)) &&
-                    !power.Contains(filter, StringComparison.OrdinalIgnoreCase) &&
-                    !c.Name.Contains(filter, StringComparison.OrdinalIgnoreCase))
-                {
-                    return false;
-                }
-            }
+            if (_selectedFilterKeys.Count > 0 && (!_definitions.TryGetValue(c.Key, out var definition) || !(definition.AvailabilityOptions ?? []).Any(x => MultiPathSearchFilters.Matches(x.Rules, _selectedFilterKeys)))) return false;
 
             if (q.Length == 0) return true;
 

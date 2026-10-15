@@ -18,12 +18,13 @@ public partial class MultiClassSearchPage : ContentPage, INotifyPropertyChanged
     private readonly CollectionViewScrollPreserver _scrollPreserver;
     private bool _isLoading = true;
     private string _searchText = string.Empty;
-    private string _selectedFilter = "All";
+    private readonly HashSet<string> _selectedFilterKeys = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _pendingFilterKeys = new(StringComparer.OrdinalIgnoreCase);
     private bool _loaded;
     private bool _isFilterModalOpen;
 
     public ObservableCollection<ClassCardVm> FilteredMultiClasses { get; } = new();
-    public ObservableCollection<SearchFilterChipVm> FilterChips { get; } = new();
+    public ObservableCollection<MultiPathFilterSectionVm> FilterSections { get; } = new();
 
     public ICommand ToggleExpandedCommand { get; }
     public ICommand ToggleFilterChipCommand { get; }
@@ -58,12 +59,14 @@ public partial class MultiClassSearchPage : ContentPage, INotifyPropertyChanged
         BindingContext = this;
 
         ToggleExpandedCommand = new Command<ClassCardVm>(OnToggleExpanded);
-        ToggleFilterChipCommand = new Command<SearchFilterChipVm>(OnToggleFilterChip);
-        OpenFiltersCommand = new Command(() => IsFilterModalOpen = true);
-        CancelFiltersCommand = new Command(() => IsFilterModalOpen = false);
-        ApplyFiltersCommand = new Command(() => { IsFilterModalOpen = false; Refilter(); });
+        ToggleFilterChipCommand = new Command<MultiPathFilterChipVm>(OnToggleFilterChip);
+        OpenFiltersCommand = new Command(OpenFilters);
+        CancelFiltersCommand = new Command(CancelFilters);
+        ApplyFiltersCommand = new Command(ApplyFilters);
+        OnPropertyChanged(nameof(OpenFiltersCommand));
+        OnPropertyChanged(nameof(CancelFiltersCommand));
+        OnPropertyChanged(nameof(ApplyFiltersCommand));
 
-        BuildFilterChips();
         _scrollPreserver = new CollectionViewScrollPreserver(MultiClassesCollection, this);
     }
 
@@ -81,25 +84,17 @@ public partial class MultiClassSearchPage : ContentPage, INotifyPropertyChanged
         _scrollPreserver.RestoreScrollPosition();
     }
 
-    private void BuildFilterChips()
-    {
-        FilterChips.Clear();
-        var options = new[] { "All", "Warrior", "Priest", "Wizard", "Scout", "Druid", "Neuro" };
-        foreach (var opt in options)
-        {
-            FilterChips.Add(new SearchFilterChipVm(opt, opt.Equals(_selectedFilter, StringComparison.OrdinalIgnoreCase)));
-        }
-    }
-
-    private void OnToggleFilterChip(SearchFilterChipVm? chip)
+    private void OnToggleFilterChip(MultiPathFilterChipVm? chip)
     {
         if (chip == null) return;
-        _selectedFilter = chip.Label;
-        foreach (var c in FilterChips)
-            c.IsSelected = c.Label.Equals(_selectedFilter, StringComparison.OrdinalIgnoreCase);
-
-        Refilter();
+        chip.IsSelected = !chip.IsSelected;
+        if (chip.IsSelected) _pendingFilterKeys.Add(chip.Key); else _pendingFilterKeys.Remove(chip.Key);
     }
+
+    private void OpenFilters() { _pendingFilterKeys.Clear(); _pendingFilterKeys.UnionWith(_selectedFilterKeys); SyncFilterChips(_pendingFilterKeys); IsFilterModalOpen = true; }
+    private void CancelFilters() { SyncFilterChips(_selectedFilterKeys); IsFilterModalOpen = false; }
+    private void ApplyFilters() { _selectedFilterKeys.Clear(); _selectedFilterKeys.UnionWith(_pendingFilterKeys); IsFilterModalOpen = false; Refilter(); }
+    private void SyncFilterChips(IReadOnlySet<string> keys) { foreach (var chip in FilterSections.SelectMany(x => x.Chips)) chip.IsSelected = keys.Contains(chip.Key); }
 
     private void OnToggleExpanded(ClassCardVm? item)
     {
@@ -180,6 +175,7 @@ public partial class MultiClassSearchPage : ContentPage, INotifyPropertyChanged
                     Name = displayName,
                     Category = category.Length > 0 ? category : powerBase,
                     Icon = icon,
+                    IconGlyph = string.IsNullOrWhiteSpace(def.IconGlyph) ? FontAwesomeGlyphs.Shield : def.IconGlyph,
                     Summary = $"Multi-class up to level {maxLevel}",
                     PowerBase = powerBase,
                     LevelRows = levelRows,
@@ -188,6 +184,9 @@ public partial class MultiClassSearchPage : ContentPage, INotifyPropertyChanged
 
                 _allMultiClasses.Add(card);
             }
+
+            FilterSections.Clear();
+            foreach (var section in MultiPathSearchFilters.Build(catalog.MultiClasses.Values.SelectMany(x => x.AvailabilityOptions ?? []).SelectMany(x => x.Rules ?? []))) FilterSections.Add(section);
 
             Refilter();
         }
@@ -204,23 +203,9 @@ public partial class MultiClassSearchPage : ContentPage, INotifyPropertyChanged
     private void Refilter()
     {
         var q = (SearchText ?? string.Empty).Trim().ToLowerInvariant();
-        var filter = _selectedFilter;
-
         var matches = _allMultiClasses.Where(c =>
         {
-            if (filter != "All")
-            {
-                var cat = c.Category ?? string.Empty;
-                var tags = c.BracketTags ?? Array.Empty<string>();
-                var power = c.PowerBase ?? string.Empty;
-                if (!cat.Contains(filter, StringComparison.OrdinalIgnoreCase) &&
-                    !tags.Any(t => t.Contains(filter, StringComparison.OrdinalIgnoreCase)) &&
-                    !power.Contains(filter, StringComparison.OrdinalIgnoreCase) &&
-                    !c.Name.Contains(filter, StringComparison.OrdinalIgnoreCase))
-                {
-                    return false;
-                }
-            }
+            if (_selectedFilterKeys.Count > 0 && (!_definitions.TryGetValue(c.Key, out var definition) || !(definition.AvailabilityOptions ?? []).Any(x => MultiPathSearchFilters.Matches(x.Rules, _selectedFilterKeys)))) return false;
 
             if (q.Length == 0) return true;
 
