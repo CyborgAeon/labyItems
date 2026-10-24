@@ -1,3 +1,4 @@
+using labyItems.Models.Search;
 using labyItems.Pages.Search;
 using labyItems.Services;
 
@@ -36,7 +37,11 @@ public partial class GuildPickerSearchView : ContentView
             Kind = GlobalSearchKind.Guild,
             Title = "Guilds",
             AllowedNames = _allowedNames,
-            InitialSelectedNames = _selectedNames
+            SelectionOptions = new SelectionOptions {
+                SelectionType = SelectionType.Multiple,
+                SelectedKeys = _selectedNames,
+                Max = 3
+            }
         });
         BindingContext = _searchVm;
         await _searchVm.EnsureLoadedAsync();

@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Text;
 using labyItems.Models.Enums;
-using labyItems.Pages.Search;
+using labyItems.Models.Search;
 using SQLite;
 
 namespace labyItems.Services;

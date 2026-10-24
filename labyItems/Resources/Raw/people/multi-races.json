@@ -1863,12 +1863,6 @@
             "AbilityRef": "ability.mr.great-ogre.l1",
             "Type": "Static",
             "Effect": "Perceives those who provide food as friends unless they attack the Ogre or tribe members."
-          },
-          {
-            "Name": "+6/2 Life",
-            "AbilityRef": "ability.mr.great-ogre.l1.2",
-            "Type": "Static",
-            "Effect": "+6 TBLP and +2 loc life (stacking with published life abilities unless otherwise specified)."
           }
         ],
         "2": [
@@ -1885,12 +1879,6 @@
             "AbilityRef": "ability.mr.great-ogre.l3",
             "Type": "Static",
             "Effect": "Gains immunity to all domination effects."
-          },
-          {
-            "Name": "+12/4 Life Total",
-            "AbilityRef": "ability.mr.great-ogre.l3.2",
-            "Type": "Static",
-            "Effect": "+12 TBLP and +4 loc life total."
           }
         ],
         "4": [
@@ -1901,14 +1889,7 @@
             "Effect": "+2 PAC total."
           }
         ],
-        "5": [
-          {
-            "Name": "+18/6 Life Total",
-            "AbilityRef": "ability.mr.great-ogre.l5",
-            "Type": "Static",
-            "Effect": "+18 TBLP and +6 loc life total."
-          }
-        ],
+        "5": [        ],
         "6": [
           {
             "Name": "+3 PAC Total",
@@ -2828,7 +2809,7 @@
       "Levels": {
         "1": [
           {
-            "Name": "Scaling Physical Reduction",
+            "Name": "1/6th off physical damage per level",
             "AbilityRef": "ability.mr.immortal.l1",
             "Type": "Static",
             "Effect": "Suffers one-sixth less damage from physical attacks per level of this race (at 6th is immune to physical damage)."
@@ -2931,7 +2912,7 @@
       "Levels": {
         "1": [
           {
-            "Name": "Scaling Non-Physical/Non-Neuronic Reduction",
+            "Name": "1/6th off non-Physical/non-Neuronic per level",
             "AbilityRef": "ability.mr.mind-over-reality.l1",
             "Type": "Static",
             "Effect": "Gains one-sixth off all damage except Physical and Neuronic per level."
@@ -2943,7 +2924,7 @@
             "Effect": "May never leave or buy-as outside the neuronic bracket."
           },
           {
-            "Name": "No Mind-Bar/Neuronic Immunity",
+            "Name": "No Mind-Bar/Neuronic",
             "AbilityRef": "ability.mr.mind-over-reality.l1.3",
             "Type": "Static",
             "Effect": "May never Mind-Bar or become immune to neuronics."
@@ -2969,7 +2950,7 @@
         ],
         "3": [
           {
-            "Name": "Kill/Sever Restriction",
+            "Name": "Killed/Severed only by physical & neuro",
             "AbilityRef": "ability.mr.mind-over-reality.l3",
             "Type": "Static",
             "Effect": "Can only be killed or have a location severed by Physical or Neuronic means."
@@ -3932,7 +3913,7 @@
       "Levels": {
         "1": [
           {
-            "Name": "Scaling Non-Spirit Reduction",
+            "Name": "1/6th off Non-Spirit damage per level",
             "AbilityRef": "ability.mr.spiritual-vessel.l1",
             "Type": "Static",
             "Effect": "One-sixth off all damage except Spirit per level."
@@ -3960,7 +3941,7 @@
         ],
         "3": [
           {
-            "Name": "Kill/Sever Restriction",
+            "Name": "Killed/Severed only by Spirit",
             "AbilityRef": "ability.mr.spiritual-vessel.l3",
             "Type": "Static",
             "Effect": "Can only be killed or have a location severed by spiritual means."
@@ -4846,13 +4827,13 @@
       "Levels": {
         "1": [
           {
-            "Name": "Scaling Non-Magic Reduction",
+            "Name": "1/6th off Non-Magic damage per level",
             "AbilityRef": "ability.mr.vessel-of-the-dragons.l1",
             "Type": "Static",
             "Effect": "One-sixth off all damage except Magic per level."
           },
           {
-            "Name": "Flesh and Blood Immunity",
+            "Name": "Immunity to Flesh and Blood",
             "AbilityRef": "ability.mr.vessel-of-the-dragons.l1.2",
             "Type": "Static",
             "Effect": "Immunity to Flesh and Blood effects (including potions, poison, and pain)."
@@ -4868,7 +4849,7 @@
         ],
         "3": [
           {
-            "Name": "Kill/Sever Restriction",
+            "Name": "Killed/Severed only by Magic",
             "AbilityRef": "ability.mr.vessel-of-the-dragons.l3",
             "Type": "Static",
             "Effect": "Can only be killed or have a location severed by magical means."
@@ -4888,7 +4869,7 @@
         ],
         "4": [
           {
-            "Name": "Non-Damaging Non-Magical Immunity",
+            "Name": "Immunity to Non-Damaging Non-Magical effects",
             "AbilityRef": "ability.mr.vessel-of-the-dragons.l4",
             "Type": "Static",
             "Effect": "Immune to non-damaging effects that are not magical in nature."
@@ -4896,7 +4877,7 @@
         ],
         "5": [
           {
-            "Name": "Unconscious/Location Stop Restriction",
+            "Name": "Magic only for unconsciousness/broken locs",
             "AbilityRef": "ability.mr.vessel-of-the-dragons.l5",
             "Type": "Static",
             "Effect": "Can only be knocked unconscious or have locations stop through magical means."
@@ -4904,7 +4885,7 @@
         ],
         "6": [
           {
-            "Name": "Immune to All but Magic",
+            "Name": "Immune to Non-Magic",
             "AbilityRef": "ability.mr.vessel-of-the-dragons.l6",
             "Type": "Static",
             "Effect": "Now completely immune to all except Magic."

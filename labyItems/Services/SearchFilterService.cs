@@ -1,6 +1,6 @@
 using System.Globalization;
 using labyItems.Models.Enums;
-using labyItems.Pages.Search;
+using labyItems.Models.Search;
 
 namespace labyItems.Services;
 

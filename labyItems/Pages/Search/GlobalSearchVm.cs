@@ -9,6 +9,7 @@ using labyItems.Controls;
 using labyItems.Infrastructure;
 using labyItems.Models.Characters;
 using labyItems.Models.Enums;
+using labyItems.Models.Search;
 using labyItems.Models.ViewModels;
 using labyItems.Pages.Characters;
 using labyItems.Pages.Characters.ViewModels;
@@ -176,7 +177,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
     public bool IsPickerMode => _picker != null;
     public bool ShowKindChips => _picker == null || _picker.AllowAllKinds;
     public string PickerTitle => _picker?.Title ?? string.Empty;
-    public string PickerConfirmText => _picker?.ConfirmText ?? "Save";
+    public string PickerConfirmText => _picker?.FooterOptions?.ConfirmText ?? "Save";
 
     public string SearchPlaceholder => _picker == null
         ? "Search abilities, spells, miracles, evocations, neuronics..."
@@ -197,7 +198,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         }
         else
         {
-            if (_picker?.SingleSelection == true)
+            if (_picker?.SelectionOptions.SelectionType == SelectionType.Single)
             {
                 foreach (var selected in _selectedResults.Values)
                     selected.IsSelected = false;
@@ -438,7 +439,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
                     .ToList();
             }
 
-            if (_picker?.InitialSelectedNames is { Count: > 0 } initial)
+            if (_picker?.SelectionOptions.SelectedKeys is { Count: > 0 } initial)
             {
                 foreach (var result in converted.Where(result => initial.Contains(result.Name)))
                 {
@@ -1101,320 +1102,5 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         Raise(name);
         return true;
     }
-
-    private sealed class FilterSnapshot
-    {
-        public HashSet<GlobalSearchKind> Kinds { get; init; } = new();
-        public HashSet<string> SpellColours { get; init; } = NewSet();
-        public HashSet<string> SpellTiers { get; init; } = NewSet();
-        public HashSet<string> AbilityTables { get; init; } = NewSet();
-        public HashSet<string> MiracleSpheres { get; init; } = NewSet();
-        public HashSet<string> MiracleTiers { get; init; } = NewSet();
-        public HashSet<string> EvocationFields { get; init; } = NewSet();
-        public HashSet<string> EvocationTiers { get; init; } = NewSet();
-        public HashSet<string> NeuroTypes { get; init; } = NewSet();
-
-        public static FilterSnapshot Empty() => new();
-
-        private static HashSet<string> NewSet(IEnumerable<string>? source = null)
-            => new(source ?? Array.Empty<string>(), StringComparer.OrdinalIgnoreCase);
-
-        public FilterSnapshot Clone() => new()
-        {
-            Kinds = new HashSet<GlobalSearchKind>(Kinds),
-            SpellColours = NewSet(SpellColours),
-            SpellTiers = NewSet(SpellTiers),
-            AbilityTables = NewSet(AbilityTables),
-            MiracleSpheres = NewSet(MiracleSpheres),
-            MiracleTiers = NewSet(MiracleTiers),
-            EvocationFields = NewSet(EvocationFields),
-            EvocationTiers = NewSet(EvocationTiers),
-            NeuroTypes = NewSet(NeuroTypes)
-        };
-
-        public HashSet<string>? GetTokens(string prefix) => prefix switch
-        {
-            "spell-colour:" => SpellColours,
-            "spell-tier:" => SpellTiers,
-            "ability-table:" => AbilityTables,
-            "miracle-sphere:" => MiracleSpheres,
-            "miracle-tier:" => MiracleTiers,
-            "evocation-field:" => EvocationFields,
-            "evocation-tier:" => EvocationTiers,
-            "neuro-type:" => NeuroTypes,
-            _ => null
-        };
-
-        public HashSet<string> ToFilterSet()
-        {
-            var filters = NewSet();
-            filters.UnionWith(SpellColours.Select(t => $"spell-colour:{t}"));
-            filters.UnionWith(SpellTiers.Select(t => $"spell-tier:{t}"));
-            filters.UnionWith(AbilityTables.Select(t => $"ability-table:{t}"));
-            filters.UnionWith(MiracleSpheres.Select(t => $"miracle-sphere:{t}"));
-            filters.UnionWith(MiracleTiers.Select(t => $"miracle-tier:{t}"));
-            filters.UnionWith(EvocationFields.Select(t => $"evocation-field:{t}"));
-            filters.UnionWith(EvocationTiers.Select(t => $"evocation-tier:{t}"));
-            filters.UnionWith(NeuroTypes.Select(t => $"neuro-type:{t}"));
-            return filters;
-        }
-    }
-
-    private readonly record struct FilterOption(string Token, string Label);
-}
-
-public enum GlobalSearchKind
-{
-    Ability,
-    Spell,
-    Miracle,
-    Evocation,
-    Neuronic,
-    Class,
-    Race,
-    Guild,
-    MultiClass,
-    MultiRace
-}
-
-public sealed class GlobalSearchFilterSectionVm : INotifyPropertyChanged
-{
-    private bool _isExpanded = true;
-
-    public GlobalSearchFilterSectionVm(GlobalSearchKind kind, string title)
-    {
-        Kind = kind;
-        Title = title;
-        ToggleExpandedCommand = new Command(() => IsExpanded = !IsExpanded);
-    }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    public GlobalSearchKind Kind { get; }
-    public string Title { get; }
-    public ObservableCollection<GlobalSearchFilterChipVm> Chips { get; } = new();
-    public ICommand ToggleExpandedCommand { get; }
-
-    public bool IsExpanded
-    {
-        get => _isExpanded;
-        private set
-        {
-            if (_isExpanded == value)
-                return;
-
-            _isExpanded = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsExpanded)));
-        }
-    }
-}
-
-public sealed class GlobalSearchFilterChipVm : INotifyPropertyChanged
-{
-    private string _label;
-    private bool _isSelected;
-    private bool _isBack;
-    private bool _isEnabled = true;
-
-    public GlobalSearchFilterChipVm(string key, string label, bool isSelected, bool isBack)
-    {
-        Key = key ?? string.Empty;
-        _label = label ?? string.Empty;
-        _isSelected = isSelected;
-        _isBack = isBack;
-    }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    public string Key { get; }
-
-    // False when the filter can't match anything in the current search scope.
-    public bool IsEnabled
-    {
-        get => _isEnabled;
-        set
-        {
-            if (_isEnabled == value)
-                return;
-
-            _isEnabled = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsEnabled)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ChipOpacity)));
-        }
-    }
-
-    public double ChipOpacity => _isEnabled ? 1d : 0.35d;
-
-    public string Label
-    {
-        get => _label;
-        private set
-        {
-            if (_label == value)
-                return;
-
-            _label = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Label)));
-        }
-    }
-
-    public bool IsSelected
-    {
-        get => _isSelected;
-        private set
-        {
-            if (_isSelected == value)
-                return;
-
-            _isSelected = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSelected)));
-        }
-    }
-
-    public bool IsBack
-    {
-        get => _isBack;
-        private set
-        {
-            if (_isBack == value)
-                return;
-
-            _isBack = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsBack)));
-        }
-    }
-
-    public void UpdateFrom(GlobalSearchFilterChipVm source)
-    {
-        if (source == null)
-            return;
-
-        Label = source.Label;
-        IsSelected = source.IsSelected;
-        IsBack = source.IsBack;
-        IsEnabled = source.IsEnabled;
-    }
-}
-
-// Restricts the search page to one kind and turns it into a multi-select picker.
-public sealed class GlobalSearchPickerOptions
-{
-    public required GlobalSearchKind Kind { get; init; }
-    public required string Title { get; init; }
-    public IReadOnlySet<string>? AllowedNames { get; init; }
-    public Func<string, bool>? IsFilterAvailable { get; init; }
-    public string ConfirmText { get; init; } = "Save";
-    public bool SingleSelection { get; init; }
-    public bool AllowAllKinds { get; init; }
-    public IReadOnlySet<string>? InitialSelectedNames { get; init; }
-}
-
-public sealed record GlobalSearchResultVm(
-    GlobalSearchKind Kind,
-    string Name,
-    string GroupText,
-    string IconGlyph,
-    string MetaText,
-    string DescriptionText,
-    EvolutionService.AbilityResult? Ability,
-    SpellService.SpellRaw? Spell,
-    MiracleService.MiracRaw? Miracle,
-    DruidEvocationService.EvocRaw? Evocation,
-    NeuronicService.NeuronicRaw? Neuronic) : INotifyPropertyChanged
-{
-    public bool UsesImageIcon => Kind == GlobalSearchKind.Neuronic;
-    public bool UsesFontIcon => !UsesImageIcon;
-    public string? IconImageSource => UsesImageIcon ? IconAssets.Neuronic : null;
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    private bool _isSelected;
-    public bool IsSelected
-    {
-        get => _isSelected;
-        set
-        {
-            if (_isSelected == value)
-                return;
-
-            _isSelected = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSelected)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectionGlyph)));
-        }
-    }
-
-    public string SelectionGlyph => IsSelected ? FontAwesomeGlyphs.CheckboxChecked : FontAwesomeGlyphs.CheckboxUnchecked;
-
-    // Reference equality: selection state is mutable.
-    public bool Equals(GlobalSearchResultVm? other) => ReferenceEquals(this, other);
-    public override int GetHashCode() => System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(this);
-
-    public string DetailKey { get; init; } = string.Empty;
-
-    public int? AbilityTable { get; init; }
-
-    public bool CanOpenDetails
-        => Ability != null
-           || Spell != null
-           || Miracle != null
-           || Evocation != null
-           || Neuronic != null
-           || Kind is GlobalSearchKind.Ability
-               or GlobalSearchKind.Spell
-               or GlobalSearchKind.Miracle
-               or GlobalSearchKind.Evocation
-               or GlobalSearchKind.Neuronic
-               or GlobalSearchKind.Guild
-               or GlobalSearchKind.Class
-               or GlobalSearchKind.Race
-               or GlobalSearchKind.MultiClass
-               or GlobalSearchKind.MultiRace;
-
-    public bool HasDescription => !string.IsNullOrWhiteSpace(DescriptionText);
-
-    public string IconBackgroundColor => Kind switch
-    {
-        GlobalSearchKind.Ability => "#E0F2FE",
-        GlobalSearchKind.Spell => "#DBEAFE",
-        GlobalSearchKind.Miracle => "#FEF3C7",
-        GlobalSearchKind.Evocation => "#DCFCE7",
-        GlobalSearchKind.Neuronic => "#E0E7FF",
-        GlobalSearchKind.Guild => "#F3E8FF",
-        GlobalSearchKind.Class => "#FEE2E2",
-        GlobalSearchKind.Race => "#FFEDD5",
-        GlobalSearchKind.MultiClass => "#FCE7F3",
-        GlobalSearchKind.MultiRace => "#ECFCCB",
-        _ => "#E5E7EB"
-    };
-
-    public string IconBorderColor => Kind switch
-    {
-        GlobalSearchKind.Ability => "#7DD3FC",
-        GlobalSearchKind.Spell => "#93C5FD",
-        GlobalSearchKind.Miracle => "#FCD34D",
-        GlobalSearchKind.Evocation => "#86EFAC",
-        GlobalSearchKind.Neuronic => "#A5B4FC",
-        GlobalSearchKind.Guild => "#D8B4FE",
-        GlobalSearchKind.Class => "#FCA5A5",
-        GlobalSearchKind.Race => "#FDBA74",
-        GlobalSearchKind.MultiClass => "#F472B6",
-        GlobalSearchKind.MultiRace => "#A3E635",
-        _ => "#D1D5DB"
-    };
-
-    public string IconColor => Kind switch
-    {
-        GlobalSearchKind.Ability => "#0C4A6E",
-        GlobalSearchKind.Spell => "#1E3A8A",
-        GlobalSearchKind.Miracle => "#92400E",
-        GlobalSearchKind.Evocation => "#166534",
-        GlobalSearchKind.Neuronic => "#3730A3",
-        GlobalSearchKind.Guild => "#581C87",
-        GlobalSearchKind.Class => "#B91C1C",
-        GlobalSearchKind.Race => "#C2410C",
-        GlobalSearchKind.MultiClass => "#BE185D",
-        GlobalSearchKind.MultiRace => "#4D7C0F",
-        _ => "#374151"
-    };
 
 }

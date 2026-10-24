@@ -270,32 +270,6 @@
                                    Text="v" />
                         </Grid>
                     </Border>
-
-                    <Border x:Name="CalendarRow"
-                            Padding="12,10"
-                            StrokeThickness="0"
-                            StrokeShape="RoundRectangle 18">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnOpenCalendarTapped" />
-                        </Border.GestureRecognizers>
-                        <Grid ColumnDefinitions="28,*,24"
-                              ColumnSpacing="8">
-                            <Label FontFamily="FASolid"
-                                   FontSize="18"
-                                   Text="{x:Static helpers:FontAwesomeGlyphs.Calendar}"
-                                   HorizontalTextAlignment="Center"
-                                   VerticalTextAlignment="Center" />
-                            <Label Grid.Column="1"
-                                   HorizontalOptions="Fill"
-                                   HorizontalTextAlignment="Start"
-                                   Text="Calendar"
-                                   VerticalTextAlignment="Center" />
-                            <Label Grid.Column="2"
-                                   Opacity="0"
-                                   Text="v" />
-                        </Grid>
-                    </Border>
-
                     <Border x:Name="SearchRow"
                             Padding="12,10"
                             StrokeThickness="0"
@@ -593,7 +567,30 @@
                                    Text="v" />
                         </Grid>
                     </Border>
-
+<Border x:Name="CalendarRow"
+                            Padding="12,10"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 18">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnOpenCalendarTapped" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="28,*,24"
+                              ColumnSpacing="8">
+                            <Label FontFamily="FASolid"
+                                   FontSize="18"
+                                   Text="{x:Static helpers:FontAwesomeGlyphs.Calendar}"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="Center" />
+                            <Label Grid.Column="1"
+                                   HorizontalOptions="Fill"
+                                   HorizontalTextAlignment="Start"
+                                   Text="Calendar"
+                                   VerticalTextAlignment="Center" />
+                            <Label Grid.Column="2"
+                                   Opacity="0"
+                                   Text="v" />
+                        </Grid>
+                    </Border>
                     <Border x:Name="SettingsRow"
                             Padding="12,10"
                             StrokeThickness="0"

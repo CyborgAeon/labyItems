@@ -10,6 +10,7 @@ using MultiRaceCardPage = labyItems.Pages.MultiRaceCard.MultiRaceCard;
 using labyItems.Services;
 using labyItems.Helpers;
 using labyItems.Controls;
+using labyItems.Models.Search;
 
 namespace labyItems.Pages.Search;
 

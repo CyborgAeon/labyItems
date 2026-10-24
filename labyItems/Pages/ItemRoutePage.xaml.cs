@@ -37,11 +37,6 @@ public partial class ItemRoutePage : ContentPage
         await ExecuteNavigationAsync(() => Navigation.PushAsync(new UnifiedCalendarPage()));
     }
 
-    private async void OnOpenNonStandardDashboardClicked(object sender, EventArgs e)
-    {
-        await ExecuteNavigationAsync(() => Navigation.PushAsync(new NonStandardWalletPage()));
-    }
-
     private async void OnOpenNonStandardDashboardTapped(object sender, TappedEventArgs e)
     {
         await ExecuteNavigationAsync(() => Navigation.PushAsync(new NonStandardWalletPage()));

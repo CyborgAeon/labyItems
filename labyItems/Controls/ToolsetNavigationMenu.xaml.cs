@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Windows.Input;
+using labyItems.Models.Search;
 using labyItems.Pages;
 using labyItems.Pages.Characters;
 using labyItems.Pages.Calendar;
@@ -83,117 +84,61 @@ public partial class ToolsetNavigationMenu : ContentView
 
     private async void OnCloseMenuClicked(object sender, EventArgs e)
         => await SetMenuOpenAsync(false);
-
     private async void OnCloseMenuTapped(object sender, TappedEventArgs e)
         => await SetMenuOpenAsync(false);
-
-    private async void OnHomeClicked(object sender, EventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new ItemRoutePage()));
-
     private async void OnHomeTapped(object sender, TappedEventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new ItemRoutePage()));
-
-    private async void OnOpenCalendarClicked(object sender, EventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new UnifiedCalendarPage()));
-
     private async void OnOpenCalendarTapped(object sender, TappedEventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new UnifiedCalendarPage()));
-
-    private async void OnMakeCharacterClicked(object sender, EventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new CharacterWalletPage()));
-
     private async void OnMakeCharacterTapped(object sender, TappedEventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new CharacterWalletPage()));
-
-    private async void OnCalculateIspClicked(object sender, EventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new IspCalculator(0)));
-
     private async void OnCalculateIspTapped(object sender, TappedEventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new IspCalculator(0)));
-
-    private async void OnCreateMpClicked(object sender, EventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new MpCalculator()));
-
     private async void OnCreateMpTapped(object sender, TappedEventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new MpCalculator()));
-
-    private async void OnScrollBuilderClicked(object sender, EventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new ScrollBuilderPage()));
-
     private async void OnScrollBuilderTapped(object sender, TappedEventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new ScrollBuilderPage()));
-
     private async void OnCraftingTapped(object sender, TappedEventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new MakeSheetPage()));
 
     private void OnSearchGroupTapped(object sender, TappedEventArgs e)
         => SearchExpanded = !SearchExpanded;
-
-    private async void OnSearchClicked(object sender, EventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage()));
-
-    private async void OnSearchTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage()));
-
-    private async void OnGlobalSearchTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage()));
-
-    private async void OnSearchSpellsTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.Spell)));
-
-    private async void OnSearchMiraclesTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.Miracle)));
-
-    private async void OnSearchEvocationsTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.Evocation)));
-
-    private async void OnSearchNeuronicsTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.Neuronic)));
-
-    private async void OnSearchClassesTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new ClassSearchPage()));
-
-    private async void OnSearchRacesTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new RaceSearchPage()));
-
-    private async void OnSearchAbilitiesTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.Ability)));
-
-    private async void OnSearchGuildsTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GuildSearchPage()));
-
-    private async void OnSearchMultiClassesTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new MultiClassSearchPage()));
-
-    private async void OnSearchMultiRacesTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new MultiRaceSearchPage()));
-
-    private async void OnGuildSearchClicked(object sender, EventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GuildSearchPage()));
-
-    private async void OnGuildSearchTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GuildSearchPage()));
-
-    private async void OnOpenNonStandardDashboardClicked(object sender, EventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new NonStandardWalletPage()));
-
-    private async void OnOpenNonStandardDashboardTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new NonStandardWalletPage()));
-
-    private async void OnItemWalletClicked(object sender, EventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new ItemWalletPage()));
-
-    private async void OnItemWalletTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new ItemWalletPage()));
-
-    private async void OnInitiateTradeClicked(object sender, EventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new TradePage()));
-
-    private async void OnInitiateTradeTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new TradePage()));
-
     private void OnItemsGroupTapped(object sender, TappedEventArgs e)
         => ItemsExpanded = !ItemsExpanded;
+    private async void OnGlobalSearchTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage()));
+    private async void OnSearchSpellsTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(new GlobalSearchPickerOptions {
+            Title = "Wizard's Grimoire",
+            Kind = GlobalSearchKind.Spell,
+            SelectionOptions = new SelectionOptions {SelectionType = SelectionType.None},
+            IsFilterAvailable = _ => true,
+            AllowAllKinds = false
+        }, GlobalSearchKind.Spell)));
+    private async void OnSearchMiraclesTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.Miracle)));
+    private async void OnSearchEvocationsTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.Evocation)));
+    private async void OnSearchNeuronicsTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.Neuronic)));
+    private async void OnSearchClassesTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new ClassSearchPage()));
+    private async void OnSearchRacesTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new RaceSearchPage()));
+    private async void OnSearchAbilitiesTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.Ability)));
+    private async void OnSearchMultiClassesTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.MultiClass)));
+    private async void OnSearchMultiRacesTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.MultiRace)));
+    private async void OnSearchGuildsTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GuildSearchPage()));
+    private async void OnOpenNonStandardDashboardTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new NonStandardWalletPage()));
+    private async void OnItemWalletTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new ItemWalletPage()));
+    private async void OnInitiateTradeTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new TradePage()));
 
     private async void OnSettingsClicked(object sender, EventArgs e)
     {

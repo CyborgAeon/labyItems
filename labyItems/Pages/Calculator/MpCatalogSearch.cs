@@ -1,3 +1,4 @@
+using labyItems.Models.Search;
 using labyItems.Pages.Search;
 using labyItems.Services;
 
@@ -46,8 +47,12 @@ public static class MpCatalogSearch
             Kind = GlobalSearchKind.Ability,
             Title = "Choose prerequisites",
             AllowAllKinds = true,
-            ConfirmText = "Apply",
-            InitialSelectedNames = new HashSet<string>(initialSelection ?? [], StringComparer.OrdinalIgnoreCase)
+            SelectionOptions = new SelectionOptions
+            {
+                SelectionType = SelectionType.Multiple,
+                SelectedKeys = new HashSet<string>(initialSelection ?? [], StringComparer.OrdinalIgnoreCase)
+            },
+            FooterOptions = new FooterOptions { ConfirmText = "Apply" }
         });
         var picked = await page.PickAsync(navigation);
         return picked.Select(result => result.Name)
@@ -172,8 +177,11 @@ public static class MpCatalogSearch
             Title = title,
             AllowedNames = new HashSet<string>(byName.Keys, StringComparer.OrdinalIgnoreCase),
             IsFilterAvailable = key => scope.Any(item => matchesFilter(item, key)),
-            ConfirmText = confirmText,
-            SingleSelection = singleSelection
+            SelectionOptions = new SelectionOptions
+            {
+                SelectionType = singleSelection ? SelectionType.Single : SelectionType.Multiple
+            },
+            FooterOptions = new FooterOptions { ConfirmText = confirmText }
         });
 
         var picked = await page.PickAsync(navigation);

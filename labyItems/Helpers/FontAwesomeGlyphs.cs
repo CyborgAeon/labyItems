@@ -99,6 +99,8 @@ public static class FontAwesomeGlyphs
     public const string Communication = "\uf086";
     public const string Wayfinder = "\uf14e";
     public const string Lifescale = "\uf44b";
+    public const string Plus = "\uf0fe";
+    public const string Minus = "\uf146";
     public static string GetSphereIcon(string? sphere)
     {
         var token = NormalizeSphereToken(sphere);

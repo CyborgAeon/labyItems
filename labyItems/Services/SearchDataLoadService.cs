@@ -1,5 +1,5 @@
 using labyItems.Helpers;
-using labyItems.Pages.Search;
+using labyItems.Models.Search;
 
 namespace labyItems.Services;
 
