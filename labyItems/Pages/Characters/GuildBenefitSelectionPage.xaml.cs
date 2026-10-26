@@ -172,7 +172,15 @@ public partial class GuildBenefitSelectionPage : ContentPage
             Options = new ObservableCollection<GuildBenefitSelectionOptionVm>(
                 _row.Options.Select((option, index) =>
                 {
-                    var vm = new GuildBenefitSelectionOptionVm(option.Label, option.Lines, index, SelectOption);
+                    var isLastOddCell = _row.Options.Count % 2 == 1 && index == _row.Options.Count - 1;
+                    var vm = new GuildBenefitSelectionOptionVm(
+                        option.Label,
+                        option.Lines,
+                        index,
+                        index / 2,
+                        isLastOddCell ? 0 : index % 2,
+                        isLastOddCell ? 2 : 1,
+                        SelectOption);
                     vm.IsSelected = _row.SelectedIndex.HasValue && _row.SelectedIndex.Value - 1 == index;
                     return vm;
                 }));
@@ -189,9 +197,10 @@ public partial class GuildBenefitSelectionPage : ContentPage
 
         private void SelectOption(int index)
         {
-            _row.ApplySelection(index + 1);
+            int? nextSelection = _row.SelectedIndex == index + 1 ? null : index + 1;
+            _row.ApplySelection(nextSelection);
             foreach (var option in Options)
-                option.IsSelected = option.Index == index;
+                option.IsSelected = nextSelection.HasValue && option.Index == index;
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasSelection)));
         }
@@ -220,11 +229,17 @@ public partial class GuildBenefitSelectionPage : ContentPage
             string label,
             IReadOnlyList<string> lines,
             int index,
+            int row,
+            int column,
+            int columnSpan,
             Action<int> select)
         {
             Label = label;
             Lines = lines;
             Index = index;
+            Row = row;
+            Column = column;
+            ColumnSpan = columnSpan;
             SelectCommand = new Command(() => select(index));
         }
 
@@ -233,6 +248,9 @@ public partial class GuildBenefitSelectionPage : ContentPage
         public string Label { get; }
         public IReadOnlyList<string> Lines { get; }
         public int Index { get; }
+        public int Row { get; }
+        public int Column { get; }
+        public int ColumnSpan { get; }
         public ICommand SelectCommand { get; }
 
         public bool IsSelected
@@ -245,66 +263,7 @@ public partial class GuildBenefitSelectionPage : ContentPage
 
                 _isSelected = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSelected)));
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectButtonText)));
             }
         }
-
-        public string SelectButtonText => IsSelected ? "Selected" : "Select";
     }
-}
-
-public sealed class GuildBenefitChoiceSummaryRow
-{
-    private readonly Action<int?> _applySelection;
-
-    public GuildBenefitChoiceSummaryRow(
-        string displayText,
-        string selectionKey,
-        IReadOnlyList<GuildBenefitChoiceOption> options,
-        int? selectedIndex,
-        Action<int?> applySelection,
-        string? guildName = null,
-        string? tier = null,
-        int? optionNumber = null,
-        bool isTierAvailableNow = true)
-    {
-        DisplayText = string.IsNullOrWhiteSpace(displayText)
-            ? "Choose one guild benefit"
-            : displayText.Trim();
-        SelectionKey = selectionKey?.Trim() ?? string.Empty;
-        Options = options ?? Array.Empty<GuildBenefitChoiceOption>();
-        SelectedIndex = selectedIndex;
-        GuildName = (guildName ?? string.Empty).Trim();
-        Tier = (tier ?? string.Empty).Trim();
-        OptionNumber = optionNumber;
-        IsTierAvailableNow = isTierAvailableNow;
-        _applySelection = applySelection ?? throw new ArgumentNullException(nameof(applySelection));
-    }
-
-    public string DisplayText { get; }
-    public string SelectionKey { get; }
-    public IReadOnlyList<GuildBenefitChoiceOption> Options { get; }
-    public int? SelectedIndex { get; private set; }
-    public string GuildName { get; }
-    public string Tier { get; }
-    public int? OptionNumber { get; }
-    public bool IsTierAvailableNow { get; }
-
-    public void ApplySelection(int selectedIndex)
-    {
-        SelectedIndex = selectedIndex;
-        _applySelection(selectedIndex);
-    }
-}
-
-public sealed class GuildBenefitChoiceOption
-{
-    public GuildBenefitChoiceOption(string label, IReadOnlyList<string> lines)
-    {
-        Label = label ?? string.Empty;
-        Lines = lines ?? Array.Empty<string>();
-    }
-
-    public string Label { get; }
-    public IReadOnlyList<string> Lines { get; }
 }

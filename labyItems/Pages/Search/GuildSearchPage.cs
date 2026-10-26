@@ -22,8 +22,7 @@ public sealed class GuildSearchPage : ContentPage
         var guilds = new Guilds(vm)
         {
             ShowBackButton = false,
-            UseTypePills = true,
-            CanExpandGuildCards = false
+            UseTypePills = true
         };
 
         var menu = new ToolsetNavigationMenu

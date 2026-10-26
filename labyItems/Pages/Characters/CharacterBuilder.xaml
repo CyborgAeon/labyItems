@@ -4,23 +4,170 @@
   x:Name="Root"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:helpers="clr-namespace:labyItems.Helpers"
+  xmlns:controls="clr-namespace:labyItems.Controls"
+  xmlns:helpers="clr-namespace:labyItems.Helpers"
   xmlns:vm="clr-namespace:labyItems.Pages.Characters">
 
   <ContentView.Resources>
     <ResourceDictionary>
       <DataTemplate x:Key="ClassCardTemplate"
                     x:DataType="vm:ClassCardVm">
-        <vm:ClassCardView
-          SelectCommand="{Binding BindingContext.SelectClassCommand, Source={x:Reference Root}}"
-          ToggleExpandedCommand="{Binding BindingContext.ToggleClassExpandedCommand, Source={x:Reference Root}}"/>
+        <Border Padding="12"
+                Margin="0,0,0,8"
+                Stroke="{StaticResource SubtleTextColor}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 12"
+                BackgroundColor="{StaticResource White}">
+          <Border.Triggers>
+            <DataTrigger TargetType="Border"
+                         Binding="{Binding IsSelected}"
+                         Value="True">
+              <Setter Property="Stroke"
+                      Value="{StaticResource AccentMaroonColor}"/>
+              <Setter Property="BackgroundColor"
+                      Value="{StaticResource SelectedSurfaceBackgroundColor}"/>
+            </DataTrigger>
+          </Border.Triggers>
+          <Border.GestureRecognizers>
+            <TapGestureRecognizer Command="{Binding BindingContext.SelectClassCommand, Source={x:Reference Root}}"
+                                  CommandParameter="{Binding .}"/>
+          </Border.GestureRecognizers>
+
+          <Grid ColumnDefinitions="Auto,*,Auto"
+                ColumnSpacing="10">
+            <controls:ClassBracketIconView IconSize="26"
+                                           HasSplitIcon="{Binding HasSplitIcon}"
+                                           SingleGlyph="{Binding SingleEmoji}"
+                                           SingleIconFontFamily="{Binding SingleIconFontFamily}"
+                                           SingleBackground="{Binding SingleBg}"
+                                           SplitLeftGlyph="{Binding SplitLeftEmoji}"
+                                           SplitRightGlyph="{Binding SplitRightEmoji}"
+                                           SplitLeftBackground="{Binding SplitLeftBg}"
+                                           SplitRightBackground="{Binding SplitRightBg}"
+                                           BorderColor="{StaticResource SurfaceBorderColor}"
+                                           VerticalOptions="Start"
+                                           Margin="0,2,0,0"/>
+
+            <VerticalStackLayout Grid.Column="1"
+                                 Spacing="2">
+              <Label Text="{Binding Name}"
+                     FontSize="18"
+                     FontAttributes="Bold"
+                     LineBreakMode="WordWrap"
+                     Margin="0,0,4,0"/>
+              <Label Text="{Binding BracketSubheading}"
+                     FontSize="12"
+                     Opacity="0.75"
+                     LineBreakMode="WordWrap"/>
+              <Label Text="{Binding Summary}"
+                     FontSize="12"
+                     Opacity="0.8"
+                     LineBreakMode="WordWrap"
+                     MaxLines="2"/>
+            </VerticalStackLayout>
+
+            <Border Grid.Column="2"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 999"
+                    BackgroundColor="Transparent"
+                    WidthRequest="28"
+                    HeightRequest="28"
+                    VerticalOptions="Start"
+                    HorizontalOptions="End">
+              <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnClassInfoTapped"
+                                      CommandParameter="{Binding .}"/>
+              </Border.GestureRecognizers>
+              <Label Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
+                     FontFamily="{x:Static helpers:FontAwesomeGlyphs.SolidFamily}"
+                     FontSize="13"
+                     TextColor="{StaticResource SubtleTextColor}"
+                     HorizontalTextAlignment="Center"
+                     VerticalTextAlignment="Center"/>
+            </Border>
+          </Grid>
+        </Border>
       </DataTemplate>
 
       <DataTemplate x:Key="RaceCardTemplate"
                     x:DataType="vm:RaceCardVm">
-        <vm:RaceCardView
-          SelectCommand="{Binding BindingContext.SelectRaceCommand, Source={x:Reference Root}}"
-          ToggleRaceExpandedCommand="{Binding BindingContext.ToggleRaceExpandedCommand, Source={x:Reference Root}}"/>
+        <Border Padding="12"
+                Margin="0,0,0,8"
+                Stroke="{StaticResource SubtleTextColor}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 12"
+                BackgroundColor="{StaticResource White}">
+          <Border.Triggers>
+            <DataTrigger TargetType="Border"
+                         Binding="{Binding IsSelected}"
+                         Value="True">
+              <Setter Property="Stroke"
+                      Value="{StaticResource AccentMaroonColor}"/>
+              <Setter Property="BackgroundColor"
+                      Value="{StaticResource SelectedSurfaceBackgroundColor}"/>
+            </DataTrigger>
+          </Border.Triggers>
+          <Border.GestureRecognizers>
+            <TapGestureRecognizer Command="{Binding BindingContext.SelectRaceCommand, Source={x:Reference Root}}"
+                                  CommandParameter="{Binding .}"/>
+          </Border.GestureRecognizers>
+
+          <Grid ColumnDefinitions="Auto,*,Auto"
+                ColumnSpacing="10">
+            <Border Stroke="#FDBA74"
+                    BackgroundColor="#FFEDD5"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 999"
+                    WidthRequest="26"
+                    HeightRequest="26"
+                    VerticalOptions="Start"
+                    Margin="0,2,0,0">
+              <Label Text="{Binding Icon}"
+                     FontSize="12"
+                     TextColor="#C2410C"
+                     HorizontalTextAlignment="Center"
+                     VerticalTextAlignment="Center"/>
+            </Border>
+
+            <VerticalStackLayout Grid.Column="1"
+                                 Spacing="2">
+              <Label Text="{Binding Name}"
+                     FontSize="18"
+                     FontAttributes="Bold"
+                     LineBreakMode="WordWrap"
+                     Margin="0,0,4,0"/>
+              <Label Text="{Binding PeopleTypeDisplay}"
+                     FontSize="12"
+                     Opacity="0.75"
+                     LineBreakMode="WordWrap"/>
+              <Label Text="{Binding Description}"
+                     FontSize="12"
+                     Opacity="0.8"
+                     LineBreakMode="WordWrap"
+                     MaxLines="2"/>
+            </VerticalStackLayout>
+
+            <Border Grid.Column="2"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 999"
+                    BackgroundColor="Transparent"
+                    WidthRequest="28"
+                    HeightRequest="28"
+                    VerticalOptions="Start"
+                    HorizontalOptions="End">
+              <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnRaceInfoTapped"
+                                      CommandParameter="{Binding .}"/>
+              </Border.GestureRecognizers>
+              <Label Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
+                     FontFamily="{x:Static helpers:FontAwesomeGlyphs.SolidFamily}"
+                     FontSize="13"
+                     TextColor="{StaticResource SubtleTextColor}"
+                     HorizontalTextAlignment="Center"
+                     VerticalTextAlignment="Center"/>
+            </Border>
+          </Grid>
+        </Border>
       </DataTemplate>
     </ResourceDictionary>
   </ContentView.Resources>

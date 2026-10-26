@@ -33,10 +33,41 @@ public partial class CharacterSpecialisation : ContentView
     protected override void OnBindingContextChanged()
     {
         if (_boundVm != null && !ReferenceEquals(_boundVm, BindingContext))
+        {
             _boundVm.CancelReloads();
+            _boundVm.ConfirmDependentSelectionLossAsync = null;
+        }
 
         base.OnBindingContextChanged();
         _boundVm = BindingContext as CharacterSpecialisationVm;
+        if (_boundVm != null)
+            _boundVm.ConfirmDependentSelectionLossAsync = ConfirmDependentSelectionLossAsync;
+    }
+
+    private async Task<bool> ConfirmDependentSelectionLossAsync(IReadOnlyList<string> sectionTitles)
+    {
+        var page = GetParentPage();
+        if (page == null)
+            return false;
+
+        var names = string.Join(", ", sectionTitles);
+        return await page.DisplayAlert(
+            "Change selection?",
+            $"This change will clear completed dependent choices: {names}.",
+            "Change",
+            "Keep current");
+    }
+
+    private Page? GetParentPage()
+    {
+        Element? current = this;
+        while (current != null)
+        {
+            if (current is Page page)
+                return page;
+            current = current.Parent;
+        }
+        return null;
     }
 
     protected override void OnParentChanged()

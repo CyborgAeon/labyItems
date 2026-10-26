@@ -90,10 +90,6 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     public ICommand AddSelectedMiracleCommand { get; }
     public ICommand AddSelectedEvocationCommand { get; }
     public ICommand AddSelectedNeuroCommand { get; }
-    public ICommand EditSpellSelectionCommand { get; }
-    public ICommand EditMiracleSelectionCommand { get; }
-    public ICommand EditEvocationSelectionCommand { get; }
-    public ICommand EditNeuroSelectionCommand { get; }
     public ICommand ViewSpellInfoCommand { get; }
     public ICommand ViewMiracleInfoCommand { get; }
     public ICommand ViewEvocationInfoCommand { get; }
@@ -243,10 +239,6 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         AddSelectedMiracleCommand = new Command<object?>(OnMiracleResultSelected);
         AddSelectedEvocationCommand = new Command<object?>(OnEvocationResultSelected);
         AddSelectedNeuroCommand = new Command<object?>(OnNeuroResultSelected);
-        EditSpellSelectionCommand = new Command<object?>(OnEditSpellSelectionRequested);
-        EditMiracleSelectionCommand = new Command<object?>(OnEditMiracleSelectionRequested);
-        EditEvocationSelectionCommand = new Command<object?>(OnEditEvocationSelectionRequested);
-        EditNeuroSelectionCommand = new Command<object?>(OnEditNeuroSelectionRequested);
         ViewSpellInfoCommand = new Command<object?>(OnViewSpellInfoRequested);
         ViewMiracleInfoCommand = new Command<object?>(OnViewMiracleInfoRequested);
         ViewEvocationInfoCommand = new Command<object?>(OnViewEvocationInfoRequested);
@@ -820,82 +812,6 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         return true;
     }
 
-    private async void OnEditSpellSelectionRequested(object? parameter)
-    {
-        if (parameter is not SelectedItemUseVm<SpellOption> entry)
-            return;
-
-        var page = new MpSelectionEditorPage<SpellOption>(
-            title: "Edit spell",
-            initialOption: entry.Option,
-            initialUses: entry.Uses,
-            placeholderText: "Search spells",
-            selectionDisplayMemberPath: nameof(SpellOption.Name),
-            displayNameFactory: FormatSpellLabel,
-            loadOptionsAsync: BuildSpellLookupAsync,
-            remoteSearchProvider: null,
-            applyChanges: (option, uses) => ApplyEditedSelection(SpellSelections, entry, option, uses, FormatSpellLabel));
-
-        await Navigation.PushModalAsync(new NavigationPage(page));
-    }
-
-    private async void OnEditMiracleSelectionRequested(object? parameter)
-    {
-        if (parameter is not SelectedItemUseVm<MiracleOption> entry)
-            return;
-
-        var page = new MpSelectionEditorPage<MiracleOption>(
-            title: "Edit miracle",
-            initialOption: entry.Option,
-            initialUses: entry.Uses,
-            placeholderText: "Search miracles",
-            selectionDisplayMemberPath: nameof(MiracleOption.Name),
-            displayNameFactory: FormatMiracleLabel,
-            loadOptionsAsync: BuildMiracleLookupAsync,
-            remoteSearchProvider: null,
-            applyChanges: (option, uses) => ApplyEditedSelection(MiracleSelections, entry, option, uses, FormatMiracleLabel));
-
-        await Navigation.PushModalAsync(new NavigationPage(page));
-    }
-
-    private async void OnEditEvocationSelectionRequested(object? parameter)
-    {
-        if (parameter is not SelectedItemUseVm<EvocationOption> entry)
-            return;
-
-        var page = new MpSelectionEditorPage<EvocationOption>(
-            title: "Edit evocation",
-            initialOption: entry.Option,
-            initialUses: entry.Uses,
-            placeholderText: "Search evocations",
-            selectionDisplayMemberPath: nameof(EvocationOption.Name),
-            displayNameFactory: FormatEvocationLabel,
-            loadOptionsAsync: () => FetchEvocationOptionsAsync(string.Empty),
-            remoteSearchProvider: FetchEvocationOptionsAsync,
-            applyChanges: (option, uses) => ApplyEditedSelection(EvocationSelections, entry, option, uses, FormatEvocationLabel));
-
-        await Navigation.PushModalAsync(new NavigationPage(page));
-    }
-
-    private async void OnEditNeuroSelectionRequested(object? parameter)
-    {
-        if (parameter is not SelectedItemUseVm<NeuroOption> entry)
-            return;
-
-        var page = new MpSelectionEditorPage<NeuroOption>(
-            title: "Edit neuronic",
-            initialOption: entry.Option,
-            initialUses: entry.Uses,
-            placeholderText: "Search neuronic abilities",
-            selectionDisplayMemberPath: nameof(NeuroOption.Name),
-            displayNameFactory: FormatNeuroLabel,
-            loadOptionsAsync: BuildNeuroLookupAsync,
-            remoteSearchProvider: null,
-            applyChanges: (option, uses) => ApplyEditedSelection(NeuroSelections, entry, option, uses, FormatNeuroLabel));
-
-        await Navigation.PushModalAsync(new NavigationPage(page));
-    }
-
     private async void OnViewSpellInfoRequested(object? parameter)
     {
         if (parameter is not SelectedItemUseVm<SpellOption> entry)
@@ -966,28 +882,6 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     {
         if (parameter is SelectedItemUseVm<NeuroOption> entry)
             NeuroSelections.Remove(entry);
-    }
-
-    private static void ApplyEditedSelection<TOption>(
-        ObservableCollection<SelectedItemUseVm<TOption>> collection,
-        SelectedItemUseVm<TOption> target,
-        TOption updatedOption,
-        int updatedUses,
-        Func<TOption, string> displayNameFactory)
-        where TOption : struct
-    {
-        var sanitizedUses = Math.Max(1, updatedUses);
-        var duplicate = collection.FirstOrDefault(item =>
-            !ReferenceEquals(item, target) && item.Option.Equals(updatedOption));
-
-        if (duplicate != null)
-        {
-            duplicate.Uses += sanitizedUses;
-            collection.Remove(target);
-            return;
-        }
-
-        target.Update(updatedOption, displayNameFactory(updatedOption), sanitizedUses);
     }
 
     private static void RefreshSelectionRowStyles<TOption>(ObservableCollection<SelectedItemUseVm<TOption>> collection)
@@ -1364,91 +1258,6 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
     #endregion
-}
-
-public sealed class SelectedItemUseVm<TOption> : INotifyPropertyChanged, IConfigSelectionListItem where TOption : struct
-{
-    private readonly Action<SelectedItemUseVm<TOption>> _onUsesChanged;
-    private string _displayName;
-    private Color _rowBackgroundColor = Colors.White;
-
-    public TOption Option { get; private set; }
-    public string DisplayText => DisplayName;
-    public string DisplayName
-    {
-        get => _displayName;
-        private set
-        {
-            if (_displayName == value)
-                return;
-
-            _displayName = value;
-            OnPropertyChanged();
-        }
-    }
-
-    private int _uses;
-    public int Uses
-    {
-        get => _uses;
-        set
-        {
-            var sanitized = Math.Max(0, value);
-            if (_uses == sanitized)
-                return;
-
-            _uses = sanitized;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(InlineSummary));
-            _onUsesChanged(this);
-        }
-    }
-
-    public string InlineSummary => Uses == 1 ? "1 use assigned." : $"{Uses} uses assigned.";
-
-    public Color RowBackgroundColor
-    {
-        get => _rowBackgroundColor;
-        set
-        {
-            if (_rowBackgroundColor == value)
-                return;
-
-            _rowBackgroundColor = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public ICommand IncrementCommand { get; }
-    public ICommand DecrementCommand { get; }
-
-    public SelectedItemUseVm(
-        TOption option,
-        string displayText,
-        Action<SelectedItemUseVm<TOption>> onUsesChanged,
-        int initialUses = 1)
-    {
-        Option = option;
-        _displayName = displayText ?? string.Empty;
-        _onUsesChanged = onUsesChanged ?? (_ => { });
-        _uses = Math.Max(1, initialUses);
-
-        IncrementCommand = new Command(() => Uses++);
-        DecrementCommand = new Command(() => Uses = Math.Max(0, Uses - 1));
-    }
-
-    public void Update(TOption option, string displayText, int uses)
-    {
-        Option = option;
-        DisplayName = displayText ?? string.Empty;
-        Uses = Math.Max(1, uses);
-        OnPropertyChanged(nameof(Option));
-    }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }
 
 public class MpSubmissionPayload

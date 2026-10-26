@@ -99,11 +99,57 @@
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <local:GuildCardView
-                            CanExpand="{Binding Source={x:Reference Root}, Path=CanExpandGuildCards}"
-                            OpenDetailCommand="{Binding Source={x:Reference Root}, Path=OpenDetailCommand}"
-                            ToggleExpandedCommand="{Binding Source={x:Reference Root}, Path=ToggleExpandedCommand}"
-                            SelectCommand="{Binding Source={RelativeSource AncestorType={x:Type local:Guilds}}, Path=BindingContext.ToggleSelectedCommand}"/>
+                        <Border Padding="12"
+                                Stroke="{StaticResource SubtleTextColor}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 12"
+                                BackgroundColor="{StaticResource White}"
+                                Margin="0,0,0,8">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                    <Setter Property="Stroke" Value="{StaticResource AccentMaroonColor}" />
+                                    <Setter Property="BackgroundColor" Value="{StaticResource SelectedSurfaceBackgroundColor}" />
+                                </DataTrigger>
+                            </Border.Triggers>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnGuildTapped" CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                <Border Stroke="#D8B4FE"
+                                        BackgroundColor="#F3E8FF"
+                                        StrokeThickness="1"
+                                        StrokeShape="RoundRectangle 999"
+                                        WidthRequest="26" HeightRequest="26"
+                                        VerticalOptions="Start" Margin="0,2,0,0">
+                                    <Label Text="{x:Static helpers:FontAwesomeGlyphs.Guild}"
+                                           FontFamily="{x:Static helpers:FontAwesomeGlyphs.SolidFamily}"
+                                           FontSize="12" TextColor="#581C87"
+                                           HorizontalTextAlignment="Center"
+                                           VerticalTextAlignment="Center" />
+                                </Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                    <Label Text="{Binding Name}" FontSize="18" FontAttributes="Bold"
+                                           LineBreakMode="WordWrap" Margin="0,0,4,0" />
+                                    <Label Text="{Binding Type}" FontSize="12" Opacity="0.75"
+                                           LineBreakMode="WordWrap" />
+                                    <Label Text="{Binding NotSelectableReason}" FontSize="12" Opacity="0.8"
+                                           MaxLines="2" LineBreakMode="WordWrap"
+                                           IsVisible="{Binding HasNotSelectableReason}" />
+                                </VerticalStackLayout>
+                                <Border Grid.Column="2" StrokeThickness="0"
+                                        BackgroundColor="Transparent" StrokeShape="RoundRectangle 999"
+                                        WidthRequest="28" HeightRequest="28"
+                                        VerticalOptions="Start" HorizontalOptions="End">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnGuildInfoTapped" CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+                                    <Label Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
+                                           FontFamily="{x:Static helpers:FontAwesomeGlyphs.SolidFamily}"
+                                           FontSize="13" TextColor="{StaticResource SubtleTextColor}"
+                                           HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                                </Border>
+                            </Grid>
+                        </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

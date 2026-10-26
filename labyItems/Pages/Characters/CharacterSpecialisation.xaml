@@ -6,6 +6,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:helpers="clr-namespace:labyItems.Helpers"
     xmlns:controls="clr-namespace:labyItems.Controls"
+    xmlns:specialisationControls="clr-namespace:labyItems.Controls.Specialisations"
     xmlns:pages="clr-namespace:labyItems.Pages.Characters">
 
     <ContentView.Resources>
@@ -18,106 +19,21 @@
         <Color x:Key="CardBgErrorLight">#FFEBEE</Color>
 
         <DataTemplate x:Key="MappedSectionTemplate">
-            <Frame Padding="0"
-                   IsVisible="{Binding IsVisible}"
-                   CornerRadius="12"
-                   HasShadow="False">
-                <Frame.Triggers>
-                    <DataTrigger TargetType="Frame"
-                                 Binding="{Binding CardStateText}"
-                                 Value="Neutral">
-                        <Setter Property="BorderColor"
-                                Value="{StaticResource CardBorderNeutralLight}"/>
-                        <Setter Property="BackgroundColor"
-                                Value="Transparent"/>
-                    </DataTrigger>
-
-                    <DataTrigger TargetType="Frame"
-                                 Binding="{Binding CardStateText}"
-                                 Value="Success">
-                        <Setter Property="BorderColor"
-                                Value="{StaticResource CardBorderSuccessLight}"/>
-                        <Setter Property="BackgroundColor"
-                                Value="{StaticResource CardBgSuccessLight}"/>
-                    </DataTrigger>
-
-                    <DataTrigger TargetType="Frame"
-                                 Binding="{Binding CardStateText}"
-                                 Value="Issue">
-                        <Setter Property="BorderColor"
-                                Value="{StaticResource CardBorderIssueLight}"/>
-                        <Setter Property="BackgroundColor"
-                                Value="{StaticResource CardBgIssueLight}"/>
-                    </DataTrigger>
-
-                    <DataTrigger TargetType="Frame"
-                                 Binding="{Binding CardStateText}"
-                                 Value="Error">
-                        <Setter Property="BorderColor"
-                                Value="{StaticResource CardBorderErrorLight}"/>
-                        <Setter Property="BackgroundColor"
-                                Value="{StaticResource CardBgErrorLight}"/>
-                    </DataTrigger>
-                </Frame.Triggers>
-
-                <VerticalStackLayout Spacing="0">
-                    <Grid Padding="12"
-                          ColumnDefinitions="*,Auto"
-                          RowDefinitions="Auto,Auto">
-                        <Label Grid.Row="0"
-                               Grid.Column="0"
-                               Text="{Binding Title}"
-                               FontAttributes="Bold"
-                               LineBreakMode="TailTruncation"/>
-
-                        <Label Grid.Row="0"
-                               Grid.Column="1"
-                               Text="{Binding StatusText}"
-                               Opacity="0.75"/>
-
-                        <Label Grid.Row="1"
-                               Grid.Column="0"
-                               Grid.ColumnSpan="2"
-                               Text="{Binding DisplaySubtitle}"
-                               Opacity="0.75"
-                               LineBreakMode="WordWrap"/>
-                    </Grid>
-
-                    <BoxView HeightRequest="1"
-                             Opacity="0.25"
-                             IsVisible="{Binding IsExpanded}"/>
-
-                    <VerticalStackLayout Padding="12"
-                                         Spacing="10"
-                                         IsVisible="{Binding IsExpanded}">
-                        <HorizontalStackLayout Spacing="10"
-                                               VerticalOptions="Center">
-                            <HorizontalStackLayout.Triggers>
-                                <DataTrigger TargetType="HorizontalStackLayout"
-                                             Binding="{Binding UseSingleOptionToggle}"
-                                             Value="False">
-                                    <Setter Property="IsVisible"
-                                            Value="False"/>
-                                </DataTrigger>
-                            </HorizontalStackLayout.Triggers>
-                            <CheckBox IsChecked="{Binding SingleOptionEnabled, Mode=TwoWay}"
-                                      VerticalOptions="Center"/>
-                            <Label Text="{Binding SingleOptionLabel}"
-                                   VerticalOptions="Center"/>
-                        </HorizontalStackLayout>
-
-                        <controls:ChipGroup
-                            Items="{Binding Options}"
-                            SelectedItem="{Binding SelectedOptionDisplay, Mode=TwoWay}">
-                            <controls:ChipGroup.Triggers>
-                                <DataTrigger TargetType="controls:ChipGroup"
-                                             Binding="{Binding UseSingleOptionToggle}"
-                                             Value="True">
-                                    <Setter Property="IsVisible"
-                                            Value="False"/>
-                                </DataTrigger>
-                            </controls:ChipGroup.Triggers>
-                        </controls:ChipGroup>
+            <specialisationControls:SpecialisationSectionView
+                SectionNumber="{Binding DisplayIndex}"
+                Title="{Binding Title}"
+                StatusText="{Binding StatusText}"
+                IsVisible="{Binding IsVisible}"
+                IsExpanded="{Binding IsExpanded, Mode=TwoWay}"
+                IsComplete="{Binding IsSubtreeComplete}"
+                SuppressCompletionTransition="{Binding SuppressCompletionTransition}"
+                ToggleCommand="{Binding ToggleExpandedCommand}">
+                <specialisationControls:SpecialisationSectionView.SectionContent>
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="{Binding DisplaySubtitle}" Opacity="0.75" LineBreakMode="WordWrap"/>
+                        <specialisationControls:SpecialisationGridView
+                            ItemsSource="{Binding Options}"
+                            SelectedItem="{Binding SelectedOptionDisplay, Mode=TwoWay}"/>
 
                         <VerticalStackLayout Spacing="8"
                                              IsVisible="{Binding HasSelection}">
@@ -195,76 +111,22 @@
                             </Grid>
                         </VerticalStackLayout>
                     </VerticalStackLayout>
-                </VerticalStackLayout>
-            </Frame>
+                </specialisationControls:SpecialisationSectionView.SectionContent>
+            </specialisationControls:SpecialisationSectionView>
         </DataTemplate>
 
         <DataTemplate x:Key="ChoiceSectionTemplate">
-            <Frame Padding="0"
-                   IsVisible="{Binding IsVisible}"
-                   CornerRadius="12"
-                   HasShadow="False">
-                <Frame.Triggers>
-                    <DataTrigger TargetType="Frame"
-                                 Binding="{Binding CardStateText}"
-                                 Value="Neutral">
-                        <Setter Property="BorderColor"
-                                Value="{StaticResource CardBorderNeutralLight}"/>
-                        <Setter Property="BackgroundColor"
-                                Value="Transparent"/>
-                    </DataTrigger>
-
-                    <DataTrigger TargetType="Frame"
-                                 Binding="{Binding CardStateText}"
-                                 Value="Success">
-                        <Setter Property="BorderColor"
-                                Value="{StaticResource CardBorderSuccessLight}"/>
-                        <Setter Property="BackgroundColor"
-                                Value="{StaticResource CardBgSuccessLight}"/>
-                    </DataTrigger>
-
-                    <DataTrigger TargetType="Frame"
-                                 Binding="{Binding CardStateText}"
-                                 Value="Issue">
-                        <Setter Property="BorderColor"
-                                Value="{StaticResource CardBorderIssueLight}"/>
-                        <Setter Property="BackgroundColor"
-                                Value="{StaticResource CardBgIssueLight}"/>
-                    </DataTrigger>
-
-                    <DataTrigger TargetType="Frame"
-                                 Binding="{Binding CardStateText}"
-                                 Value="Error">
-                        <Setter Property="BorderColor"
-                                Value="{StaticResource CardBorderErrorLight}"/>
-                        <Setter Property="BackgroundColor"
-                                Value="{StaticResource CardBgErrorLight}"/>
-                    </DataTrigger>
-                </Frame.Triggers>
-
-                <VerticalStackLayout Spacing="0">
-                    <Grid Padding="12"
-                          ColumnDefinitions="*,Auto"
-                          RowDefinitions="Auto">
-                        <Label Grid.Row="0"
-                               Grid.Column="0"
-                               Text="{Binding Title}"
-                               FontAttributes="Bold"
-                               LineBreakMode="TailTruncation"/>
-
-                        <Label Grid.Row="0"
-                               Grid.Column="1"
-                               Text="{Binding StatusText}"
-                               Opacity="0.75"/>
-                    </Grid>
-
-                    <BoxView HeightRequest="1"
-                             Opacity="0.25"
-                             IsVisible="{Binding IsExpanded}"/>
-
-                    <VerticalStackLayout Padding="12"
-                                         Spacing="10"
-                                         IsVisible="{Binding IsExpanded}">
+            <specialisationControls:SpecialisationSectionView
+                SectionNumber="{Binding DisplayIndex}"
+                Title="{Binding Title}"
+                StatusText="{Binding StatusText}"
+                IsVisible="{Binding IsVisible}"
+                IsExpanded="{Binding IsExpanded, Mode=TwoWay}"
+                IsComplete="{Binding IsSubtreeComplete}"
+                SuppressCompletionTransition="{Binding SuppressCompletionTransition}"
+                ToggleCommand="{Binding ToggleExpandedCommand}">
+                <specialisationControls:SpecialisationSectionView.SectionContent>
+                    <VerticalStackLayout Spacing="10">
                         <Label Text="{Binding DisplaySubtitle}"
                                Opacity="0.75"
                                LineBreakMode="WordWrap"/>
@@ -289,49 +151,49 @@
 
                                             <VerticalStackLayout Spacing="6"
                                                                  IsVisible="{Binding IsSelectable}">
-                                                <Picker HorizontalOptions="FillAndExpand"
-                                                        Title="Select an ability"
+                                                <specialisationControls:SpecialisationGridView
+                                                        HorizontalOptions="FillAndExpand"
                                                         ItemsSource="{Binding FilteredOptionNames}"
                                                         SelectedItem="{Binding SelectedOption, Mode=TwoWay}">
-                                                    <Picker.Triggers>
-                                                        <DataTrigger TargetType="Picker"
+                                                    <specialisationControls:SpecialisationGridView.Triggers>
+                                                        <DataTrigger TargetType="specialisationControls:SpecialisationGridView"
                                                                      Binding="{Binding UseWardPactEnum}"
                                                                      Value="True">
                                                             <Setter Property="IsVisible"
                                                                     Value="False"/>
                                                         </DataTrigger>
-                                                        <DataTrigger TargetType="Picker"
+                                                        <DataTrigger TargetType="specialisationControls:SpecialisationGridView"
                                                                      Binding="{Binding UseMagicColourEnum}"
                                                                      Value="True">
                                                             <Setter Property="IsVisible"
                                                                     Value="False"/>
                                                         </DataTrigger>
-                                                        <DataTrigger TargetType="Picker"
+                                                        <DataTrigger TargetType="specialisationControls:SpecialisationGridView"
                                                                      Binding="{Binding UseVivomancerColourEnum}"
                                                                      Value="True">
                                                             <Setter Property="IsVisible"
                                                                     Value="False"/>
                                                         </DataTrigger>
-                                                        <DataTrigger TargetType="Picker"
+                                                        <DataTrigger TargetType="specialisationControls:SpecialisationGridView"
                                                                      Binding="{Binding UseDictionarySearch}"
                                                                      Value="True">
                                                             <Setter Property="IsVisible"
                                                                     Value="False"/>
                                                         </DataTrigger>
-                                                        <DataTrigger TargetType="Picker"
+                                                        <DataTrigger TargetType="specialisationControls:SpecialisationGridView"
                                                                      Binding="{Binding HideAbilityPicker}"
                                                                      Value="True">
                                                             <Setter Property="IsVisible"
                                                                     Value="False"/>
                                                         </DataTrigger>
-                                                        <DataTrigger TargetType="Picker"
+                                                        <DataTrigger TargetType="specialisationControls:SpecialisationGridView"
                                                                      Binding="{Binding ShowCustomisationInline}"
                                                                      Value="True">
                                                             <Setter Property="IsVisible"
                                                                     Value="False"/>
                                                         </DataTrigger>
-                                                    </Picker.Triggers>
-                                                </Picker>
+                                                    </specialisationControls:SpecialisationGridView.Triggers>
+                                                </specialisationControls:SpecialisationGridView>
 
                                                 <Grid ColumnDefinitions="0.46*,0.54*"
                                                       ColumnSpacing="8"
@@ -504,8 +366,8 @@
                             </VerticalStackLayout>
                         </VerticalStackLayout>
                     </VerticalStackLayout>
-                </VerticalStackLayout>
-            </Frame>
+                </specialisationControls:SpecialisationSectionView.SectionContent>
+            </specialisationControls:SpecialisationSectionView>
         </DataTemplate>
 
         <pages:SpecialisationSectionTemplateSelector x:Key="SectionTemplateSelector"
@@ -537,13 +399,10 @@
                     </VerticalStackLayout>
                 </Frame>
 
-                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Sections}"
-                                     IsVisible="{Binding IsLoading, Converter={StaticResource InverseBoolConverter}}"
-                                     Spacing="12">
-                    <BindableLayout.ItemTemplateSelector>
-                        <StaticResource Key="SectionTemplateSelector"/>
-                    </BindableLayout.ItemTemplateSelector>
-                </VerticalStackLayout>
+                <specialisationControls:CascadingSpecialisationView
+                    ItemsSource="{Binding Sections}"
+                    ItemTemplateSelector="{StaticResource SectionTemplateSelector}"
+                    IsVisible="{Binding IsLoading, Converter={StaticResource InverseBoolConverter}}"/>
             </VerticalStackLayout>
         </ScrollView>
     </Grid>

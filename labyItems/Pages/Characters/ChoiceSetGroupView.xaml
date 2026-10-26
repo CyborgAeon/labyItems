@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="labyItems.Pages.Characters.ChoiceSetGroupView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
+    xmlns:specialisationControls="clr-namespace:labyItems.Controls.Specialisations"
+    xmlns:viewModels="clr-namespace:labyItems.Pages.Characters.ViewModels"
+    x:DataType="viewModels:ChoiceSetGroupVm">
+    <Border Padding="10"
+            Stroke="{StaticResource SurfaceBorderColor}"
+            StrokeThickness="1"
+            StrokeShape="RoundRectangle 10">
+        <VerticalStackLayout Spacing="8">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                <Label Text="{Binding Title}" FontAttributes="Bold" LineBreakMode="WordWrap"/>
+                <Label Grid.Column="1" Text="{Binding UnlockLevelText}" FontSize="11" Opacity="0.7"/>
+            </Grid>
+
+            <Grid ColumnDefinitions="*,*"
+                  ColumnSpacing="6"
+                  RowSpacing="6"
+                  BindableLayout.ItemsSource="{Binding OptionCells}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="viewModels:ChoiceSetOptionCellVm">
+                        <specialisationControls:SpecialisationChoiceView Grid.Row="{Binding Row}"
+                                Grid.Column="{Binding Column}"
+                                Grid.ColumnSpan="{Binding ColumnSpan}"
+                                Text="{Binding Label}"
+                                IsSelected="{Binding IsSelected}"
+                                Command="{Binding SelectCommand}"/>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </Grid>
+
+            <VerticalStackLayout IsVisible="{Binding HasAbilityRows}" Spacing="4">
+                <Label Text="Granted abilities" FontSize="11" Opacity="0.7"/>
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding AbilityRows}" Spacing="3">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="viewModels:ChoiceSetAbilityRowVm">
+                            <Border Padding="9,7"
+                                    Stroke="{StaticResource SurfaceBorderColor}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 7">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                    <Label Text="{Binding DisplayName}" LineBreakMode="WordWrap"/>
+                                    <Label Grid.Column="1"
+                                           Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
+                                           FontFamily="FASolid"
+                                           TextColor="{StaticResource SubtleTextColor}"
+                                           VerticalOptions="Center">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnAbilityInfoTapped" CommandParameter="{Binding .}"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </Border>
+</ContentView>

@@ -17,7 +17,7 @@
         <ResourceDictionary>
             <DataTemplate x:Key="ClassCardTemplate"
                           x:DataType="characters:ClassCardVm">
-                <characters:ClassCardView
+                <characters:MultiClassCard
                     SelectCommand="{Binding SelectClassCommand, Source={x:Reference Root}}"
                     ToggleExpandedCommand="{Binding ToggleExpandedCommand, Source={x:Reference Root}}"/>
             </DataTemplate>

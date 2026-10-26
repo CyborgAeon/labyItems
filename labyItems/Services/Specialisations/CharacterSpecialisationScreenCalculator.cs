@@ -85,6 +85,8 @@ public sealed class SpecialisationSectionState
     public IReadOnlyList<SpecialisationAbilityRowState> AbilityRows { get; init; } = Array.Empty<SpecialisationAbilityRowState>();
     public string ValidationMessage { get; init; } = string.Empty;
     public bool IsComplete { get; init; }
+    public bool IsSubtreeComplete { get; init; }
+    public int DisplayIndex { get; init; }
     public string StatusText { get; init; } = string.Empty;
     public string CardState { get; init; } = "Neutral";
 }
@@ -428,7 +430,7 @@ public static class CharacterSpecialisationScreenCalculator
 
         var grouped = requiredChoices
             .GroupBy(r => r.SpecialisationKey, StringComparer.OrdinalIgnoreCase)
-            .OrderBy(g => g.Key, StringComparer.OrdinalIgnoreCase);
+            .OrderBy(g => g.Min(choice => choice.Level));
 
         foreach (var group in grouped)
         {
@@ -481,6 +483,14 @@ public static class CharacterSpecialisationScreenCalculator
         }
 
         ApplyInjectionRules(context, sections);
+
+        for (var index = 0; index < sections.Count; index++)
+        {
+            var section = sections[index];
+            var metadata = section.Metadata.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.OrdinalIgnoreCase);
+            metadata["displayIndex"] = (index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
+            sections[index] = CloneSectionWithMetadata(section, metadata);
+        }
 
         return sections;
     }
@@ -822,6 +832,7 @@ public static class CharacterSpecialisationScreenCalculator
         }
 
         sections = ApplyCrossSectionChoiceValidation(sections);
+        sections = ApplySubtreeCompletion(sections);
         var isComplete = sections.All(section => section.IsComplete);
 
         return new SpecialisationScreenState
@@ -839,6 +850,58 @@ public static class CharacterSpecialisationScreenCalculator
             IsComplete = isComplete
         };
     }
+
+    private static List<SpecialisationSectionState> ApplySubtreeCompletion(List<SpecialisationSectionState> sections)
+    {
+        var completeById = sections.ToDictionary(
+            section => section.Spec.SectionId,
+            section => section.IsComplete,
+            StringComparer.OrdinalIgnoreCase);
+
+        for (var index = sections.Count - 1; index >= 0; index--)
+        {
+            var section = sections[index];
+            var subtreeComplete = completeById[section.Spec.SectionId];
+            if (section.Spec.Metadata.TryGetValue("parentSectionId", out var parentId)
+                && completeById.ContainsKey(parentId))
+            {
+                completeById[parentId] = completeById[parentId] && subtreeComplete;
+            }
+        }
+
+        return sections.Select((section, index) => new SpecialisationSectionState
+        {
+            Spec = section.Spec,
+            SelectedByLevel = section.SelectedByLevel,
+            CustomisationByLevel = section.CustomisationByLevel,
+            SelectedOption = section.SelectedOption,
+            AbilityRows = section.AbilityRows,
+            ValidationMessage = section.ValidationMessage,
+            IsComplete = section.IsComplete,
+            IsSubtreeComplete = completeById[section.Spec.SectionId],
+            DisplayIndex = index + 1,
+            StatusText = section.StatusText,
+            CardState = section.CardState
+        }).ToList();
+    }
+
+    private static SpecialisationSectionSpec CloneSectionWithMetadata(
+        SpecialisationSectionSpec section,
+        IReadOnlyDictionary<string, string> metadata)
+        => new()
+        {
+            SectionId = section.SectionId,
+            DefinitionKey = section.DefinitionKey,
+            Title = section.Title,
+            Subtitle = section.Subtitle,
+            DetailKey = section.DetailKey,
+            Kind = section.Kind,
+            Required = section.Required,
+            Levels = section.Levels,
+            Options = section.Options,
+            StrategyIds = section.StrategyIds,
+            Metadata = metadata
+        };
 
     private static ChoiceOption? ResolveMappedOptionFromDefinition(
         string definitionKey,
@@ -1459,6 +1522,17 @@ public static class CharacterSpecialisationScreenCalculator
             var spec = BuildSectionFromRule(context, rule);
             if (spec == null)
                 continue;
+
+            if (!string.IsNullOrWhiteSpace(rule.Conditions.Subtype))
+            {
+                var subtypeParent = sections.FirstOrDefault(section => section.Kind == SpecialisationSectionKind.RaceSubtype);
+                if (subtypeParent != null)
+                {
+                    var metadata = spec.Metadata.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.OrdinalIgnoreCase);
+                    metadata["parentSectionId"] = subtypeParent.SectionId;
+                    spec = CloneSectionWithMetadata(spec, metadata);
+                }
+            }
 
             var existingByIdIndex = !string.IsNullOrWhiteSpace(spec.SectionId)
                 ? sections.FindIndex(existing => existing.SectionId.Equals(spec.SectionId, StringComparison.OrdinalIgnoreCase))

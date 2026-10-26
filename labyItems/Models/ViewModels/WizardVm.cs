@@ -328,7 +328,7 @@ public sealed class WizardVm : INotifyPropertyChanged
         {
             new(
                 index: 0,
-                label: "Race/Class",
+                label: "Person",
                 canEnter: () => true,
                 createView: () => new CharacterBuilder(CharacterBuilderVm),
                 onEnterAsync: async () => await CharacterBuilderVm.EnsureReferenceCardsLoadedAsync(),

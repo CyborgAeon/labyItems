@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
+using labyItems.Helpers;
 using labyItems.Models.Characters;
 using labyItems.Pages.Characters.ViewModels;
 
@@ -25,6 +26,21 @@ public partial class Wizard : ContentPage
         }
 #endif
         return base.OnBackButtonPressed();
+    }
+
+    private async void OnGuildInfoTapped(object? sender, TappedEventArgs e)
+    {
+        if (e.Parameter is not GuildCardVm guild)
+            return;
+
+        try
+        {
+            await Navigation.PushAsync(new global::labyItems.Pages.GuildCard.GuildCard(guild));
+        }
+        catch (Exception ex)
+        {
+            RuntimeLog.Write("WIZARD_GUILD_DETAILS_FAILED", $"Failed to open guild details for {guild.Name}.", ex);
+        }
     }
 
 }

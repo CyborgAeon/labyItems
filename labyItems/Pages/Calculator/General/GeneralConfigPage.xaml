@@ -46,10 +46,25 @@
           <Label FontAttributes="Bold"
                  FontSize="14"
                  Text="Selected abilities"/>
-          <controls:ConfigSelectionList ItemsSource="{Binding SelectedGeneralAbilityEntries}"
-                                        ShowEditButton="False"
-                                        InfoCommand="{Binding Source={x:Reference RootPage}, Path=ViewGeneralAbilityInfoCommand}"
-                                        DeleteCommand="{Binding Source={x:Reference RootPage}, Path=DeleteGeneralAbilityCommand}" />
+          <VerticalStackLayout BindableLayout.ItemsSource="{Binding SelectedGeneralAbilityEntries}" Spacing="8">
+            <BindableLayout.ItemTemplate>
+              <DataTemplate>
+                <controls:ListItemRowView RowBackgroundColor="{Binding RowBackgroundColor}"
+                                          ShowInfo="True"
+                                          ShowDelete="True"
+                                          InfoCommand="{Binding Source={x:Reference RootPage}, Path=ViewGeneralAbilityInfoCommand}"
+                                          DeleteCommand="{Binding Source={x:Reference RootPage}, Path=DeleteGeneralAbilityCommand}"
+                                          ActionCommandParameter="{Binding .}">
+                  <controls:ListItemRowView.PrimaryText>
+                    <MultiBinding StringFormat="{}{0} · {1}">
+                      <Binding Path="DisplayName" />
+                      <Binding Path="InlineSummary" />
+                    </MultiBinding>
+                  </controls:ListItemRowView.PrimaryText>
+                </controls:ListItemRowView>
+              </DataTemplate>
+            </BindableLayout.ItemTemplate>
+          </VerticalStackLayout>
         </VerticalStackLayout>
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
           <controls:ResistanceTypePicker LabelText="Additional levels of resistance for..." PlaceholderText="Select a type" SelectedValue="{Binding ResistanceType, Mode=TwoWay}"/>

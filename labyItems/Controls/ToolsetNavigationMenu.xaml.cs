@@ -116,23 +116,78 @@ public partial class ToolsetNavigationMenu : ContentView
             AllowAllKinds = false
         }, GlobalSearchKind.Spell)));
     private async void OnSearchMiraclesTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.Miracle)));
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(new GlobalSearchPickerOptions {
+            Title = "Words from Above",
+            Kind = GlobalSearchKind.Miracle,
+            SelectionOptions = new SelectionOptions {SelectionType = SelectionType.None},
+            IsFilterAvailable = _ => true,
+            AllowAllKinds = false
+        }, GlobalSearchKind.Miracle)));
     private async void OnSearchEvocationsTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.Evocation)));
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(new GlobalSearchPickerOptions {
+            Title = "Druid's Way",
+            Kind = GlobalSearchKind.Evocation,
+            SelectionOptions = new SelectionOptions {SelectionType = SelectionType.None},
+            IsFilterAvailable = _ => true,
+            AllowAllKinds = false
+        }, GlobalSearchKind.Evocation)));
     private async void OnSearchNeuronicsTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.Neuronic)));
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(new GlobalSearchPickerOptions {
+            Title = "Oraculum Insight",
+            Kind = GlobalSearchKind.Neuronic,
+            SelectionOptions = new SelectionOptions {SelectionType = SelectionType.None},
+            IsFilterAvailable = _ => true,
+            AllowAllKinds = false
+        }, GlobalSearchKind.Neuronic)));
     private async void OnSearchClassesTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new ClassSearchPage()));
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(new GlobalSearchPickerOptions {
+            Title = "Character Classes",
+            Kind = GlobalSearchKind.Class,
+            SelectionOptions = new SelectionOptions {SelectionType = SelectionType.None},
+            IsFilterAvailable = _ => true,
+            AllowAllKinds = false
+        }, GlobalSearchKind.Class)));
     private async void OnSearchRacesTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new RaceSearchPage()));
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(new GlobalSearchPickerOptions {
+            Title = "Character Races",
+            Kind = GlobalSearchKind.Race,
+            SelectionOptions = new SelectionOptions {SelectionType = SelectionType.None},
+            IsFilterAvailable = _ => true,
+            AllowAllKinds = false
+        }, GlobalSearchKind.Race)));
     private async void OnSearchAbilitiesTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.Ability)));
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(new GlobalSearchPickerOptions {
+            Title = "Post 8th Abilities",
+            Kind = GlobalSearchKind.Ability,
+            SelectionOptions = new SelectionOptions {SelectionType = SelectionType.None},
+            IsFilterAvailable = _ => true,
+            AllowAllKinds = false
+        }, GlobalSearchKind.Ability)));
+
     private async void OnSearchMultiClassesTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.MultiClass)));
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(new GlobalSearchPickerOptions {
+            Title = "Evolution Classes",
+            Kind = GlobalSearchKind.MultiClass,
+            SelectionOptions = new SelectionOptions {SelectionType = SelectionType.None},
+            IsFilterAvailable = _ => true,
+            AllowAllKinds = false
+        }, GlobalSearchKind.MultiClass)));
     private async void OnSearchMultiRacesTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(GlobalSearchKind.MultiRace)));
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(new GlobalSearchPickerOptions {
+            Title = "Evolution Races",
+            Kind = GlobalSearchKind.MultiRace,
+            SelectionOptions = new SelectionOptions {SelectionType = SelectionType.None},
+            IsFilterAvailable = _ => true,
+            AllowAllKinds = false
+        }, GlobalSearchKind.MultiRace)));
     private async void OnSearchGuildsTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GuildSearchPage()));
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage(new GlobalSearchPickerOptions {
+            Title = "Wizard's Grimoire",
+            Kind = GlobalSearchKind.Guild,
+            SelectionOptions = new SelectionOptions {SelectionType = SelectionType.None},
+            IsFilterAvailable = _ => true,
+            AllowAllKinds = false
+        }, GlobalSearchKind.Guild)));
     private async void OnOpenNonStandardDashboardTapped(object sender, TappedEventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new NonStandardWalletPage()));
     private async void OnItemWalletTapped(object sender, TappedEventArgs e)

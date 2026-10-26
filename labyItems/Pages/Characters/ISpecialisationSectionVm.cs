@@ -18,7 +18,10 @@ public interface ISpecialisationSectionVm : INotifyPropertyChanged
     string StatusText { get; }
     string CardStateText { get; }
     string DisplaySubtitle { get; }
+    int DisplayIndex { get; }
     bool IsComplete { get; }
+    bool IsSubtreeComplete { get; }
+    bool SuppressCompletionTransition { get; }
     bool IsVisible { get; }
     bool IsExpanded { get; set; }
     ICommand ToggleExpandedCommand { get; }

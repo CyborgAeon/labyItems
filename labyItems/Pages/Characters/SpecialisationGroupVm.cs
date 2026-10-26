@@ -59,6 +59,9 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged, ISpecialisat
     public string DetailKey => _detailKey.Length == 0 ? Title : _detailKey;
     public IReadOnlyList<string> StrategyIds => _strategyIds;
     public SpecialisationSectionType SectionType { get; private set; } = SpecialisationSectionType.Choice;
+    public int DisplayIndex { get; private set; }
+    public bool IsSubtreeComplete { get; private set; } = true;
+    public bool SuppressCompletionTransition { get; private set; }
     public int RequiredCount => Slots.Count;
 
     public ObservableCollection<SpecialisationSlotVm> Slots { get; } = new();
@@ -146,9 +149,9 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged, ISpecialisat
         get
         {
             if (_isOptional)
-                return !HasDuplicates && !HasValidationError && !HasIssue;
+                return !HasDuplicates && !HasValidationError && !HasIssue && IsSubtreeComplete;
 
-            return SelectedCount == RequiredCount && !HasDuplicates && !HasValidationError && !HasIssue;
+            return SelectedCount == RequiredCount && !HasDuplicates && !HasValidationError && !HasIssue && IsSubtreeComplete;
         }
     }
 
@@ -275,6 +278,17 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged, ISpecialisat
         Raise(nameof(DetailKey));
         Raise(nameof(StrategyIds));
         Raise(nameof(SectionType));
+    }
+
+    public void ConfigureResolvedState(int displayIndex, bool isSubtreeComplete, bool suppressCompletionTransition)
+    {
+        DisplayIndex = displayIndex;
+        IsSubtreeComplete = isSubtreeComplete;
+        SuppressCompletionTransition = suppressCompletionTransition;
+        Raise(nameof(DisplayIndex));
+        Raise(nameof(IsSubtreeComplete));
+        Raise(nameof(SuppressCompletionTransition));
+        RaiseComputed();
     }
 
     public void RefreshCustomisationOptions()

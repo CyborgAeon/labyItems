@@ -5,12 +5,13 @@ using System.Runtime.CompilerServices;
 using labyItems.Controls;
 using labyItems.Helpers;
 using labyItems.Models.Enums;
+using labyItems.Models.ViewModels;
 using labyItems.Services;
 using Microsoft.Maui.Graphics;
 
 namespace labyItems.Pages.Configs;
 
-public sealed class NeuronicSelectionEntry : INotifyPropertyChanged, IConfigSelectionListItem
+public sealed class NeuronicSelectionEntry : INotifyPropertyChanged, IListItemRowModel
 {
     private int _usesPerDay = 1;
     private bool _addToBaseList;

@@ -88,10 +88,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
         SpecialisationVm = new CharacterSpecialisationVm(this);
 
-        ToggleClassExpandedCommand = new Command<ClassCardVm>(item => _ = ToggleExpandedCommandAsync(item));
         SelectClassCommand = new Command<ClassCardVm>(SelectClass);
         SelectRaceCommand = new Command<RaceCardVm>(SelectRace);
-        ToggleRaceExpandedCommand = new Command<RaceCardVm>(ToggleRaceExpandedCommandImpl);
         ToggleClassFilterChipCommand = new Command<ClassFilterChipVm>(ToggleClassFilterChip);
         ShowClassSelectionCommand = new Command(() => SelectedTabIndex = 0);
 
@@ -124,7 +122,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             await EnsureReferenceCardsLoadedAsync();
 
             await CaptureHumanLifeForSelectedClassAsync();
-            await UpdateDraftLifeAsync(expandIfChanged: false);
+            await UpdateDraftLifeAsync();
 
             await SpecialisationVm.ReloadAsync();
 
@@ -211,21 +209,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         return MainThread.InvokeOnMainThreadAsync(action);
     }
 
-    public ICommand ToggleRaceExpandedCommand { get; }
-
-    private void ToggleRaceExpandedCommandImpl(RaceCardVm? item)
-    {
-        if (item == null) return;
-
-        foreach (var r in AllRaces)
-        {
-            if (!ReferenceEquals(r, item) && r.IsExpanded)
-                r.IsExpanded = false;
-        }
-
-        item.IsExpanded = !item.IsExpanded;
-    }
-
     private async Task LoadRacesAsync()
     {
         var all = await _creationDataService.GetPeopleAsync();
@@ -254,13 +237,11 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 PeopleType = displayPeopleType,
                 IsNonStandard = record.NonStandard,
                 Description = record.Description ?? "",
-                BuyAsRaw = record.BuyAs ?? "",
                 Icon = PeopleTypeFormatting.IconForPeopleType(primaryPeopleType),
                 IsSelected = string.Equals(name, _draft.Race, StringComparison.OrdinalIgnoreCase)
             };
 
             vm.SearchText = BuildRaceSearchText(name, record);
-            vm.BuildRowsAndChips(record.LevelledAbilities ?? new Dictionary<string, List<AbilityDefinition>>(), record.BuyAs);
             list.Add(vm);
         }
 
@@ -520,26 +501,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     public ObservableCollection<ClassCardVm> FilteredClasses { get; } = new();
     public ObservableCollection<RaceCardVm> FilteredRaces { get; } = new();
 
-    public ICommand ToggleClassExpandedCommand { get; }
     public ICommand SelectClassCommand { get; }
     public ICommand SelectRaceCommand { get; }
-
-    private async Task ToggleExpandedCommandAsync(ClassCardVm? item)
-    {
-        if (item == null) return;
-
-        foreach (var c in AllClasses)
-        {
-            if (!ReferenceEquals(c, item) && c.IsExpanded)
-                c.IsExpanded = false;
-        }
-
-        var shouldExpand = !item.IsExpanded;
-        if (shouldExpand)
-            await item.EnsureProgressionLoadedAsync();
-
-        item.IsExpanded = shouldExpand;
-    }
 
     private void SelectClass(ClassCardVm? item)
     {
@@ -605,7 +568,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 RefilterClasses();
             }
 
-            await UpdateDraftLifeAsync(expandIfChanged: true);
+            await UpdateDraftLifeAsync();
             cancellationToken.ThrowIfCancellationRequested();
 
             await SpecialisationVm.ReloadAsync(cancellationToken);
@@ -677,7 +640,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             await ApplyRaceToClassesAsync(_draft.Race);
             cancellationToken.ThrowIfCancellationRequested();
 
-            await UpdateDraftLifeAsync(expandIfChanged: true);
+            await UpdateDraftLifeAsync();
             cancellationToken.ThrowIfCancellationRequested();
 
             if (!classStillValid)
@@ -838,7 +801,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 Name = classKey,
                 Category = category,
                 Icon = icon,
-                Summary = "",
+                Summary = ClassCardVm.BuildSummaryFromLevels(record.Levels),
                 MaxAc = maxAc,
                 TBLP = tblp,
                 PowerBase = powerBase,
@@ -944,23 +907,14 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     {
         var race = string.IsNullOrWhiteSpace(raceName) ? "" : raceName;
 
-        var expandedCards = await MainThread.InvokeOnMainThreadAsync(() =>
+        await MainThread.InvokeOnMainThreadAsync(() =>
         {
-            var expanded = new List<ClassCardVm>();
             foreach (var c in AllClasses)
             {
                 c.RaceName = race;
                 c.MarkProgressionDirty();
-
-                if (c.IsExpanded)
-                    expanded.Add(c);
             }
-
-            return expanded;
         });
-
-        if (expandedCards.Count > 0)
-            await Task.WhenAll(expandedCards.Select(c => c.EnsureProgressionLoadedAsync()));
     }
 
     private async Task CaptureHumanLifeForSelectedClassAsync()
@@ -1006,7 +960,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         return ResolveRaceKeyForLifeScale(_draft);
     }
 
-    private async Task UpdateDraftLifeAsync(bool expandIfChanged)
+    private async Task UpdateDraftLifeAsync()
     {
         var className = (_draft.Class ?? string.Empty).Trim();
         if (className.Length == 0)
@@ -1029,38 +983,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         }
 
         var newLife = lifePoint.Value;
-        var differsFromHuman = _humanLifeForSelectedClass.HasValue &&
-                               (_humanLifeForSelectedClass.Value.Body != newLife.Body ||
-                                _humanLifeForSelectedClass.Value.Loc != newLife.Loc);
-
         _draft.TBLP = newLife.Body;
         _draft.Loc = newLife.Loc;
-
-        if (expandIfChanged && differsFromHuman)
-            ExpandSelectedClassCard();
-    }
-
-    private void ExpandSelectedClassCard()
-    {
-        if (!MainThread.IsMainThread)
-        {
-            MainThread.BeginInvokeOnMainThread(ExpandSelectedClassCard);
-            return;
-        }
-
-        var selected = AllClasses.FirstOrDefault(c => c.IsSelected);
-        if (selected == null) return;
-
-        foreach (var c in AllClasses)
-        {
-            if (!ReferenceEquals(c, selected) && c.IsExpanded)
-                c.IsExpanded = false;
-        }
-
-        if (!selected.IsExpanded)
-            selected.IsExpanded = true;
-
-        RefilterClasses();
     }
 
     private async Task<LifeScalePoint?> GetLifePointAsync(string raceName, string className)
@@ -1079,8 +1003,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         return Math.Clamp(idx, 0, life.Count - 1);
     }
 
-    public Task SyncDraftLifeAsync(bool expandIfChanged = false)
-        => UpdateDraftLifeAsync(expandIfChanged);
+    public Task SyncDraftLifeAsync()
+        => UpdateDraftLifeAsync();
 
     public async Task RefreshDraftAbilitiesAsync(CancellationToken cancellationToken = default)
     {
@@ -1113,7 +1037,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
                 abilities = ConsolidateAbilities(abilities);
 
-                await UpdateDraftLifeAsync(expandIfChanged: false).ConfigureAwait(false);
+                await UpdateDraftLifeAsync().ConfigureAwait(false);
                 cancellationToken.ThrowIfCancellationRequested();
                 ApplyLifeBonuses(abilities);
 

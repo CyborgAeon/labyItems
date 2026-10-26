@@ -41,12 +41,6 @@ public partial class Guilds : ContentView
         typeof(Guilds),
         true);
 
-    public static readonly BindableProperty CanExpandGuildCardsProperty = BindableProperty.Create(
-        nameof(CanExpandGuildCards),
-        typeof(bool),
-        typeof(Guilds),
-        true);
-
     public static readonly BindableProperty HeaderLeadingViewProperty = BindableProperty.Create(
         nameof(HeaderLeadingView),
         typeof(View),
@@ -60,22 +54,12 @@ public partial class Guilds : ContentView
 
     private readonly CollectionViewScrollPreserver _scrollPreserver;
 
-    public ICommand OpenDetailCommand { get; }
-
     public Guilds(GuildsVm vm)
     {
         InitializeComponent();
         BindingContext = vm;
-        ToggleExpandedCommand = new Command<GuildCardVm>(item => _ = HandleToggleExpandedAsync(item));
-        OpenDetailCommand = new Command<GuildCardVm>(item => _ = OpenGuildDetailAsync(item));
         UpdateHeaderLeadingView(HeaderLeadingView);
         _scrollPreserver = new CollectionViewScrollPreserver(GuildList);
-    }
-
-    public bool CanExpandGuildCards
-    {
-        get => (bool)GetValue(CanExpandGuildCardsProperty);
-        set => SetValue(CanExpandGuildCardsProperty, value);
     }
 
     public bool ShowBackButton
@@ -107,8 +91,6 @@ public partial class Guilds : ContentView
         get => (View?)GetValue(HeaderLeadingViewProperty);
         set => SetValue(HeaderLeadingViewProperty, value);
     }
-
-    public ICommand ToggleExpandedCommand { get; }
 
     private void UpdateHeaderLeadingView(View? view)
     {
@@ -144,24 +126,16 @@ public partial class Guilds : ContentView
         }
     }
 
-    private async Task HandleToggleExpandedAsync(GuildCardVm? item)
+    private async void OnGuildTapped(object? sender, TappedEventArgs e)
     {
-        if (item == null || BindingContext is not GuildsVm vm)
+        if (e.Parameter is not GuildCardVm item || BindingContext is not GuildsVm vm)
             return;
-
-        if (!CanExpandGuildCards)
-        {
+        if (vm.CanSelectGuilds && item.CanToggleSelection)
+            vm.ToggleSelectedCommand.Execute(item);
+        else if (!vm.CanSelectGuilds)
             await OpenGuildDetailAsync(item);
-            return;
-        }
-
-        var shouldScrollToTop = !item.IsExpanded;
-        vm.ToggleExpandedCommand.Execute(item);
-
-        if (!shouldScrollToTop)
-            return;
-
-        await MainThread.InvokeOnMainThreadAsync(() =>
-            GuildList?.ScrollTo(item, position: ScrollToPosition.Start, animate: true));
     }
+
+    private async void OnGuildInfoTapped(object? sender, TappedEventArgs e)
+        => await OpenGuildDetailAsync(e.Parameter as GuildCardVm);
 }

@@ -18,6 +18,8 @@
                     <ColumnDefinition Width="{Binding PrimaryColumnWidth, Source={x:Reference Root}}" />
                     <ColumnDefinition Width="{Binding SecondaryColumnWidth, Source={x:Reference Root}}" />
                     <ColumnDefinition Width="{Binding TertiaryColumnWidth, Source={x:Reference Root}}" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="{Binding InfoColumnWidth, Source={x:Reference Root}}" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
@@ -41,6 +43,34 @@
                        HorizontalTextAlignment="Center"
                        VerticalTextAlignment="Center" />
                 <Button Grid.Column="3"
+                        Text="{Binding FirstActionGlyph, Source={x:Reference Root}}"
+                        FontFamily="FASolid"
+                        FontSize="12"
+                        Padding="0"
+                        BackgroundColor="Transparent"
+                        TextColor="{StaticResource SubtleTextColor}"
+                        HeightRequest="18"
+                        WidthRequest="18"
+                        MinimumHeightRequest="0"
+                        MinimumWidthRequest="0"
+                        IsVisible="{Binding ShowFirstAction, Source={x:Reference Root}}"
+                        Command="{Binding FirstActionCommand, Source={x:Reference Root}}"
+                        CommandParameter="{Binding ActionCommandParameter, Source={x:Reference Root}}" />
+                <Button Grid.Column="4"
+                        Text="{Binding SecondActionGlyph, Source={x:Reference Root}}"
+                        FontFamily="FASolid"
+                        FontSize="12"
+                        Padding="0"
+                        BackgroundColor="Transparent"
+                        TextColor="{StaticResource SubtleTextColor}"
+                        HeightRequest="18"
+                        WidthRequest="18"
+                        MinimumHeightRequest="0"
+                        MinimumWidthRequest="0"
+                        IsVisible="{Binding ShowSecondAction, Source={x:Reference Root}}"
+                        Command="{Binding SecondActionCommand, Source={x:Reference Root}}"
+                        CommandParameter="{Binding ActionCommandParameter, Source={x:Reference Root}}" />
+                <Button Grid.Column="5"
                         Text="{Binding InfoGlyph, Source={x:Reference Root}}"
                         FontFamily="FASolid"
                         FontSize="12"
@@ -55,7 +85,7 @@
                         Command="{Binding InfoCommand, Source={x:Reference Root}}"
                         CommandParameter="{Binding ActionCommandParameter, Source={x:Reference Root}}"
                         Clicked="OnInfoClicked" />
-                <Button Grid.Column="4"
+                <Button Grid.Column="6"
                         Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
                         FontFamily="FASolid"
                         FontSize="12"

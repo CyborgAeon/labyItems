@@ -51,10 +51,24 @@
                Opacity="0.7"
                IsVisible="{Binding HasSelectedSpells, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}" />
 
-        <controls:ConfigSelectionList ItemsSource="{Binding SelectedSpells}"
-                                      EditCommand="{Binding Source={x:Reference RootPage}, Path=EditSpellCommand}"
-                                      InfoCommand="{Binding Source={x:Reference RootPage}, Path=ViewSpellInfoCommand}"
-                                      DeleteCommand="{Binding Source={x:Reference RootPage}, Path=DeleteSpellCommand}" />
+        <VerticalStackLayout BindableLayout.ItemsSource="{Binding SelectedSpells}" Spacing="8">
+          <BindableLayout.ItemTemplate>
+            <DataTemplate>
+              <controls:EditableListItemRowView RowBackgroundColor="{Binding RowBackgroundColor}"
+                                                FirstActionCommand="{Binding Source={x:Reference RootPage}, Path=EditSpellCommand}"
+                                                InfoCommand="{Binding Source={x:Reference RootPage}, Path=ViewSpellInfoCommand}"
+                                                DeleteCommand="{Binding Source={x:Reference RootPage}, Path=DeleteSpellCommand}"
+                                                ActionCommandParameter="{Binding .}">
+                <controls:EditableListItemRowView.PrimaryText>
+                  <MultiBinding StringFormat="{}{0} · {1}">
+                    <Binding Path="DisplayName" />
+                    <Binding Path="InlineSummary" />
+                  </MultiBinding>
+                </controls:EditableListItemRowView.PrimaryText>
+              </controls:EditableListItemRowView>
+            </DataTemplate>
+          </BindableLayout.ItemTemplate>
+        </VerticalStackLayout>
 
         <Label FontAttributes="Bold"
                Text="Global spell item modifiers" />

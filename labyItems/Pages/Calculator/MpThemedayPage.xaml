@@ -44,11 +44,15 @@
                                         ClearAfterResultSelection="True" />
           <Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.Search}" FontFamily="FASolid" FontSize="16" Padding="0" WidthRequest="44" HeightRequest="44" MinimumWidthRequest="0" MinimumHeightRequest="0" BackgroundColor="Transparent" TextColor="{StaticResource SubtleTextColor}" BorderColor="{StaticResource SurfaceBorderColor}" BorderWidth="1" CornerRadius="10" VerticalOptions="Center" Command="{Binding OpenSpellSearchCommand}" />
         </Grid>
-        <controls:ConfigSelectionList ItemsSource="{Binding SpellSelections}"
-                                      IsVisible="{Binding HasSpellSelections}"
-                                      EditCommand="{Binding EditSpellSelectionCommand}"
-                                      InfoCommand="{Binding ViewSpellInfoCommand}"
-                                      DeleteCommand="{Binding DeleteSpellSelectionCommand}" />
+        <VerticalStackLayout BindableLayout.ItemsSource="{Binding SpellSelections}" IsVisible="{Binding HasSpellSelections}" Spacing="8">
+          <BindableLayout.ItemTemplate><DataTemplate>
+            <controls:MpUseListItemRowView PrimaryText="{Binding RowText}" RowBackgroundColor="{Binding RowBackgroundColor}"
+                                                FirstActionCommand="{Binding DecrementCommand}" SecondActionCommand="{Binding IncrementCommand}"
+                                                InfoCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ViewSpellInfoCommand}"
+                                                DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteSpellSelectionCommand}"
+                                                ActionCommandParameter="{Binding .}" />
+          </DataTemplate></BindableLayout.ItemTemplate>
+        </VerticalStackLayout>
 
         <!-- Miracles -->
         <Label Text="Add standard miracle (1st-5th) or advanced (1-3)" FontAttributes="Bold" />
@@ -64,11 +68,15 @@
                                         ClearAfterResultSelection="True" />
           <Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.Search}" FontFamily="FASolid" FontSize="16" Padding="0" WidthRequest="44" HeightRequest="44" MinimumWidthRequest="0" MinimumHeightRequest="0" BackgroundColor="Transparent" TextColor="{StaticResource SubtleTextColor}" BorderColor="{StaticResource SurfaceBorderColor}" BorderWidth="1" CornerRadius="10" VerticalOptions="Center" Command="{Binding OpenMiracleSearchCommand}" />
         </Grid>
-        <controls:ConfigSelectionList ItemsSource="{Binding MiracleSelections}"
-                                      IsVisible="{Binding HasMiracleSelections}"
-                                      EditCommand="{Binding EditMiracleSelectionCommand}"
-                                      InfoCommand="{Binding ViewMiracleInfoCommand}"
-                                      DeleteCommand="{Binding DeleteMiracleSelectionCommand}" />
+        <VerticalStackLayout BindableLayout.ItemsSource="{Binding MiracleSelections}" IsVisible="{Binding HasMiracleSelections}" Spacing="8">
+          <BindableLayout.ItemTemplate><DataTemplate>
+            <controls:MpUseListItemRowView PrimaryText="{Binding RowText}" RowBackgroundColor="{Binding RowBackgroundColor}"
+                                                FirstActionCommand="{Binding DecrementCommand}" SecondActionCommand="{Binding IncrementCommand}"
+                                                InfoCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ViewMiracleInfoCommand}"
+                                                DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteMiracleSelectionCommand}"
+                                                ActionCommandParameter="{Binding .}" />
+          </DataTemplate></BindableLayout.ItemTemplate>
+        </VerticalStackLayout>
 
         <!-- Evocations -->
         <Label Text="Add 0-4th standard evocation" FontAttributes="Bold" />
@@ -85,11 +93,15 @@
                                         ClearAfterResultSelection="True" />
           <Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.Search}" FontFamily="FASolid" FontSize="16" Padding="0" WidthRequest="44" HeightRequest="44" MinimumWidthRequest="0" MinimumHeightRequest="0" BackgroundColor="Transparent" TextColor="{StaticResource SubtleTextColor}" BorderColor="{StaticResource SurfaceBorderColor}" BorderWidth="1" CornerRadius="10" VerticalOptions="Center" Command="{Binding OpenEvocationSearchCommand}" />
         </Grid>
-        <controls:ConfigSelectionList ItemsSource="{Binding EvocationSelections}"
-                                      IsVisible="{Binding HasEvocationSelections}"
-                                      EditCommand="{Binding EditEvocationSelectionCommand}"
-                                      InfoCommand="{Binding ViewEvocationInfoCommand}"
-                                      DeleteCommand="{Binding DeleteEvocationSelectionCommand}" />
+        <VerticalStackLayout BindableLayout.ItemsSource="{Binding EvocationSelections}" IsVisible="{Binding HasEvocationSelections}" Spacing="8">
+          <BindableLayout.ItemTemplate><DataTemplate>
+            <controls:MpUseListItemRowView PrimaryText="{Binding RowText}" RowBackgroundColor="{Binding RowBackgroundColor}"
+                                                FirstActionCommand="{Binding DecrementCommand}" SecondActionCommand="{Binding IncrementCommand}"
+                                                InfoCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ViewEvocationInfoCommand}"
+                                                DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteEvocationSelectionCommand}"
+                                                ActionCommandParameter="{Binding .}" />
+          </DataTemplate></BindableLayout.ItemTemplate>
+        </VerticalStackLayout>
 
         <Label Text="Add neuronic ability" FontAttributes="Bold" />
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
@@ -104,11 +116,15 @@
                                         ClearAfterResultSelection="True" />
           <Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.Search}" FontFamily="FASolid" FontSize="16" Padding="0" WidthRequest="44" HeightRequest="44" MinimumWidthRequest="0" MinimumHeightRequest="0" BackgroundColor="Transparent" TextColor="{StaticResource SubtleTextColor}" BorderColor="{StaticResource SurfaceBorderColor}" BorderWidth="1" CornerRadius="10" VerticalOptions="Center" Command="{Binding OpenNeuroSearchCommand}" />
         </Grid>
-        <controls:ConfigSelectionList ItemsSource="{Binding NeuroSelections}"
-                                      IsVisible="{Binding HasNeuroSelections}"
-                                      EditCommand="{Binding EditNeuroSelectionCommand}"
-                                      InfoCommand="{Binding ViewNeuroInfoCommand}"
-                                      DeleteCommand="{Binding DeleteNeuroSelectionCommand}" />
+        <VerticalStackLayout BindableLayout.ItemsSource="{Binding NeuroSelections}" IsVisible="{Binding HasNeuroSelections}" Spacing="8">
+          <BindableLayout.ItemTemplate><DataTemplate>
+            <controls:MpUseListItemRowView PrimaryText="{Binding RowText}" RowBackgroundColor="{Binding RowBackgroundColor}"
+                                                FirstActionCommand="{Binding DecrementCommand}" SecondActionCommand="{Binding IncrementCommand}"
+                                                InfoCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ViewNeuroInfoCommand}"
+                                                DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteNeuroSelectionCommand}"
+                                                ActionCommandParameter="{Binding .}" />
+          </DataTemplate></BindableLayout.ItemTemplate>
+        </VerticalStackLayout>
 
         <!-- Life slider -->
         <VerticalStackLayout Spacing="4">

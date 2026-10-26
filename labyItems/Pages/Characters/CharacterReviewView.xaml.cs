@@ -763,32 +763,7 @@ public partial class CharacterReviewView : ContentView
         if (navigation == null)
             return;
 
-        var detailView = new GuildCardView
-        {
-            BindingContext = detailCard,
-            ToggleExpandedCommand = new Command<GuildCardVm>(card =>
-            {
-                if (card == null)
-                    return;
-                card.IsExpanded = !card.IsExpanded;
-            }),
-            SelectCommand = new Command<GuildCardVm>(_ => { })
-        };
-
-        var page = new ContentPage
-        {
-            Title = detailCard.Name,
-            Content = new ScrollView
-            {
-                Content = new VerticalStackLayout
-                {
-                    Padding = new Thickness(16, 16, 16, 24),
-                    Children = { detailView }
-                }
-            }
-        };
-
-        await navigation.PushAsync(page);
+        await navigation.PushAsync(new global::labyItems.Pages.GuildCard.GuildCard(detailCard));
     }
 
     private async void OnGetBattleboardClicked(object sender, EventArgs e)

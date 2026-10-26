@@ -34,6 +34,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
     private IReadOnlyList<SpecialisationSectionSpec> _sectionSpecs = Array.Empty<SpecialisationSectionSpec>();
     private readonly Dictionary<string, SpecialisationSectionSpec> _specBySectionId = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _spellCustomisationSectionIds = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _managedPersistenceKeys = new(StringComparer.OrdinalIgnoreCase);
     private SpecialisationScreenState? _screenState;
 
     private bool _isApplyingState;
@@ -114,6 +115,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             Raise(nameof(HasMappedSpecialisations));
         };
     }
+
+    public Func<IReadOnlyList<string>, Task<bool>>? ConfirmDependentSelectionLossAsync { get; set; }
 
     public void CancelReloads()
     {
@@ -218,6 +221,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         var expandedBySection = preserveExpanded
             ? Sections.ToDictionary(section => section.SectionId, section => section.IsExpanded, StringComparer.OrdinalIgnoreCase)
             : new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
+        var completedBySection = preserveExpanded
+            ? Sections.ToDictionary(section => section.SectionId, section => section.IsComplete, StringComparer.OrdinalIgnoreCase)
+            : new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
 
         _isApplyingState = true;
         try
@@ -237,6 +243,10 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                     case SpecialisationSectionKind.Choice:
                     {
                         var choiceVm = BuildChoiceSection(spec, sectionState);
+                        choiceVm.ConfigureResolvedState(
+                            sectionState.DisplayIndex,
+                            sectionState.IsSubtreeComplete,
+                            suppressCompletionTransition: !preserveExpanded);
                         if (expandedBySection.TryGetValue(spec.SectionId, out var expanded))
                             choiceVm.IsExpanded = expanded;
                         Sections.Add(choiceVm);
@@ -250,10 +260,33 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                     case SpecialisationSectionKind.RaceSubtype:
                     {
                         var mappedVm = BuildMappedSection(spec, sectionState);
+                        mappedVm.ConfigureResolvedState(
+                            sectionState.DisplayIndex,
+                            sectionState.IsSubtreeComplete,
+                            suppressCompletionTransition: !preserveExpanded);
                         if (expandedBySection.TryGetValue(spec.SectionId, out var expanded))
                             mappedVm.IsExpanded = expanded;
                         Sections.Add(mappedVm);
                         break;
+                    }
+                }
+            }
+
+            if (!preserveExpanded)
+            {
+                var firstIncomplete = Sections.FirstOrDefault(section => !section.IsComplete);
+                foreach (var section in Sections)
+                    section.IsExpanded = ReferenceEquals(section, firstIncomplete);
+            }
+            else
+            {
+                foreach (var section in Sections)
+                {
+                    if (completedBySection.TryGetValue(section.SectionId, out var wasComplete)
+                        && !wasComplete
+                        && section.IsComplete)
+                    {
+                        section.IsExpanded = false;
                     }
                 }
             }
@@ -687,6 +720,10 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                     return;
 
                 var selectionState = BuildSelectionStateFromSections();
+                var previousScreen = _screenState;
+                var previousContext = _context;
+                var previousRequiredChoices = _requiredChoices;
+                var previousSectionSpecs = _sectionSpecs;
                 var result = await Task.Run(() =>
                 {
                     var context = CharacterSpecialisationScreenCalculator.LoadContext(
@@ -728,6 +765,25 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                 if (cancellationToken.IsCancellationRequested || !IsLatestSelectionRecalc(version))
                     return;
 
+                var lostSelections = ResolveLostSelections(previousScreen, result.recalculated);
+                if (lostSelections.Count > 0 && ConfirmDependentSelectionLossAsync != null)
+                {
+                    var accepted = await MainThread.InvokeOnMainThreadAsync(
+                        () => ConfirmDependentSelectionLossAsync(lostSelections));
+                    if (!accepted)
+                    {
+                        _context = previousContext;
+                        _requiredChoices = previousRequiredChoices;
+                        _sectionSpecs = previousSectionSpecs;
+                        if (previousScreen != null)
+                        {
+                            await MainThread.InvokeOnMainThreadAsync(
+                                () => ApplyScreenState(previousScreen, preserveExpanded: true));
+                        }
+                        return;
+                    }
+                }
+
                 _context = result.context;
                 _requiredChoices = result.requiredChoices;
                 _sectionSpecs = result.sectionSpecs;
@@ -767,6 +823,31 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             System.Diagnostics.Debug.WriteLine($"Specialisation recalculation failed: {ex}");
         }
     }
+
+    private static IReadOnlyList<string> ResolveLostSelections(
+        SpecialisationScreenState? previous,
+        SpecialisationScreenState current)
+    {
+        if (previous == null)
+            return Array.Empty<string>();
+
+        var currentById = current.Sections.ToDictionary(
+            section => section.Spec.SectionId,
+            StringComparer.OrdinalIgnoreCase);
+
+        return previous.Sections
+            .Where(HasMeaningfulSelection)
+            .Where(section => !currentById.TryGetValue(section.Spec.SectionId, out var replacement)
+                || !HasMeaningfulSelection(replacement))
+            .Select(section => section.Spec.Title)
+            .Where(title => !string.IsNullOrWhiteSpace(title))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private static bool HasMeaningfulSelection(SpecialisationSectionState section)
+        => !string.IsNullOrWhiteSpace(section.SelectedOption)
+            || section.SelectedByLevel.Values.Any(value => !string.IsNullOrWhiteSpace(value));
 
     private SpecialisationSelectionState BuildSelectionStateFromSections()
     {
@@ -842,21 +923,19 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
     private void ApplyDraftState(SpecialisationScreenState screenState)
     {
-        var managedKeys = _sectionSpecs
+        var currentManagedKeys = _sectionSpecs
             .Where(spec => spec.Kind != SpecialisationSectionKind.RaceSubtype)
             .Select(spec => spec.Title)
             .Where(title => !string.IsNullOrWhiteSpace(title))
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-        var toRemove = Draft.SpecialisationSelections.Keys
-            .Where(key => managedKeys.Contains(key))
-            .ToList();
+        foreach (var key in currentManagedKeys)
+            _managedPersistenceKeys.Add(key);
 
-        foreach (var key in toRemove)
-            Draft.SpecialisationSelections.Remove(key);
-
-        foreach (var entry in screenState.PersistedSelections)
-            Draft.SpecialisationSelections[entry.Key] = entry.Value;
+        SpecialisationSelectionPersistence.Reconcile(
+            Draft,
+            _managedPersistenceKeys,
+            screenState.PersistedSelections);
 
         Draft.RaceSubtypeKey = screenState.RaceSubtypeKey;
         Draft.RaceSubtypeValue = screenState.RaceSubtypeValue;

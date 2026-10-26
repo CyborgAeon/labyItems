@@ -67,6 +67,7 @@
     <Compile Include="../../labyItems/Services/Specialisations/NormalizedSpecialisationModels.cs" Link="Source/NormalizedSpecialisationModels.cs" />
     <Compile Include="../../labyItems/Services/Specialisations/SpecialisationDefinitionRepository.cs" Link="Source/SpecialisationDefinitionRepository.cs" />
     <Compile Include="../../labyItems/Services/Specialisations/CharacterSpecialisationScreenCalculator.cs" Link="Source/CharacterSpecialisationScreenCalculator.cs" />
+    <Compile Include="../../labyItems/Services/Specialisations/SpecialisationSelectionPersistence.cs" Link="Source/SpecialisationSelectionPersistence.cs" />
     <Compile Include="../../labyItems/Services/BattleboardService.cs" Link="Source/BattleboardService.cs" />
     <Compile Include="../../labyItems/Services/BattleboardAdvancementEffectResolver.cs" Link="Source/BattleboardAdvancementEffectResolver.cs" />
     <Compile Include="../../labyItems/Services/BattleboardAbilityEffectResolver.cs" Link="Source/BattleboardAbilityEffectResolver.cs" />

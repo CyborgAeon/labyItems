@@ -1,8 +1,8 @@
 using Microsoft.Maui.Graphics;
 
-namespace labyItems.Pages.Configs;
+namespace labyItems.Models.ViewModels;
 
-public interface IConfigSelectionListItem
+public interface IListItemRowModel
 {
     string DisplayName { get; }
     string InlineSummary { get; }

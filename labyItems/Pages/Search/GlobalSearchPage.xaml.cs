@@ -42,22 +42,20 @@ public partial class GlobalSearchPage : ContentPage
         BindingContext = _vm;
         _scrollPreserver = new CollectionViewScrollPreserver(ResultsCollection, this);
 
-        if (initialKind.HasValue)
+        ToolsetMenu.SelectedRoute = (picker?.Kind ?? initialKind) switch
         {
-            ToolsetMenu.SelectedRoute = initialKind.Value switch
-            {
-                GlobalSearchKind.Spell => ToolsetRouteKeys.SearchSpells,
-                GlobalSearchKind.Miracle => ToolsetRouteKeys.SearchMiracles,
-                GlobalSearchKind.Evocation => ToolsetRouteKeys.SearchEvocations,
-                GlobalSearchKind.Neuronic => ToolsetRouteKeys.SearchNeuronics,
-                GlobalSearchKind.Ability => ToolsetRouteKeys.SearchAbilities,
-                _ => ToolsetRouteKeys.SearchGlobal
-            };
-        }
-        else
-        {
-            ToolsetMenu.SelectedRoute = ToolsetRouteKeys.SearchGlobal;
-        }
+            GlobalSearchKind.Spell => ToolsetRouteKeys.SearchSpells,
+            GlobalSearchKind.Miracle => ToolsetRouteKeys.SearchMiracles,
+            GlobalSearchKind.Evocation => ToolsetRouteKeys.SearchEvocations,
+            GlobalSearchKind.Neuronic => ToolsetRouteKeys.SearchNeuronics,
+            GlobalSearchKind.Ability => ToolsetRouteKeys.SearchAbilities,
+            GlobalSearchKind.Class => ToolsetRouteKeys.SearchClasses,
+            GlobalSearchKind.Race => ToolsetRouteKeys.SearchRaces,
+            GlobalSearchKind.MultiClass => ToolsetRouteKeys.SearchMultiClasses,
+            GlobalSearchKind.MultiRace => ToolsetRouteKeys.SearchMultiRaces,
+            GlobalSearchKind.Guild => ToolsetRouteKeys.SearchGuilds,
+            _ => ToolsetRouteKeys.SearchGlobal
+        };
     }
 
     public async Task<IReadOnlyList<GlobalSearchResultVm>> PickAsync(INavigation navigation)

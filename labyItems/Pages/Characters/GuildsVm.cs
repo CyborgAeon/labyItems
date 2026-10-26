@@ -150,10 +150,6 @@ public sealed class GuildsVm : INotifyPropertyChanged
         FilteredGuilds = new ObservableCollection<GuildCardVm>();
         TypeFilterChips = new ObservableCollection<GuildTypeFilterChipVm>();
 
-        ToggleExpandedCommand = new Command<GuildCardVm>(item => _ = ExecuteGuildCardCommandSafeAsync(
-            action: () => ToggleExpandedAsync(item),
-            operation: "GUILD_TOGGLE_EXPANDED",
-            guildName: item?.Name));
         ToggleSelectedCommand = new Command<GuildCardVm>(item => _ = ExecuteGuildCardCommandSafeAsync(
             action: () => ToggleSelectedAsync(item),
             operation: "GUILD_TOGGLE_SELECTED",
@@ -556,7 +552,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
     public bool IsComplete =>
         AreRequiredBenefitChoicesComplete(_guildRecords);
 
-    public ICommand ToggleExpandedCommand { get; }
+    public bool CanSelectGuilds => _allowGuildSelection;
     public ICommand ToggleSelectedCommand { get; }
     public ICommand SelectTypeFilterCommand { get; }
     public ICommand ToggleTypeFilterChipCommand { get; }
@@ -1902,25 +1898,6 @@ public sealed class GuildsVm : INotifyPropertyChanged
             ScheduleRefilter(debounce: false);
     }
 
-    private async Task ToggleExpandedAsync(GuildCardVm? item)
-    {
-        if (item == null)
-            return;
-
-        var shouldExpand = !item.IsExpanded;
-
-        foreach (var g in FilteredGuilds)
-        {
-            if (!ReferenceEquals(g, item) && g.IsExpanded)
-                g.IsExpanded = false;
-        }
-
-        item.IsExpanded = shouldExpand;
-
-        if (shouldExpand)
-            _ = EnsureCardDetailsLoadedAsync(item);
-    }
-
     private static bool RecordMatchesSearch(string guildName, GuildRecord record, string text)
     {
         if (guildName.Contains(text, StringComparison.OrdinalIgnoreCase))
@@ -2546,22 +2523,19 @@ public sealed class GuildsVm : INotifyPropertyChanged
             && SelectedIndex.Value <= Options.Count;
     }
 
-    private async Task ToggleSelectedAsync(GuildCardVm? item)
+    public async Task<bool> ToggleSelectedAsync(GuildCardVm? item)
     {
         if (!_allowGuildSelection)
-        {
-            await ToggleExpandedAsync(item);
-            return;
-        }
+            return false;
 
         if (item is null || (!item.IsSelectable && !item.IsSelected))
-            return;
+            return false;
 
         var availability = EvaluateAvailabilityForCurrentContext(item.Name);
         if (_enforceAvailabilityForSelection && !item.IsSelected && !availability.Allowed)
         {
             item.NotSelectableReason = availability.Reason;
-            return;
+            return false;
         }
 
         var idx = _draft.Guilds.FindIndex(g => string.Equals(g, item.Name, StringComparison.OrdinalIgnoreCase));
@@ -2569,6 +2543,12 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
         if (nowSelected)
         {
+            if (_draft.Guilds.Count >= 3)
+            {
+                item.NotSelectableReason = "A maximum of 3 guilds may be selected.";
+                return false;
+            }
+
             _draft.Guilds.Add(item.Name);
             item.IsSelected = true;
             if (_guildRecords.TryGetValue(item.Name, out var rec) && rec != null)
@@ -2590,6 +2570,8 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
         if (_refreshDraftAbilitiesAsync != null)
             await _refreshDraftAbilitiesAsync();
+
+        return true;
     }
 }
 

@@ -36,6 +36,9 @@ public sealed class MappedSpecialisationSectionVm : ISpecialisationSectionVm
     public string Title { get; }
     public string Subtitle { get; }
     public SpecialisationSectionType SectionType { get; }
+    public int DisplayIndex { get; private set; }
+    public bool IsSubtreeComplete { get; private set; } = true;
+    public bool SuppressCompletionTransition { get; private set; }
 
     public ObservableCollection<string> Options { get; } = new();
     public ObservableCollection<SpecialisationAbilityRow> AbilityRows { get; } = new();
@@ -110,7 +113,7 @@ public sealed class MappedSpecialisationSectionVm : ISpecialisationSectionVm
         }
     }
     public bool HasIssue => !string.IsNullOrWhiteSpace(IssueMessage);
-    public bool IsComplete => (!_required || HasSelection) && !HasIssue;
+    public bool IsComplete => (!_required || HasSelection) && !HasIssue && IsSubtreeComplete;
     public string StatusText => HasIssue ? "Issue" : (HasSelection ? "Selected" : (_required ? "Required" : "Optional"));
     public string CardState => HasIssue ? "Issue" : (HasSelection ? "Success" : (_required ? "Error" : "Neutral"));
     public string CardStateText => CardState;
@@ -198,6 +201,17 @@ public sealed class MappedSpecialisationSectionVm : ISpecialisationSectionVm
         }
 
         IssueMessage = (_selectionIssueResolver?.Invoke(selected) ?? string.Empty).Trim();
+        RaiseComputed();
+    }
+
+    public void ConfigureResolvedState(int displayIndex, bool isSubtreeComplete, bool suppressCompletionTransition)
+    {
+        DisplayIndex = displayIndex;
+        IsSubtreeComplete = isSubtreeComplete;
+        SuppressCompletionTransition = suppressCompletionTransition;
+        Raise(nameof(DisplayIndex));
+        Raise(nameof(IsSubtreeComplete));
+        Raise(nameof(SuppressCompletionTransition));
         RaiseComputed();
     }
 

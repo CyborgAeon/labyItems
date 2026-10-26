@@ -11,6 +11,12 @@ public partial class ListItemRowView : ContentView
     public static readonly BindableProperty ShowSecondaryTextProperty = Create(nameof(ShowSecondaryText), false);
     public static readonly BindableProperty TertiaryTextProperty = Create(nameof(TertiaryText), string.Empty);
     public static readonly BindableProperty ShowTertiaryTextProperty = Create(nameof(ShowTertiaryText), false);
+    public static readonly BindableProperty ShowFirstActionProperty = Create(nameof(ShowFirstAction), false);
+    public static readonly BindableProperty FirstActionGlyphProperty = Create(nameof(FirstActionGlyph), string.Empty);
+    public static readonly BindableProperty FirstActionCommandProperty = Create<ICommand?>(nameof(FirstActionCommand), null);
+    public static readonly BindableProperty ShowSecondActionProperty = Create(nameof(ShowSecondAction), false);
+    public static readonly BindableProperty SecondActionGlyphProperty = Create(nameof(SecondActionGlyph), string.Empty);
+    public static readonly BindableProperty SecondActionCommandProperty = Create<ICommand?>(nameof(SecondActionCommand), null);
     public static readonly BindableProperty ShowInfoProperty = Create(nameof(ShowInfo), false);
     public static readonly BindableProperty InfoGlyphProperty = Create(nameof(InfoGlyph), FontAwesomeGlyphs.InfoCircle);
     public static readonly BindableProperty ShowDeleteProperty = Create(nameof(ShowDelete), false);
@@ -59,6 +65,12 @@ public partial class ListItemRowView : ContentView
     public bool ShowSecondaryText { get => (bool)GetValue(ShowSecondaryTextProperty); set => SetValue(ShowSecondaryTextProperty, value); }
     public string TertiaryText { get => (string)GetValue(TertiaryTextProperty); set => SetValue(TertiaryTextProperty, value); }
     public bool ShowTertiaryText { get => (bool)GetValue(ShowTertiaryTextProperty); set => SetValue(ShowTertiaryTextProperty, value); }
+    public bool ShowFirstAction { get => (bool)GetValue(ShowFirstActionProperty); set => SetValue(ShowFirstActionProperty, value); }
+    public string FirstActionGlyph { get => (string)GetValue(FirstActionGlyphProperty); set => SetValue(FirstActionGlyphProperty, value); }
+    public ICommand? FirstActionCommand { get => (ICommand?)GetValue(FirstActionCommandProperty); set => SetValue(FirstActionCommandProperty, value); }
+    public bool ShowSecondAction { get => (bool)GetValue(ShowSecondActionProperty); set => SetValue(ShowSecondActionProperty, value); }
+    public string SecondActionGlyph { get => (string)GetValue(SecondActionGlyphProperty); set => SetValue(SecondActionGlyphProperty, value); }
+    public ICommand? SecondActionCommand { get => (ICommand?)GetValue(SecondActionCommandProperty); set => SetValue(SecondActionCommandProperty, value); }
     public bool ShowInfo { get => (bool)GetValue(ShowInfoProperty); set => SetValue(ShowInfoProperty, value); }
     public string InfoGlyph { get => (string)GetValue(InfoGlyphProperty); set => SetValue(InfoGlyphProperty, value); }
     public bool ShowDelete { get => (bool)GetValue(ShowDeleteProperty); set => SetValue(ShowDeleteProperty, value); }

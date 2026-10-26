@@ -11,6 +11,114 @@ namespace labyItems.Tests;
 public sealed class CharacterSpecialisationScreenCalculatorTests : ServiceTestBase
 {
     [Fact]
+    public async Task BuildScreenSections_AssassinScoutSkills_FollowProgressionOrder()
+    {
+        FileSystem.ClearPackageOverrides();
+        ServiceCacheResetter.ResetAll();
+
+        var classes = await ClassService.GetAllAsync();
+        var races = await PeopleService.GetAllAsync();
+        var index = await SpecialisationDefinitionRepository.GetIndexAsync();
+        var context = CharacterSpecialisationScreenCalculator.LoadContext(
+            new CharacterDraft { Class = "Assassin", Race = "Blauz" },
+            classes,
+            races,
+            index.Definitions,
+            index.InjectionRules);
+
+        var required = CharacterSpecialisationScreenCalculator.ResolveRequiredChoices(context);
+        var sections = CharacterSpecialisationScreenCalculator.BuildScreenSections(context, required);
+        var scoutSections = sections
+            .Where(section => section.Title.Contains("Scout skill", StringComparison.OrdinalIgnoreCase))
+            .Select(section => section.Title)
+            .ToList();
+
+        Assert.Equal(
+            ["Standard Scout skill", "Specialist Scout skill"],
+            scoutSections);
+        Assert.All(sections, section => Assert.NotEmpty(section.Options));
+    }
+
+    [Fact]
+    public async Task BuildScreenSections_ElfArcher_PutsRaceBeforeClass_AndBothHaveOptions()
+    {
+        FileSystem.ClearPackageOverrides();
+        ServiceCacheResetter.ResetAll();
+
+        var classes = await ClassService.GetAllAsync();
+        var races = await PeopleService.GetAllAsync();
+        var index = await SpecialisationDefinitionRepository.GetIndexAsync();
+        var context = CharacterSpecialisationScreenCalculator.LoadContext(
+            new CharacterDraft { Class = "Archer", Race = "Elf" },
+            classes,
+            races,
+            index.Definitions,
+            index.InjectionRules);
+
+        var required = CharacterSpecialisationScreenCalculator.ResolveRequiredChoices(context);
+        var sections = CharacterSpecialisationScreenCalculator.BuildScreenSections(context, required);
+
+        Assert.True(sections.Count >= 2);
+        Assert.Equal(SpecialisationSectionKind.RaceSubtype, sections[0].Kind);
+        Assert.Contains("Elf", sections[0].Title, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains(sections.Skip(1), section =>
+            section.Title.Contains("Archer", StringComparison.OrdinalIgnoreCase));
+        Assert.All(sections, section => Assert.NotEmpty(section.Options));
+    }
+
+    [Fact]
+    public void Recalculate_SubtypeInjectedRequiredSection_HoldsParentSubtreeIncomplete()
+    {
+        var draft = new CharacterDraft { Race = "Human", RaceSubtypeValue = "Amlesian" };
+        var subtype = new SpecialisationSectionSpec
+        {
+            SectionId = "subtype:Human:Subtype",
+            Title = "Subtype",
+            Kind = SpecialisationSectionKind.RaceSubtype,
+            Required = true,
+            Options = [new ChoiceOption { Key = "Amlesian", Label = "Amlesian" }]
+        };
+        var child = new SpecialisationSectionSpec
+        {
+            SectionId = "mapped:AmlesianCaste",
+            Title = "Amlesian Caste",
+            Kind = SpecialisationSectionKind.Mapped,
+            Required = true,
+            Options =
+            [
+                new ChoiceOption { Key = "Samurai", Label = "Samurai" },
+                new ChoiceOption { Key = "Eta", Label = "Eta" }
+            ],
+            Metadata = new Dictionary<string, string>
+            {
+                ["parentSectionId"] = subtype.SectionId
+            }
+        };
+        var context = CharacterSpecialisationScreenCalculator.LoadContext(
+            draft,
+            new Dictionary<string, CharacterClassRecord>(),
+            new Dictionary<string, PeopleRecord>(),
+            new Dictionary<string, SpecialisationDefinition>());
+
+        var screen = CharacterSpecialisationScreenCalculator.Recalculate(
+            context,
+            [subtype, child],
+            new SpecialisationSelectionState
+            {
+                RaceSubtype = "Amlesian",
+                MappedSelections = new Dictionary<string, string>
+                {
+                    [subtype.SectionId] = "Amlesian"
+                }
+            });
+
+        Assert.True(screen.Sections[0].IsComplete);
+        Assert.False(screen.Sections[0].IsSubtreeComplete);
+        Assert.Equal(1, screen.Sections[0].DisplayIndex);
+        Assert.Equal(2, screen.Sections[1].DisplayIndex);
+    }
+
+    [Fact]
     public async Task BuildScreenSections_CrolSubtypeAppliesTalentInjectionRules()
     {
         FileSystem.ClearPackageOverrides();

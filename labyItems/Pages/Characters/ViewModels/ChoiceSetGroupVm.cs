@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows.Input;
 using labyItems.Models.Characters;
 using labyItems.Services.Specialisations;
 
@@ -9,6 +10,7 @@ public sealed class ChoiceSetGroupVm : INotifyPropertyChanged
 {
     private readonly Dictionary<string, ChoiceOption> _optionsByLabel = new(StringComparer.OrdinalIgnoreCase);
     private readonly Action<ChoiceSetGroupVm> _onSelectionChanged;
+    private readonly IReadOnlyDictionary<string, AbilityDefinition> _abilityRefs;
     private string _selectedOptionDisplay = string.Empty;
     private string _selectedOptionKey = string.Empty;
 
@@ -29,6 +31,7 @@ public sealed class ChoiceSetGroupVm : INotifyPropertyChanged
         UnlockLevel = unlockLevel;
         Title = title;
         _onSelectionChanged = onSelectionChanged;
+        _abilityRefs = abilityRefs;
         foreach (var option in choiceSet.Options ?? Array.Empty<ChoiceOption>())
         {
             var label = (option.Label ?? option.Key ?? string.Empty).Trim();
@@ -43,6 +46,8 @@ public sealed class ChoiceSetGroupVm : INotifyPropertyChanged
             SearchOptions[label] = label;
         }
 
+        RebuildOptionCells();
+
         var initial = ResolveInitialSelectionLabel(savedSelection);
         _selectedOptionDisplay = initial;
         _selectedOptionKey = ResolveSelectedOptionKey(initial);
@@ -55,6 +60,7 @@ public sealed class ChoiceSetGroupVm : INotifyPropertyChanged
     public string UnlockLevelText => $"Level {UnlockLevel}";
     public string Title { get; }
     public ObservableCollection<string> Options { get; } = new();
+    public ObservableCollection<ChoiceSetOptionCellVm> OptionCells { get; } = new();
     public Dictionary<string, string> SearchOptions { get; } = new(StringComparer.OrdinalIgnoreCase);
     public ObservableCollection<ChoiceSetAbilityRowVm> AbilityRows { get; } = new();
     public bool HasAbilityRows => AbilityRows.Count > 0;
@@ -72,6 +78,8 @@ public sealed class ChoiceSetGroupVm : INotifyPropertyChanged
             _selectedOptionKey = ResolveSelectedOptionKey(next);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedOptionDisplay)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedOptionKey)));
+            RefreshOptionSelection();
+            RefreshAbilityRows(_abilityRefs);
             _onSelectionChanged(this);
         }
     }
@@ -137,17 +145,30 @@ public sealed class ChoiceSetGroupVm : INotifyPropertyChanged
 
         return string.Empty;
     }
-}
 
-public sealed record ChoiceSetAbilityRowVm(string DisplayName, string LookupKey)
-{
-    private Color _rowBackgroundColor = Colors.Transparent;
-
-    public bool IsValid => !string.IsNullOrWhiteSpace(DisplayName) || !string.IsNullOrWhiteSpace(LookupKey);
-
-    public Color RowBackgroundColor
+    private void RebuildOptionCells()
     {
-        get => _rowBackgroundColor;
-        set => _rowBackgroundColor = value;
+        OptionCells.Clear();
+        for (var index = 0; index < Options.Count; index++)
+        {
+            var label = Options[index];
+            var isLastOddCell = Options.Count % 2 == 1 && index == Options.Count - 1;
+            OptionCells.Add(new ChoiceSetOptionCellVm(
+                label,
+                row: index / 2,
+                column: isLastOddCell ? 0 : index % 2,
+                columnSpan: isLastOddCell ? 2 : 1,
+                select: () => SelectedOptionDisplay = label.Equals(_selectedOptionDisplay, StringComparison.OrdinalIgnoreCase)
+                    ? string.Empty
+                    : label));
+        }
+
+        RefreshOptionSelection();
+    }
+
+    private void RefreshOptionSelection()
+    {
+        foreach (var option in OptionCells)
+            option.IsSelected = option.Label.Equals(_selectedOptionDisplay, StringComparison.OrdinalIgnoreCase);
     }
 }

@@ -2,7 +2,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
   <g fill="none"
      stroke="currentColor"
-     stroke-width="72"
+     stroke-width="100"
      stroke-linecap="butt"
      stroke-linejoin="round">
     <path d="M104 64V280Q104 352 176 352H464Q536 352 536 280V64"/>

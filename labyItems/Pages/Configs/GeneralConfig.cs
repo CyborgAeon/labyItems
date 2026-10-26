@@ -9,11 +9,12 @@ using labyItems.Models.Enums;
 using labyItems.Services;
 using labyItems.Pages.Calculator;
 using labyItems.Models;
+using labyItems.Models.ViewModels;
 using Microsoft.Maui.Graphics;
 
 namespace labyItems.Pages.Configs
 {
-    public sealed class GeneralAbilitySelectionEntry : INotifyPropertyChanged, IConfigSelectionListItem
+    public sealed class GeneralAbilitySelectionEntry : INotifyPropertyChanged, IListItemRowModel
     {
         private bool _immunityOnlyFirstTimeNeeded;
         private Color _rowBackgroundColor = Colors.White;

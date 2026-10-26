@@ -5,28 +5,27 @@ using Microsoft.Maui.ApplicationModel;
 
 namespace labyItems.Pages.Characters;
 
-public partial class RaceCardView : ContentView
+public partial class WizardClassCardView : ContentView
 {
-    public static readonly BindableProperty ToggleRaceExpandedCommandProperty =
-        BindableProperty.Create(nameof(ToggleRaceExpandedCommand), typeof(ICommand), typeof(RaceCardView));
+    public static readonly BindableProperty ToggleExpandedCommandProperty =
+        BindableProperty.Create(nameof(ToggleExpandedCommand), typeof(ICommand), typeof(WizardClassCardView));
 
-    public ICommand ToggleRaceExpandedCommand
+    public ICommand ToggleExpandedCommand
     {
-        get => (ICommand)GetValue(ToggleRaceExpandedCommandProperty);
-        set => SetValue(ToggleRaceExpandedCommandProperty, value);
+        get => (ICommand)GetValue(ToggleExpandedCommandProperty);
+        set => SetValue(ToggleExpandedCommandProperty, value);
     }
 
 
     public static readonly BindableProperty SelectCommandProperty =
-        BindableProperty.Create(nameof(SelectCommand), typeof(ICommand), typeof(RaceCardView));
-
+        BindableProperty.Create(nameof(SelectCommand), typeof(ICommand), typeof(WizardClassCardView));
     public ICommand SelectCommand
     {
         get => (ICommand)GetValue(SelectCommandProperty);
         set => SetValue(SelectCommandProperty, value);
     }
 
-    public RaceCardView()
+    public WizardClassCardView()
     {
         InitializeComponent();
         Unloaded += OnUnloaded;
@@ -47,7 +46,7 @@ public partial class RaceCardView : ContentView
         if (_boundVm != null)
             _boundVm.PropertyChanged += OnVmPropertyChanged;
 
-        if (BindingContext is RaceCardVm vm)
+        if (BindingContext is ClassCardVm vm)
         {
             ExpandedContent.AbortAnimation("expand");
             ExpandedContent.IsVisible = vm.IsExpanded;
@@ -58,28 +57,38 @@ public partial class RaceCardView : ContentView
 
     private void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(RaceCardVm.IsSelected))
+        if (e.PropertyName == nameof(ClassCardVm.IsSelected))
         {
             UiDispatchHelper.BeginOnMainThread(() =>
                 UiDispatchHelper.RunFireAndForget(
                     AnimateSelectionAsync,
-                    "RACE_CARD_SELECTION_ANIMATION"));
+                    "CLASS_CARD_SELECTION_ANIMATION"));
         }
 
 
-        if (e.PropertyName == nameof(RaceCardVm.IsExpanded))
+        if (e.PropertyName == nameof(ClassCardVm.IsExpanded))
         {
             UiDispatchHelper.BeginOnMainThread(() =>
                 UiDispatchHelper.RunFireAndForget(
                     HandleExpandedChangedAsync,
-                    "RACE_CARD_EXPAND_ANIMATION"));
+                    "CLASS_CARD_EXPAND_ANIMATION"));
+        }
+    }
+
+    private async Task AnimateSelectionAsync()
+    {
+        if (BindingContext is not ClassCardVm vm) return;
+
+        if (vm.IsSelected)
+        {
+            await CardFrame.ScaleTo(1.02, 110, Easing.CubicOut);
+            await CardFrame.ScaleTo(1.0, 110, Easing.CubicOut);
         }
     }
 
     private async Task HandleExpandedChangedAsync()
     {
-        if (BindingContext is not RaceCardVm vm) return;
-
+        if (BindingContext is not ClassCardVm vm) return;
         var previousCts = _expandCts;
         previousCts?.Cancel();
         _expandCts = new CancellationTokenSource();
@@ -183,17 +192,6 @@ public partial class RaceCardView : ContentView
         ExpandedContent.IsVisible = false;
         ExpandedContent.HeightRequest = -1;
         ExpandedContent.Opacity = 1;
-    }
-
-    private async Task AnimateSelectionAsync()
-    {
-        if (BindingContext is not RaceCardVm vm) return;
-
-        if (vm.IsSelected)
-        {
-            await CardFrame.ScaleTo(1.02, 110, Easing.CubicOut);
-            await CardFrame.ScaleTo(1.0, 110, Easing.CubicOut);
-        }
     }
 
     private void OnUnloaded(object? sender, EventArgs e)
