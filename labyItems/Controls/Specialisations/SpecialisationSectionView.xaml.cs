@@ -3,7 +3,6 @@ using labyItems.Helpers;
 
 namespace labyItems.Controls.Specialisations;
 
-[ContentProperty(nameof(SectionContent))]
 public partial class SpecialisationSectionView : ContentView
 {
     public static readonly BindableProperty SectionNumberProperty = BindableProperty.Create(nameof(SectionNumber), typeof(int), typeof(SpecialisationSectionView), 1);
@@ -25,33 +24,13 @@ public partial class SpecialisationSectionView : ContentView
     public bool SuppressCompletionTransition { get => (bool)GetValue(SuppressCompletionTransitionProperty); set => SetValue(SuppressCompletionTransitionProperty, value); }
     public bool AnimationsEnabled { get => (bool)GetValue(AnimationsEnabledProperty); set => SetValue(AnimationsEnabledProperty, value); }
     public ICommand? ToggleCommand { get => (ICommand?)GetValue(ToggleCommandProperty); set => SetValue(ToggleCommandProperty, value); }
-    public View? SectionContent
-    {
-        get => (View?)GetValue(SectionContentProperty);
-        set
-        {
-            SetValue(SectionContentProperty, value);
-            ApplySectionContentBindingContext();
-        }
-    }
+    public View? SectionContent { get => (View?)GetValue(SectionContentProperty); set => SetValue(SectionContentProperty, value); }
 
     public SpecialisationSectionView()
     {
         InitializeComponent();
         Loaded += (_, _) => { _loaded = true; ApplyCompleteState(false); ApplyExpandedState(false); };
         Unloaded += (_, _) => AbortAnimations();
-    }
-
-    protected override void OnBindingContextChanged()
-    {
-        base.OnBindingContextChanged();
-        ApplySectionContentBindingContext();
-    }
-
-    private void ApplySectionContentBindingContext()
-    {
-        if (SectionContent != null)
-            SectionContent.BindingContext = BindingContext;
     }
 
     private void OnHeaderTapped(object? sender, TappedEventArgs e)

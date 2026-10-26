@@ -410,8 +410,52 @@
                   x:Name="ReviewSectionHost">
                 <local:CharacterReviewView x:Name="DetailsSectionView"
                                            ShowSaveButton="False"
+                                           ShowBuilderSummary="False"
                                            IsVisible="True" />
-
+                <ScrollView x:Name="SpendsSectionView"
+                            IsVisible="False">
+                    <VerticalStackLayout Padding="16"
+                                         Spacing="14">
+                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Spend"
+                                       FontAttributes="Bold" />
+                                <Grid ColumnDefinitions="*,*"
+                                      ColumnSpacing="8">
+                                    <Button Text="Edit Spend"
+                                            FontSize="12"
+                                            BackgroundColor="{StaticResource Primary}"
+                                            TextColor="White"
+                                            CornerRadius="10"
+                                            Clicked="OnEditSpendClicked" />
+                                    <Button Grid.Column="1"
+                                            Text="Select Spend"
+                                            FontSize="12"
+                                            BackgroundColor="{StaticResource White}"
+                                            TextColor="{StaticResource Primary}"
+                                            BorderColor="{StaticResource Primary}"
+                                            BorderWidth="1"
+                                            CornerRadius="10"
+                                            Clicked="OnSelectSpendClicked" />
+                                </Grid>
+                               <VerticalStackLayout BindableLayout.ItemsSource="{Binding SpendEntries}"
+                                                     Spacing="6">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <controls:ListItemRowView PrimaryText="{Binding PrimaryText}" SecondaryText="{Binding SecondaryText}" ShowSecondaryText="{Binding HasSecondaryText}" 
+                                                ShowInfo="True" ActionCommandParameter="{Binding .}" InfoClicked="OnSpendEntryInfoClicked"/>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                                <Label Text="No Spends Recorded Yet&#10;&#10;Manage on advancement page."
+                                       HorizontalTextAlignment="Center"
+                                       TextColor="{StaticResource MutedTextColor}"
+                                       IsVisible="{Binding HasSpendEntries, Converter={StaticResource InverseBoolConverter}}" />
+                                       
+                            </VerticalStackLayout>
+                        </Frame>
+                    </VerticalStackLayout>
+                </ScrollView>
                 <ScrollView x:Name="SpellsSectionView"
                             IsVisible="False">
                     <VerticalStackLayout Padding="16"
@@ -432,7 +476,7 @@
                                                         FontFamily="FASolid"
                                                         FontSize="14"
                                                         Padding="0"
-                                                        BackgroundColor="Transparent"
+                                                        BackgroundColor="{StaticResource Transparent}"
                                                         TextColor="{StaticResource SubtleTextColor}"
                                                         HeightRequest="24"
                                                         WidthRequest="24"
@@ -465,7 +509,6 @@
                                IsVisible="{Binding HasSpellReviewGroups, Converter={StaticResource InverseBoolConverter}}" />
                     </VerticalStackLayout>
                 </ScrollView>
-
                 <ScrollView x:Name="MiraclesSectionView"
                             IsVisible="False">
                     <VerticalStackLayout Padding="16"
@@ -519,7 +562,6 @@
                                IsVisible="{Binding HasMiracleReviewGroups, Converter={StaticResource InverseBoolConverter}}" />
                     </VerticalStackLayout>
                 </ScrollView>
-
                 <ScrollView x:Name="EvocationsSectionView"
                             IsVisible="False">
                     <VerticalStackLayout Padding="16"
@@ -573,7 +615,6 @@
                                IsVisible="{Binding HasEvocationReviewGroups, Converter={StaticResource InverseBoolConverter}}" />
                     </VerticalStackLayout>
                 </ScrollView>
-
                 <ScrollView x:Name="NeuronicsSectionView"
                             IsVisible="False">
                     <VerticalStackLayout Padding="16"
@@ -609,7 +650,6 @@
                                IsVisible="{Binding HasNeuronicReviewGroups, Converter={StaticResource InverseBoolConverter}}" />
                     </VerticalStackLayout>
                 </ScrollView>
-
                 <ScrollView x:Name="ItemsSectionView"
                             IsVisible="False">
                     <VerticalStackLayout Padding="16"
@@ -648,6 +688,20 @@
                                        HorizontalTextAlignment="Center"
                                        TextColor="{StaticResource MutedTextColor}"
                                        IsVisible="{Binding HasItemReviewEntries, Converter={StaticResource InverseBoolConverter}}" />
+                                       <Button Grid.Column="1"
+                                                        Text="{x:Static helpers:FontAwesomeGlyphs.Edit}"
+                                                        FontFamily="FASolid"
+                                                        FontSize="14"
+                                                        Padding="0"
+                                                        BackgroundColor="Transparent"
+                                                        TextColor="{StaticResource SubtleTextColor}"
+                                                        HeightRequest="24"
+                                                        WidthRequest="24"
+                                                        MinimumHeightRequest="0"
+                                                        MinimumWidthRequest="0"
+                                                        AutomationProperties.Name="Edit spends"
+                                                        Clicked="OnEditAdvancementTabClicked"
+                                                        CommandParameter="spends" />
                             </VerticalStackLayout>
                         </Frame>
                     </VerticalStackLayout>

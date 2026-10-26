@@ -221,9 +221,6 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         var expandedBySection = preserveExpanded
             ? Sections.ToDictionary(section => section.SectionId, section => section.IsExpanded, StringComparer.OrdinalIgnoreCase)
             : new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
-        var completedBySection = preserveExpanded
-            ? Sections.ToDictionary(section => section.SectionId, section => section.IsComplete, StringComparer.OrdinalIgnoreCase)
-            : new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
 
         _isApplyingState = true;
         try
@@ -274,23 +271,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
             if (!preserveExpanded)
             {
-                var firstIncomplete = Sections.FirstOrDefault(section => !section.IsComplete);
                 foreach (var section in Sections)
-                    section.IsExpanded = ReferenceEquals(section, firstIncomplete);
+                    section.IsExpanded = true;
             }
-            else
-            {
-                foreach (var section in Sections)
-                {
-                    if (completedBySection.TryGetValue(section.SectionId, out var wasComplete)
-                        && !wasComplete
-                        && section.IsComplete)
-                    {
-                        section.IsExpanded = false;
-                    }
-                }
-            }
-
             ApplyDraftState(screenState);
             RecomputeCompletion();
 
@@ -675,10 +658,36 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         if (_isApplyingState)
             return;
 
+        PersistCurrentSelectionsToDraft();
+
         // Surface completion/gating changes immediately; expensive recomputation can trail behind.
         RecomputeCompletion();
         _builder.NotifyGatingChanged();
         QueueSelectionRecalculation();
+    }
+
+    private void PersistCurrentSelectionsToDraft()
+    {
+        if (_context == null || _sectionSpecs.Count == 0)
+            return;
+
+        var selectionState = BuildSelectionStateFromSections();
+        var raceSubtypeSpec = _sectionSpecs.FirstOrDefault(spec => spec.Kind == SpecialisationSectionKind.RaceSubtype);
+        var raceSubtypeKey = raceSubtypeSpec?.Metadata.TryGetValue("raceSubtypeKey", out var subtypeKey) == true
+            ? subtypeKey
+            : string.Empty;
+        var raceSubtypeMapKey = raceSubtypeSpec?.Metadata.TryGetValue("abilityMapKey", out var mapKey) == true
+            ? mapKey
+            : string.Empty;
+
+        var snapshot = CharacterSpecialisationScreenCalculator.Recalculate(
+            _context,
+            _sectionSpecs,
+            selectionState,
+            raceSubtypeKey,
+            raceSubtypeMapKey);
+
+        ApplyDraftState(snapshot);
     }
 
     private void QueueSelectionRecalculation()

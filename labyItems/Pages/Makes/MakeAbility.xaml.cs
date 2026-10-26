@@ -334,19 +334,19 @@ namespace labyItems.Pages
 
         private async Task LoadAsync(string query)
         {
-            var catalog = await ManuAbilityService.GetMergedCatalogAsync();
+            var catalog = await EvolutionService.GetAllAbilitiesAsync();
             RebuildSourceBookFilterOptions(catalog);
 
             var list = string.IsNullOrWhiteSpace(query)
                 ? catalog
-                : await ManuAbilityService.SearchMergedCatalogAsync(query);
+                : await EvolutionService.SearchAbilitiesAsync(query);
 
             var selectedSourceBook = (SelectedSourceBookFilter ?? string.Empty).Trim();
             var sourceFiltered = selectedSourceBook.Length == 0
                 ? list
                 : list
                     .Where(entry => string.Equals(
-                        NormalizeSourceBook(entry.sourceBook),
+                        NormalizeSourceBook(entry.SourceBook),
                         selectedSourceBook,
                         StringComparison.OrdinalIgnoreCase))
                     .ToList();
@@ -356,7 +356,7 @@ namespace labyItems.Pages
                 {
                     Entry = entry,
                     IsAvailable = _draftingMode || _availabilityService.IsAvailable(
-                        entry.availabilityRules,
+                        entry.AvailabilityRules,
                         _draft,
                         _classes,
                         _races)
@@ -383,7 +383,7 @@ namespace labyItems.Pages
             }
 
             var orderedResults = results
-                .OrderBy(item => item.Entry.name, StringComparer.OrdinalIgnoreCase)
+                .OrderBy(item => item.Entry.DisplayName, StringComparer.OrdinalIgnoreCase)
                 .ToList();
 
             Rows.Clear();
@@ -391,18 +391,18 @@ namespace labyItems.Pages
             {
                 var entry = item.Entry;
                 var result = new Result(
-                    entry.name,
-                    entry.cost,
-                    entry.table,
-                    entry.description,
-                    entry.availability,
-                    entry.availabilityRules,
+                    string.IsNullOrWhiteSpace(entry.DisplayName) ? entry.Index : entry.DisplayName,
+                    entry.Cost,
+                    entry.Table,
+                    entry.Description,
+                    entry.Available,
+                    entry.AvailabilityRules,
                     item.IsAvailable,
-                    entry.canBuyMultiple,
-                    entry.preReqs,
-                    entry.choiceSetRefs,
-                    entry.abilityRef,
-                    NormalizeSourceBook(entry.sourceBook));
+                    entry.CanBuyMultiple,
+                    entry.PreReqs,
+                    entry.ChoiceSetRefs,
+                    entry.AbilityRef,
+                    NormalizeSourceBook(entry.SourceBook));
                 var key = BuildAbilityKey(entry);
                 var isSelected = _selectedByKey.ContainsKey(key);
                 if (isSelected)
@@ -543,10 +543,10 @@ namespace labyItems.Pages
             OnPropertyChanged(nameof(SearchColumnSpan));
         }
 
-        private void RebuildSourceBookFilterOptions(IEnumerable<ManuAbilityService.ManuAbilityEntry> entries)
+        private void RebuildSourceBookFilterOptions(IEnumerable<EvolutionService.AbilityResult> entries)
         {
             var filters = entries
-                .Select(entry => NormalizeSourceBook(entry.sourceBook))
+                .Select(entry => NormalizeSourceBook(entry.SourceBook))
                 .Where(sourceBook => sourceBook.Length > 0)
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .OrderBy(sourceBook => sourceBook, StringComparer.OrdinalIgnoreCase)
@@ -577,7 +577,7 @@ namespace labyItems.Pages
             OnPropertyChanged(nameof(ShowSourceBookFilters));
         }
 
-        private void RebuildBracketFilterOptions(IEnumerable<ManuAbilityService.ManuAbilityEntry> entries)
+        private void RebuildBracketFilterOptions(IEnumerable<EvolutionService.AbilityResult> entries)
         {
             var filters = entries
                 .SelectMany(ExtractBracketRuleValues)
@@ -611,7 +611,7 @@ namespace labyItems.Pages
             OnPropertyChanged(nameof(ShowBracketFilters));
         }
 
-        private static bool EntryMatchesBracketFilter(ManuAbilityService.ManuAbilityEntry entry, string selectedBracket)
+        private static bool EntryMatchesBracketFilter(EvolutionService.AbilityResult entry, string selectedBracket)
         {
             var selectedToken = NormalizeFilterToken(selectedBracket);
             if (selectedToken.Length == 0)
@@ -626,8 +626,8 @@ namespace labyItems.Pages
                 });
         }
 
-        private static IEnumerable<string> ExtractBracketRuleValues(ManuAbilityService.ManuAbilityEntry entry)
-            => (entry.availabilityRules ?? Array.Empty<RuleClause>())
+        private static IEnumerable<string> ExtractBracketRuleValues(EvolutionService.AbilityResult entry)
+            => (entry.AvailabilityRules ?? Array.Empty<RuleClause>())
                 .Where(rule => rule != null
                                && rule.IsValid
                                && rule.Field.Equals("Bracket", StringComparison.OrdinalIgnoreCase))
@@ -652,13 +652,14 @@ namespace labyItems.Pages
             return value.Length == 0 ? "Unknown" : value;
         }
 
-        private static string BuildAbilityKey(ManuAbilityService.ManuAbilityEntry entry)
+        private static string BuildAbilityKey(EvolutionService.AbilityResult entry)
         {
-            var abilityRef = NormalizeToken(entry.abilityRef);
+            var abilityRef = NormalizeToken(entry.AbilityRef);
             if (abilityRef.Length > 0)
                 return $"ref:{abilityRef}";
 
-            return $"{Math.Max(0, entry.table)}|{NormalizeToken(entry.name)}";
+            var name = string.IsNullOrWhiteSpace(entry.DisplayName) ? entry.Index : entry.DisplayName;
+            return $"{Math.Max(0, entry.Table)}|{NormalizeToken(name)}";
         }
 
         private static string NormalizeToken(string? value)

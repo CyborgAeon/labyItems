@@ -23,10 +23,12 @@ namespace labyItems.Pages.Characters;
 
 public enum AdvanceCharacterTab
 {
+    Spends,
     Details,
     Spells,
     Miracles,
-    Evocations
+    Evocations,
+    Items
 }
 
 public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
@@ -67,6 +69,7 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
             AdvanceCharacterTab.Spells => SpellsTab,
             AdvanceCharacterTab.Miracles => MiraclesTab,
             AdvanceCharacterTab.Evocations => EvocsTab,
+            AdvanceCharacterTab.Items => ItemsTab,
             _ => null
         };
         Shell.SetNavBarIsVisible(this, false);
@@ -103,6 +106,7 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
         ConfigureTabPageChrome(SpellsTab);
         ConfigureTabPageChrome(MiraclesTab);
         ConfigureTabPageChrome(EvocsTab);
+        ConfigureTabPageChrome(ItemsTab);
         ApplyTabVisibility();
         QueuePlatformTabLayoutRefresh();
 
@@ -173,6 +177,7 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
         BindTabContext(SpellsTab);
         BindTabContext(MiraclesTab);
         BindTabContext(EvocsTab);
+        BindTabContext(ItemsTab);
     }
 
     private void BindTabContext(Page page)

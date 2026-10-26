@@ -1,340 +1,52 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentView
-       x:Class="labyItems.Pages.Characters.CharacterReviewView"
-       x:Name="Root"
-       xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:helpers="clr-namespace:labyItems.Helpers"
-       xmlns:controls="clr-namespace:labyItems.Controls">
+<ContentView x:Class="labyItems.Pages.Characters.CharacterReviewView" x:Name="Root"
+ xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+ xmlns:controls="clr-namespace:labyItems.Controls">
+ <ScrollView>
+  <VerticalStackLayout Padding="16" Spacing="14">
+   <VerticalStackLayout Margin="-16,0" Padding="12,10" Spacing="10" IsVisible="{Binding ShowBuilderSummary, Source={x:Reference Root}}">
+    <Grid ColumnDefinitions="*,1,*">
+     <VerticalStackLayout><Label Text="RACE" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding RaceDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+     <BoxView Grid.Column="1" Color="{StaticResource SurfaceBorderColor}"/>
+     <VerticalStackLayout Grid.Column="2"><Label Text="CLASS" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding ClassDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+    </Grid>
+    <BoxView HeightRequest="1" Color="{StaticResource SurfaceBorderColor}"/>
+    <VerticalStackLayout><Label Text="ALIGNMENT" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding AlignmentDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+    <BoxView HeightRequest="1" Color="{StaticResource SurfaceBorderColor}"/>
+    <Grid ColumnDefinitions="*,1,*,1,*">
+     <VerticalStackLayout Opacity="{Binding PoliticalGuildOpacity, Source={x:Reference Root}}"><Label Text="POLITICAL" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding PoliticalGuildText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+     <BoxView Grid.Column="1" Color="{StaticResource SurfaceBorderColor}"/>
+     <VerticalStackLayout Grid.Column="2" Opacity="{Binding ProfessionalGuildOpacity, Source={x:Reference Root}}"><Label Text="PROFESSIONAL" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding ProfessionalGuildText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+     <BoxView Grid.Column="3" Color="{StaticResource SurfaceBorderColor}"/>
+     <VerticalStackLayout Grid.Column="4" Opacity="{Binding SocialGuildOpacity, Source={x:Reference Root}}"><Label Text="SOCIAL" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding SocialGuildText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
+    </Grid>
+   </VerticalStackLayout>
 
-       <ScrollView>
-              <VerticalStackLayout Padding="16"
-                                   Spacing="14">
-                     <Frame HasShadow="False"
-                            CornerRadius="12"
-                            Padding="12"
-                            BorderColor="{StaticResource SurfaceBorderColor}">
-                            <VerticalStackLayout Spacing="8">
-                                   <Grid ColumnDefinitions="Auto,*,Auto"
-                                         ColumnSpacing="8">
-                                         
-                                          <Label Grid.Column="1"
-                                                 Text="Level Progression"
-                                                 FontAttributes="Bold"
-                                                 VerticalTextAlignment="Center"/>
-                                          <controls:ChevronIconView x:Name="LevelProgressionChevron"
-                                                                    Grid.Column="2"
-                                                                    GlyphSize="18"
-                                                                    GlyphColor="{StaticResource MutedTextColor}">
-                                                 <controls:ChevronIconView.GestureRecognizers>
-                                                        <TapGestureRecognizer Tapped="OnLevelProgressionChevronTapped" />
-                                                 </controls:ChevronIconView.GestureRecognizers>
-                                          </controls:ChevronIconView>
-                                   </Grid>
+   <controls:LevelValueStripView Title="LIFESCALE"
+                                 Subtitle="BODY / LOC"
+                                 ItemsSource="{Binding LifeScaleRows, Source={x:Reference Root}}"/>
 
-                                   <VerticalStackLayout x:Name="LevelProgressionExpandedContent"
-                                                        Spacing="8">
-                                          <Grid>
-                                                 <VisualStateManager.VisualStateGroups>
-                                                        <VisualStateGroup x:Name="ProgressionWidthStates">
-                                                               <VisualState x:Name="Compact">
-                                                                      <VisualState.StateTriggers>
-                                                                             <AdaptiveTrigger MinWindowWidth="0"/>
-                                                                      </VisualState.StateTriggers>
-                                                                      <VisualState.Setters>
-                                                                             <Setter TargetName="LevelProgressionCards" Property="IsVisible" Value="True"/>
-                                                                             <Setter TargetName="LevelProgressionTableScroller" Property="IsVisible" Value="False"/>
-                                                                      </VisualState.Setters>
-                                                               </VisualState>
-                                                               <VisualState x:Name="Wide">
-                                                                      <VisualState.StateTriggers>
-                                                                             <AdaptiveTrigger MinWindowWidth="720"/>
-                                                                      </VisualState.StateTriggers>
-                                                                      <VisualState.Setters>
-                                                                             <Setter TargetName="LevelProgressionCards" Property="IsVisible" Value="False"/>
-                                                                             <Setter TargetName="LevelProgressionTableScroller" Property="IsVisible" Value="True"/>
-                                                                      </VisualState.Setters>
-                                                               </VisualState>
-                                                        </VisualStateGroup>
-                                                 </VisualStateManager.VisualStateGroups>
+   <VerticalStackLayout Spacing="7">
+    <Label Text="PRE-8TH" Style="{StaticResource SectionHeaderLabelStyle}"/>
+    <Grid ColumnDefinitions="54,*,32" Padding="10,0"><Label Text="LVL" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center"/><Label Grid.Column="1" Text="ABILITY" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center"/><Label Grid.Column="2" Text="INFO" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center"/></Grid>
+    <VerticalStackLayout BindableLayout.ItemsSource="{Binding PreEighthRows, Source={x:Reference Root}}" Spacing="0">
+     <BindableLayout.ItemTemplate><DataTemplate><controls:ListItemRowView PrimaryText="{Binding LevelText}" SecondaryText="{Binding Name}" PrimaryColumnWidth="44" SecondaryColumnWidth="*" InfoColumnWidth="18" PrimaryTextAlignment="Center" SecondaryTextAlignment="Center" ShowSecondaryText="True" ShowInfo="True" ActionCommandParameter="{Binding .}" RowBackgroundColor="{Binding RowBackgroundColor}" InfoClicked="OnPreEighthInfoClicked" RowClicked="OnPreEighthInfoClicked"/></DataTemplate></BindableLayout.ItemTemplate>
+    </VerticalStackLayout>
+    <Label Text="No class or race abilities are granted before 8th level." TextColor="{StaticResource MutedTextColor}" IsVisible="{Binding HasNoPreEighthRows, Source={x:Reference Root}}"/>
+   </VerticalStackLayout>
 
-                                                 <VerticalStackLayout x:Name="LevelProgressionCards"
-                                                                      BindableLayout.ItemsSource="{Binding Source={x:Reference Root}, Path=LevelColumns}"
-                                                                      Spacing="8">
-                                                        <BindableLayout.ItemTemplate>
-                                                               <DataTemplate>
-                                                                      <Border Padding="12,10"
-                                                                              Stroke="{StaticResource SurfaceBorderColor}"
-                                                                              StrokeShape="RoundRectangle 10"
-                                                                              BackgroundColor="{StaticResource White}">
-                                                                             <VerticalStackLayout Spacing="8">
-                                                                                    <Grid ColumnDefinitions="*,Auto">
-                                                                                           <Label Text="{Binding Level, StringFormat='Level {0}'}"
-                                                                                                  FontAttributes="Bold"
-                                                                                                  FontSize="15"/>
-                                                                                           <Label Grid.Column="1"
-                                                                                                  Text="{Binding LifeText, StringFormat='Life  {0}'}"
-                                                                                                  TextColor="{StaticResource MutedTextColor}"/>
-                                                                                    </Grid>
-                                                                                    <Button Text="{Binding ClassSkillDisplayText, StringFormat='Class  •  {0}'}"
-                                                                                            HorizontalOptions="Fill"
-                                                                                            BackgroundColor="Transparent"
-                                                                                            TextColor="{StaticResource Black}"
-                                                                                            BorderColor="{StaticResource SurfaceBorderColor}"
-                                                                                            BorderWidth="1"
-                                                                                            IsEnabled="{Binding HasClassSkill}"
-                                                                                            Clicked="OnLevelProgressionClassCellClicked"
-                                                                                            CommandParameter="{Binding .}"/>
-                                                                                    <Button Text="{Binding RaceSkillDisplayText, StringFormat='Race  •  {0}'}"
-                                                                                            HorizontalOptions="Fill"
-                                                                                            BackgroundColor="Transparent"
-                                                                                            TextColor="{StaticResource Black}"
-                                                                                            BorderColor="{StaticResource SurfaceBorderColor}"
-                                                                                            BorderWidth="1"
-                                                                                            IsEnabled="{Binding HasRaceSkill}"
-                                                                                            Clicked="OnLevelProgressionRaceCellClicked"
-                                                                                            CommandParameter="{Binding .}"/>
-                                                                                    <Button Text="{Binding WeaponSkillDisplayText, StringFormat='Weapon  •  {0}'}"
-                                                                                            HorizontalOptions="Fill"
-                                                                                            BackgroundColor="Transparent"
-                                                                                            TextColor="{StaticResource Black}"
-                                                                                            BorderColor="{StaticResource SurfaceBorderColor}"
-                                                                                            BorderWidth="1"
-                                                                                            IsEnabled="{Binding HasWeaponSkill}"
-                                                                                            Clicked="OnLevelProgressionWeaponCellClicked"
-                                                                                            CommandParameter="{Binding .}"/>
-                                                                             </VerticalStackLayout>
-                                                                      </Border>
-                                                               </DataTemplate>
-                                                        </BindableLayout.ItemTemplate>
-                                                 </VerticalStackLayout>
+   <VerticalStackLayout IsVisible="{Binding ShowPost8Card, Source={x:Reference Root}}" Spacing="7">
+    <Grid ColumnDefinitions="*,Auto"><Label Text="POST-8TH" Style="{StaticResource SectionHeaderLabelStyle}"/><controls:ChevronIconView Grid.Column="1" IsExpanded="{Binding IsAdvancementExpanded}" AnimateRotation="True" GlyphSize="14" GlyphColor="{StaticResource MutedTextColor}"><controls:ChevronIconView.GestureRecognizers><TapGestureRecognizer Command="{Binding ToggleAdvancementExpandedCommand}"/></controls:ChevronIconView.GestureRecognizers></controls:ChevronIconView></Grid>
+    <VerticalStackLayout x:Name="Post8ExpandedContent" IsVisible="False" Spacing="6">
+     <VerticalStackLayout BindableLayout.ItemsSource="{Binding AdvancementAbilityLines}" Spacing="0"><BindableLayout.ItemTemplate><DataTemplate><controls:ListItemRowView PrimaryText="{Binding Name}" SecondaryText="{Binding CostText}" PrimaryColumnWidth="*" SecondaryColumnWidth="72" PrimaryTextAlignment="Start" SecondaryTextAlignment="Center" ShowSecondaryText="True"/></DataTemplate></BindableLayout.ItemTemplate></VerticalStackLayout>
+     <Button Text="Open Advancement" Clicked="OnOpenAdvancementClicked"/>
+    </VerticalStackLayout>
+   </VerticalStackLayout>
 
-                                                 <ScrollView x:Name="LevelProgressionTableScroller"
-                                                             IsVisible="False"
-                                                             Orientation="Horizontal"
-                                                             HorizontalScrollBarVisibility="Always"
-                                                             VerticalScrollBarVisibility="Never">
-                                                        <Grid x:Name="LevelProgressionTableHost" />
-                                                 </ScrollView>
-                                          </Grid>
-                                   </VerticalStackLayout>
-                            </VerticalStackLayout>
-                     </Frame>
-
-                     <Frame HasShadow="False"
-                            CornerRadius="12"
-                            Padding="12"
-                            BorderColor="{StaticResource SurfaceBorderColor}">
-                            <VerticalStackLayout Spacing="4">
-                                   <Label Text="Guilds"
-                                          FontAttributes="Bold"/>
-                                   <Grid IsVisible="{Binding HasGuildReviewRows}"
-                                         ColumnDefinitions="96,*,64"
-                                         ColumnSpacing="8">
-                                          <Label Grid.Column="0"
-                                                 Text="Guild Type"
-                                                 FontSize="11"
-                                                 FontAttributes="Bold"
-                                                 TextColor="{StaticResource MutedTextColor}"/>
-                                          <Label Grid.Column="1"
-                                                 Text="Guild"
-                                                 FontSize="11"
-                                                 FontAttributes="Bold"
-                                                 TextColor="{StaticResource MutedTextColor}"/>
-                                          <Label Grid.Column="2"
-                                                 Text="Actions"
-                                                 FontSize="11"
-                                                 FontAttributes="Bold"
-                                                 TextColor="{StaticResource MutedTextColor}"
-                                                 HorizontalTextAlignment="Center"/>
-                                   </Grid>
-
-                                   <VerticalStackLayout IsVisible="{Binding HasGuildReviewRows}"
-                                                        Spacing="6"
-                                                        BindableLayout.ItemsSource="{Binding GuildReviewRows}">
-                                          <BindableLayout.ItemTemplate>
-                                                 <DataTemplate>
-                                                                 <controls:ListItemRowView RowBackgroundColor="{Binding RowBackgroundColor}" ContentPadding="0">
-                                                                   <controls:ListItemRowView.CustomContent>
-                                                                 <Grid ColumnDefinitions="96,*,64"
-                                                              ColumnSpacing="8"
-                                                                        RowDefinitions="Auto"
-                                                                        BackgroundColor="{Binding RowBackgroundColor}">
-                                                               <Label Grid.Column="0"
-                                                                      Text="{Binding GuildType}"
-                                                                      FontSize="11"
-                                                                      LineBreakMode="TailTruncation"/>
-                                                               <Label Grid.Column="1"
-                                                                      Text="{Binding GuildName}"
-                                                                      LineBreakMode="WordWrap"
-                                                                      VerticalTextAlignment="Center"/>
-                                                               <HorizontalStackLayout Grid.Column="2"
-                                                                                    Spacing="4"
-                                                                                    HorizontalOptions="Center">
-                                                                      <Button Text="{x:Static helpers:FontAwesomeGlyphs.InfoCircle}"
-                                                                              FontFamily="FASolid"
-                                                                              FontSize="12"
-                                                                              Padding="0"
-                                                                              BackgroundColor="Transparent"
-                                                                              TextColor="{StaticResource SubtleTextColor}"
-                                                                              HeightRequest="18"
-                                                                              WidthRequest="18"
-                                                                              MinimumHeightRequest="0"
-                                                                              MinimumWidthRequest="0"
-                                                                              Clicked="OnViewGuildDetailsClicked"
-                                                                              CommandParameter="{Binding .}"/>
-                                                                      <Button Text="{x:Static helpers:FontAwesomeGlyphs.Edit}"
-                                                                              FontFamily="FASolid"
-                                                                              FontSize="12"
-                                                                              Padding="0"
-                                                                              BackgroundColor="Transparent"
-                                                                              TextColor="{StaticResource SubtleTextColor}"
-                                                                              HeightRequest="18"
-                                                                              WidthRequest="18"
-                                                                              MinimumHeightRequest="0"
-                                                                              MinimumWidthRequest="0"
-                                                                              IsVisible="{Binding HasChoices}"
-                                                                              Clicked="OnEditGuildChoicesClicked"
-                                                                              CommandParameter="{Binding .}"/>
-                                                               </HorizontalStackLayout>
-                                                        </Grid>
-                                                                   </controls:ListItemRowView.CustomContent>
-                                                                 </controls:ListItemRowView>
-                                                 </DataTemplate>
-                                          </BindableLayout.ItemTemplate>
-                                   </VerticalStackLayout>
-
-                                   <Label Text="{Binding GuildSummary}"
-                                          IsVisible="{Binding HasGuildReviewRows, Converter={StaticResource InverseBoolConverter}}"
-                                          LineBreakMode="WordWrap"/>
-                                   <Label Text="{Binding GuildChoiceWarningText}"
-                                          FontSize="12"
-                                          FontAttributes="Bold"
-                                          TextColor="{StaticResource AccentMaroonColor}"
-                                          IsVisible="{Binding HasGuildChoiceWarning}"
-                                          LineBreakMode="WordWrap"/>
-                                   <VerticalStackLayout IsVisible="{Binding HasGuildStackingWarnings}"
-                                                        Spacing="2"
-                                                        BindableLayout.ItemsSource="{Binding GuildStackingWarnings}">
-                                          <BindableLayout.ItemTemplate>
-                                                 <DataTemplate>
-                                                        <Label Text="{Binding ., StringFormat='- {0}'}"
-                                                               FontSize="12"
-                                                               TextColor="{StaticResource AccentMaroonColor}"
-                                                               LineBreakMode="WordWrap"/>
-                                                 </DataTemplate>
-                                          </BindableLayout.ItemTemplate>
-                                   </VerticalStackLayout>
-                            </VerticalStackLayout>
-                     </Frame>
-
-                     <Frame x:Name="Post8CardFrame"
-                            HasShadow="False"
-                            CornerRadius="12"
-                            Padding="12"
-                            IsVisible="{Binding Source={x:Reference Root}, Path=ShowPost8Card}"
-                            BorderColor="{StaticResource SurfaceBorderColor}">
-                            <VerticalStackLayout Spacing="6">
-                                   <Grid ColumnDefinitions="*,Auto">
-                                          <HorizontalStackLayout Spacing="6">
-                                                 <Label Text="Post-8th Advancement"
-                                                        FontAttributes="Bold"
-                                                        VerticalTextAlignment="Center"/>
-                                          </HorizontalStackLayout>
-                                           <controls:ChevronIconView Grid.Column="1"
-                                                                     IsExpanded="{Binding IsAdvancementExpanded}"
-                                                                     AnimateRotation="True"
-                                                                     GlyphSize="18"
-                                                                     GlyphColor="{StaticResource MutedTextColor}"
-                                                                     HorizontalOptions="End"
-                                                                     VerticalOptions="Center">
-                                                  <controls:ChevronIconView.GestureRecognizers>
-                                                         <TapGestureRecognizer Command="{Binding ToggleAdvancementExpandedCommand}" />
-                                                  </controls:ChevronIconView.GestureRecognizers>
-                                           </controls:ChevronIconView>
-                                   </Grid>
-
-                                   <VerticalStackLayout x:Name="Post8ExpandedContent"
-                                                        IsVisible="False"
-                                                        Spacing="8">
-                                          <VerticalStackLayout BindableLayout.ItemsSource="{Binding AdvancementAbilityLines}"
-                                                               Spacing="4">
-
-                                                 <BindableLayout.ItemTemplate>
-                                                        <DataTemplate>
-                                                               <controls:ListItemRowView ContentPadding="0,2">
-                                                                 <controls:ListItemRowView.CustomContent>
-                                                               <Grid ColumnDefinitions="*,Auto,Auto"
-                                                                     ColumnSpacing="8"
-                                                                     Padding="0,2">
-                                                                      <Label Text="{Binding Name}"
-                                                                             LineBreakMode="WordWrap"
-                                                                             VerticalTextAlignment="Center"/>
-                                                                      <Label Grid.Column="1"
-                                                                             Text="{Binding CostText}"
-                                                                             FontSize="12"
-                                                                             VerticalTextAlignment="Center"/>
-                                                                      <Label Grid.Column="2"
-                                                                             Text="{Binding OrderText}"
-                                                                             FontSize="12"
-                                                                             Opacity="0.7"
-                                                                             VerticalTextAlignment="Center"/>
-                                                               </Grid>
-                                                                 </controls:ListItemRowView.CustomContent>
-                                                               </controls:ListItemRowView>
-                                                        </DataTemplate>
-                                                 </BindableLayout.ItemTemplate>
-                                          </VerticalStackLayout>
-                                          <Button Text="Open Advancement"
-                                                  FontSize="12"
-                                                  FontAttributes="Bold"
-                                                  BackgroundColor="{StaticResource Primary}"
-                                                  TextColor="White"
-                                                  CornerRadius="10"
-                                                  Clicked="OnOpenAdvancementClicked" />
-                                   </VerticalStackLayout>
-                            </VerticalStackLayout>
-                     </Frame>
-
-                     <Frame HasShadow="False"
-                            CornerRadius="12"
-                            Padding="12"
-                            BorderColor="{StaticResource SurfaceBorderColor}">
-                            <VerticalStackLayout Spacing="6">
-                                   <Grid ColumnDefinitions="*,Auto,Auto"
-                                         ColumnSpacing="8">
-                                          <Label Text="Notes"
-                                                 FontAttributes="Bold"
-                                                 VerticalTextAlignment="Center"/>
-                                          <Button Grid.Column="1"
-                                                  Text="{x:Static helpers:FontAwesomeGlyphs.Edit}"
-                                                  FontFamily="FASolid"
-                                                  FontSize="12"
-                                                  Padding="0"
-                                                  BackgroundColor="Transparent"
-                                                  TextColor="{StaticResource SubtleTextColor}"
-                                                  HeightRequest="18"
-                                                  WidthRequest="18"
-                                                  MinimumHeightRequest="0"
-                                                  MinimumWidthRequest="0"
-                                                  VerticalOptions="Center"
-                                                  Clicked="OnEditNotesClicked"/>
-                                          <controls:ChevronIconView x:Name="NotesChevron"
-                                                                    Grid.Column="2"
-                                                                    GlyphSize="18"
-                                                                    GlyphColor="{StaticResource MutedTextColor}">
-                                                 <controls:ChevronIconView.GestureRecognizers>
-                                                        <TapGestureRecognizer Tapped="OnNotesChevronTapped" />
-                                                 </controls:ChevronIconView.GestureRecognizers>
-                                          </controls:ChevronIconView>
-                                   </Grid>
-
-                                   <Label x:Name="NotesContentLabel"
-                                          IsVisible="False"
-                                          Text="{Binding NotesSummary}"
-                                          LineBreakMode="WordWrap"/>
-                            </VerticalStackLayout>
-                     </Frame>
-              </VerticalStackLayout>
-       </ScrollView>
+   <VerticalStackLayout Spacing="7">
+    <Grid ColumnDefinitions="*,Auto"><Label Text="NOTES" Style="{StaticResource SectionHeaderLabelStyle}"/><controls:ChevronIconView x:Name="NotesChevron" Grid.Column="1" GlyphSize="14" GlyphColor="{StaticResource MutedTextColor}"><controls:ChevronIconView.GestureRecognizers><TapGestureRecognizer Tapped="OnNotesChevronTapped"/></controls:ChevronIconView.GestureRecognizers></controls:ChevronIconView></Grid>
+    <Label x:Name="NotesContentLabel" IsVisible="False" Text="{Binding NotesSummary}" LineBreakMode="WordWrap"/>
+   </VerticalStackLayout>
+  </VerticalStackLayout>
+ </ScrollView>
 </ContentView>

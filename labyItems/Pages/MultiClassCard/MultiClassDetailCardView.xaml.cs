@@ -45,7 +45,7 @@ public partial class MultiClassDetailCardView : ContentView
             foreach (var level in Enumerable.Range(1, Math.Clamp(definition.MaxLevel, 0, 8)))
             {
                 var life = (definition.SystemEffectsByLevel.GetValueOrDefault(level.ToString()) ?? []).FirstOrDefault(x => x.EffectType.Equals("BaseLife", StringComparison.OrdinalIgnoreCase));
-                if (life != null) LifeCells.Add(new(level, life.Display));
+                if (life != null) LifeCells.Add(new(level, life.Display, PrefixLevel: true));
             }
             BuildCostCells();
         }
@@ -98,7 +98,7 @@ public partial class MultiClassDetailCardView : ContentView
     private static string Join(IEnumerable<string>? values) => string.Join(", ", values?.Where(x => !string.IsNullOrWhiteSpace(x)) ?? []);
     private static string NotesText(JsonElement value) => value.ValueKind switch { JsonValueKind.String => value.GetString() ?? string.Empty, JsonValueKind.Array => string.Join(", ", value.EnumerateArray().Select(x => x.ToString())), _ => string.Empty };
     private static Color RowColor(int index) => index % 2 == 0 ? Colors.White : Color.FromArgb("#FAF8F3");
-    public sealed record ValueCell(int Level, string Value, bool ShowDivider = false) { public string LevelText => $"L{Level}"; public string CostText => Value; }
+    public sealed record ValueCell(int Level, string Value, bool ShowDivider = false, bool PrefixLevel = false) { public string LevelText => PrefixLevel ? $"L{Level}" : Level.ToString(); public string ValueText => Value; }
     public sealed record AvailabilityRow(MultiClassAvailabilityOption Option, string TotalText, Color RowBackgroundColor, Color BorderColor, double BorderThickness) { public string Display => Option.Display; }
     public sealed record LevelRow(int Level, string Name, string Detail, string AbilityRef, Color RowBackgroundColor) { public string LevelText => Level.ToString(); public bool HasDetails => !string.IsNullOrWhiteSpace(AbilityRef) || !string.IsNullOrWhiteSpace(Detail); }
 }

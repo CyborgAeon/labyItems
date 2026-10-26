@@ -283,7 +283,6 @@ public static class EvolutionService
     {
         _cache = null;
         _abilityCache = null;
-        ManuAbilityService.InvalidateCache();
         AbilityDetailsLookupService.InvalidateCache();
     }
 

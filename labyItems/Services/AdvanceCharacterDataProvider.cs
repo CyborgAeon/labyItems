@@ -30,7 +30,7 @@ public sealed class AdvanceCharacterDataProvider : IAdvanceCharacterDataProvider
             Miracles: miraclesTask.Result,
             Spells: spellsTask.Result,
             Evocations: evocationsTask.Result,
-            Abilities: Array.Empty<ManuAbilityService.ManuAbilityEntry>());
+            Abilities: Array.Empty<EvolutionService.AbilityResult>());
     }
 
     public async Task<IReadOnlyList<SpellService.SpellRaw>> LoadSpellsAsync()
@@ -39,8 +39,8 @@ public sealed class AdvanceCharacterDataProvider : IAdvanceCharacterDataProvider
     public Task<IReadOnlyList<DruidEvocationService.EvocRaw>> LoadEvocationsAsync()
         => EvocationCatalogService.GetAllAsync();
 
-    public Task<IReadOnlyList<ManuAbilityService.ManuAbilityEntry>> SearchAbilitiesAsync(string query)
-        => ManuAbilityService.SearchAsync(query ?? string.Empty);
+    public Task<IReadOnlyList<EvolutionService.AbilityResult>> SearchAbilitiesAsync(string query)
+        => EvolutionService.SearchAbilitiesAsync(query ?? string.Empty);
 }
 
 public sealed class AdvanceAbilityLookupService : IAdvanceAbilityLookupService

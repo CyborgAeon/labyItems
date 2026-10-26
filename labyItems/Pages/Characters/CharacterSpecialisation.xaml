@@ -19,17 +19,45 @@
         <Color x:Key="CardBgErrorLight">#FFEBEE</Color>
 
         <DataTemplate x:Key="MappedSectionTemplate">
-            <specialisationControls:SpecialisationSectionView
-                SectionNumber="{Binding DisplayIndex}"
-                Title="{Binding Title}"
-                StatusText="{Binding StatusText}"
-                IsVisible="{Binding IsVisible}"
-                IsExpanded="{Binding IsExpanded, Mode=TwoWay}"
-                IsComplete="{Binding IsSubtreeComplete}"
-                SuppressCompletionTransition="{Binding SuppressCompletionTransition}"
-                ToggleCommand="{Binding ToggleExpandedCommand}">
-                <specialisationControls:SpecialisationSectionView.SectionContent>
-                    <VerticalStackLayout Spacing="10">
+            <Border IsVisible="{Binding IsVisible}"
+                    Stroke="{StaticResource SurfaceBorderColor}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    BackgroundColor="{StaticResource White}">
+                <VerticalStackLayout Spacing="0">
+                    <Border Padding="12,9" StrokeThickness="0" BackgroundColor="Transparent">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding IsSubtreeComplete}" Value="True">
+                                <Setter Property="BackgroundColor" Value="{StaticResource CardBgSuccessLight}"/>
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleExpandedCommand}"/>
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="38,*,Auto" ColumnSpacing="10">
+                            <Border HeightRequest="30" WidthRequest="30" StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 15" BackgroundColor="{StaticResource Gray500}">
+                                <Label Text="{Binding DisplayIndex}" TextColor="White" FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center" VerticalTextAlignment="Center">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsSubtreeComplete}" Value="True">
+                                            <Setter Property="Text" Value="{x:Static helpers:FontAwesomeGlyphs.Check}"/>
+                                            <Setter Property="FontFamily" Value="FASolid"/>
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
+                                <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="16" LineBreakMode="WordWrap"/>
+                                <Label Text="{Binding StatusText}" FontSize="12" Opacity="0.72"/>
+                            </VerticalStackLayout>
+                            <controls:ChevronIconView Grid.Column="2" IsExpanded="{Binding IsExpanded}"
+                                                      AnimateRotation="True" GlyphSize="14" IconSize="30"
+                                                      GlyphColor="{StaticResource MutedTextColor}"/>
+                        </Grid>
+                    </Border>
+                    <controls:AnimatedExpandView IsExpanded="{Binding IsExpanded}" AnimationName="MappedSpecialisationExpand">
+                        <VerticalStackLayout Padding="12" Spacing="10">
                         <Label Text="{Binding DisplaySubtitle}" Opacity="0.75" LineBreakMode="WordWrap"/>
                         <specialisationControls:SpecialisationGridView
                             ItemsSource="{Binding Options}"
@@ -110,23 +138,52 @@
                                         CommandParameter="{Binding .}"/>
                             </Grid>
                         </VerticalStackLayout>
-                    </VerticalStackLayout>
-                </specialisationControls:SpecialisationSectionView.SectionContent>
-            </specialisationControls:SpecialisationSectionView>
+                        </VerticalStackLayout>
+                    </controls:AnimatedExpandView>
+                </VerticalStackLayout>
+            </Border>
         </DataTemplate>
 
         <DataTemplate x:Key="ChoiceSectionTemplate">
-            <specialisationControls:SpecialisationSectionView
-                SectionNumber="{Binding DisplayIndex}"
-                Title="{Binding Title}"
-                StatusText="{Binding StatusText}"
-                IsVisible="{Binding IsVisible}"
-                IsExpanded="{Binding IsExpanded, Mode=TwoWay}"
-                IsComplete="{Binding IsSubtreeComplete}"
-                SuppressCompletionTransition="{Binding SuppressCompletionTransition}"
-                ToggleCommand="{Binding ToggleExpandedCommand}">
-                <specialisationControls:SpecialisationSectionView.SectionContent>
-                    <VerticalStackLayout Spacing="10">
+            <Border IsVisible="{Binding IsVisible}"
+                    Stroke="{StaticResource SurfaceBorderColor}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    BackgroundColor="{StaticResource White}">
+                <VerticalStackLayout Spacing="0">
+                    <Border Padding="12,9" StrokeThickness="0" BackgroundColor="Transparent">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding IsSubtreeComplete}" Value="True">
+                                <Setter Property="BackgroundColor" Value="{StaticResource CardBgSuccessLight}"/>
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleExpandedCommand}"/>
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="38,*,Auto" ColumnSpacing="10">
+                            <Border HeightRequest="30" WidthRequest="30" StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 15" BackgroundColor="{StaticResource Gray500}">
+                                <Label Text="{Binding DisplayIndex}" TextColor="White" FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center" VerticalTextAlignment="Center">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsSubtreeComplete}" Value="True">
+                                            <Setter Property="Text" Value="{x:Static helpers:FontAwesomeGlyphs.Check}"/>
+                                            <Setter Property="FontFamily" Value="FASolid"/>
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
+                                <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="16" LineBreakMode="WordWrap"/>
+                                <Label Text="{Binding StatusText}" FontSize="12" Opacity="0.72"/>
+                            </VerticalStackLayout>
+                            <controls:ChevronIconView Grid.Column="2" IsExpanded="{Binding IsExpanded}"
+                                                      AnimateRotation="True" GlyphSize="14" IconSize="30"
+                                                      GlyphColor="{StaticResource MutedTextColor}"/>
+                        </Grid>
+                    </Border>
+                    <controls:AnimatedExpandView IsExpanded="{Binding IsExpanded}" AnimationName="ChoiceSpecialisationExpand">
+                        <VerticalStackLayout Padding="12" Spacing="10">
                         <Label Text="{Binding DisplaySubtitle}"
                                Opacity="0.75"
                                LineBreakMode="WordWrap"/>
@@ -365,9 +422,10 @@
                                 </BindableLayout.ItemTemplate>
                             </VerticalStackLayout>
                         </VerticalStackLayout>
-                    </VerticalStackLayout>
-                </specialisationControls:SpecialisationSectionView.SectionContent>
-            </specialisationControls:SpecialisationSectionView>
+                        </VerticalStackLayout>
+                    </controls:AnimatedExpandView>
+                </VerticalStackLayout>
+            </Border>
         </DataTemplate>
 
         <pages:SpecialisationSectionTemplateSelector x:Key="SectionTemplateSelector"

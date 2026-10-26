@@ -238,26 +238,8 @@ VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_
     private static List<AbilityRaw> LoadAllAbilitiesFromResources()
     {
         var combined = new List<AbilityRaw>();
-        combined.AddRange(LoadMakesAbilities());
         combined.AddRange(LoadEvolutionTables());
         return combined;
-    }
-
-    private static List<AbilityRaw> LoadMakesAbilities()
-    {
-        var assembly = Assembly.GetExecutingAssembly();
-        var resourceName = assembly.GetManifestResourceNames()
-            .FirstOrDefault(n => n.EndsWith("makes_abilities.json", StringComparison.OrdinalIgnoreCase));
-        if (resourceName is null)
-            return new List<AbilityRaw>();
-
-        using var stream = assembly.GetManifestResourceStream(resourceName);
-        if (stream is null)
-            return new List<AbilityRaw>();
-
-        using var reader = new StreamReader(stream);
-        var json = reader.ReadToEnd();
-        return ParseAbilityRows(json, tableOverride: null, sourceName: resourceName);
     }
 
     private static List<AbilityRaw> LoadEvolutionTables()

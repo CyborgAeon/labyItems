@@ -140,20 +140,15 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         }
     }
 
-    public GlobalSearchVm(GlobalSearchPickerOptions? picker = null, GlobalSearchKind? initialKind = null)
+    public GlobalSearchVm(GlobalSearchPickerOptions picker)
     {
         _picker = picker;
-        if (picker != null && !picker.AllowAllKinds)
+        if (!picker.AllowAllKinds)
         {
             _applied.Kinds.Add(picker.Kind);
             _pending.Kinds.Add(picker.Kind);
         }
-        else if (initialKind.HasValue && picker == null)
-        {
-            _applied.Kinds.Add(initialKind.Value);
-            _pending.Kinds.Add(initialKind.Value);
-        }
-        else if (picker?.AllowAllKinds == true)
+        else
         {
             foreach (var (kind, _) in KindOrder)
             {

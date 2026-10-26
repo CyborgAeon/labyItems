@@ -15,7 +15,7 @@ public interface IEvolutionDataSynchronizer
 
 public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
 {
-    private const string SeedVersion = "evolution-defaults-v4";
+    private const string SeedVersion = "evolution-defaults-v5";
     private const int NgramSize = 3;
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -60,10 +60,9 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
             return;
         }
 
-        var makesJson = await ReadAssetTextAsync("Manufacturers_guide/makes_abilities.json", cancellationToken).ConfigureAwait(false);
-        var checksum = ComputeChecksum($"{mergedJson}\n{makesJson}");
+        var checksum = ComputeChecksum(mergedJson);
 
-        var defaults = LoadDefaults(mergedJson, makesJson);
+        var defaults = LoadDefaults(mergedJson);
         if (defaults.Count == 0)
         {
             _logger.LogWarning("Skipped evolution sync: no default abilities were parsed.");
@@ -102,14 +101,11 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
         _logger.LogInformation("Evolution defaults synchronized. Upserted {Count} defaults.", defaults.Count);
     }
 
-    private static Dictionary<string, EvolutionDefaultAbility> LoadDefaults(string mergedJson, string makesJson)
+    private static Dictionary<string, EvolutionDefaultAbility> LoadDefaults(string mergedJson)
     {
         var map = new Dictionary<string, EvolutionDefaultAbility>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var ability in ParseAbilitySeedList(mergedJson, sourceBookFallback: string.Empty))
-            map[BuildKey(ability.Table, ability.Index)] = ability;
-
-        foreach (var ability in ParseAbilitySeedList(makesJson, sourceBookFallback: "Classes"))
             map[BuildKey(ability.Table, ability.Index)] = ability;
 
         return map;

@@ -27,7 +27,9 @@
                        FontFamily="FASolid" TextColor="{StaticResource Gray500}" VerticalTextAlignment="Center"/>
             </Grid>
             <controls:AnimatedExpandView Grid.Row="1" IsExpanded="{Binding IsExpanded, Source={x:Reference Root}}">
-                <ContentPresenter Padding="12" Content="{Binding SectionContent, Source={x:Reference Root}}"/>
+                <ContentPresenter Padding="12"
+                                  BindingContext="{Binding BindingContext, Source={x:Reference Root}}"
+                                  Content="{Binding SectionContent, Source={x:Reference Root}}"/>
             </controls:AnimatedExpandView>
         </Grid>
     </Border>

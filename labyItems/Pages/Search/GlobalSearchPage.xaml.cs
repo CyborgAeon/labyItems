@@ -23,26 +23,14 @@ public partial class GlobalSearchPage : ContentPage
     private TaskCompletionSource<IReadOnlyList<GlobalSearchResultVm>>? _pickTcs;
     private bool _isCompleting;
 
-    public GlobalSearchPage() : this(null, null)
+    public GlobalSearchPage(GlobalSearchPickerOptions picker)
     {
-    }
-
-    public GlobalSearchPage(GlobalSearchKind initialKind) : this(null, initialKind)
-    {
-    }
-
-    public GlobalSearchPage(GlobalSearchPickerOptions? picker) : this(picker, null)
-    {
-    }
-
-    public GlobalSearchPage(GlobalSearchPickerOptions? picker, GlobalSearchKind? initialKind)
-    {
-        _vm = new GlobalSearchVm(picker, initialKind);
+        _vm = new GlobalSearchVm(picker);
         InitializeComponent();
         BindingContext = _vm;
         _scrollPreserver = new CollectionViewScrollPreserver(ResultsCollection, this);
 
-        ToolsetMenu.SelectedRoute = (picker?.Kind ?? initialKind) switch
+        ToolsetMenu.SelectedRoute = (picker?.Kind) switch
         {
             GlobalSearchKind.Spell => ToolsetRouteKeys.SearchSpells,
             GlobalSearchKind.Miracle => ToolsetRouteKeys.SearchMiracles,

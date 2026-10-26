@@ -56,8 +56,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     private Dictionary<string, GuildRecord> _guilds = new(StringComparer.OrdinalIgnoreCase);
     private Dictionary<string, ServiceCharacterClassRecord> _classes = new(StringComparer.OrdinalIgnoreCase);
     private Dictionary<string, PeopleRecord> _races = new(StringComparer.OrdinalIgnoreCase);
-    private Dictionary<string, ManuAbilityOption> _abilityOptions = new(StringComparer.OrdinalIgnoreCase);
-    private Dictionary<string, ManuAbilityOption> _abilityOptionsByName = new(StringComparer.OrdinalIgnoreCase);
+    private Dictionary<string, AbilityOption> _abilityOptions = new(StringComparer.OrdinalIgnoreCase);
+    private Dictionary<string, AbilityOption> _abilityOptionsByName = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, MultiClassDefinition> _multiClassDefinitionsByKey = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, MultiRaceDefinition> _multiRaceDefinitionsByKey = new(StringComparer.OrdinalIgnoreCase);
     private bool _hasLoadedReferenceData;
@@ -242,14 +242,14 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         }
     }
 
-    public Dictionary<string, ManuAbilityOption> AbilityOptions
+    public Dictionary<string, AbilityOption> AbilityOptions
     {
         get => _abilityOptions;
         private set => Set(ref _abilityOptions, value);
     }
 
-    private ManuAbilityOption? _selectedAbilityOption;
-    public ManuAbilityOption? SelectedAbilityOption
+    private AbilityOption? _selectedAbilityOption;
+    public AbilityOption? SelectedAbilityOption
     {
         get => _selectedAbilityOption;
         set
@@ -431,7 +431,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         _allSpells = referenceData.Spells ?? Array.Empty<SpellService.SpellRaw>();
         _allEvocations = referenceData.Evocations ?? Array.Empty<DruidEvocationService.EvocRaw>();
 
-        var abilityEntries = referenceData.Abilities ?? Array.Empty<ManuAbilityService.ManuAbilityEntry>();
+        var abilityEntries = referenceData.Abilities ?? Array.Empty<EvolutionService.AbilityResult>();
         _abilityOptionsByName = _abilityService.BuildAbilityOptionsByName(abilityEntries, _draft, _classes, _races);
         AbilityOptions = _abilityService.BuildAbilityOptionsWithLabels(_abilityOptionsByName.Values);
         _hasLoadedReferenceData = true;
@@ -802,7 +802,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             var abilityKey = AbilityKey.Build(ability);
             Abilities.Add(new AbilityEntryVm(displayName, normalizedCost, abilityKey, OnAdvancementAbilityEntryChanged));
 
-            _abilityOptionsByName[displayName] = new ManuAbilityOption(
+            _abilityOptionsByName[displayName] = new AbilityOption(
                 displayName,
                 normalizedCost,
                 normalizedTable,
@@ -936,7 +936,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         Raise(nameof(AbilityPointsSummary));
     }
 
-    public async Task<Dictionary<string, ManuAbilityOption>> SearchAbilityOptionsAsync(string query)
+    public async Task<Dictionary<string, AbilityOption>> SearchAbilityOptionsAsync(string query)
     {
         var results = await _abilityService.SearchAbilityOptionsAsync(query, _draft, _classes, _races);
         foreach (var kvp in results)

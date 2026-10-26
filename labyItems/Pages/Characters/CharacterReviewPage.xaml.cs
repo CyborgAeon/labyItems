@@ -41,6 +41,7 @@ public partial class CharacterReviewPage : ContentPage
     public ObservableCollection<ReviewEntryVm> ItemReviewEntries { get; } = new();
 
     public bool IsDetailsSelected => _selectedReviewSection == ReviewSectionKeys.Details;
+    public bool IsSpendsSelected => _selectedReviewSection == ReviewSectionKeys.Spends;
     public bool IsSpellsSelected => _selectedReviewSection == ReviewSectionKeys.Spells;
     public bool IsMiraclesSelected => _selectedReviewSection == ReviewSectionKeys.Miracles;
     public bool IsEvocationsSelected => _selectedReviewSection == ReviewSectionKeys.Evocations;
@@ -209,6 +210,7 @@ public partial class CharacterReviewPage : ContentPage
         return key switch
         {
             ReviewSectionKeys.Details => DetailsSectionView,
+            ReviewSectionKeys.Spends => SpendsSectionView,
             ReviewSectionKeys.Spells => SpellsSectionView,
             ReviewSectionKeys.Miracles => MiraclesSectionView,
             ReviewSectionKeys.Evocations => EvocationsSectionView,
@@ -221,12 +223,13 @@ public partial class CharacterReviewPage : ContentPage
     private void ApplySelectedSectionVisibility(bool forceImmediate)
     {
         var details = ResolveSectionView(ReviewSectionKeys.Details);
+        var spends = ResolveSectionView(ReviewSectionKeys.Spends);
         var spells = ResolveSectionView(ReviewSectionKeys.Spells);
         var miracles = ResolveSectionView(ReviewSectionKeys.Miracles);
         var evocations = ResolveSectionView(ReviewSectionKeys.Evocations);
         var items = ResolveSectionView(ReviewSectionKeys.Items);
 
-        var allSections = new[] { details, spells, miracles, evocations, items };
+        var allSections = new[] { details, spends, spells, miracles, evocations, items };
         foreach (var section in allSections)
         {
             if (section == null)
@@ -274,8 +277,9 @@ public partial class CharacterReviewPage : ContentPage
             nextView.InputTransparent = true;
             nextView.Opacity = 0;
             nextView.TranslationX = moveRight ? travel : -travel;
-
+            nextView.BackgroundColor = Color.FromHex("#530000");
             currentView.InputTransparent = true;
+            currentView.BackgroundColor = Colors.Transparent;
 
             await Task.WhenAll(
                 CardExpandAnimationHelper.FadeAsync(currentView, 0),
@@ -302,10 +306,11 @@ public partial class CharacterReviewPage : ContentPage
         return key switch
         {
             ReviewSectionKeys.Details => 0,
-            ReviewSectionKeys.Spells => 1,
-            ReviewSectionKeys.Miracles => 2,
-            ReviewSectionKeys.Evocations => 3,
-            ReviewSectionKeys.Items => 4,
+            ReviewSectionKeys.Spends => 1,
+            ReviewSectionKeys.Spells => 2,
+            ReviewSectionKeys.Miracles => 3,
+            ReviewSectionKeys.Evocations => 4,
+            ReviewSectionKeys.Items => 5,
             _ => 99
         };
     }
@@ -370,7 +375,8 @@ public partial class CharacterReviewPage : ContentPage
     {
         var sections = new List<ReviewSectionVm>
         {
-            new(ReviewSectionKeys.Details, "Details")
+            new(ReviewSectionKeys.Details, "Details"),
+            new(ReviewSectionKeys.Spends, "Spends")
         };
 
         if (_advanceVm.ShowSpellsTab)
@@ -682,6 +688,7 @@ public partial class CharacterReviewPage : ContentPage
 
         var tab = (button.CommandParameter as string) switch
         {
+            ReviewSectionKeys.Spends => AdvanceCharacterTab.Spends,
             ReviewSectionKeys.Spells => AdvanceCharacterTab.Spells,
             ReviewSectionKeys.Miracles => AdvanceCharacterTab.Miracles,
             ReviewSectionKeys.Evocations => AdvanceCharacterTab.Evocations,
@@ -1046,6 +1053,7 @@ public partial class CharacterReviewPage : ContentPage
 
     public enum ReviewEntryKind
     {
+        Spends,
         Spell,
         Miracle,
         Evocation,
@@ -1056,6 +1064,7 @@ public partial class CharacterReviewPage : ContentPage
     private static class ReviewSectionKeys
     {
         public const string Details = "details";
+        public const string Spends = "spends";
         public const string Spells = "spells";
         public const string Miracles = "miracles";
         public const string Evocations = "evocations";

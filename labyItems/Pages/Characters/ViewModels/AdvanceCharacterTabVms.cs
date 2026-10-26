@@ -41,8 +41,8 @@ public sealed class AdvanceCharacterDetailsTabVm : AdvanceCharacterTabVmBase
     public bool CanEditCurrentVitae => Root.CanEditCurrentVitae;
     public string CurrentVitaeDisplayText => Root.CurrentVitaeDisplayText;
     public string Notes { get => Root.Notes; set => Root.Notes = value; }
-    public Dictionary<string, ManuAbilityOption> AbilityOptions => Root.AbilityOptions;
-    public ManuAbilityOption? SelectedAbilityOption { get => Root.SelectedAbilityOption; set => Root.SelectedAbilityOption = value; }
+    public Dictionary<string, AbilityOption> AbilityOptions => Root.AbilityOptions;
+    public AbilityOption? SelectedAbilityOption { get => Root.SelectedAbilityOption; set => Root.SelectedAbilityOption = value; }
     public bool CanAddAbility => Root.CanAddAbility;
     public ObservableCollection<AbilityEntryVm> Abilities => Root.Abilities;
     public ObservableCollection<MultiClassEntryVm> MultiClasses => Root.MultiClasses;
@@ -59,7 +59,23 @@ public sealed class AdvanceCharacterDetailsTabVm : AdvanceCharacterTabVmBase
     public ICommand RemoveMultiClassCommand => Root.RemoveMultiClassCommand;
     public ICommand RemoveMultiRaceCommand => Root.RemoveMultiRaceCommand;
     public ICommand RemoveItemCommand => Root.RemoveItemCommand;
-    public Task<Dictionary<string, ManuAbilityOption>> SearchAbilityOptionsAsync(string query)
+    public Task<Dictionary<string, AbilityOption>> SearchAbilityOptionsAsync(string query)
+        => Root.SearchAbilityOptionsAsync(query);
+}
+public sealed class AdvanceCharacterSpendsTabVm : AdvanceCharacterTabVmBase
+{
+    public AdvanceCharacterSpendsTabVm(AdvanceCharacterVm root) : base(root)
+    {
+    }
+
+    public int Points { get => Root.Points; set => Root.Points = value; }    public string CurrentVitaeDisplayText => Root.CurrentVitaeDisplayText;
+    public bool CanAddAbility => Root.CanAddAbility;
+    public ObservableCollection<AbilityEntryVm> Abilities => Root.Abilities;
+    public ObservableCollection<MultiClassEntryVm> MultiClasses => Root.MultiClasses;
+    public MultiRaceEntryVm? MultiRaceSelection => Root.MultiRaceSelection;
+    public string AbilityPointsSummary => Root.AbilityPointsSummary;
+    public ICommand RemoveAbilityCommand => Root.RemoveAbilityCommand;
+    public Task<Dictionary<string, AbilityOption>> SearchAbilityOptionsAsync(string query)
         => Root.SearchAbilityOptionsAsync(query);
 }
 

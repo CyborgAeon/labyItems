@@ -219,27 +219,8 @@ VALUES (@id, @name, @name_lower, @data_json, @created_at, @updated_at);";
     private static List<AbilityRaw> LoadAllAbilities()
     {
         var combined = new List<AbilityRaw>();
-        combined.AddRange(LoadMakesAbilities());
         combined.AddRange(LoadEvolutionTables());
         return combined;
-    }
-
-    private static List<AbilityRaw> LoadMakesAbilities()
-    {
-        var assembly = Assembly.GetExecutingAssembly();
-        var resourceName = assembly.GetManifestResourceNames()
-            .Single(n => n.EndsWith("makes_abilities.json", StringComparison.OrdinalIgnoreCase));
-        if (resourceName is null)
-            return new List<AbilityRaw>();
-
-        using var stream = assembly.GetManifestResourceStream(resourceName);
-        if (stream is null)
-            return new List<AbilityRaw>();
-
-        using var reader = new StreamReader(stream);
-        var json = reader.ReadToEnd();
-        var opts = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        return JsonSerializer.Deserialize<List<AbilityRaw>>(json, opts) ?? new List<AbilityRaw>();
     }
 
     private static List<AbilityRaw> LoadEvolutionTables()

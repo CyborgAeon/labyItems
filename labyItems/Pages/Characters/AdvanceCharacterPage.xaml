@@ -17,7 +17,10 @@
                  Title="←">
         <Grid />
     </ContentPage>
-
+    <ContentPage x:Name="ItemsTab"
+                 Title="Items">
+        <Grid />
+    </ContentPage>
     <ContentPage x:Name="DetailsTab"
                  Title="Details">
         <Grid StyleId="__overlay_host__">

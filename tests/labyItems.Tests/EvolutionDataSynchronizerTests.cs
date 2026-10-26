@@ -34,8 +34,6 @@ public sealed class EvolutionDataSynchronizerTests : ServiceTestBase
                   }
                 ]
                 """));
-        FileSystem.SetPackageOverride("Manufacturers_guide/makes_abilities.json", () => ToStream("[]"));
-
         var synchronizer = new EvolutionDataSynchronizer(NullLogger<EvolutionDataSynchronizer>.Instance);
 
         await synchronizer.EnsureCurrentAsync(dbPath);

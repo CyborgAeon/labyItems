@@ -234,7 +234,8 @@ VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_
     {
         var assembly = Assembly.GetExecutingAssembly();
         var resourceName = assembly.GetManifestResourceNames()
-            .FirstOrDefault(n => n.EndsWith("makes_abilities.json", StringComparison.OrdinalIgnoreCase));
+            .FirstOrDefault(n => n.EndsWith("evolution_classes.merged.json", StringComparison.OrdinalIgnoreCase)
+                                 || n.EndsWith("evolution_classes/merged.json", StringComparison.OrdinalIgnoreCase));
         if (resourceName is null)
             return new List<AbilityRaw>();
 

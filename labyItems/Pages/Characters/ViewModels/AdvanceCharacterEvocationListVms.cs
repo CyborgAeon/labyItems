@@ -666,20 +666,3 @@ public readonly record struct EvocationOption(string Name, int Power, bool IsAdv
     public override int GetHashCode()
         => HashCode.Combine(StringComparer.OrdinalIgnoreCase.GetHashCode(Name ?? string.Empty), Power, IsAdvanced);
 }
-
-public readonly record struct ManuAbilityOption(
-    string Name,
-    int Cost,
-    int Table,
-    string Availability,
-    IReadOnlyList<RuleClause> AvailabilityRules,
-    string Description)
-{
-    public bool Equals(ManuAbilityOption other)
-        => string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase)
-           && Cost == other.Cost
-           && Table == other.Table;
-
-    public override int GetHashCode()
-        => HashCode.Combine(StringComparer.OrdinalIgnoreCase.GetHashCode(Name ?? string.Empty), Cost, Table);
-}

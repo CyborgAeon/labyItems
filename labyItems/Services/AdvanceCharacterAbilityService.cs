@@ -15,13 +15,13 @@ public interface IAdvanceCharacterAbilityService
     Task WarmAbilityDetailsAsync(IEnumerable<string>? rawKeysOrNames);
     EvolutionService.AbilityResult? TryResolveAbilityDetails(string? rawKeyOrName);
     string ResolveAbilityDisplayName(string? rawKeyOrName);
-    Dictionary<string, ManuAbilityOption> BuildAbilityOptionsByName(
-        IEnumerable<ManuAbilityService.ManuAbilityEntry> entries,
+    Dictionary<string, AbilityOption> BuildAbilityOptionsByName(
+        IEnumerable<EvolutionService.AbilityResult> entries,
         CharacterDraft draft,
         IReadOnlyDictionary<string, CharacterClassRecord> classes,
         IReadOnlyDictionary<string, PeopleRecord> races);
-    Dictionary<string, ManuAbilityOption> BuildAbilityOptionsWithLabels(IEnumerable<ManuAbilityOption> entries);
-    Task<Dictionary<string, ManuAbilityOption>> SearchAbilityOptionsAsync(
+    Dictionary<string, AbilityOption> BuildAbilityOptionsWithLabels(IEnumerable<AbilityOption> entries);
+    Task<Dictionary<string, AbilityOption>> SearchAbilityOptionsAsync(
         string query,
         CharacterDraft draft,
         IReadOnlyDictionary<string, CharacterClassRecord> classes,
@@ -184,45 +184,46 @@ public sealed class AdvanceCharacterAbilityService : IAdvanceCharacterAbilitySer
         return trimmed;
     }
 
-    public Dictionary<string, ManuAbilityOption> BuildAbilityOptionsByName(
-        IEnumerable<ManuAbilityService.ManuAbilityEntry> entries,
+    public Dictionary<string, AbilityOption> BuildAbilityOptionsByName(
+        IEnumerable<EvolutionService.AbilityResult> entries,
         CharacterDraft draft,
         IReadOnlyDictionary<string, CharacterClassRecord> classes,
         IReadOnlyDictionary<string, PeopleRecord> races)
     {
         return entries
             .Where(e => _abilityAvailabilityService.IsAvailable(
-                e.availabilityRules,
+                e.AvailabilityRules,
                 draft,
                 classes,
                 races))
-            .GroupBy(a => a.name ?? string.Empty, StringComparer.OrdinalIgnoreCase)
+            .GroupBy(a => string.IsNullOrWhiteSpace(a.DisplayName) ? a.Index : a.DisplayName, StringComparer.OrdinalIgnoreCase)
             .Where(g => !string.IsNullOrWhiteSpace(g.Key))
             .ToDictionary(
                 g => g.Key,
                 g =>
                 {
                     var entry = g.First();
-                    var details = ResolveAbilityDetails(entry.name, entry.abilityRef);
+                    var name = string.IsNullOrWhiteSpace(entry.DisplayName) ? entry.Index : entry.DisplayName;
+                    var details = ResolveAbilityDetails(name, entry.AbilityRef);
                     var adjustedCost = ApplyRaceAbilityCostModifiers(
-                        Math.Max(0, entry.cost),
-                        entry.name,
+                        Math.Max(0, entry.Cost),
+                        name,
                         details,
-                        entry.abilityRef,
+                        entry.AbilityRef,
                         draft,
                         races);
-                    return new ManuAbilityOption(
-                        entry.name ?? string.Empty,
+                    return new AbilityOption(
+                        name,
                         adjustedCost,
-                        entry.table,
-                        entry.availability ?? string.Empty,
-                        entry.availabilityRules ?? Array.Empty<RuleClause>(),
-                        entry.description ?? string.Empty);
+                        entry.Table,
+                        entry.Available ?? string.Empty,
+                        entry.AvailabilityRules ?? Array.Empty<RuleClause>(),
+                        entry.Description ?? string.Empty);
                 },
                 StringComparer.OrdinalIgnoreCase);
     }
 
-    public Dictionary<string, ManuAbilityOption> BuildAbilityOptionsWithLabels(IEnumerable<ManuAbilityOption> entries)
+    public Dictionary<string, AbilityOption> BuildAbilityOptionsWithLabels(IEnumerable<AbilityOption> entries)
     {
         return entries
             .Where(e => !string.IsNullOrWhiteSpace(e.Name))
@@ -232,7 +233,7 @@ public sealed class AdvanceCharacterAbilityService : IAdvanceCharacterAbilitySer
                 StringComparer.OrdinalIgnoreCase);
     }
 
-    public async Task<Dictionary<string, ManuAbilityOption>> SearchAbilityOptionsAsync(
+    public async Task<Dictionary<string, AbilityOption>> SearchAbilityOptionsAsync(
         string query,
         CharacterDraft draft,
         IReadOnlyDictionary<string, CharacterClassRecord> classes,
@@ -304,7 +305,7 @@ public sealed class AdvanceCharacterAbilityService : IAdvanceCharacterAbilitySer
         return ScaleCostByFiftyPercent(cost);
     }
 
-    private static string BuildAbilityOptionLabel(ManuAbilityOption option)
+    private static string BuildAbilityOptionLabel(AbilityOption option)
     {
         var name = option.Name ?? string.Empty;
         return $"{name} ({option.Cost})";

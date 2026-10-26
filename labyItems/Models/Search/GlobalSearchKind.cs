@@ -2,6 +2,7 @@ namespace labyItems.Models.Search;
 
 public enum GlobalSearchKind
 {
+    Global,
     Ability,
     Spell,
     Miracle,
