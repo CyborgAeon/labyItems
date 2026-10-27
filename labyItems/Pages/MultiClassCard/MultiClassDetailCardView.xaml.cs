@@ -72,7 +72,7 @@ public partial class MultiClassDetailCardView : ContentView
     private void SelectAvailability(MultiClassAvailabilityOption option) { _selectedAvailability = option; BuildAvailabilityRows(); BuildCostCells(); RaiseAll(); }
     private void OnAvailabilityRowClicked(object? sender, EventArgs e) { if (sender is ListItemRowView { ActionCommandParameter: AvailabilityRow row }) SelectAvailability(row.Option); }
 
-    private async void OnCostTapped(object? sender, TappedEventArgs e)
+    private async void OnCostTapped(object? sender, EventArgs e)
     {
         var options = Definition?.AvailabilityOptions ?? [];
         if (options.Count <= 1 || GetParentPage() is not Page page) return;
