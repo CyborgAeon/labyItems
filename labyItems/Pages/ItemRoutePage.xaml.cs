@@ -28,9 +28,13 @@ public partial class ItemRoutePage : ContentPage
         }
     }
 
-    protected override async void OnAppearing()
+    protected override void OnAppearing()
     {
         base.OnAppearing();
+        var session = LabyrintheSession.Shared;
+        var firstName = session.IsFallback ? "admin" : session.Account?.FirstName?.Trim();
+        WelcomeLabel.Text = string.IsNullOrWhiteSpace(firstName) ? "Welcome back." : $"Welcome back, {firstName}.";
+        SessionNameSpan.Text = string.IsNullOrWhiteSpace(firstName) ? session.DisplayName : firstName;
         var allowed = LabyrintheSession.Shared.CanViewCalendar;
         CalendarCard.IsEnabled = allowed;
         CalendarCard.Opacity = allowed ? 1 : 0.55;

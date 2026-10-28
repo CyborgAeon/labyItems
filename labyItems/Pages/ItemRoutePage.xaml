@@ -30,8 +30,9 @@
                 StrokeThickness="0"
                 StrokeShape="RoundRectangle 24">
           <VerticalStackLayout Spacing="10">
-            <Label FontSize="18"
-                   Text="Welcome back, admin."
+            <Label x:Name="WelcomeLabel"
+                   FontSize="18"
+                   Text="Welcome back."
                    TextColor="{StaticResource White}" />
             <Label FontAttributes="Italic"
                    FontSize="16"
@@ -91,8 +92,8 @@
                 <Label.FormattedText>
                   <FormattedString>
                     <Span Text="Signed in as " />
-                    <Span FontAttributes="Bold" Text="admin" />
-                    <Span Text=" using the temporary placeholder login while authentication is being integrated." />
+                    <Span x:Name="SessionNameSpan" FontAttributes="Bold" />
+                    <Span Text="." />
                   </FormattedString>
                 </Label.FormattedText>
               </Label>
