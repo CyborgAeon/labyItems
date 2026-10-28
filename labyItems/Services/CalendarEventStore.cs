@@ -30,7 +30,7 @@ public sealed class CalendarEventStore
             // Sequential requests avoid flooding the member website with detail requests.
             foreach (var record in events)
             {
-                var detail = await _session.GetHtmlAsync($"/members/event/{record.Id}");
+                var detail = await _session.GetHtmlAsync($"/members/event/{record.Id}/");
                 if (LabyrintheEventParser.PopulateDetails(record, detail, _session.DisplayName)) results.Add(record);
             }
             foreach (var id in _events.Values.Where(e => e.Date.Year == month.Year && e.Date.Month == month.Month).Select(e => e.Id).ToList())
@@ -55,7 +55,7 @@ public sealed class CalendarEventStore
         try
         {
             if (!_events.TryGetValue(id, out var record)) throw new InvalidOperationException("Event not found.");
-            var html = await _session.GetHtmlAsync($"/members/event/{id}");
+            var html = await _session.GetHtmlAsync($"/members/event/{id}/");
             if (!LabyrintheEventParser.PopulateDetails(record, html, _session.DisplayName)) _events.Remove(id);
         }
         finally { _requests.Release(); }
