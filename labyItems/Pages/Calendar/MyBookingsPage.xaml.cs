@@ -5,6 +5,7 @@ namespace labyItems.Pages.Calendar;
 public partial class MyBookingsPage : ContentPage
 {
     private readonly CalendarEventStore _eventStore;
+    private bool _isLoading;
 
     public MyBookingsPage()
     {
@@ -23,31 +24,43 @@ public partial class MyBookingsPage : ContentPage
         await Navigation.PopAsync();
     }
 
-    private Task LoadBookingsAsync()
+    private async Task LoadBookingsAsync()
     {
-        var bookedEvents = _eventStore.GetBookedEvents();
-
-        CalendarVisualHelper.PopulateLegend(LegendHost);
+        if (_isLoading) return;
+        _isLoading = true;
+        BookingsLoadingIndicator.IsVisible = BookingsLoadingIndicator.IsRunning = true;
         BookingsHost.Children.Clear();
-
-        if (bookedEvents.Count == 0)
+        try
         {
-            BookingsHost.Children.Add(new Label
+            var bookedEvents = await _eventStore.LoadBookedEventsAsync();
+            CalendarVisualHelper.PopulateLegend(LegendHost);
+            if (bookedEvents.Count == 0)
             {
-                Text = "No bookings found in the months you have viewed.",
-                FontAttributes = FontAttributes.Italic,
-                HorizontalTextAlignment = TextAlignment.Center
-            });
-            return Task.CompletedTask;
+                BookingsHost.Children.Add(new Label
+                {
+                    Text = "You are not currently booked onto any events.",
+                    FontAttributes = FontAttributes.Italic,
+                    HorizontalTextAlignment = TextAlignment.Center
+                });
+                return;
+            }
+            foreach (var evt in bookedEvents)
+            {
+                BookingsHost.Children.Add(CalendarVisualHelper.BuildEventCard(evt, async () =>
+                {
+                    await Navigation.PushAsync(new EventDetailsPage(evt.Id));
+                }));
+            }
         }
-
-        foreach (var evt in bookedEvents)
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException)
         {
-            BookingsHost.Children.Add(CalendarVisualHelper.BuildEventCard(evt, async () =>
-            {
-                await Navigation.PushAsync(new EventDetailsPage(evt.Id));
-            }));
+            await DisplayAlert("Unable to load bookings", ex.Message, "OK");
+            BookingsHost.Children.Add(new Label { Text = "Bookings could not be loaded. Please try again." });
         }
-        return Task.CompletedTask;
+        finally
+        {
+            _isLoading = false;
+            BookingsLoadingIndicator.IsVisible = BookingsLoadingIndicator.IsRunning = false;
+        }
     }
 }

@@ -386,7 +386,8 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
             var dayBorder = new Border
             {
                 Padding = new Thickness(6, 8),
-                StrokeThickness = 0,
+                StrokeThickness = isSelected ? 2 : 0,
+                Stroke = CalendarVisualHelper.ResolveColor("Primary", Colors.Maroon),
                 MinimumHeightRequest = 58,
                 StrokeShape = new RoundRectangle { CornerRadius = new CornerRadius(12) },
                 BackgroundColor = CalendarVisualHelper.ResolveDayBackgroundColor(isSelected, hasEvents, bookedRole, isDisabled),

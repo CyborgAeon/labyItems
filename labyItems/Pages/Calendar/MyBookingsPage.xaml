@@ -39,6 +39,11 @@
                                      Spacing="8" />
             </Border>
 
+            <ActivityIndicator x:Name="BookingsLoadingIndicator"
+                               IsVisible="False"
+                               IsRunning="False"
+                               SemanticProperties.Description="Loading your bookings" />
+
             <VerticalStackLayout x:Name="BookingsHost"
                                  Spacing="12" />
         </VerticalStackLayout>

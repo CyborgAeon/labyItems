@@ -76,12 +76,12 @@ internal static class CalendarVisualHelper
 
     public static Color ResolveDayBackgroundColor(bool isSelected, bool hasEvents, CalendarEventRole? bookedRole, bool isDisabled)
     {
+        if (bookedRole.HasValue)
+            return ResolveColor(bookedRole.Value.GetCalendarColorKey(), Colors.Maroon);
         if (isSelected)
             return ResolveColor("Primary", Colors.Maroon);
         if (isDisabled)
             return ResolveColor("CalendarDisabledColor", Color.FromArgb("#D4D4D8"));
-        if (bookedRole.HasValue)
-            return ResolveColor(bookedRole.Value.GetCalendarColorKey(), Colors.Maroon);
         if (hasEvents)
             return ResolveColor("Gray100", Color.FromArgb("#EDEDED"));
 

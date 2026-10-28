@@ -123,18 +123,19 @@ public sealed class LabyrintheIntegrationTests
     {
         var month = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1);
         var handler = new RecordingHandler(Response(HttpStatusCode.Found), Response(HttpStatusCode.OK, Account),
-            Response(HttpStatusCode.OK, Month.Replace("31<br", "1<br")), Response(HttpStatusCode.OK, Bookings),
-            Response(HttpStatusCode.OK), Response(HttpStatusCode.OK, "<p>No events</p>"));
+            Response(HttpStatusCode.OK, Month.Replace("31<br", "1<br")), Response(HttpStatusCode.OK, ""), Response(HttpStatusCode.OK, Bookings),
+            Response(HttpStatusCode.OK), Response(HttpStatusCode.OK, "<p>No events</p>"), Response(HttpStatusCode.OK, ""));
         var session = new LabyrintheSession(new HttpClient(handler));
         var store = new CalendarEventStore(session);
         await session.LoginAsync("member@example.com", "secret");
         var record = Assert.Single(await store.LoadMonthAsync(month));
         Assert.Contains($"month={month:yyyy-MM}", handler.Requests[2].Uri);
-        Assert.Equal("https://www.labyrinthe.co.uk/members/event/717", handler.Requests[3].Uri);
+        Assert.Equal("https://www.labyrinthe.co.uk/members/bookings/", handler.Requests[3].Uri);
+        Assert.Equal("https://www.labyrinthe.co.uk/members/event/717/", handler.Requests[4].Uri);
         Assert.False(await store.JoinRoleAsync(record.Id, CalendarEventRole.Player));
         Assert.DoesNotContain("Bradley Barfoot", record.Players);
         await store.LoadMonthAsync(month.AddMonths(1));
-        Assert.Contains($"month={month.AddMonths(1):yyyy-MM}", handler.Requests[^1].Uri);
+        Assert.Contains($"month={month.AddMonths(1):yyyy-MM}", handler.Requests[^2].Uri);
         var count = handler.Requests.Count;
         Assert.Empty(await store.LoadMonthAsync(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(-1)));
         Assert.Equal(count, handler.Requests.Count);
@@ -157,7 +158,7 @@ public sealed class LabyrintheIntegrationTests
     {
         var month = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1);
         var handler = new RecordingHandler(Response(HttpStatusCode.Found), Response(HttpStatusCode.OK, Account),
-            Response(HttpStatusCode.OK, Month.Replace("31<br", "1<br")), Response(HttpStatusCode.OK, Bookings),
+            Response(HttpStatusCode.OK, Month.Replace("31<br", "1<br")), Response(HttpStatusCode.OK, ""), Response(HttpStatusCode.OK, Bookings),
             Response(HttpStatusCode.Found), Response(HttpStatusCode.OK), Response(HttpStatusCode.Found));
         var session = new LabyrintheSession(new HttpClient(handler));
         var store = new CalendarEventStore(session);
@@ -196,6 +197,124 @@ public sealed class LabyrintheIntegrationTests
         Assert.Equal(2, handler.Requests.Count(r => r.Uri.EndsWith("/members/account/")));
         Assert.True(await session.LoginAsync("admin", "admin"));
         Assert.False(session.CanViewCalendar);
+    }
+
+    private static string BookingRow(string date, string role, string id = "746") => $"""
+        <div class="event-item flex ac jsb">
+            <div class="ei-date"><p>{date}</p></div>
+            <div class="ei-title"><p>Open Max 5250 <strong>[ Booked as {role} ]</strong></p>
+            <p class="ei-subtitle">Access: Open, Threshold: Max 5250, Type: Adult players</p></div>
+            <div class="ei-link"><p><a href="/members/event/{id}">View event detail »</a></p></div>
+        </div>
+        """;
+
+    [Theory]
+    [InlineData("Player", CalendarEventRole.Player)]
+    [InlineData("Referee", CalendarEventRole.Referee)]
+    [InlineData("A Referee", CalendarEventRole.ARef)]
+    [InlineData("Assistant Referee", CalendarEventRole.ARef)]
+    [InlineData("A-ref", CalendarEventRole.ARef)]
+    [InlineData("Crew", CalendarEventRole.Crew)]
+    public void ParsesSuppliedBookingRowAndRole(string label, CalendarEventRole expected)
+    {
+        var record = Assert.Single(LabyrintheEventParser.ParseBookings(BookingRow("31<br>Oct", label), new DateTime(2026, 10, 28)));
+        Assert.Equal("746", record.Id);
+        Assert.Equal("Open Max 5250", record.Name);
+        Assert.Equal(new DateTime(2026, 10, 31), record.Date);
+        Assert.Equal(expected, record.MyBookedRole);
+        Assert.Equal("Max 5250", record.Threshold);
+    }
+
+    [Fact]
+    public void BookingDatesCrossTheYearBoundaryAndRespectExplicitYears()
+    {
+        var today = new DateTime(2026, 12, 28);
+        var nextYear = Assert.Single(LabyrintheEventParser.ParseBookings(BookingRow("2<br>Jan", "Crew"), today));
+        Assert.Equal(new DateTime(2027, 1, 2), nextYear.Date);
+        var thisYear = Assert.Single(LabyrintheEventParser.ParseBookings(BookingRow("31<br>Dec", "Player"), today));
+        Assert.Equal(new DateTime(2026, 12, 31), thisYear.Date);
+        var explicitYear = Assert.Single(LabyrintheEventParser.ParseBookings(BookingRow("2<br>Jan 2028", "Player"), today));
+        Assert.Equal(new DateTime(2028, 1, 2), explicitYear.Date);
+        var leapDay = Assert.Single(LabyrintheEventParser.ParseBookings(BookingRow("29<br>Feb", "Player"), today));
+        Assert.Equal(new DateTime(2028, 2, 29), leapDay.Date);
+    }
+
+    [Fact]
+    public void UnknownBookingRoleFailsRatherThanHighlightingTheWrongRole()
+    {
+        Assert.Throws<InvalidOperationException>(() => LabyrintheEventParser.ParseBookings(BookingRow("31<br>Oct", "Unknown"), new DateTime(2026, 10, 28)));
+        Assert.Empty(LabyrintheEventParser.ParseBookings(BookingRow("31<br>Oct", "Player").Replace("Open Max 5250", "Battle School"), new DateTime(2026, 10, 28)));
+    }
+
+    [Fact]
+    public async Task MyBookingsLoadsUnvisitedMonthsAndPreservesRoleFromTheBookingPage()
+    {
+        var date = DateTime.Today.AddMonths(2);
+        var dateHtml = date.Day.ToString(System.Globalization.CultureInfo.InvariantCulture) + "<br>" + date.ToString("MMM yyyy", System.Globalization.CultureInfo.InvariantCulture);
+        var handler = new RecordingHandler(Response(HttpStatusCode.Found), Response(HttpStatusCode.OK, Account),
+            Response(HttpStatusCode.OK, BookingRow(dateHtml, "Crew")), Response(HttpStatusCode.OK, Bookings),
+            Response(HttpStatusCode.OK, "<p>No bookings</p>"));
+        var session = new LabyrintheSession(new HttpClient(handler));
+        var store = new CalendarEventStore(session);
+        await session.LoginAsync("member@example.com", "secret");
+        var record = Assert.Single(await store.LoadBookedEventsAsync());
+        Assert.Equal("https://www.labyrinthe.co.uk/members/bookings/", handler.Requests[2].Uri);
+        Assert.Equal("https://www.labyrinthe.co.uk/members/event/746/", handler.Requests[3].Uri);
+        Assert.Equal(CalendarEventRole.Crew, record.MyBookedRole);
+        Assert.Equal(3, record.Crew.Count);
+        Assert.Equal(date.Date, record.Date);
+        Assert.Same(record, store.GetEvent("746"));
+        Assert.Empty(await store.LoadBookedEventsAsync());
+        Assert.Null(store.GetEvent("746")!.MyBookedRole);
+        Assert.Empty(store.GetBookedEvents());
+    }
+
+    [Fact]
+    public async Task CalendarUsesBookingPageRoleEvenWhenRosterNameDoesNotMatch()
+    {
+        var month = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1);
+        var dateHtml = "1<br>" + month.ToString("MMM yyyy", System.Globalization.CultureInfo.InvariantCulture);
+        var handler = new RecordingHandler(Response(HttpStatusCode.Found), Response(HttpStatusCode.OK, Account),
+            Response(HttpStatusCode.OK, Month.Replace("31<br", "1<br")),
+            Response(HttpStatusCode.OK, BookingRow(dateHtml, "A Referee", "717")), Response(HttpStatusCode.OK, Bookings),
+            Response(HttpStatusCode.OK, Month.Replace("31<br", "1<br")), Response(HttpStatusCode.OK, ""),
+            Response(HttpStatusCode.OK, Bookings.Replace("pixie meadows", "Bradley Barfoot")));
+        var session = new LabyrintheSession(new HttpClient(handler));
+        var store = new CalendarEventStore(session);
+        await session.LoginAsync("member@example.com", "secret");
+        var record = Assert.Single(await store.LoadMonthAsync(month));
+        Assert.Equal(CalendarEventRole.ARef, record.MyBookedRole);
+        // A name match alone cannot claim a booking absent from the authenticated feed.
+        var refreshed = Assert.Single(await store.LoadMonthAsync(month));
+        Assert.Null(refreshed.MyBookedRole);
+    }
+
+    [Fact]
+    public async Task BookedEventsMissingFromTheUpcomingListStillAppearInTheCalendar()
+    {
+        var month = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1);
+        var dateHtml = "1<br>" + month.ToString("MMM yyyy", System.Globalization.CultureInfo.InvariantCulture);
+        var handler = new RecordingHandler(Response(HttpStatusCode.Found), Response(HttpStatusCode.OK, Account),
+            Response(HttpStatusCode.OK, ""), Response(HttpStatusCode.OK, BookingRow(dateHtml, "Player")), Response(HttpStatusCode.OK, Bookings));
+        var session = new LabyrintheSession(new HttpClient(handler));
+        var store = new CalendarEventStore(session);
+        await session.LoginAsync("member@example.com", "secret");
+        Assert.Equal(CalendarEventRole.Player, Assert.Single(await store.LoadMonthAsync(month)).MyBookedRole);
+    }
+
+    [Fact]
+    public async Task FailedBookingRefreshLeavesThePreviousBookingStateIntact()
+    {
+        var dateHtml = "1<br>" + DateTime.Today.AddMonths(1).ToString("MMM yyyy", System.Globalization.CultureInfo.InvariantCulture);
+        var handler = new RecordingHandler(Response(HttpStatusCode.Found), Response(HttpStatusCode.OK, Account),
+            Response(HttpStatusCode.OK, BookingRow(dateHtml, "Crew")), Response(HttpStatusCode.OK, Bookings),
+            Response(HttpStatusCode.InternalServerError));
+        var session = new LabyrintheSession(new HttpClient(handler));
+        var store = new CalendarEventStore(session);
+        await session.LoginAsync("member@example.com", "secret");
+        await store.LoadBookedEventsAsync();
+        await Assert.ThrowsAsync<HttpRequestException>(() => store.LoadBookedEventsAsync());
+        Assert.Equal(CalendarEventRole.Crew, Assert.Single(store.GetBookedEvents()).MyBookedRole);
     }
 
     private static HttpResponseMessage Response(HttpStatusCode code, string body = "") => new(code) { Content = new StringContent(body) };
