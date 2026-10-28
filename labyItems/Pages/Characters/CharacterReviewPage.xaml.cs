@@ -277,9 +277,7 @@ public partial class CharacterReviewPage : ContentPage
             nextView.InputTransparent = true;
             nextView.Opacity = 0;
             nextView.TranslationX = moveRight ? travel : -travel;
-            nextView.BackgroundColor = Color.FromHex("#530000");
             currentView.InputTransparent = true;
-            currentView.BackgroundColor = Colors.Transparent;
 
             await Task.WhenAll(
                 CardExpandAnimationHelper.FadeAsync(currentView, 0),
@@ -531,9 +529,9 @@ public partial class CharacterReviewPage : ContentPage
         foreach (var section in AvailableReviewSections)
         {
             section.IsSelected = section.Key == _selectedReviewSection;
-            section.BackgroundColor = section.IsSelected ? Color.FromArgb("#FFF7ED") : Colors.White;
-            section.BorderColor = section.IsSelected ? Color.FromArgb("#7F1D1D") : Color.FromArgb("#E5E7EB");
-            section.TextColor = section.IsSelected ? Color.FromArgb("#7F1D1D") : Color.FromArgb("#374151");
+            section.BackgroundColor = section.IsSelected ? Color.FromArgb("#530000") : Colors.White;
+            section.BorderColor = section.IsSelected ? Color.FromArgb("#530000") : Color.FromArgb("#E5E7EB");
+            section.TextColor = section.IsSelected ? Colors.White : Colors.Black;
         }
     }
 
@@ -999,22 +997,6 @@ public partial class CharacterReviewPage : ContentPage
         layout.Children.Clear();
         foreach (var child in ordered)
             layout.Children.Add(child);
-    }
-
-    public sealed class ReviewSectionVm
-    {
-        public ReviewSectionVm(string key, string title)
-        {
-            Key = key;
-            Title = title;
-        }
-
-        public string Key { get; }
-        public string Title { get; }
-        public bool IsSelected { get; set; }
-        public Color BackgroundColor { get; set; } = Colors.White;
-        public Color BorderColor { get; set; } = Color.FromArgb("#E5E7EB");
-        public Color TextColor { get; set; } = Color.FromArgb("#374151");
     }
 
     public sealed class ReviewGroupVm

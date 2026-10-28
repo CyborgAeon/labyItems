@@ -30,7 +30,7 @@
                            ClearButtonVisibility="WhileEditing"
                            FontSize="16"
                            Placeholder="Enter your email address"
-                           Text="admin" />
+                           Keyboard="Email" />
                 </Border>
 
                 <Label Margin="0,8,0,0"
@@ -46,11 +46,10 @@
                            BackgroundColor="Transparent"
                            FontSize="16"
                            IsPassword="True"
-                           Placeholder="Enter your password"
-                           Text="admin" />
+                           Placeholder="Enter your password" />
                 </Border>
 
-                <Button Clicked="OnForgotPasswordClicked"
+                <Button x:Name="ForgotPasswordButton" Clicked="OnForgotPasswordClicked"
                         FontSize="16"
                         HorizontalOptions="Start"
                         Padding="0"
@@ -59,13 +58,23 @@
                     <Button.BackgroundColor>Transparent</Button.BackgroundColor>
                 </Button>
 
-                <Button Clicked="OnLoginClicked"
+                <Button x:Name="LoginButton" Clicked="OnLoginClicked"
                         FontSize="18"
                         HorizontalOptions="Start"
                         Margin="0,8,0,0"
                         Padding="32,14"
                         Text="LOGIN"
                         TextColor="{StaticResource White}" />
+                <Button x:Name="BiometricLoginButton"
+                        IsVisible="False"
+                        Clicked="OnBiometricLoginClicked"
+                        Text="Sign in with biometrics" />
+                <Button x:Name="ForgetLoginButton"
+                        IsVisible="False"
+                        Clicked="OnForgetLoginClicked"
+                        BackgroundColor="Transparent"
+                        TextColor="{StaticResource Secondary}"
+                        Text="Forget saved login" />
             </VerticalStackLayout>
         </ScrollView>
     </Grid>

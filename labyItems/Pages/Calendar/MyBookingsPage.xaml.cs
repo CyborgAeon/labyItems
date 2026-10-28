@@ -23,9 +23,9 @@ public partial class MyBookingsPage : ContentPage
         await Navigation.PopAsync();
     }
 
-    private async Task LoadBookingsAsync()
+    private Task LoadBookingsAsync()
     {
-        var bookedEvents = await Task.Run(() => _eventStore.GetBookedEvents());
+        var bookedEvents = _eventStore.GetBookedEvents();
 
         CalendarVisualHelper.PopulateLegend(LegendHost);
         BookingsHost.Children.Clear();
@@ -34,11 +34,11 @@ public partial class MyBookingsPage : ContentPage
         {
             BookingsHost.Children.Add(new Label
             {
-                Text = "You have not booked onto any events yet.",
+                Text = "No bookings found in the months you have viewed.",
                 FontAttributes = FontAttributes.Italic,
                 HorizontalTextAlignment = TextAlignment.Center
             });
-            return;
+            return Task.CompletedTask;
         }
 
         foreach (var evt in bookedEvents)
@@ -48,5 +48,6 @@ public partial class MyBookingsPage : ContentPage
                 await Navigation.PushAsync(new EventDetailsPage(evt.Id));
             }));
         }
+        return Task.CompletedTask;
     }
 }

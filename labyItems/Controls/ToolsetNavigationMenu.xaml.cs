@@ -1,4 +1,5 @@
 using System.Linq;
+using labyItems.Services;
 using System.Windows.Input;
 using labyItems.Models.Search;
 using labyItems.Pages;
@@ -89,7 +90,10 @@ public partial class ToolsetNavigationMenu : ContentView
     private async void OnHomeTapped(object sender, TappedEventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new ItemRoutePage()));
     private async void OnOpenCalendarTapped(object sender, TappedEventArgs e)
-        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new UnifiedCalendarPage()));
+    {
+        if (!LabyrintheSession.Shared.CanViewCalendar) return;
+        await ExecuteNavigationAsync(() => Navigation.PushAsync(new UnifiedCalendarPage()));
+    }
     private async void OnMakeCharacterTapped(object sender, TappedEventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new CharacterWalletPage()));
     private async void OnCalculateIspTapped(object sender, TappedEventArgs e)
@@ -243,6 +247,7 @@ public partial class ToolsetNavigationMenu : ContentView
         {
             if (shouldOpen)
             {
+                ApplySelectionState();
                 MenuPanel.TranslationX = -320;
                 MenuOverlay.Opacity = 0;
                 MenuOverlay.IsVisible = true;
@@ -314,6 +319,20 @@ public partial class ToolsetNavigationMenu : ContentView
         ApplyRowState(SearchMultiRacesRow, ToolsetRouteKeys.SearchMultiRaces);
         ApplyRowState(TradeRow, ToolsetRouteKeys.Trade);
         ApplyRowState(SettingsRow, ToolsetRouteKeys.Settings);
+        ApplyCalendarAccess();
+    }
+
+    private void ApplyCalendarAccess()
+    {
+        if (CalendarRow == null || CalendarLockIcon == null) return;
+        var allowed = LabyrintheSession.Shared.CanViewCalendar;
+        CalendarRow.IsEnabled = allowed;
+        CalendarLockIcon.IsVisible = !allowed;
+        SemanticProperties.SetDescription(CalendarRow, allowed ? "Calendar" : "Calendar locked. Sign in with a member account.");
+        if (allowed) return;
+        CalendarRow.BackgroundColor = Color.FromArgb("#E5E7EB");
+        foreach (var label in GetDescendants<Label>(CalendarRow))
+            label.TextColor = Color.FromArgb("#6B7280");
     }
 
     private void ApplyRowState(Border? border, string routeKey)

@@ -1,3 +1,4 @@
+using labyItems.Models.Calendar;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -15,6 +16,7 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
     private const double HorizontalGestureBias = 1.2;
     private readonly CalendarEventStore _eventStore;
     private bool _isAnimatingCalendarCollapse;
+    private bool _isLoadingMonth;
     private bool _isAnimatingMonthTransition;
     private bool _isPerformingPageFade;
     private double _calendarPanTotalX;
@@ -39,13 +41,16 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
         YearButton.Text = _visibleMonth.ToString("yyyy");
         PageContent.Opacity = 0;
         ToggleCalendarChevron.IsExpanded = _isCalendarExpanded;
-        _ = RefreshMonthAsync();
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await RefreshMonthAsync();
+        if (!LabyrintheSession.Shared.CanViewCalendar)
+        {
+            await NavigateBackAsync();
+            return;
+        }
         if (!_isPerformingPageFade)
         {
             PageContent.Opacity = 0;
@@ -56,6 +61,7 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
             _isPerformingPageFade = false;
             PageContent.Opacity = 1;
         }
+        await RefreshMonthAsync();
     }
 
     private async Task NavigateBackAsync()
@@ -73,6 +79,7 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
     private async void OnMonthTitleClicked(object sender, EventArgs e)
     {
         var monthNames = Enumerable.Range(1, 12)
+            .Where(month => _visibleMonth.Year > DateTime.Today.Year || month >= DateTime.Today.Month)
             .Select(month => new DateTime(2000, month, 1).ToString("MMMM"))
             .ToArray();
 
@@ -84,14 +91,15 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
         if (monthIndex < 0)
             return;
 
-        var targetMonth = new DateTime(_visibleMonth.Year, monthIndex + 1, 1);
+        var monthNumber = DateTime.ParseExact(selection, "MMMM", System.Globalization.CultureInfo.CurrentCulture).Month;
+        var targetMonth = new DateTime(_visibleMonth.Year, monthNumber, 1);
         var direction = targetMonth > _visibleMonth ? 1 : -1;
         await ChangeVisibleMonthAsync(targetMonth, direction == 0 ? 1 : direction);
     }
 
     private async void OnYearTitleClicked(object sender, EventArgs e)
     {
-        var startYear = DateTime.Today.Year - 3;
+        var startYear = DateTime.Today.Year;
         var yearOptions = Enumerable.Range(startYear, 7)
             .Select(year => year.ToString())
             .ToArray();
@@ -202,9 +210,27 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
         await NavigateWithFadeAsync(() => Navigation.PushAsync(new EventDetailsPage(selectedEvent.Id)));
     }
 
+    private async Task<IReadOnlyList<CalendarEventRecord>> LoadVisibleMonthAsync()
+    {
+        _isLoadingMonth = true;
+        EventsLoadingIndicator.IsVisible = EventsLoadingIndicator.IsRunning = true;
+        try { return await _eventStore.LoadMonthAsync(_visibleMonth); }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException)
+        {
+            await DisplayAlert("Unable to load events", ex.Message, "OK");
+            return Array.Empty<CalendarEventRecord>();
+        }
+        finally
+        {
+            _isLoadingMonth = false;
+            EventsLoadingIndicator.IsVisible = EventsLoadingIndicator.IsRunning = false;
+        }
+    }
+
     private async Task RefreshMonthAsync()
     {
-        var monthEvents = await Task.Run(() => _eventStore.GetEventsForMonth(_visibleMonth));
+        if (_isLoadingMonth) return;
+        var monthEvents = await LoadVisibleMonthAsync();
         RefreshMonthContent(monthEvents);
         CalendarBodyHost.IsExpanded = _isCalendarExpanded;
         ToggleCalendarChevron.IsExpanded = _isCalendarExpanded;
@@ -234,7 +260,8 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
 
     private async Task ChangeVisibleMonthAsync(DateTime targetMonth, int direction)
     {
-        if (_isAnimatingMonthTransition || targetMonth == _visibleMonth)
+        if (_isAnimatingMonthTransition || _isLoadingMonth || targetMonth == _visibleMonth
+            || targetMonth < new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1))
             return;
 
         _isAnimatingMonthTransition = true;
@@ -254,7 +281,7 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
             _visibleMonth = targetMonth;
             _selectedDay = null;
 
-            var monthEvents = await Task.Run(() => _eventStore.GetEventsForMonth(_visibleMonth));
+            var monthEvents = await LoadVisibleMonthAsync();
             RefreshMonthContent(monthEvents);
 
             CalendarTitleHost.TranslationX = incomingOffset;
@@ -282,7 +309,7 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
     {
         await EventsHost.FadeTo(0, 70, Easing.CubicIn);
 
-        var monthEvents = await Task.Run(() => _eventStore.GetEventsForMonth(_visibleMonth));
+        var monthEvents = _eventStore.GetEventsForMonth(_visibleMonth);
         RefreshMonthContent(monthEvents);
 
         EventsHost.Opacity = 0;

@@ -1,4 +1,5 @@
 using System.Linq;
+using labyItems.Services;
 using labyItems.Pages.Calendar;
 using labyItems.Pages.Calculator;
 using labyItems.Pages.NonStandard;
@@ -30,10 +31,15 @@ public partial class ItemRoutePage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        var allowed = LabyrintheSession.Shared.CanViewCalendar;
+        CalendarCard.IsEnabled = allowed;
+        CalendarCard.Opacity = allowed ? 1 : 0.55;
+        SemanticProperties.SetDescription(CalendarCard, allowed ? "Calendar" : "Calendar locked. Sign in with a member account.");
     }
 
     private async void OnOpenCalendarTapped(object sender, TappedEventArgs e)
     {
+        if (!LabyrintheSession.Shared.CanViewCalendar) return;
         await ExecuteNavigationAsync(() => Navigation.PushAsync(new UnifiedCalendarPage()));
     }
 

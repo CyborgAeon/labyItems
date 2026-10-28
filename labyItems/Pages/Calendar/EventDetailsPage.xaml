@@ -33,6 +33,7 @@
 
                 <Button Grid.Column="2"
                         x:Name="EditEventButton"
+                        IsVisible="False"
                         Clicked="OnEditEventClicked"
                         FontSize="14"
                         Padding="0"
@@ -106,7 +107,7 @@
                 <Button Clicked="OnJoinPlayerClicked"
                         FontSize="18"
                         Text="Join as Player" />
-                <Button Clicked="OnJoinRefereeClicked"
+                <Button IsVisible="False" Clicked="OnJoinRefereeClicked"
                         BackgroundColor="{StaticResource White}"
                         BorderColor="{StaticResource Primary}"
                         BorderWidth="1"

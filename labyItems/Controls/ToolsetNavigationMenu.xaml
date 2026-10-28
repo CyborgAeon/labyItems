@@ -586,9 +586,13 @@
                                    HorizontalTextAlignment="Start"
                                    Text="Calendar"
                                    VerticalTextAlignment="Center" />
-                            <Label Grid.Column="2"
-                                   Opacity="0"
-                                   Text="v" />
+                            <Label x:Name="CalendarLockIcon"
+                                   Grid.Column="2"
+                                   IsVisible="False"
+                                   FontFamily="FASolid"
+                                   Text="{x:Static helpers:FontAwesomeGlyphs.Lock}"
+                                   VerticalTextAlignment="Center"
+                                   SemanticProperties.Description="Calendar requires a member login" />
                         </Grid>
                     </Border>
                     <Border x:Name="SettingsRow"

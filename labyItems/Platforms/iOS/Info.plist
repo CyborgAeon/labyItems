@@ -34,5 +34,7 @@
 	<string>Allow camera access so you can attach a photo to a creation.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow photo library access so the app can keep long-term links to your chosen or captured creation files.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Use Face ID to unlock your saved Labyrinthe login.</string>
 </dict>
 </plist>

@@ -98,10 +98,15 @@
                 </VerticalStackLayout>
             </Border>
 
+            <ActivityIndicator x:Name="EventsLoadingIndicator"
+                               IsVisible="False"
+                               IsRunning="False"
+                               SemanticProperties.Description="Loading events" />
+
             <VerticalStackLayout x:Name="EventsHost"
                                  Spacing="12" />
 
-            <Button Clicked="OnCreateEventClicked"
+            <Button IsVisible="False" Clicked="OnCreateEventClicked"
                     FontSize="18"
                     Padding="20,14"
                     Text="+ Create Event" />

@@ -22,12 +22,23 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="HtmlAgilityPack" />
     <PackageReference Include="ClosedXML" />
     <PackageReference Include="Microsoft.Data.Sqlite" />
     <PackageReference Include="PdfSharpCore" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="../../labyItems/Services/ISavedLoginStorage.cs" Link="Source/ISavedLoginStorage.cs" />
+    <Compile Include="../../labyItems/Services/SavedLoginStore.cs" Link="Source/SavedLoginStore.cs" />
+    <Compile Include="../../labyItems/Services/IAccountProfileCache.cs" Link="Source/IAccountProfileCache.cs" />
+    <Compile Include="../../labyItems/Services/AccountProfileCache.cs" Link="Source/AccountProfileCache.cs" />
+    <Compile Include="../../labyItems/Models/Authentication/*.cs" Link="Source/Authentication/%(Filename)%(Extension)" />
+    <Compile Include="../../labyItems/Services/LabyrintheSession.cs" Link="Source/LabyrintheSession.cs" />
+    <Compile Include="../../labyItems/Services/LabyrintheEventParser.cs" Link="Source/LabyrintheEventParser.cs" />
+    <Compile Include="../../labyItems/Services/CalendarEventStore.cs" Link="Source/CalendarEventStore.cs" />
+    <Compile Include="../../labyItems/Models/Calendar/*.cs" Link="Source/Calendar/%(Filename)%(Extension)" />
+    <None Update="Fixtures/EventBookings.html" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="../../labyItems/Helpers/WizardSpellRules.cs" Link="Source/WizardSpellRules.cs" />
     <Compile Include="../../labyItems/Helpers/MagicColourExtensions.cs" Link="Source/MagicColourExtensions.cs" />
     <Compile Include="../../labyItems/Helpers/WizardAbilityProgressionHelper.cs" Link="Source/WizardAbilityProgressionHelper.cs" />

@@ -25,6 +25,9 @@ public static class MauiProgram
 	public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
+        LabyrintheSession.Shared.AccountProfiles = new AccountProfileCache(
+            () => SecureStorage.Default.GetAsync("labyrinthe.account-profile.v1"),
+            json => SecureStorage.Default.SetAsync("labyrinthe.account-profile.v1", json));
 
 		EntryHandler.Mapper.AppendToMapping("GlobalKeyboardAvoidance", (handler, view) =>
 		{
