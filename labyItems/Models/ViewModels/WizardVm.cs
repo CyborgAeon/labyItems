@@ -896,10 +896,95 @@ public sealed class WizardVm : INotifyPropertyChanged
             var abilities = WizardAbilityProgressionHelper.GetAbilitiesForLevel(classRecord.Levels, level);
             var body = lifeByLevel.Count >= level ? lifeByLevel[level - 1].Body.ToString() : string.Empty;
             var loc = lifeByLevel.Count >= level ? lifeByLevel[level - 1].Loc.ToString() : string.Empty;
-            rows.Add(LevelAbilityRowBuilder.Build(level, abilities, body, loc));
+            var row = LevelAbilityRowBuilder.Build(level, abilities, body, loc);
+            ApplySelectedSpecialisationAbilities(row, abilities, level);
+            rows.Add(row);
         }
 
         return rows;
+    }
+
+    private void ApplySelectedSpecialisationAbilities(
+        LevelAbilityRowVm row,
+        IReadOnlyList<AbilityDefinition> levelDefinitions,
+        int level)
+    {
+        if (row == null || levelDefinitions == null || levelDefinitions.Count == 0)
+            return;
+
+        var displayed = row.AbilityNames
+            .Select((name, index) => new
+            {
+                Name = (name ?? string.Empty).Trim(),
+                Key = index < row.AbilityDetailKeys.Count
+                    ? (row.AbilityDetailKeys[index] ?? string.Empty).Trim()
+                    : string.Empty
+            })
+            .Where(entry => entry.Name.Length > 0)
+            .Select(entry => (entry.Name, entry.Key))
+            .ToList();
+
+        var changed = false;
+        foreach (var placeholder in levelDefinitions.Where(IsSpecialisationChoicePlaceholder))
+        {
+            var placeholderName = (placeholder.Name ?? string.Empty).Trim();
+            var selectionKey = (placeholder.OverwriteKey ?? placeholderName).Trim();
+            if (selectionKey.Length == 0)
+                continue;
+
+            var selected = (Draft.Abilities ?? new List<AbilityDraft>())
+                .Where(ability => ability != null
+                    && ability.LevelGained == level
+                    && IsAbilityFromSpecialisation(ability, selectionKey))
+                .OrderBy(ability => ability.Name, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            if (selected.Count == 0)
+                continue;
+
+            displayed.RemoveAll(entry =>
+                string.Equals(entry.Name, placeholderName, StringComparison.OrdinalIgnoreCase));
+
+            foreach (var ability in selected)
+            {
+                var name = (ability.Name ?? string.Empty).Trim();
+                if (name.Length == 0 || displayed.Any(entry =>
+                        string.Equals(entry.Name, name, StringComparison.OrdinalIgnoreCase)))
+                {
+                    continue;
+                }
+
+                var key = (ability.AbilityKey ?? name).Trim();
+                displayed.Add((name, key));
+            }
+
+            changed = true;
+        }
+
+        if (!changed)
+            return;
+
+        row.AbilityNames = displayed.Select(entry => entry.Name).ToList();
+        row.AbilityDetailKeys = displayed.Select(entry => entry.Key).ToList();
+    }
+
+    private static bool IsSpecialisationChoicePlaceholder(AbilityDefinition? definition)
+    {
+        if (definition == null)
+            return false;
+
+        return string.Equals(definition.Type, nameof(AbilityType.Overwrite), StringComparison.OrdinalIgnoreCase)
+            || !string.IsNullOrWhiteSpace(definition.OverwriteKey);
+    }
+
+    private static bool IsAbilityFromSpecialisation(AbilityDraft ability, string selectionKey)
+    {
+        var source = (ability.Source ?? string.Empty).Trim();
+        const string prefix = "Specialisation:";
+        if (!source.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        var sourceSelection = source[prefix.Length..].Trim();
+        return string.Equals(sourceSelection, selectionKey, StringComparison.OrdinalIgnoreCase);
     }
 
     private async Task<IReadOnlyList<LevelAbilityRowVm>> BuildRaceLevelAbilityRowsAsync()

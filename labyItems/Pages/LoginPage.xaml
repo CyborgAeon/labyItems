@@ -1,81 +1,77 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
-    x:Class="labyItems.Pages.LoginPage"
+<ContentPage x:Class="labyItems.Pages.LoginPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Shell.NavBarIsVisible="False"
-    NavigationPage.HasNavigationBar="False">
-
-    <Grid BackgroundColor="{StaticResource White}">
-        <ScrollView>
-            <VerticalStackLayout Padding="24,40,24,24"
-                                 Spacing="18"
-                                 VerticalOptions="Center">
-                <Label FontAttributes="Bold"
-                       FontSize="34"
-                       Text="Login"
-                       TextColor="{StaticResource Gray950}" />
-
-                <Label Margin="0,6,0,0"
-                       FontSize="16"
-                       Text="Email address"
-                       TextColor="{StaticResource Gray950}" />
-
-                <Border BackgroundColor="#EEF4FF"
-                        Padding="14,6"
-                        Stroke="{StaticResource Gray200}"
-                        StrokeShape="RoundRectangle 4">
-                    <Entry x:Name="UsernameEntry"
-                           BackgroundColor="Transparent"
-                           ClearButtonVisibility="WhileEditing"
-                           FontSize="16"
-                           Placeholder="Enter your email address"
-                           Keyboard="Email" />
-                </Border>
-
-                <Label Margin="0,8,0,0"
-                       FontSize="16"
-                       Text="Password"
-                       TextColor="{StaticResource Gray950}" />
-
-                <Border BackgroundColor="#EEF4FF"
-                        Padding="14,6"
-                        Stroke="{StaticResource Gray200}"
-                        StrokeShape="RoundRectangle 4">
-                    <Entry x:Name="PasswordEntry"
-                           BackgroundColor="Transparent"
-                           FontSize="16"
-                           IsPassword="True"
-                           Placeholder="Enter your password" />
-                </Border>
-
-                <Button x:Name="ForgotPasswordButton" Clicked="OnForgotPasswordClicked"
-                        FontSize="16"
-                        HorizontalOptions="Start"
-                        Padding="0"
-                        Text="Forgot password?"
-                        TextColor="{StaticResource Secondary}">
-                    <Button.BackgroundColor>Transparent</Button.BackgroundColor>
+    xmlns:helpers="clr-namespace:labyItems.Helpers"
+    Shell.NavBarIsVisible="False" NavigationPage.HasNavigationBar="False"
+    BackgroundColor="White">
+    <ContentPage.Resources>
+        <Style TargetType="Label">
+            <Setter Property="FontFamily" Value="LibreCaslonTextRegular" />
+            <Setter Property="TextColor" Value="#111111" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="FontFamily" Value="LibreCaslonTextRegular" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="MinimumHeightRequest" Value="48" />
+        </Style>
+        <Style x:Key="FieldIcon" TargetType="Label">
+            <Setter Property="FontFamily" Value="FASolid" />
+            <Setter Property="FontSize" Value="21" />
+            <Setter Property="TextColor" Value="#777777" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+    </ContentPage.Resources>
+    <ScrollView>
+        <VerticalStackLayout Padding="26,32,26,28" Spacing="0" MaximumWidthRequest="460" HorizontalOptions="Fill">
+            <Image Source="login_watermark.png" HeightRequest="120" WidthRequest="150"
+                   Aspect="AspectFit" HorizontalOptions="Center" SemanticProperties.Description="Labyrinthe logo" />
+            <Label Text="Welcome back" FontFamily="LibreCaslonTextBold" FontSize="32"
+                   HorizontalTextAlignment="Center" Margin="0,22,0,10" />
+            <Label Text="Sign in to continue" FontSize="20" TextColor="#777777"
+                   HorizontalTextAlignment="Center" Margin="0,0,0,34" />
+            <Label Text="Email address" FontSize="18" Margin="0,0,0,10" />
+            <Border BackgroundColor="#FAFAFC" Stroke="#CCCCCF" StrokeShape="RoundRectangle 7" Padding="16,5">
+                <Grid ColumnDefinitions="24,*" ColumnSpacing="12" MinimumHeightRequest="44">
+                    <Label Text="{x:Static helpers:FontAwesomeGlyphs.Envelope}" Style="{StaticResource FieldIcon}" />
+                    <Entry x:Name="UsernameEntry" Grid.Column="1" BackgroundColor="Transparent" TextColor="#111111"
+                           FontFamily="LibreCaslonTextRegular" FontSize="15" PlaceholderColor="#999999"
+                           Placeholder="Enter your email address" Keyboard="Email" ReturnType="Next"
+                           Completed="OnUsernameCompleted" ClearButtonVisibility="WhileEditing" />
+                </Grid>
+            </Border>
+            <Label Text="Password" FontSize="18" Margin="0,24,0,10" />
+            <Border BackgroundColor="#FAFAFC" Stroke="#CCCCCF" StrokeShape="RoundRectangle 7" Padding="16,5">
+                <Grid ColumnDefinitions="24,*,40" ColumnSpacing="12" MinimumHeightRequest="44">
+                    <Label Text="{x:Static helpers:FontAwesomeGlyphs.Lock}" Style="{StaticResource FieldIcon}" />
+                    <Entry x:Name="PasswordEntry" Grid.Column="1" BackgroundColor="Transparent" TextColor="#111111"
+                           FontFamily="LibreCaslonTextRegular" FontSize="15" PlaceholderColor="#999999"
+                           Placeholder="Enter your password" IsPassword="True" ReturnType="Go" Completed="OnLoginClicked" />
+                    <Button x:Name="PasswordVisibilityButton" Grid.Column="2" Text="{x:Static helpers:FontAwesomeGlyphs.Eye}"
+                            FontFamily="FASolid" FontSize="20" Padding="0" BackgroundColor="Transparent" TextColor="#666666"
+                            Clicked="OnTogglePasswordClicked" SemanticProperties.Description="Show password" />
+                </Grid>
+            </Border>
+            <Button x:Name="GuestLoginButton" Text="Log in as guest" Clicked="OnGuestLoginClicked"
+                    BackgroundColor="Transparent" TextColor="#800000" HorizontalOptions="End" Padding="0" Margin="0,4,0,16" />
+            <Button x:Name="LoginButton" Text="Sign in" Clicked="OnLoginClicked" BackgroundColor="#800000"
+                    TextColor="White" FontFamily="LibreCaslonTextBold" FontSize="20" HeightRequest="54" />
+            <VerticalStackLayout x:Name="BiometricActions" IsVisible="False" Spacing="0">
+                <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="20" Margin="0,24">
+                    <BoxView HeightRequest="1" BackgroundColor="#BBBBBB" VerticalOptions="Center" />
+                    <Label Grid.Column="1" Text="OR" FontSize="14" TextColor="#666666" />
+                    <BoxView Grid.Column="2" HeightRequest="1" BackgroundColor="#BBBBBB" VerticalOptions="Center" />
+                </Grid>
+                <Button x:Name="BiometricLoginButton" Clicked="OnBiometricLoginClicked" Text="Sign in with biometrics"
+                        BackgroundColor="White" TextColor="#111111" BorderColor="#AAAAAA" BorderWidth="1" HeightRequest="56">
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="{x:Static helpers:FontAwesomeGlyphs.Fingerprint}" FontFamily="FASolid" Color="#800000" Size="28" />
+                    </Button.ImageSource>
                 </Button>
-
-                <Button x:Name="LoginButton" Clicked="OnLoginClicked"
-                        FontSize="18"
-                        HorizontalOptions="Start"
-                        Margin="0,8,0,0"
-                        Padding="32,14"
-                        Text="LOGIN"
-                        TextColor="{StaticResource White}" />
-                <Button x:Name="BiometricLoginButton"
-                        IsVisible="False"
-                        Clicked="OnBiometricLoginClicked"
-                        Text="Sign in with biometrics" />
-                <Button x:Name="ForgetLoginButton"
-                        IsVisible="False"
-                        Clicked="OnForgetLoginClicked"
-                        BackgroundColor="Transparent"
-                        TextColor="{StaticResource Secondary}"
-                        Text="Forget saved login" />
             </VerticalStackLayout>
-        </ScrollView>
-    </Grid>
+            <Button x:Name="ForgetLoginButton" IsVisible="False" Clicked="OnForgetLoginClicked"
+                    BackgroundColor="Transparent" TextColor="#800000" Text="Forget saved login" Margin="0,20,0,0" />
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

@@ -23,6 +23,7 @@ public static class FontAwesomeGlyphs
     public const string CheckboxChecked = "\uf14a";
     public const string CheckboxUnchecked = "\uf0c8";
     public const string MoreVertical = "\uf142";
+    public const string GripVertical = "\uf58e";
     public const string Star = "\uf005";
     public const string Lightning = "\uf0e7";
     public const string Upload = "\uf093";
@@ -51,6 +52,10 @@ public static class FontAwesomeGlyphs
     public const string Trash = "\uf1f8";
     public const string Delete = Trash;
     public const string Question = "\uf129";
+    public const string Envelope = "\uf0e0";
+    public const string Eye = "\uf06e";
+    public const string EyeSlash = "\uf070";
+    public const string Fingerprint = "\uf577";
     public const string Lock = "\uf023";
     public const string Minus = "\uf068";
     public const string Tag = "\uf02b";

@@ -32,7 +32,7 @@ public partial class ItemRoutePage : ContentPage
     {
         base.OnAppearing();
         var session = LabyrintheSession.Shared;
-        var firstName = session.IsFallback ? "admin" : session.Account?.FirstName?.Trim();
+        var firstName = session.IsFallback ? session.DisplayName : session.Account?.FirstName?.Trim();
         WelcomeLabel.Text = string.IsNullOrWhiteSpace(firstName) ? "Welcome back." : $"Welcome back, {firstName}.";
         SessionNameSpan.Text = string.IsNullOrWhiteSpace(firstName) ? session.DisplayName : firstName;
         var allowed = LabyrintheSession.Shared.CanViewCalendar;

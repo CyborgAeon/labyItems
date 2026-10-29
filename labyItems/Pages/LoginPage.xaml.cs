@@ -1,4 +1,5 @@
 using labyItems.Services;
+using labyItems.Helpers;
 
 namespace labyItems.Pages;
 
@@ -22,7 +23,7 @@ public partial class LoginPage : ContentPage
 
     private void RefreshSavedLoginActions()
     {
-        BiometricLoginButton.IsVisible = _savedLogin.HasSavedLogin && BiometricLogin.IsAvailable;
+        BiometricActions.IsVisible = _savedLogin.HasSavedLogin && BiometricLogin.IsAvailable;
         ForgetLoginButton.IsVisible = _savedLogin.HasSavedLogin;
     }
 
@@ -82,6 +83,11 @@ public partial class LoginPage : ContentPage
             }
         }
         PasswordEntry.Text = string.Empty;
+        await OpenHomeAsync();
+    }
+
+    private async Task OpenHomeAsync()
+    {
         var homePage = new ItemRoutePage();
         Navigation.InsertPageBefore(homePage, this);
         await Navigation.PopAsync();
@@ -90,16 +96,25 @@ public partial class LoginPage : ContentPage
     private void SetSigningIn(bool value)
     {
         _isSigningIn = value;
-        LoginButton.IsEnabled = BiometricLoginButton.IsEnabled = ForgetLoginButton.IsEnabled = ForgotPasswordButton.IsEnabled = !value;
+        LoginButton.IsEnabled = BiometricLoginButton.IsEnabled = ForgetLoginButton.IsEnabled = GuestLoginButton.IsEnabled = PasswordVisibilityButton.IsEnabled = !value;
         UsernameEntry.IsEnabled = PasswordEntry.IsEnabled = !value;
     }
 
     private async void OnForgetLoginClicked(object sender, EventArgs e)
     {
         if (_isSigningIn) return;
-        try { _savedLogin.Remove(); }
+        SetSigningIn(true);
+        try
+        {
+            if (BiometricLogin.IsAvailable)
+            {
+                if (!await BiometricLogin.AuthenticateAsync()) return;
+            }
+            else if (!await DisplayAlert("Forget saved login?", "Remove the login saved on this device?", "Remove", "Cancel")) return;
+            _savedLogin.Remove();
+        }
         catch (Exception) { await DisplayAlert("Unable to remove login", "Please try again.", "OK"); }
-        RefreshSavedLoginActions();
+        finally { SetSigningIn(false); RefreshSavedLoginActions(); }
     }
 
     private void ConfigureAutofill()
@@ -118,6 +133,25 @@ public partial class LoginPage : ContentPage
 #endif
     }
 
-    private async void OnForgotPasswordClicked(object sender, EventArgs e)
-        => await Navigation.PushAsync(new ForgotPasswordPage());
+    private void OnUsernameCompleted(object sender, EventArgs e) => PasswordEntry.Focus();
+
+    private void OnTogglePasswordClicked(object sender, EventArgs e)
+    {
+        PasswordEntry.IsPassword = !PasswordEntry.IsPassword;
+        PasswordVisibilityButton.Text = PasswordEntry.IsPassword ? FontAwesomeGlyphs.Eye : FontAwesomeGlyphs.EyeSlash;
+        SemanticProperties.SetDescription(PasswordVisibilityButton, PasswordEntry.IsPassword ? "Show password" : "Hide password");
+    }
+
+    private async void OnGuestLoginClicked(object sender, EventArgs e)
+    {
+        if (_isSigningIn) return;
+        SetSigningIn(true);
+        try
+        {
+            LabyrintheSession.Shared.LoginAsGuest();
+            PasswordEntry.Text = string.Empty;
+            await OpenHomeAsync();
+        }
+        finally { SetSigningIn(false); }
+    }
 }

@@ -43,6 +43,9 @@ public sealed class CharacterDraft
         new(StringComparer.OrdinalIgnoreCase);
     public List<string> AdvancementAbilities { get; set; } = new();
     public List<string> AdvancementItems { get; set; } = new();
+    public Dictionary<string, CharacterSpend> Spends { get; set; } =
+        new(StringComparer.OrdinalIgnoreCase);
+    public string SelectedSpendName { get; set; } = string.Empty;
     public List<MiracleListDraft> MiracleLists { get; set; } = new();
     public MiracleListDraft? EvilStairwayList { get; set; }
     public List<SpellListDraft> SpellLists { get; set; } = new();

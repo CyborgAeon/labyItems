@@ -70,6 +70,7 @@
     <Compile Include="../../labyItems/Services/AbilityAvailabilityService.cs" Link="Source/AbilityAvailabilityService.cs" />
     <Compile Include="../../labyItems/Services/AbilityChoiceSetResolverService.cs" Link="Source/AbilityChoiceSetResolverService.cs" />
     <Compile Include="../../labyItems/Services/CharacterReferenceDataSynchronizer.cs" Link="Source/CharacterReferenceDataSynchronizer.cs" />
+    <Compile Include="../../labyItems/Services/CharacterSpendService.cs" Link="Source/CharacterSpendService.cs" />
     <Compile Include="../../labyItems/Services/IFileService.cs" Link="Source/IFileService.cs" />
     <Compile Include="../../labyItems/Services/PeopleService.cs" Link="Source/PeopleService.cs" />
     <Compile Include="../../labyItems/Services/LifeScalesService.cs" Link="Source/LifeScalesService.cs" />
@@ -129,6 +130,10 @@
     <Compile Include="../../labyItems/Models/Characters/AbilityDefinition.cs" Link="Source/AbilityDefinition.cs" />
     <Compile Include="../../labyItems/Models/Characters/Alignment.cs" Link="Source/Alignment.cs" />
     <Compile Include="../../labyItems/Models/Characters/CharacterDraft.cs" Link="Source/CharacterDraft.cs" />
+    <Compile Include="../../labyItems/Models/Characters/CharacterSpend.cs" Link="Source/CharacterSpend.cs" />
+    <Compile Include="../../labyItems/Models/Characters/CharacterSpendEntry.cs" Link="Source/CharacterSpendEntry.cs" />
+    <Compile Include="../../labyItems/Models/Characters/CharacterSpendEntryType.cs" Link="Source/CharacterSpendEntryType.cs" />
+    <Compile Include="../../labyItems/Models/ViewModels/CharacterSpendRowVm.cs" Link="Source/CharacterSpendRowVm.cs" />
     <Compile Include="../../labyItems/Models/Characters/GuildOverrideRules.cs" Link="Source/GuildOverrideRules.cs" />
     <Compile Include="../../labyItems/Models/Characters/MagicListDrafts.cs" Link="Source/MagicListDrafts.cs" />
     <Compile Include="../../labyItems/Models/Rules/RuleTree.cs" Link="Source/RuleTree.cs" />

@@ -6,6 +6,6 @@ public sealed class CharacterReviewLifeScaleRowVm
     public string LevelText => Level.ToString();
     public string Body { get; init; } = "—";
     public string Loc { get; init; } = "—";
-    public string ValueText => $"{Body} / {Loc}";
+    public string ValueText => $"{Body}/{Loc}";
     public bool ShowDivider => Level > 1;
 }

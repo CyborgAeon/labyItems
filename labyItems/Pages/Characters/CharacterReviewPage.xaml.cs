@@ -6,6 +6,7 @@ using labyItems.Helpers;
 using labyItems.Controls;
 using labyItems.Models;
 using labyItems.Models.Characters;
+using labyItems.Models.ViewModels;
 using labyItems.Pages;
 using labyItems.Pages.Battleboard;
 using labyItems.Pages.Calculator;
@@ -31,6 +32,10 @@ public partial class CharacterReviewPage : ContentPage
     private bool _isActionMenuExpanded;
     private bool _isActionMenuAnimating;
     private bool _isSectionAnimating;
+    private readonly CharacterSpendService _spendService = new();
+    private CharacterSpend? _selectedSpend;
+    private string _captureAdvancementSpendName = string.Empty;
+    private string _selectedSpendName = string.Empty;
     private string _selectedReviewSection = ReviewSectionKeys.Details;
 
     public ObservableCollection<ReviewSectionVm> AvailableReviewSections { get; } = new();
@@ -39,6 +44,23 @@ public partial class CharacterReviewPage : ContentPage
     public ObservableCollection<ReviewGroupVm> EvocationReviewGroups { get; } = new();
     public ObservableCollection<ReviewGroupVm> NeuronicReviewGroups { get; } = new();
     public ObservableCollection<ReviewEntryVm> ItemReviewEntries { get; } = new();
+    public ObservableCollection<string> AvailableSpendNames { get; } = new();
+    public ObservableCollection<CharacterSpendRowVm> SpendRows { get; } = new();
+
+    public string SelectedSpendName
+    {
+        get => _selectedSpendName;
+        set
+        {
+            var next = (value ?? string.Empty).Trim();
+            if (string.Equals(_selectedSpendName, next, StringComparison.OrdinalIgnoreCase))
+                return;
+            _selectedSpendName = next;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool HasSelectedSpendRows => SpendRows.Any(row => row.IsSelected);
 
     public bool IsDetailsSelected => _selectedReviewSection == ReviewSectionKeys.Details;
     public bool IsSpendsSelected => _selectedReviewSection == ReviewSectionKeys.Spends;
@@ -89,6 +111,7 @@ public partial class CharacterReviewPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        LoadStoredSpendRowsImmediately();
         await RefreshReviewSafelyAsync();
     }
 
@@ -332,6 +355,8 @@ public partial class CharacterReviewPage : ContentPage
             await _vm.RefreshReviewAsync(cts.Token);
             await _advanceVm.InitializeAsync().ConfigureAwait(false);
             cts.Token.ThrowIfCancellationRequested();
+            await InitializeSpendEditorAsync(cts.Token).ConfigureAwait(false);
+            cts.Token.ThrowIfCancellationRequested();
 
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
@@ -367,6 +392,220 @@ public partial class CharacterReviewPage : ContentPage
     {
         var cts = Interlocked.Exchange(ref _refreshCts, null);
         cts?.Cancel();
+    }
+
+    private async Task InitializeSpendEditorAsync(CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var spend = _spendService.GetOrCreateSelected(_draft);
+        var captureCurrentAdvancement = _captureAdvancementSpendName.Length > 0
+            && string.Equals(spend.Name, _captureAdvancementSpendName, StringComparison.OrdinalIgnoreCase);
+        if (captureCurrentAdvancement)
+        {
+            await ReconcileCurrentAdvancementIntoSpendAsync(spend, cancellationToken).ConfigureAwait(false);
+            _captureAdvancementSpendName = string.Empty;
+            LiteDbService.UpsertDraft(_draft);
+        }
+        else if (!(spend.Entries ?? new List<CharacterSpendEntry>()).Any(entry => !entry.IsCharacterCreationChoice))
+        {
+            await SeedCurrentAdvancementIntoSpendAsync(spend, cancellationToken).ConfigureAwait(false);
+        }
+
+        await MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            _selectedSpend = spend;
+            AvailableSpendNames.Clear();
+            foreach (var name in (_draft.Spends ?? new Dictionary<string, CharacterSpend>())
+                         .Keys.OrderBy(name => name, StringComparer.OrdinalIgnoreCase))
+            {
+                AvailableSpendNames.Add(name);
+            }
+
+            _selectedSpendName = spend.Name;
+            OnPropertyChanged(nameof(SelectedSpendName));
+            RefreshSpendRows();
+        });
+    }
+
+    private async Task ReconcileCurrentAdvancementIntoSpendAsync(
+        CharacterSpend spend,
+        CancellationToken cancellationToken)
+    {
+        var projected = new CharacterSpend { Name = spend.Name };
+        await SeedCurrentAdvancementIntoSpendAsync(projected, cancellationToken).ConfigureAwait(false);
+        var desiredQueues = projected.Entries
+            .GroupBy(SpendEntryIdentity, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(
+                group => group.Key,
+                group => new Queue<CharacterSpendEntry>(group),
+                StringComparer.OrdinalIgnoreCase);
+
+        var reconciled = new List<CharacterSpendEntry>();
+        foreach (var existing in spend.Entries.OrderBy(entry => entry.Position))
+        {
+            if (existing.IsCharacterCreationChoice)
+            {
+                reconciled.Add(existing);
+                continue;
+            }
+
+            var identity = SpendEntryIdentity(existing);
+            if (!desiredQueues.TryGetValue(identity, out var desired) || desired.Count == 0)
+                continue;
+
+            var current = desired.Dequeue();
+            existing.Name = current.Name;
+            existing.Cost = current.Cost;
+            existing.ChoiceSelections = current.ChoiceSelections;
+            reconciled.Add(existing);
+        }
+
+        foreach (var queue in desiredQueues.Values)
+        {
+            while (queue.Count > 0)
+                reconciled.Add(queue.Dequeue());
+        }
+
+        spend.Entries = reconciled;
+        for (var index = 0; index < spend.Entries.Count; index++)
+            spend.Entries[index].Position = index + 1;
+    }
+
+    private static string SpendEntryIdentity(CharacterSpendEntry entry)
+        => $"{entry.Type}:{entry.Key.Trim()}:{entry.PurchaseLevel.GetValueOrDefault()}";
+
+    private void LoadStoredSpendRowsImmediately()
+    {
+        try
+        {
+            _selectedSpend = _spendService.GetOrCreateSelected(_draft);
+            AvailableSpendNames.Clear();
+            foreach (var name in _draft.Spends.Keys.OrderBy(name => name, StringComparer.OrdinalIgnoreCase))
+                AvailableSpendNames.Add(name);
+            _selectedSpendName = _selectedSpend.Name;
+            OnPropertyChanged(nameof(SelectedSpendName));
+            RefreshSpendRows();
+            LiteDbService.UpsertDraft(_draft);
+        }
+        catch (Exception ex)
+        {
+            RuntimeLog.Write("CHARACTER_SPEND_IMMEDIATE_LOAD", "Failed loading stored spend rows.", ex);
+        }
+    }
+
+    private async Task SeedCurrentAdvancementIntoSpendAsync(
+        CharacterSpend spend,
+        CancellationToken cancellationToken)
+    {
+        foreach (var ability in _advanceVm.Abilities)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            _spendService.AddEntry(spend, new CharacterSpendEntry
+            {
+                Type = CharacterSpendEntryType.Ability,
+                Key = ability.AbilityKey,
+                Name = ability.Name,
+                Cost = ability.Cost
+            });
+        }
+
+        var multiClassCatalog = await MultiClassService.GetCatalogAsync().ConfigureAwait(false);
+        foreach (var selected in _advanceVm.MultiClasses)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var definition = ResolveMultiClassDefinition(multiClassCatalog.MultiClasses, selected.Key, selected.Name);
+            var costs = ResolvePerLevelCosts(
+                definition?.AvailabilityOptions.Select(option => option.CostsByLevel),
+                selected.Level,
+                selected.Cost);
+            for (var level = 1; level <= selected.Level; level++)
+            {
+                _spendService.AddEntry(spend, new CharacterSpendEntry
+                {
+                    Type = CharacterSpendEntryType.MultiClass,
+                    Key = selected.Key,
+                    Name = $"{selected.Name} · level {level}",
+                    Cost = costs.GetValueOrDefault(level),
+                    PurchaseLevel = level,
+                    ChoiceSelections = (_draft.MultiClassChoiceSelections ?? new Dictionary<string, string>())
+                        .Where(pair => pair.Key.StartsWith(selected.Key + "::", StringComparison.OrdinalIgnoreCase))
+                        .ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.OrdinalIgnoreCase)
+                });
+            }
+        }
+
+        var multiRace = _advanceVm.MultiRaceSelection;
+        if (multiRace == null)
+            return;
+
+        var multiRaceCatalog = await MultiRaceService.GetCatalogAsync().ConfigureAwait(false);
+        var raceDefinition = ResolveMultiRaceDefinition(multiRaceCatalog.MultiRaces, multiRace.Key, multiRace.Name);
+        var raceCosts = ResolvePerLevelCosts(
+            raceDefinition?.AvailabilityOptions.Select(option => option.CostsByLevel),
+            multiRace.Level,
+            multiRace.Cost);
+        for (var level = 1; level <= multiRace.Level; level++)
+        {
+            _spendService.AddEntry(spend, new CharacterSpendEntry
+            {
+                Type = CharacterSpendEntryType.MultiRace,
+                Key = multiRace.Key,
+                Name = $"{multiRace.Name} · level {level}",
+                Cost = raceCosts.GetValueOrDefault(level),
+                PurchaseLevel = level,
+                ChoiceSelections = new Dictionary<string, string>(
+                    _draft.MultiRaceChoiceSelections ?? new Dictionary<string, string>(),
+                    StringComparer.OrdinalIgnoreCase)
+            });
+        }
+    }
+
+    private static MultiClassDefinition? ResolveMultiClassDefinition(
+        IReadOnlyDictionary<string, MultiClassDefinition> definitions,
+        string key,
+        string displayName)
+        => definitions.FirstOrDefault(pair =>
+                string.Equals(pair.Key, key, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(pair.Value?.DisplayName, displayName, StringComparison.OrdinalIgnoreCase))
+            .Value;
+
+    private static MultiRaceDefinition? ResolveMultiRaceDefinition(
+        IReadOnlyDictionary<string, MultiRaceDefinition> definitions,
+        string key,
+        string displayName)
+        => definitions.FirstOrDefault(pair =>
+                string.Equals(pair.Key, key, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(pair.Value?.DisplayName, displayName, StringComparison.OrdinalIgnoreCase))
+            .Value;
+
+    private static Dictionary<int, int> ResolvePerLevelCosts(
+        IEnumerable<Dictionary<string, int>>? candidates,
+        int selectedLevel,
+        int expectedTotal)
+    {
+        var maps = (candidates ?? Array.Empty<Dictionary<string, int>>()).Where(map => map != null).ToList();
+        var selected = maps.FirstOrDefault(map => Enumerable.Range(1, selectedLevel)
+                           .Sum(level => map.GetValueOrDefault(level.ToString())) == expectedTotal)
+                       ?? maps.FirstOrDefault()
+                       ?? new Dictionary<string, int>();
+        return Enumerable.Range(1, Math.Max(0, selectedLevel))
+            .ToDictionary(level => level, level => selected.GetValueOrDefault(level.ToString()));
+    }
+
+    private void RefreshSpendRows()
+    {
+        var selectedIds = SpendRows.Where(row => row.IsSelected).Select(row => row.Id)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        SpendRows.Clear();
+        if (_selectedSpend != null)
+        {
+            foreach (var row in _spendService.BuildRows(_selectedSpend))
+            {
+                row.IsSelected = selectedIds.Contains(row.Id);
+                SpendRows.Add(row);
+            }
+        }
+        OnPropertyChanged(nameof(HasSelectedSpendRows));
     }
 
     private void BuildReviewSections()
@@ -557,6 +796,201 @@ public partial class CharacterReviewPage : ContentPage
             return;
 
         _ = SwitchSectionAsync(section.Key);
+    }
+
+    private void OnSpendSelected(object sender, EventArgs e)
+    {
+        if (sender is not Picker { SelectedItem: string name }
+            || string.IsNullOrWhiteSpace(name)
+            || _selectedSpend == null
+            || string.Equals(_selectedSpend.Name, name, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        try
+        {
+            _selectedSpend = _spendService.Select(_draft, name);
+            _selectedSpendName = _selectedSpend.Name;
+            OnPropertyChanged(nameof(SelectedSpendName));
+            RefreshSpendRows();
+            LiteDbService.UpsertDraft(_draft);
+        }
+        catch (Exception ex)
+        {
+            RuntimeLog.Write("CHARACTER_SPEND_SELECT", "Failed selecting character spend.", ex);
+        }
+    }
+
+    private async void OnCreateSpendClicked(object sender, EventArgs e)
+    {
+        var name = await DisplayPromptAsync(
+            "New spend",
+            "Name this spend",
+            "Create",
+            "Cancel",
+            maxLength: 60,
+            keyboard: Keyboard.Text);
+        if (string.IsNullOrWhiteSpace(name))
+            return;
+
+        try
+        {
+            _selectedSpend = _spendService.Create(_draft, name);
+            AvailableSpendNames.Clear();
+            foreach (var spendName in _draft.Spends.Keys.OrderBy(value => value, StringComparer.OrdinalIgnoreCase))
+                AvailableSpendNames.Add(spendName);
+            _selectedSpendName = _selectedSpend.Name;
+            OnPropertyChanged(nameof(SelectedSpendName));
+            RefreshSpendRows();
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Cannot create spend", ex.Message, "OK");
+        }
+    }
+
+    private async void OnAdvanceSelectedSpendClicked(object sender, EventArgs e)
+    {
+        if (_selectedSpend == null)
+            return;
+
+        try
+        {
+            LiteDbService.UpsertDraft(_draft);
+            ClearSpendSelection();
+            _captureAdvancementSpendName = _selectedSpend.Name;
+            await Navigation.PushAsync(new AdvanceCharacterPage(_draft, AdvanceCharacterTab.Spends));
+        }
+        catch (Exception ex)
+        {
+            _captureAdvancementSpendName = string.Empty;
+            RuntimeLog.Write("CHARACTER_SPEND_ADVANCE", "Failed opening advancement for the selected spend.", ex);
+            await DisplayAlert("Cannot open advancement", ex.Message, "OK");
+        }
+    }
+
+    private void OnClearSpendSelectionClicked(object sender, EventArgs e) => ClearSpendSelection();
+
+    private void OnSpendRowLongPressed(object? sender, CharacterSpendRowVm row)
+    {
+        row.IsSelected = true;
+        OnPropertyChanged(nameof(HasSelectedSpendRows));
+    }
+
+    private void OnSpendRowTapped(object? sender, CharacterSpendRowVm row)
+    {
+        if (!HasSelectedSpendRows)
+            return;
+        row.IsSelected = !row.IsSelected;
+        OnPropertyChanged(nameof(HasSelectedSpendRows));
+    }
+
+    private void OnSpendRowMoveRequested(object? sender, int direction)
+    {
+        if (_selectedSpend == null || sender is not SpendOrderRowView { Row: { } row })
+            return;
+
+        if (!row.IsSelected)
+        {
+            ClearSpendSelection();
+            row.IsSelected = true;
+        }
+        var ids = SelectedSpendRowIds();
+        if (ids.Count == 0)
+            return;
+
+        var selectedRows = SpendRows.Where(candidate => candidate.IsSelected).ToList();
+        var targetPosition = direction < 0
+            ? selectedRows.Min(candidate => candidate.Position) - 1
+            : selectedRows.Max(candidate => candidate.Position) + 1;
+        MoveSpendRowsSafely(ids, targetPosition);
+    }
+
+    private async void OnSpendRowOptionsClicked(object? sender, CharacterSpendRowVm row)
+    {
+        if (_selectedSpend == null)
+            return;
+        if (!row.IsSelected)
+        {
+            ClearSpendSelection();
+            row.IsSelected = true;
+        }
+
+        var action = await DisplayActionSheet(
+            row.Name,
+            "Cancel",
+            null,
+            "Set position…",
+            "Move to top",
+            "Move to bottom");
+        var ids = SelectedSpendRowIds();
+        if (ids.Count == 0)
+            return;
+
+        try
+        {
+            if (string.Equals(action, "Move to top", StringComparison.Ordinal))
+                _spendService.MoveToTop(_selectedSpend, ids);
+            else if (string.Equals(action, "Move to bottom", StringComparison.Ordinal))
+                _spendService.MoveToBottom(_selectedSpend, ids);
+            else if (string.Equals(action, "Set position…", StringComparison.Ordinal))
+            {
+                var entered = await DisplayPromptAsync(
+                    "Set position",
+                    "Enter the first position for the selected row or rows.",
+                    "Move",
+                    "Cancel",
+                    initialValue: row.PositionText,
+                    maxLength: 4,
+                    keyboard: Keyboard.Numeric);
+                if (!int.TryParse(entered, out var position))
+                    return;
+                _spendService.MoveToPosition(_selectedSpend, ids, position);
+            }
+            else
+            {
+                return;
+            }
+
+            PersistSpendOrderAndRefresh();
+        }
+        catch (Exception ex)
+        {
+            RuntimeLog.Write("CHARACTER_SPEND_REORDER", "Failed reordering spend rows.", ex);
+            await DisplayAlert("Cannot move spend rows", ex.Message, "OK");
+        }
+    }
+
+    private void MoveSpendRowsSafely(IReadOnlyList<string> ids, int position)
+    {
+        if (_selectedSpend == null)
+            return;
+        try
+        {
+            _spendService.MoveToPosition(_selectedSpend, ids, position);
+            PersistSpendOrderAndRefresh();
+        }
+        catch (Exception ex)
+        {
+            RuntimeLog.Write("CHARACTER_SPEND_DRAG_REORDER", "Failed dragging spend rows.", ex);
+        }
+    }
+
+    private void PersistSpendOrderAndRefresh()
+    {
+        LiteDbService.UpsertDraft(_draft);
+        RefreshSpendRows();
+    }
+
+    private List<string> SelectedSpendRowIds()
+        => SpendRows.Where(row => row.IsSelected).OrderBy(row => row.Position).Select(row => row.Id).ToList();
+
+    private void ClearSpendSelection()
+    {
+        foreach (var row in SpendRows)
+            row.IsSelected = false;
+        OnPropertyChanged(nameof(HasSelectedSpendRows));
     }
 
     private async void OnReviewEntryInfoClicked(object sender, EventArgs e)
@@ -863,10 +1297,9 @@ public partial class CharacterReviewPage : ContentPage
     {
         if (!alignment.HasValue)
             return "Neutral";
-        var resolvedMoral = alignment.Value.Moral == MoralAxis.Neutral && alignment.Value.Order == OrderAxis.Neutral
-            ? "True"
-            : alignment.Value.Moral.ToString();
-        return $"{alignment.Value.Order} {resolvedMoral}"; 
+        return alignment.Value.Moral == MoralAxis.Neutral && alignment.Value.Order == OrderAxis.Neutral
+            ? $"True {alignment.Value.Order}"
+            : $"{alignment.Value.Order} {alignment.Value.Moral}";
     }
 
     private static string ResolveMoralGlyph(Alignment? alignment)

@@ -46,7 +46,6 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
     private static readonly Dictionary<string, MagicColours> AlfarWizardColourMap = new(StringComparer.OrdinalIgnoreCase)
     {
-        ["Löss light (white)"] = MagicColours.White,
         ["Loss light (white)"] = MagicColours.White,
         ["Svart dark (black)"] = MagicColours.Black,
         ["Alfamir seas (green)"] = MagicColours.Green,

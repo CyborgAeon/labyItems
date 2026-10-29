@@ -37,7 +37,7 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
         BindingContext = this;
         _eventStore = ServiceHelper.ResolveService<CalendarEventStore>() ?? CalendarEventStore.Shared;
         _visibleMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-        MonthButton.Text = _visibleMonth.ToString("MMMM");
+        MonthButton.Text = _visibleMonth.ToString("MMM");
         YearButton.Text = _visibleMonth.ToString("yyyy");
         PageContent.Opacity = 0;
         ToggleCalendarChevron.IsExpanded = _isCalendarExpanded;

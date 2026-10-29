@@ -34,6 +34,20 @@ public sealed class LabyrintheSession
         CookieContainer = _cookies = new CookieContainer()
     }) { Timeout = TimeSpan.FromSeconds(30) };
 
+    public void LoginAsGuest()
+    {
+        if (_ownsClient)
+        {
+            _client.Dispose();
+            _client = CreateClient();
+        }
+        Email = string.Empty;
+        DisplayName = "Guest";
+        Account = null;
+        IsFallback = IsAuthenticated = true;
+        SessionChanged?.Invoke();
+    }
+
     public async Task<bool> LoginAsync(string email, string password)
     {
         IsAuthenticated = false;
