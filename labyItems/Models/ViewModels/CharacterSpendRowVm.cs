@@ -26,8 +26,8 @@ public sealed class CharacterSpendRowVm : INotifyPropertyChanged
     public int RunningTotal { get; init; }
     public int? CharacterLevel { get; init; }
     public int? PurchaseLevel { get; init; }
-    public string CostText => CharacterLevel is > 0 ? $"lvl {CharacterLevel}" : $"{Cost:n0} Pts";
-    public string TotalText => $"{RunningTotal:n0} Pts";
+    public string CostText => CharacterLevel is > 0 ? $"lvl {CharacterLevel}" : $"{Cost:n0}";
+    public string TotalText => $"{RunningTotal:n0}";
     public bool IsSelected
     {
         get => _isSelected;

@@ -442,7 +442,7 @@
                                 FontSize="12"
                                 Clicked="OnCreateSpendClicked" />
                     </Grid>
-                    <Grid Grid.Row="2" ColumnDefinitions="24,30,80,*,64,68,28" ColumnSpacing="5" Padding="6,0">
+                    <Grid Grid.Row="2" ColumnDefinitions="Auto,Auto,*,Auto,Auto" ColumnSpacing="5" Padding="6,0">
                         <Label Grid.Column="1" Text="#" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center" />
                         <Label Grid.Column="2" Text="TYPE" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center" />
                         <Label Grid.Column="3" Text="NAME" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center" />
@@ -484,7 +484,7 @@
                                                         FontFamily="FASolid"
                                                         FontSize="14"
                                                         Padding="0"
-                                                        BackgroundColor="{StaticResource Transparent}"
+                                                        BackgroundColor="Transparent"
                                                         TextColor="{StaticResource SubtleTextColor}"
                                                         HeightRequest="24"
                                                         WidthRequest="24"

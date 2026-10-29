@@ -25,7 +25,7 @@ public sealed class CharacterSpendServiceTests
 
         Assert.Equal("1st Weapon Mastery", row.Name);
         Assert.Equal("lvl 1", row.CostText);
-        Assert.Equal("0 Pts", row.TotalText);
+        Assert.Equal("0", row.TotalText);
     }
 
     [Fact]
@@ -100,9 +100,9 @@ public sealed class CharacterSpendServiceTests
         var rows = _service.BuildRows(spend);
 
         Assert.Equal("lvl 2", rows[0].CostText);
-        Assert.Equal("0 Pts", rows[0].TotalText);
-        Assert.Equal("40 Pts", rows[1].CostText);
-        Assert.Equal("40 Pts", rows[1].TotalText);
+        Assert.Equal("0", rows[0].TotalText);
+        Assert.Equal("40", rows[1].CostText);
+        Assert.Equal("40", rows[1].TotalText);
     }
 
     private static CharacterSpendEntry MultiClass(string key, int level)

@@ -9,7 +9,7 @@
             StrokeThickness="{Binding Row.BorderThickness, Source={x:Reference Root}}"
             Stroke="{Binding Row.BorderColor, Source={x:Reference Root}}"
             BackgroundColor="{Binding Row.RowBackgroundColor, Source={x:Reference Root}}">
-        <Grid ColumnDefinitions="24,30,80,*,64,68,28" ColumnSpacing="5">
+        <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto,Auto" ColumnSpacing="5">
             <Button Grid.Column="0"
                     Text="{x:Static helpers:FontAwesomeGlyphs.GripVertical}"
                     FontFamily="FASolid"
