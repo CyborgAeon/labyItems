@@ -11,11 +11,13 @@ public sealed class LabyrintheSession
     private HttpClient _client;
     private readonly bool _ownsClient;
     private CookieContainer? _cookies;
+    private SavedLogin? _offlineCredentials;
     public string Email { get; private set; } = string.Empty;
     public string DisplayName { get; private set; } = string.Empty;
     public AccountProfile? Account { get; private set; }
     public IAccountProfileCache? AccountProfiles { get; set; }
     public bool CanViewCalendar => IsAuthenticated && !IsFallback;
+    public bool IsOfflineSession { get; private set; }
     public bool IsAuthenticated { get; private set; }
     public bool IsFallback { get; private set; }
     public event Action? SessionChanged;
@@ -41,6 +43,8 @@ public sealed class LabyrintheSession
             _client.Dispose();
             _client = CreateClient();
         }
+        IsOfflineSession = false;
+        _offlineCredentials = null;
         Email = string.Empty;
         DisplayName = "Guest";
         Account = null;
@@ -51,6 +55,8 @@ public sealed class LabyrintheSession
     public async Task<bool> LoginAsync(string email, string password)
     {
         IsAuthenticated = false;
+        IsOfflineSession = false;
+        _offlineCredentials = null;
         IsFallback = false;
         Email = string.Empty;
         DisplayName = string.Empty;
@@ -74,7 +80,20 @@ public sealed class LabyrintheSession
         {
             ["email"] = email, ["password"] = password, ["submit_login"] = ""
         });
-        using var response = await _client.PostAsync("https://www.labyrinthe.co.uk/login/", content);
+        HttpResponseMessage loginResponse;
+        try { loginResponse = await _client.PostAsync("https://www.labyrinthe.co.uk/login/", content); }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        {
+            var cached = AccountProfiles == null ? null : await AccountProfiles.GetAsync(email, password);
+            if (cached == null) throw;
+            Email = email;
+            Account = cached;
+            DisplayName = cached.DisplayName;
+            IsOfflineSession = IsAuthenticated = true;
+            _offlineCredentials = new SavedLogin(email, password);
+            return true;
+        }
+        using var response = loginResponse;
         IsAuthenticated = response.StatusCode == HttpStatusCode.Found;
         if (IsAuthenticated)
         {
@@ -104,6 +123,7 @@ public sealed class LabyrintheSession
     {
         if (!IsAuthenticated || IsFallback)
             throw new InvalidOperationException("Sign in with your Labyrinthe account to view live events.");
+        await ReconnectAsync();
         using var response = await _client.GetAsync(new Uri(new Uri("https://www.labyrinthe.co.uk/"), path));
         if (response.StatusCode is HttpStatusCode.Found or HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden)
             throw new InvalidOperationException("Your session has expired. Please sign in again.");
@@ -117,6 +137,7 @@ public sealed class LabyrintheSession
     public async Task<bool> PostBookingAsync(string id, CalendarEventRole? role)
     {
         if (!IsAuthenticated || IsFallback || !id.All(char.IsAsciiDigit) || id.Length == 0) return false;
+        await ReconnectAsync();
         var fields = new Dictionary<string, string>();
         if (role.HasValue)
         {
@@ -140,6 +161,20 @@ public sealed class LabyrintheSession
         if (response.StatusCode != HttpStatusCode.Found) return false;
         var location = response.Headers.Location;
         return location == null || !location.ToString().Contains("/login", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private async Task ReconnectAsync()
+    {
+        if (!IsOfflineSession || _offlineCredentials == null) return;
+        using var form = new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["email"] = _offlineCredentials.Email, ["password"] = _offlineCredentials.Password, ["submit_login"] = ""
+        });
+        using var response = await _client.PostAsync("https://www.labyrinthe.co.uk/login/", form);
+        if (response.StatusCode != HttpStatusCode.Found)
+            throw new InvalidOperationException("Please sign in again to refresh your calendar.");
+        IsOfflineSession = false;
+        _offlineCredentials = null;
     }
 
     private void MirrorCookies(string source, string destination)

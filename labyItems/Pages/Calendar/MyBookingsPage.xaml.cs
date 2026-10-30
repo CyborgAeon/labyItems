@@ -5,18 +5,33 @@ namespace labyItems.Pages.Calendar;
 public partial class MyBookingsPage : ContentPage
 {
     private readonly CalendarEventStore _eventStore;
+    private readonly CalendarStatusLabelUpdater _statusLabel;
     private bool _isLoading;
 
     public MyBookingsPage()
     {
         InitializeComponent();
         _eventStore = ServiceHelper.ResolveService<CalendarEventStore>() ?? CalendarEventStore.Shared;
+        _statusLabel = new CalendarStatusLabelUpdater(LastUpdatedLabel, () => _eventStore.BookingsStatus, OnCalendarDateChangedAsync);
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        _statusLabel.Start();
         await LoadBookingsAsync();
+    }
+
+    private async Task OnCalendarDateChangedAsync()
+    {
+        await _eventStore.ExpireAsync();
+        await LoadBookingsAsync();
+    }
+
+    protected override void OnDisappearing()
+    {
+        _statusLabel.Stop();
+        base.OnDisappearing();
     }
 
     private async void OnBackClicked(object sender, EventArgs e)
@@ -60,6 +75,7 @@ public partial class MyBookingsPage : ContentPage
         finally
         {
             _isLoading = false;
+            _statusLabel.Update();
             BookingsLoadingIndicator.IsVisible = BookingsLoadingIndicator.IsRunning = false;
         }
     }

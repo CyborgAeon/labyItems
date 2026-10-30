@@ -313,7 +313,8 @@ public sealed class LabyrintheIntegrationTests
         var store = new CalendarEventStore(session);
         await session.LoginAsync("member@example.com", "secret");
         await store.LoadBookedEventsAsync();
-        await Assert.ThrowsAsync<HttpRequestException>(() => store.LoadBookedEventsAsync());
+        Assert.Equal(CalendarEventRole.Crew, Assert.Single(await store.LoadBookedEventsAsync()).MyBookedRole);
+        Assert.True(store.BookingsStatus!.IsOffline);
         Assert.Equal(CalendarEventRole.Crew, Assert.Single(store.GetBookedEvents()).MyBookedRole);
     }
 

@@ -43,6 +43,12 @@
                 </Button>
             </Grid>
 
+            <Label x:Name="LastUpdatedLabel"
+                   IsVisible="False"
+                   FontSize="13"
+                   FontAttributes="Italic"
+                   TextColor="{StaticResource Gray500}" />
+
             <Border Padding="18"
                     Stroke="{StaticResource SurfaceBorderColor}"
                     StrokeShape="RoundRectangle 18">
@@ -58,7 +64,12 @@
                 </VerticalStackLayout>
             </Border>
 
-            <Grid ColumnDefinitions="1.2*,0.8*"
+            <Label x:Name="RosterUnavailableLabel"
+                   IsVisible="False"
+                   Text="Roster details have not been saved for offline viewing."
+                   TextColor="{StaticResource Gray500}" />
+
+            <Grid x:Name="RostersGrid" ColumnDefinitions="1.2*,0.8*"
                   ColumnSpacing="12"
                   VerticalOptions="Start">
                 <controls:ExpandableSectionCard x:Name="PlayersSectionCard"
@@ -130,17 +141,7 @@
                         TextColor="{StaticResource Primary}" />
             </VerticalStackLayout>
 
-            <Border Padding="16"
-                    Stroke="{StaticResource SurfaceBorderColor}"
-                    StrokeShape="RoundRectangle 16">
-                <VerticalStackLayout Spacing="12">
-                    <Label FontAttributes="Bold"
-                           FontSize="16"
-                           Text="Associated Users" />
-                    <HorizontalStackLayout x:Name="ProfileIconsHost"
-                                           Spacing="10" />
-                </VerticalStackLayout>
-            </Border>
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

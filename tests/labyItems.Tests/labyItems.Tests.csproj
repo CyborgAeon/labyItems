@@ -36,6 +36,8 @@
     <Compile Include="../../labyItems/Models/Authentication/*.cs" Link="Source/Authentication/%(Filename)%(Extension)" />
     <Compile Include="../../labyItems/Services/LabyrintheSession.cs" Link="Source/LabyrintheSession.cs" />
     <Compile Include="../../labyItems/Services/LabyrintheEventParser.cs" Link="Source/LabyrintheEventParser.cs" />
+    <Compile Include="../../labyItems/Services/ICalendarEventCache.cs" Link="Source/ICalendarEventCache.cs" />
+    <Compile Include="../../labyItems/Services/FileCalendarEventCache.cs" Link="Source/FileCalendarEventCache.cs" />
     <Compile Include="../../labyItems/Services/CalendarEventStore.cs" Link="Source/CalendarEventStore.cs" />
     <Compile Include="../../labyItems/Models/Calendar/*.cs" Link="Source/Calendar/%(Filename)%(Extension)" />
     <None Update="Fixtures/EventBookings.html" CopyToOutputDirectory="PreserveNewest" />

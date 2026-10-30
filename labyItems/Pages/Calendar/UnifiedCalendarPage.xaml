@@ -53,6 +53,12 @@
                     </Button>
                 </Grid>
 
+            <Label x:Name="LastUpdatedLabel"
+                   IsVisible="False"
+                   FontSize="13"
+                   FontAttributes="Italic"
+                   TextColor="{StaticResource Gray500}" />
+
             <Label x:Name="SelectedDayLabel"
                    FontAttributes="Italic"
                    FontSize="14"

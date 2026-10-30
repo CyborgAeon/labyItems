@@ -5,6 +5,7 @@ public sealed class CalendarEventRecord
     public string Id { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public DateTime Date { get; set; }
+    public DateTimeOffset? UpdatedAtUtc { get; set; }
     public string Location { get; set; } = string.Empty;
     public string Threshold { get; set; } = string.Empty;
     public string EventType { get; set; } = string.Empty;

@@ -15,6 +15,7 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
     private const double MonthSwipeThreshold = 48;
     private const double HorizontalGestureBias = 1.2;
     private readonly CalendarEventStore _eventStore;
+    private readonly CalendarStatusLabelUpdater _statusLabel;
     private bool _isAnimatingCalendarCollapse;
     private bool _isLoadingMonth;
     private bool _isAnimatingMonthTransition;
@@ -36,6 +37,7 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
         InitializeComponent();
         BindingContext = this;
         _eventStore = ServiceHelper.ResolveService<CalendarEventStore>() ?? CalendarEventStore.Shared;
+        _statusLabel = new CalendarStatusLabelUpdater(LastUpdatedLabel, () => _eventStore.GetMonthStatus(_visibleMonth), OnCalendarDateChangedAsync);
         _visibleMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
         MonthButton.Text = _visibleMonth.ToString("MMM");
         YearButton.Text = _visibleMonth.ToString("yyyy");
@@ -46,6 +48,7 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        _statusLabel.Start();
         if (!LabyrintheSession.Shared.CanViewCalendar)
         {
             await NavigateBackAsync();
@@ -62,6 +65,21 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
             PageContent.Opacity = 1;
         }
         await RefreshMonthAsync();
+    }
+
+    private async Task OnCalendarDateChangedAsync()
+    {
+        await _eventStore.ExpireAsync();
+        var currentMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+        if (_visibleMonth < currentMonth) _visibleMonth = currentMonth;
+        _selectedDay = null;
+        await RefreshMonthAsync();
+    }
+
+    protected override void OnDisappearing()
+    {
+        _statusLabel.Stop();
+        base.OnDisappearing();
     }
 
     private async Task NavigateBackAsync()
@@ -223,6 +241,7 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
         finally
         {
             _isLoadingMonth = false;
+            _statusLabel.Update();
             EventsLoadingIndicator.IsVisible = EventsLoadingIndicator.IsRunning = false;
         }
     }

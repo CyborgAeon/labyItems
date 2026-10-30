@@ -62,7 +62,7 @@ internal static class CalendarVisualHelper
                     new Label { Text = evt.MonthDayLabel, FontSize = 14 },
                     new Label { Text = evt.Location, FontSize = 14 },
                     BuildRoleSummary(evt),
-                    new Label { Text = evt.SummaryLine, FontSize = 13, TextColor = ResolveColor("Gray500", Colors.Gray) },
+                    new Label { Text = evt.UpdatedAtUtc.HasValue ? evt.SummaryLine : "Roster not saved for offline viewing.", FontSize = 13, TextColor = ResolveColor("Gray500", Colors.Gray) },
                     new Label { Text = evt.AreaSummary, FontSize = 13, FontAttributes = FontAttributes.Italic, TextColor = ResolveColor("Gray500", Colors.Gray) }
                 }
             }

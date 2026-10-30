@@ -1,13 +1,13 @@
 using labyItems.Models.Calendar;
 using labyItems.Services;
 using labyItems.Helpers;
-using Microsoft.Maui.Controls.Shapes;
 
 namespace labyItems.Pages.Calendar;
 
 public partial class EventDetailsPage : ContentPage
 {
     private readonly CalendarEventStore _eventStore;
+    private readonly CalendarStatusLabelUpdater _statusLabel;
     private readonly string _eventId;
     private CalendarEventRecord? _event;
     private bool _isSubmitting;
@@ -17,6 +17,7 @@ public partial class EventDetailsPage : ContentPage
         InitializeComponent();
         _eventId = eventId;
         _eventStore = ServiceHelper.ResolveService<CalendarEventStore>() ?? CalendarEventStore.Shared;
+        _statusLabel = new CalendarStatusLabelUpdater(LastUpdatedLabel, () => _eventStore.GetEventStatus(_eventId), OnCalendarDateChangedAsync);
 
         BindableLayout.SetItemTemplate(PlayersSection, CreateNameTemplate(CalendarEventRole.Player));
         BindableLayout.SetItemTemplate(RefereesSection, CreateNameTemplate(CalendarEventRole.Referee));
@@ -27,8 +28,22 @@ public partial class EventDetailsPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        _statusLabel.Start();
         LoadEvent();
         await RefreshEventAsync();
+    }
+
+    private async Task OnCalendarDateChangedAsync()
+    {
+        await _eventStore.ExpireAsync();
+        LoadEvent();
+        if (_event == null) await Navigation.PopAsync();
+    }
+
+    protected override void OnDisappearing()
+    {
+        _statusLabel.Stop();
+        base.OnDisappearing();
     }
 
     private async void OnBackClicked(object sender, EventArgs e)
@@ -119,14 +134,19 @@ public partial class EventDetailsPage : ContentPage
         {
             await DisplayAlert("Unable to refresh event", ex.Message, "OK");
         }
+        finally { _statusLabel.Update(); }
     }
 
     private void LoadEvent()
     {
         _event = _eventStore.GetEvent(_eventId);
         if (_event == null)
+        {
+            BindingContext = null;
+            Content.IsVisible = false;
             return;
-
+        }
+        Content.IsVisible = true;
         BindingContext = null;
         BindingContext = _event;
         Title = _event.Name;
@@ -135,34 +155,9 @@ public partial class EventDetailsPage : ContentPage
         EventLocationLabel.Text = _event.Location;
         EventThresholdLabel.Text = $"{_event.EventType} / Threshold {_event.ThresholdBadge}";
 
-        BuildProfileIcons();
+        RostersGrid.IsVisible = _event.UpdatedAtUtc.HasValue;
+        RosterUnavailableLabel.IsVisible = !_event.UpdatedAtUtc.HasValue;
         ApplySectionState();
-    }
-
-    private void BuildProfileIcons()
-    {
-        ProfileIconsHost.Children.Clear();
-        if (_event == null)
-            return;
-
-        foreach (var _ in _event.AllParticipants.Take(8))
-        {
-            ProfileIconsHost.Children.Add(new Border
-            {
-                WidthRequest = 42,
-                HeightRequest = 42,
-                StrokeShape = new RoundRectangle { CornerRadius = new CornerRadius(21) },
-                Stroke = Colors.LightGray,
-                BackgroundColor = Color.FromArgb("#F5F5F5"),
-                Content = new Label
-                {
-                    Text = string.Empty,
-                    HorizontalTextAlignment = TextAlignment.Center,
-                    VerticalTextAlignment = TextAlignment.Center,
-                    TextColor = Colors.Gray
-                }
-            });
-        }
     }
 
     private void ApplySectionState()
