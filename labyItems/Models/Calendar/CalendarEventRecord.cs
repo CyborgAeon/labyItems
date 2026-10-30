@@ -21,7 +21,7 @@ public sealed class CalendarEventRecord
     public string CurrentUserName { get; set; } = string.Empty;
 
     public string DayLabel => Date.ToString("ddd d MMM");
-    public string MonthDayLabel => Date.ToString("dddd d MMMM");
+    public string MonthDayLabel => Date.ToString("dddd d MMM");
     public string SummaryLine => $"P {Players.Count}/{PlayerCapacity}  R {Referees.Count}/{RefereeCapacity}  A {ARefs.Count}/{ARefCapacity}  C {Crew.Count}/{CrewCapacity}";
     public string ThresholdBadge => Threshold.Equals("No-Max", StringComparison.OrdinalIgnoreCase) ? "No-Max" : Threshold;
     public string AreaSummary => BookedAreas.Count == 0 ? "No area booked" : $"Area {string.Join(", ", BookedAreas)}";

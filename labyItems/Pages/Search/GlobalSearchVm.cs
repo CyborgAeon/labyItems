@@ -169,7 +169,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
     private readonly Dictionary<string, GlobalSearchResultVm> _selectedResults = new(StringComparer.OrdinalIgnoreCase);
 
     public ICommand ToggleResultSelectionCommand { get; }
-    public bool IsPickerMode => _picker != null;
+    public bool IsPickerMode => _picker?.SelectionOptions.SelectionType is SelectionType.Single or SelectionType.Multiple;
     public bool ShowKindChips => _picker == null || _picker.AllowAllKinds;
     public string PickerTitle => _picker?.Title ?? string.Empty;
     public string PickerConfirmText => _picker?.FooterOptions?.ConfirmText ?? "Save";
@@ -183,7 +183,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
 
     private void ToggleResultSelection(GlobalSearchResultVm? result)
     {
-        if (result == null)
+        if (!IsPickerMode || result == null)
             return;
 
         var key = SelectionKey(result);
@@ -434,7 +434,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
                     .ToList();
             }
 
-            if (_picker?.SelectionOptions.SelectedKeys is { Count: > 0 } initial)
+            if (IsPickerMode && _picker?.SelectionOptions.SelectedKeys is { Count: > 0 } initial)
             {
                 foreach (var result in converted.Where(result => initial.Contains(result.Name)))
                 {

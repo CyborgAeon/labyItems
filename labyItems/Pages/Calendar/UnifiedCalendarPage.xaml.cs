@@ -80,7 +80,7 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
     {
         var monthNames = Enumerable.Range(1, 12)
             .Where(month => _visibleMonth.Year > DateTime.Today.Year || month >= DateTime.Today.Month)
-            .Select(month => new DateTime(2000, month, 1).ToString("MMMM"))
+            .Select(month => new DateTime(2000, month, 1).ToString("MMM"))
             .ToArray();
 
         var selection = await DisplayActionSheet("Select month", "Cancel", null, monthNames);
@@ -91,7 +91,7 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
         if (monthIndex < 0)
             return;
 
-        var monthNumber = DateTime.ParseExact(selection, "MMMM", System.Globalization.CultureInfo.CurrentCulture).Month;
+        var monthNumber = DateTime.ParseExact(selection, "MMM", System.Globalization.CultureInfo.CurrentCulture).Month;
         var targetMonth = new DateTime(_visibleMonth.Year, monthNumber, 1);
         var direction = targetMonth > _visibleMonth ? 1 : -1;
         await ChangeVisibleMonthAsync(targetMonth, direction == 0 ? 1 : direction);
@@ -247,10 +247,10 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
         foreach (var evt in visible)
             VisibleEvents.Add(evt);
 
-        MonthButton.Text = _visibleMonth.ToString("MMMM");
+        MonthButton.Text = _visibleMonth.ToString("MMM");
         YearButton.Text = _visibleMonth.ToString("yyyy");
         SelectedDayLabel.Text = _selectedDay.HasValue
-            ? $"Filtering by {_selectedDay.Value:dddd d MMMM}. Tap the same day again to clear."
+            ? $"Filtering by {_selectedDay.Value:dddd d MMM}. Tap the same day again to clear."
             : "Tap a day to filter the event list below. Swipe left or right to change month.";
 
         BuildCalendar(monthEvents);
