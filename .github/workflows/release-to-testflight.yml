@@ -177,9 +177,12 @@ jobs:
           printf "%s" "$APP_STORE_CONNECT_API_PRIVATE_KEY" > "$KEY_FILE"
           chmod 600 "$KEY_FILE"
 
+         
           xcrun altool \
+            --use-old-altool \
             --upload-app \
             --type ios \
             --file "$IPA_PATH" \
             --apiKey "$APP_STORE_CONNECT_API_KEY_ID" \
             --apiIssuer "$APP_STORE_CONNECT_API_ISSUER_ID"
+
