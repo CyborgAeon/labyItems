@@ -30,10 +30,9 @@
                                  BindableLayout.ItemsSource="{Binding Sections}">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
-                        <Frame Padding="12"
-                               CornerRadius="12"
-                               HasShadow="False"
-                               BorderColor="{StaticResource SurfaceBorderColor}"
+                        <Border Style="{StaticResource CardBorderStyle}" Padding="12"
+                               StrokeShape="RoundRectangle 12"
+                               Stroke="{StaticResource SurfaceBorderColor}"
                                BackgroundColor="White">
                             <VerticalStackLayout Spacing="8">
                                 <Grid ColumnDefinitions="*,Auto"
@@ -143,7 +142,7 @@
                                     </VerticalStackLayout>
                                 </controls:AnimatedExpandView>
                             </VerticalStackLayout>
-                        </Frame>
+                        </Border>
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
             </VerticalStackLayout>

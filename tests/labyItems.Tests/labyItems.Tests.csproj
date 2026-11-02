@@ -29,6 +29,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="../../labyItems/Services/ReferenceDatabaseReadiness.cs" Link="Source/ReferenceDatabaseReadiness.cs" />
+    <Compile Include="../../labyItems/Models/Items/*.cs" Link="Source/Items/%(Filename)%(Extension)" />
     <Compile Include="../../labyItems/Services/ISavedLoginStorage.cs" Link="Source/ISavedLoginStorage.cs" />
     <Compile Include="../../labyItems/Services/SavedLoginStore.cs" Link="Source/SavedLoginStore.cs" />
     <Compile Include="../../labyItems/Services/IAccountProfileCache.cs" Link="Source/IAccountProfileCache.cs" />
@@ -63,6 +65,9 @@
     <Compile Include="../../labyItems/Services/DruidEvocationService.cs" Link="Source/DruidEvocationService.cs" />
     <Compile Include="../../labyItems/Services/EvolutionService.cs" Link="Source/EvolutionService.cs" />
     <Compile Include="../../labyItems/Services/EvolutionDataSynchronizer.cs" Link="Source/EvolutionDataSynchronizer.cs" />
+    <Compile Include="../../labyItems/Services/IEvolutionDataSynchronizer.cs" Link="Source/IEvolutionDataSynchronizer.cs" />
+    <Compile Include="../../labyItems/Services/AbilityDefinitionDataSynchronizer.cs" Link="Source/AbilityDefinitionDataSynchronizer.cs" />
+    <Compile Include="../../labyItems/Services/IAbilityDefinitionDataSynchronizer.cs" Link="Source/IAbilityDefinitionDataSynchronizer.cs" />
     <Compile Include="../../labyItems/Services/BookDirectory.cs" Link="Source/BookDirectory.cs" />
     <Compile Include="../../labyItems/Services/AbilityDetailsLookupService.cs" Link="Source/AbilityDetailsLookupService.cs" />
     <Compile Include="../../labyItems/Services/ClassService.cs" Link="Source/ClassService.cs" />
@@ -71,6 +76,11 @@
     <Compile Include="../../labyItems/Services/IAbilityAvailabilityService.cs" Link="Source/IAbilityAvailabilityService.cs" />
     <Compile Include="../../labyItems/Services/AbilityAvailabilityService.cs" Link="Source/AbilityAvailabilityService.cs" />
     <Compile Include="../../labyItems/Services/AbilityChoiceSetResolverService.cs" Link="Source/AbilityChoiceSetResolverService.cs" />
+    <Compile Include="../../labyItems/Services/ICharacterReferenceDataSynchronizer.cs" Link="Source/ICharacterReferenceDataSynchronizer.cs" />
+    <Compile Include="../../labyItems/Services/LightweightMigrator.cs" Link="Source/LightweightMigrator.cs" />
+    <Compile Include="../../labyItems/Services/IReferenceCatalogueDataSynchronizer.cs" Link="Source/IReferenceCatalogueDataSynchronizer.cs" />
+    <Compile Include="../../labyItems/Services/NeuronicService.cs" Link="Source/NeuronicService.cs" />
+    <Compile Include="../../labyItems/Services/ReferenceCatalogueDataSynchronizer.cs" Link="Source/ReferenceCatalogueDataSynchronizer.cs" />
     <Compile Include="../../labyItems/Services/CharacterReferenceDataSynchronizer.cs" Link="Source/CharacterReferenceDataSynchronizer.cs" />
     <Compile Include="../../labyItems/Services/CharacterSpendService.cs" Link="Source/CharacterSpendService.cs" />
     <Compile Include="../../labyItems/Services/IFileService.cs" Link="Source/IFileService.cs" />
@@ -120,6 +130,8 @@
     <Compile Include="../../labyItems/Pages/Characters/MappedSpecialisationSectionVm.cs" Link="Source/MappedSpecialisationSectionVm.cs" />
     <Compile Include="../../labyItems/Models/CalcResult.cs" Link="Source/CalcResult.cs" />
     <Compile Include="../../labyItems/Models/Item.cs" Link="Source/Item.cs" />
+    <Compile Include="../../labyItems/Models/ItemJsonDetail.cs" Link="Source/ItemJsonDetail.cs" />
+    <Compile Include="../../labyItems/Models/RecipientPayload.cs" Link="Source/RecipientPayload.cs" />
     <Compile Include="../../labyItems/Models/ItemJsonPayload.cs" Link="Source/ItemJsonPayload.cs" />
     <Compile Include="../../labyItems/Models/ItemTypeEnum.cs" Link="Source/ItemTypeEnum.cs" />
     <Compile Include="../../labyItems/Models/RecipientInfo.cs" Link="Source/RecipientInfo.cs" />
@@ -139,6 +151,11 @@
     <Compile Include="../../labyItems/Models/Characters/GuildOverrideRules.cs" Link="Source/GuildOverrideRules.cs" />
     <Compile Include="../../labyItems/Models/Characters/MagicListDrafts.cs" Link="Source/MagicListDrafts.cs" />
     <Compile Include="../../labyItems/Models/Rules/RuleTree.cs" Link="Source/RuleTree.cs" />
+    <Compile Include="../../labyItems/Models/Enums/WeaponType.cs" Link="Source/WeaponType.cs" />
+    <Compile Include="../../labyItems/Models/Enums/Alignments.cs" Link="Source/Alignments.cs" />
+    <Compile Include="../../labyItems/Models/Enums/SpiritualSpheres.cs" Link="Source/SpiritualSpheres.cs" />
+    <Compile Include="../../labyItems/Models/Enums/EvocationFields.cs" Link="Source/EvocationFields.cs" />
+    <Compile Include="../../labyItems/Models/Enums/NeuroOptionType.cs" Link="Source/NeuroOptionType.cs" />
     <Compile Include="../../labyItems/Models/Enums/ArmourType.cs" Link="Source/ArmourType.cs" />
     <Compile Include="../../labyItems/Models/Enums/DamageTypeEnum.cs" Link="Source/DamageTypeEnum.cs" />
     <Compile Include="../../labyItems/Models/Enums/DamType.cs" Link="Source/DamType.cs" />

@@ -22,7 +22,7 @@
                         JustifyContent="SpaceBetween">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
-                        <Grid Padding="8,7"
+                        <Grid Padding="{Binding CellPadding, Source={x:Reference Root}}"
                               FlexLayout.Grow="1"
                               FlexLayout.Basis="0">
                             <Grid.GestureRecognizers>
@@ -30,7 +30,7 @@
                             </Grid.GestureRecognizers>
                             <BoxView WidthRequest="1"
                                      HorizontalOptions="Start"
-                                     Margin="-8,-7,0,-7"
+                                     Margin="{Binding CellDividerMargin, Source={x:Reference Root}}"
                                      Color="{StaticResource SurfaceBorderColor}"
                                      IsVisible="{Binding ShowDivider}"/>
                             <VerticalStackLayout Spacing="2">
@@ -39,7 +39,7 @@
                                        FontSize="16"
                                        HorizontalTextAlignment="Center"/>
                                 <Label Text="{Binding ValueText}"
-                                       FontSize="16"
+                                       FontSize="{Binding ValueFontSize, Source={x:Reference Root}}"
                                        HorizontalTextAlignment="Center"/>
                             </VerticalStackLayout>
                         </Grid>

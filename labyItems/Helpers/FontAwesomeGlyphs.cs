@@ -2,6 +2,7 @@ namespace labyItems.Helpers;
 
 public static class FontAwesomeGlyphs
 {
+    public const string Camera = "\uf083";
     public const string SolidFamily = "FASolid";
     public const string Back = "\uf060";
     public const string Add = "\uf067";

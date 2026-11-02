@@ -1,3 +1,4 @@
+using labyItems.Models.Items;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -22,10 +23,6 @@ using NeuronicCardPage = labyItems.Pages.NeuronicCard.NeuronicCard;
 
 namespace labyItems.Pages.Calculator;
 
-public readonly record struct SpellOption(string Name, int Level, bool IsAdvanced);
-public readonly record struct MiracleOption(string Name, int Power, bool IsAdvanced);
-public readonly record struct EvocationOption(string Name, int Power, bool IsAdvanced);
-public readonly record struct NeuroOption(string Name, int Power, NeuroOptionType Type);
 public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropertyChanged
 {
     private bool _dataLoaded;
@@ -329,12 +326,92 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         await Navigation.PushAsync(new RecipientPage(null, payload));
     }
 
+    protected virtual MpEditorState CaptureEditorState()
+    {
+        return new MpEditorState
+        {
+            CalculatorType = GetType().Name,
+            LifeIndex = LifeSliderControl.SelectedIndex,
+            SpellCount = SpellCount,
+            MiracleCount = MiracleCount,
+            EvocationCount = EvocationCount,
+            ActiveNeuroCount = ActiveNeuroCount,
+            PassiveNeuroCount = PassiveNeuroCount,
+            RepelGoodEvilCount = RepelGoodEvilCount,
+            RepelGoodEvilTarget = RepelGoodEvilTarget,
+            RepelLifeCount = RepelLifeCount,
+            PacChecked = PacChecked,
+            DacChecked = DacChecked,
+            MacChecked = MacChecked,
+            SacChecked = SacChecked,
+            ApprenticeType = ApprenticeType,
+            SelectedWeapon = SelectedWeapon,
+            SpellSelections = SpellSelections.Select(row => new MpEditorSelection<SpellOption> { Option = row.Option, Uses = row.Uses }).ToList(),
+            MiracleSelections = MiracleSelections.Select(row => new MpEditorSelection<MiracleOption> { Option = row.Option, Uses = row.Uses }).ToList(),
+            EvocationSelections = EvocationSelections.Select(row => new MpEditorSelection<EvocationOption> { Option = row.Option, Uses = row.Uses }).ToList(),
+            NeuroSelections = NeuroSelections.Select(row => new MpEditorSelection<NeuroOption> { Option = row.Option, Uses = row.Uses }).ToList(),
+        };
+    }
+
+    public virtual void RestoreEditorState(MpEditorState state)
+    {
+        SpellCount = state.SpellCount;
+        MiracleCount = state.MiracleCount;
+        EvocationCount = state.EvocationCount;
+        ActiveNeuroCount = state.ActiveNeuroCount;
+        PassiveNeuroCount = state.PassiveNeuroCount;
+        RepelGoodEvilTarget = state.RepelGoodEvilTarget;
+        RepelGoodEvilCount = state.RepelGoodEvilCount;
+        RepelLifeCount = state.RepelLifeCount;
+        PacChecked = state.PacChecked;
+        DacChecked = state.DacChecked;
+        MacChecked = state.MacChecked;
+        SacChecked = state.SacChecked;
+        ApprenticeType = state.ApprenticeType;
+        SelectedWeapon = state.SelectedWeapon;
+        LifeSliderControl.SelectedIndex = Math.Clamp(state.LifeIndex, 0, Math.Max(0, LifeOptions.Count - 1));
+        SpellSelections.Clear();
+        foreach (var row in state.SpellSelections ?? new())
+        {
+            AddOrIncrementSelection(SpellSelections, row.Option, FormatSpellLabel, OnSpellSelectionUsesChanged);
+            if (SpellSelections.LastOrDefault() is { } entry) entry.Uses = Math.Max(0, row.Uses);
+        }
+        RefreshSelectionRowStyles(SpellSelections);
+        OnPropertyChanged(nameof(HasSpellSelections));
+        MiracleSelections.Clear();
+        foreach (var row in state.MiracleSelections ?? new())
+        {
+            AddOrIncrementSelection(MiracleSelections, row.Option, FormatMiracleLabel, OnMiracleSelectionUsesChanged);
+            if (MiracleSelections.LastOrDefault() is { } entry) entry.Uses = Math.Max(0, row.Uses);
+        }
+        RefreshSelectionRowStyles(MiracleSelections);
+        OnPropertyChanged(nameof(HasMiracleSelections));
+        EvocationSelections.Clear();
+        foreach (var row in state.EvocationSelections ?? new())
+        {
+            AddOrIncrementSelection(EvocationSelections, row.Option, FormatEvocationLabel, OnEvocationSelectionUsesChanged);
+            if (EvocationSelections.LastOrDefault() is { } entry) entry.Uses = Math.Max(0, row.Uses);
+        }
+        RefreshSelectionRowStyles(EvocationSelections);
+        OnPropertyChanged(nameof(HasEvocationSelections));
+        NeuroSelections.Clear();
+        foreach (var row in state.NeuroSelections ?? new())
+        {
+            AddOrIncrementSelection(NeuroSelections, row.Option, FormatNeuroLabel, OnNeuroSelectionUsesChanged);
+            if (NeuroSelections.LastOrDefault() is { } entry) entry.Uses = Math.Max(0, row.Uses);
+        }
+        RefreshSelectionRowStyles(NeuroSelections);
+        OnPropertyChanged(nameof(HasNeuroSelections));
+        Recalculate();
+    }
+
     protected virtual MpSubmissionPayload BuildSubmissionPayload()
     {
         var ispBreakdown = BuildIspBreakdown(out var totalIsp);
         var payload = new MpSubmissionPayload
         {
             TotalMp = TotalMp,
+            EditorState = CaptureEditorState(),
             Breakdown = Breakdown.ToList(),
             TotalIsp = totalIsp,
             IspBreakdown = ispBreakdown
@@ -1258,17 +1335,4 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
     #endregion
-}
-
-public class MpSubmissionPayload
-{
-    public string ItemName { get; set; } = string.Empty;
-    public string SourceFlow { get; set; } = "monster-point";
-    public string PhysicalRepresentation { get; set; } = string.Empty;
-    public List<string> ItemTypes { get; set; } = new();
-    public List<CalcResult> Abilities { get; set; } = new();
-    public int TotalMp { get; set; }
-    public List<ContributionRow> Breakdown { get; set; } = new();
-    public int TotalIsp { get; set; }
-    public List<ContributionRow> IspBreakdown { get; set; } = new();
 }

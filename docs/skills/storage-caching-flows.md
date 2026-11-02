@@ -43,9 +43,18 @@ Runtime startup sequence:
    - Other platforms: FluentMigrator runner first, then fallback to LightweightMigrator on failure.
 4. Synchronizers update packaged defaults and seed/reference data:
    - PackagedDatabaseSynchronizer
+   - ReferenceCatalogueDataSynchronizer (JSON recovery for missing catalogue rows)
    - EvolutionDataSynchronizer
    - AbilityDefinitionDataSynchronizer
    - CharacterReferenceDataSynchronizer
+5. ReferenceDatabaseReadiness checks required catalogues before startup can complete.
+
+Fresh-install and recovery invariants:
+
+- Mobile startup uses `LightweightMigrator`, so adding a reference table only to a FluentMigrator migration does not make it available on Android/iOS. Keep the mobile schema path complete; character reference sync also calls `EnsureCharacterReferenceSchema` to repair existing installs.
+- Seed checksums/build IDs describe the source already processed, not the destination's health. A checksum shortcut must also verify expected packaged rows exist; otherwise a prior skipped import or subsequently deleted row can leave the app permanently empty with current metadata.
+- Do not report successful startup after a required migration/sync failure. Let the existing startup error/Retry flow handle it, and mark the initializer complete only after readiness validation.
+- Test a truly empty SQLite file and an unchanged-source rerun with a missing table or packaged row. Preserve wallet data and non-standard overrides during repair; a healthy packaged `output/laby.db` alone does not exercise these paths.
 
 CLI and tooling migration pipeline:
 

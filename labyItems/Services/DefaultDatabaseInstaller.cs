@@ -6,11 +6,6 @@ using Microsoft.Extensions.Logging;
 
 namespace labyItems.Services
 {
-	public interface IDefaultDatabaseInstaller
-	{
-		Task EnsureDatabaseAsync();
-	}
-
 	public class DefaultDatabaseInstaller : IDefaultDatabaseInstaller
 	{
 		private readonly ILogger<DefaultDatabaseInstaller> _logger;
@@ -41,7 +36,7 @@ namespace labyItems.Services
 			try
 			{
 				using var packagedStream = await FileSystem.OpenAppPackageFileAsync(DbFileName);
-				using (var outFs = File.OpenWrite(packagedTempPath))
+				using (var outFs = File.Create(packagedTempPath))
 				{
 					await packagedStream.CopyToAsync(outFs);
 				}

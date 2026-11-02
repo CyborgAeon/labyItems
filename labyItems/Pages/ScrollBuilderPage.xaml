@@ -101,7 +101,7 @@
                         VerticalOptions="Center" />
                 </Grid>
 
-                <Frame Padding="14" HasShadow="False" BorderColor="#D0D0D0">
+                <Border Style="{StaticResource CardBorderStyle}" Padding="14" Stroke="#D0D0D0">
                     <VerticalStackLayout Spacing="8">
                         <Label FontAttributes="Bold" Text="Preview" />
                         <Label
@@ -142,7 +142,7 @@
                             LineBreakMode="WordWrap"
                             Text="{Binding CribSheetNote}" />
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
                 <Button Clicked="OnPrintClicked" Text="Print" />
             </VerticalStackLayout>

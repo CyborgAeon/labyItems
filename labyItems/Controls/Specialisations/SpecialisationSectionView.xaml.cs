@@ -78,7 +78,7 @@ public partial class SpecialisationSectionView : ContentView
     private async void ApplyExpandedState(bool animate)
     {
         if (!animate) { Chevron.Rotation = IsExpanded ? 90 : 0; }
-        else await Chevron.RotateTo(IsExpanded ? 90 : 0, CardExpandAnimationHelper.UnifiedDurationMs, Easing.CubicInOut);
+        else await CardExpandAnimationHelper.RotateAsync(Chevron, IsExpanded ? 90 : 0);
         ApplySemantics();
     }
 

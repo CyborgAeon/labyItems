@@ -154,6 +154,12 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
         }
     }
 
+    private void OnToggleLegendTapped(object sender, TappedEventArgs e)
+    {
+        LegendBodyHost.IsExpanded = !LegendBodyHost.IsExpanded;
+        ToggleLegendChevron.IsExpanded = LegendBodyHost.IsExpanded;
+    }
+
     private async void OnNextMonthSwiped(object sender, SwipedEventArgs e)
     {
         await ChangeVisibleMonthAsync(_visibleMonth.AddMonths(1), 1);
@@ -273,7 +279,7 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
             : "Tap a day to filter the event list below. Swipe left or right to change month.";
 
         BuildCalendar(monthEvents);
-        CalendarVisualHelper.PopulateLegend(LegendHost);
+        CalendarVisualHelper.PopulateLegend(LegendHost, includeHeading: false);
         BuildEvents();
     }
 

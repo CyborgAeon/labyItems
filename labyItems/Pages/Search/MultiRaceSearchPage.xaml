@@ -21,19 +21,18 @@
                         BackgroundColor="{StaticResource White}">
                     <Grid ColumnDefinitions="Auto,*,Auto"
                             ColumnSpacing="10">
-                        <Frame WidthRequest="34"
+                        <Border Style="{StaticResource CardBorderStyle}" WidthRequest="34"
                                 HeightRequest="34"
-                                CornerRadius="17"
+                                StrokeShape="RoundRectangle 17"
                                 Padding="0"
-                                HasShadow="False"
-                                BorderColor="{StaticResource SurfaceBorderColor}"
+                                Stroke="{StaticResource SurfaceBorderColor}"
                                 BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}">
                             <Label Text="{Binding IconGlyph}"
                                     FontFamily="FASolid"
                                     FontSize="16"
                                     HorizontalOptions="Center"
                                     VerticalOptions="Center"/>
-                        </Frame>
+                        </Border>
                         <VerticalStackLayout Grid.Column="1"
                                 Spacing="2">
                             <Label Text="{Binding Name}"

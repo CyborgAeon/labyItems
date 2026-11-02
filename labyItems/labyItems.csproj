@@ -71,7 +71,7 @@
 		<MauiFont Include="Resources\Fonts\*" />
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 		<MauiAsset Remove="Resources\Raw\**\.DS_Store" />
-		<MauiAsset Include="..\output\laby.db" LogicalName="laby.db" />
+		<MauiAsset Include="..\output\laby.db" LogicalName="laby.db" Condition="Exists('..\output\laby.db')" />
 	</ItemGroup>
 
 	<ItemGroup>

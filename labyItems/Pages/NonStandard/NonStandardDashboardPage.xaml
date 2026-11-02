@@ -11,7 +11,7 @@
     Title="Create New">
 
     <ContentPage.Resources>
-        <Style TargetType="Border">
+        <Style x:Key="CreationCardBorderStyle" TargetType="Border">
             <Setter Property="Padding" Value="14" />
             <Setter Property="MinimumHeightRequest" Value="76" />
             <Setter Property="Stroke" Value="{StaticResource SurfaceBorderColor}" />
@@ -39,7 +39,7 @@
                 </Grid>
 
                 <VerticalStackLayout Spacing="12">
-                        <Border Stroke="{StaticResource SurfaceBorderColor}"
+                        <Border Style="{StaticResource CreationCardBorderStyle}" Stroke="{StaticResource SurfaceBorderColor}"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 18"
                                 Padding="14,12">
@@ -61,7 +61,7 @@
                             </Border.GestureRecognizers>
                         </Border>
 
-                        <Border Stroke="{StaticResource SurfaceBorderColor}"
+                        <Border Style="{StaticResource CreationCardBorderStyle}" Stroke="{StaticResource SurfaceBorderColor}"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 18"
                                 Padding="14,12">
@@ -83,7 +83,7 @@
                             </Border.GestureRecognizers>
                         </Border>
 
-                        <Border Stroke="{StaticResource SurfaceBorderColor}"
+                        <Border Style="{StaticResource CreationCardBorderStyle}" Stroke="{StaticResource SurfaceBorderColor}"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 18"
                                 Padding="14,12">
@@ -105,7 +105,7 @@
                             </Border.GestureRecognizers>
                         </Border>
 
-                        <Border Stroke="{StaticResource SurfaceBorderColor}"
+                        <Border Style="{StaticResource CreationCardBorderStyle}" Stroke="{StaticResource SurfaceBorderColor}"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 18"
                                 Padding="14,12">
@@ -127,7 +127,7 @@
                             </Border.GestureRecognizers>
                         </Border>
 
-                        <Border Stroke="{StaticResource SurfaceBorderColor}"
+                        <Border Style="{StaticResource CreationCardBorderStyle}" Stroke="{StaticResource SurfaceBorderColor}"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 18"
                                 Padding="14,12">
@@ -149,7 +149,7 @@
                             </Border.GestureRecognizers>
                         </Border>
 
-                        <Border Stroke="{StaticResource SurfaceBorderColor}"
+                        <Border Style="{StaticResource CreationCardBorderStyle}" Stroke="{StaticResource SurfaceBorderColor}"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 18"
                                 Padding="14,12">
@@ -171,7 +171,7 @@
                             </Border.GestureRecognizers>
                         </Border>
 
-                        <Border Stroke="{StaticResource SurfaceBorderColor}" StrokeThickness="1" StrokeShape="RoundRectangle 18" Padding="14,12">
+                        <Border Style="{StaticResource CreationCardBorderStyle}" Stroke="{StaticResource SurfaceBorderColor}" StrokeThickness="1" StrokeShape="RoundRectangle 18" Padding="14,12">
                             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
                                 <Border WidthRequest="42" HeightRequest="42" Padding="0" StrokeThickness="0" BackgroundColor="#E7F0FF" StrokeShape="RoundRectangle 14"><Image Source="{x:Static helpers:IconAssets.Neuronic}" WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center" /></Border>
                                 <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center"><Label Text="Neuronic" FontSize="17" FontAttributes="Bold"/><Label Text="Create a neuronic ability" FontSize="13" TextColor="{StaticResource Gray500}"/></VerticalStackLayout>

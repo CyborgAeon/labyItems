@@ -83,6 +83,98 @@ public sealed class CharacterReferenceDataSynchronizerTests : IDisposable
         Assert.Equal(1, preservedCustomLifeScale);
     }
 
+    [Fact]
+    public async Task EnsureCurrentAsync_SeedsAnEmptyDatabaseWithoutPackagedDatabase()
+    {
+        using (var conn = new SqliteConnection($"Data Source={_dbPath}"))
+        {
+            conn.Open();
+            Execute(conn, "DROP TABLE classes; DROP TABLE races; DROP TABLE lifescales; DROP TABLE seed_metadata;");
+        }
+
+        await CreateMinimalSynchronizer().EnsureCurrentAsync(_dbPath);
+
+        using var result = new SqliteConnection($"Data Source={_dbPath}");
+        result.Open();
+        Assert.Equal("1", ReadScalar(result, "SELECT COUNT(*) FROM classes WHERE name = 'Fighter';"));
+        Assert.Equal("1", ReadScalar(result, "SELECT COUNT(*) FROM races WHERE name = 'Human';"));
+        Assert.Equal("12", ReadScalar(result, "SELECT body FROM lifescales WHERE race = 'Human' AND idx = 1;"));
+    }
+
+    [Theory]
+    [InlineData("classes", true)]
+    [InlineData("races", true)]
+    [InlineData("lifescales", true)]
+    [InlineData("classes", false)]
+    [InlineData("races", false)]
+    [InlineData("lifescales", false)]
+    public async Task EnsureCurrentAsync_RepairsStampedMissingOrEmptyTables_AndPreservesWallet(string table, bool dropTable)
+    {
+        var synchronizer = CreateMinimalSynchronizer();
+        await synchronizer.EnsureCurrentAsync(_dbPath);
+        using (var conn = new SqliteConnection($"Data Source={_dbPath}"))
+        {
+            conn.Open();
+            Execute(conn, "CREATE TABLE wallet_items(id TEXT PRIMARY KEY, description TEXT); INSERT INTO wallet_items VALUES ('mine', 'Keep me');");
+            Execute(conn, $"{(dropTable ? "DROP TABLE" : "DELETE FROM")} {table};");
+            Assert.Equal("1", ReadScalar(conn, "SELECT COUNT(*) FROM seed_metadata WHERE seed_version = 'character-reference-defaults-v1';"));
+        }
+
+        await synchronizer.EnsureCurrentAsync(_dbPath);
+
+        using var result = new SqliteConnection($"Data Source={_dbPath}");
+        result.Open();
+        Assert.Equal("1", ReadScalar(result, $"SELECT COUNT(*) FROM {table};"));
+        Assert.Equal("Keep me", ReadScalar(result, "SELECT description FROM wallet_items WHERE id = 'mine';"));
+    }
+
+    [Fact]
+    public async Task EnsureCurrentAsync_RepairsMissingDefaultsEvenWhenOnlyCustomRowsRemain()
+    {
+        var synchronizer = CreateMinimalSynchronizer();
+        await synchronizer.EnsureCurrentAsync(_dbPath);
+        using (var conn = new SqliteConnection($"Data Source={_dbPath}"))
+        {
+            conn.Open();
+            Execute(conn, """DELETE FROM classes; INSERT INTO classes(id, name, name_lower, data_json) VALUES ('custom', 'Custom class', 'custom class', '{"NonStandard":true}');""");
+        }
+
+        await synchronizer.EnsureCurrentAsync(_dbPath);
+
+        using var result = new SqliteConnection($"Data Source={_dbPath}");
+        result.Open();
+        Assert.Equal("2", ReadScalar(result, "SELECT COUNT(*) FROM classes;"));
+        Assert.Equal("custom", ReadScalar(result, "SELECT id FROM classes WHERE name = 'Custom class';"));
+        Assert.Equal("1", ReadScalar(result, "SELECT COUNT(*) FROM classes WHERE name = 'Fighter';"));
+    }
+
+    [Fact]
+    public void ApplyInitialSchema_CreatesReferenceTablesAndSupportsRepeatedMigration()
+    {
+        using (var conn = new SqliteConnection($"Data Source={_dbPath}"))
+        {
+            conn.Open();
+            Execute(conn, "DROP TABLE classes; DROP TABLE races; DROP TABLE lifescales;");
+        }
+        LightweightMigrator.ApplyInitialSchema(_dbPath);
+        LightweightMigrator.ApplyInitialSchema(_dbPath);
+
+        using var result = new SqliteConnection($"Data Source={_dbPath}");
+        result.Open();
+        Assert.Equal("3", ReadScalar(result, "SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name IN ('classes', 'races', 'lifescales');"));
+        Execute(result, "INSERT INTO lifescales VALUES ('Human', 'Fighter', 1, 12, 6);");
+        Assert.Throws<SqliteException>(() => Execute(result, "INSERT INTO lifescales VALUES ('Human', 'Fighter', 1, 20, 10);"));
+    }
+
+    private static CharacterReferenceDataSynchronizer CreateMinimalSynchronizer()
+        => new(NullLogger<CharacterReferenceDataSynchronizer>.Instance, new FakeFileService(
+            new Dictionary<string, string>
+            {
+                ["people/classes.json"] = """{"Fighter":{"Levels":{}}}""",
+                ["people/people.json"] = """{"Human":{"Description":"Human"}}""",
+                ["people/lifescales.json"] = """{"Human":{"Fighter":[[12,6]]}}"""
+            }));
+
     public void Dispose()
     {
         try

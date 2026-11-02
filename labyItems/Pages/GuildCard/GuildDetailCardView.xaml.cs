@@ -432,19 +432,28 @@ public partial class GuildDetailCardView : ContentView, INotifyPropertyChanged
         if (row == null)
             return;
 
-        var abilityDef = row.Abilities.FirstOrDefault();
-        var abilityName = (abilityDef?.Name ?? row.DisplayText ?? string.Empty).Trim();
-        if (abilityName.Length == 0)
-            return;
-
-        var abilityKey = (abilityDef?.AbilityRef ?? abilityDef?.Key ?? string.Empty).Trim();
-        var ability = await DetailCardLookupService.ResolveAbilityAsync(abilityName)
-            ?? await DetailCardLookupService.ResolveAbilityAsync(abilityKey)
-            ?? await EvolutionService.FindAbilityAsync(abilityName);
-
-        if (ability != null)
+        try
         {
-            await Navigation.PushAsync(new AbilityCardPage(ability));
+            var abilityDef = row.Abilities.FirstOrDefault();
+            var abilityName = (abilityDef?.Name ?? row.DisplayText ?? string.Empty).Trim();
+            var abilityKey = (abilityDef?.AbilityRef ?? abilityDef?.Key ?? string.Empty).Trim();
+            if (abilityName.Length == 0 && abilityKey.Length == 0)
+                return;
+
+            // Guild-only benefits carry their details on the grant and need not exist
+            // in the purchasable ability or specialisation catalogues.
+            var ability = await DetailCardLookupService.ResolveAbilityAsync(abilityKey)
+                ?? await DetailCardLookupService.ResolveAbilityAsync(abilityName)
+                ?? await EvolutionService.FindAbilityAsync(abilityName);
+            if (ability == null && abilityDef != null)
+                ability = DetailCardLookupService.ToAbilityResult(abilityDef, abilityKey, abilityName);
+
+            if (ability != null)
+                await Navigation.PushAsync(new AbilityCardPage(ability));
+        }
+        catch (Exception ex)
+        {
+            RuntimeLog.Write("GUILD_DETAIL", "Failed opening guild benefit details.", ex);
         }
     }
 }

@@ -8,11 +8,6 @@ using Microsoft.Maui.Storage;
 
 namespace labyItems.Services;
 
-public interface IEvolutionDataSynchronizer
-{
-    Task EnsureCurrentAsync(string dbPath, CancellationToken cancellationToken = default);
-}
-
 public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
 {
     private const string SeedVersion = "evolution-defaults-v5";
@@ -69,7 +64,8 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
             return;
         }
 
-        if (string.Equals(existingChecksum, checksum, StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(existingChecksum, checksum, StringComparison.OrdinalIgnoreCase)
+            && HasExpectedAbilities(conn, defaults.Values))
         {
             if (!string.Equals(existingBuildId, buildId, StringComparison.OrdinalIgnoreCase))
                 SaveChecksum(conn, tx: null, checksum, buildId);
@@ -99,6 +95,21 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
 
         EvolutionService.InvalidateCache();
         _logger.LogInformation("Evolution defaults synchronized. Upserted {Count} defaults.", defaults.Count);
+    }
+
+    private static bool HasExpectedAbilities(SqliteConnection conn, IEnumerable<EvolutionDefaultAbility> defaults)
+    {
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = "SELECT id FROM evolution;";
+        using var reader = cmd.ExecuteReader();
+        var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        while (reader.Read())
+        {
+            if (!reader.IsDBNull(0)) ids.Add(reader.GetString(0));
+        }
+
+        // A non-standard row with a packaged ID intentionally overrides that default.
+        return defaults.All(ability => ids.Contains(ability.Id));
     }
 
     private static Dictionary<string, EvolutionDefaultAbility> LoadDefaults(string mergedJson)

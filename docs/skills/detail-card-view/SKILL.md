@@ -32,7 +32,7 @@ Reuse shared controls in `labyItems/Controls`; refine a shared control when dupl
 - Alternate rows between white and `#FAF8F3`, beginning with white. Assign the colour after the final sort/filter so striping follows displayed order.
 - Sort rows by the domain's primary ordering before display (for example level ascending, or evolution table ascending with name as a stable tie-breaker).
 - Reserve the final narrow column for the information glyph. Bind the row itself as `ActionCommandParameter`, and resolve the destination through the existing lookup/service path.
-- Use `AnimatedExpandView` with `ChevronIconView` for collapsed sections. Copy the direction and animation settings from a working current detail view; do not introduce a second caret animation.
+- Use `AnimatedExpandView` with `ChevronIconView` for collapsed sections. Match `ToolsetNavigationMenu`: set `AnimateRotation="True"`, keep collapsed/expanded rotations at 0/90 degrees, and use `CardExpandAnimationHelper.RotateAsync` (200 ms, `CubicInOut`) for any custom caret. Static navigation chevrons do not rotate.
 - Keep potentially large sections collapsed or virtualized where appropriate. Never eagerly create a broad catalogue of unrelated rows inside a page `ScrollView`; filter the data to the entity first.
 
 ## Selection and text behavior
@@ -47,6 +47,7 @@ Reuse shared controls in `labyItems/Controls`; refine a shared control when dupl
 - Treat service/model collections as nullable at UI boundaries. Never call LINQ operators such as `Count()`, `Any()`, or `Where()` on a possibly null collection.
 - For subtype or other selection-dependent sections, recompute only the affected rows and raise the associated visibility properties.
 - Avoid loading all abilities and filtering through generic availability if the section promises entity-specific results. Require a positive matching race/class/guild dimension as appropriate.
+- Guild benefit grants can carry inline `AbilityDefinition` values absent from the evolution/specialisation catalogues. When opening a benefit detail card, retain the inline definition as a fallback through `DetailCardLookupService.ToAbilityResult` after the normal lookup; a missing catalogue match must not silently discard a valid grant.
 - Catch and log recoverable reference-data failures with `RuntimeLog`; do not silently turn navigation failures into an application crash.
 
 ## Verification

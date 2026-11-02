@@ -14,13 +14,16 @@
         <VerticalStackLayout Padding="20,18,20,28"
                              Spacing="16">
             <Grid ColumnDefinitions="48,*,48">
-                <Button Clicked="OnBackClicked"
-                        FontSize="22"
-                        Padding="8"
-                        Text="{x:Static helpers:FontAwesomeGlyphs.Previous}"
-                        TextColor="{StaticResource Gray950}">
-                    <Button.BackgroundColor>Transparent</Button.BackgroundColor>
-                </Button>
+                <ImageButton Clicked="OnBackClicked"
+                             AutomationProperties.Name="Back"
+                             Style="{StaticResource BackArrowImageButtonStyle}">
+                    <ImageButton.Source>
+                        <FontImageSource FontFamily="FASolid"
+                                         Glyph="{x:Static helpers:FontAwesomeGlyphs.Back}"
+                                         Size="18"
+                                         Color="{StaticResource Gray950}" />
+                    </ImageButton.Source>
+                </ImageButton>
 
                 <Label x:Name="PageTitleLabel"
                        Grid.Column="1"

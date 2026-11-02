@@ -7,11 +7,6 @@ using Microsoft.Maui.ApplicationModel;
 
 namespace labyItems.Services;
 
-public interface ICharacterReferenceDataSynchronizer
-{
-    Task EnsureCurrentAsync(string dbPath, CancellationToken cancellationToken = default);
-}
-
 public sealed class CharacterReferenceDataSynchronizer : ICharacterReferenceDataSynchronizer
 {
     private const string SeedVersion = "character-reference-defaults-v1";
@@ -37,6 +32,7 @@ public sealed class CharacterReferenceDataSynchronizer : ICharacterReferenceData
         using var conn = new SqliteConnection($"Data Source={dbPath}");
         await conn.OpenAsync(cancellationToken).ConfigureAwait(false);
         EnsureSeedMetadataTable(conn);
+        LightweightMigrator.EnsureCharacterReferenceSchema(conn);
 
         var existingChecksum = GetExistingChecksum(conn);
         var classesJson = await TryReadAssetTextAsync("people/classes.json").ConfigureAwait(false);
@@ -63,7 +59,8 @@ public sealed class CharacterReferenceDataSynchronizer : ICharacterReferenceData
 
         var checksum = ComputeChecksum($"{classesJson}\n{racesJson}\n{lifeScalesJson}");
 
-        if (string.Equals(existingChecksum, checksum, StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(existingChecksum, checksum, StringComparison.OrdinalIgnoreCase)
+            && HasPackagedReferenceRows(conn, classes.Keys, races.Keys, lifeScaleRows))
         {
             SaveChecksum(conn, tx: null, checksum, buildId);
             return;
@@ -85,6 +82,33 @@ public sealed class CharacterReferenceDataSynchronizer : ICharacterReferenceData
             classes.Count,
             races.Count,
             lifeScaleRows.Count);
+    }
+
+    private static bool HasPackagedReferenceRows(
+        SqliteConnection conn,
+        IEnumerable<string> classNames,
+        IEnumerable<string> raceNames,
+        IEnumerable<LifeScaleSeedRow> lifeScaleRows)
+    {
+        foreach (var (table, names) in new[] { ("classes", classNames), ("races", raceNames) })
+        {
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = $"SELECT name FROM {table};";
+            using var reader = cmd.ExecuteReader();
+            var existing = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            while (reader.Read())
+                existing.Add(NormalizeName(reader.GetString(0)));
+            if (names.Any(name => !existing.Contains(NormalizeName(name))))
+                return false;
+        }
+
+        using var lifeCmd = conn.CreateCommand();
+        lifeCmd.CommandText = "SELECT race, \"class\", idx FROM lifescales;";
+        using var lifeReader = lifeCmd.ExecuteReader();
+        var existingLife = new HashSet<(string Race, string Class, int Index)>();
+        while (lifeReader.Read())
+            existingLife.Add((NormalizeName(lifeReader.GetString(0)), NormalizeName(lifeReader.GetString(1)), lifeReader.GetInt32(2)));
+        return lifeScaleRows.All(row => existingLife.Contains((NormalizeName(row.Race), NormalizeName(row.Class), row.Index)));
     }
 
     private async Task<string> TryReadAssetTextAsync(string relativePath)

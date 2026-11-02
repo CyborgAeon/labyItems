@@ -22,7 +22,7 @@
                                 ItemDisplayBinding="{Binding Name}"/>
                     </VerticalStackLayout>
 
-                    <Frame Style="{StaticResource SectionCardFrameStyle}">
+                    <Border Style="{StaticResource SectionCardBorderStyle}">
                         <VerticalStackLayout Spacing="8">
                             <Label Text="Manual damage"
                                    FontAttributes="Bold"/>
@@ -41,9 +41,9 @@
                                         Command="{Binding ApplyManualDamageCommand}"/>
                             </Grid>
                         </VerticalStackLayout>
-                    </Frame>
+                    </Border>
 
-                    <Frame Style="{StaticResource SectionCardFrameStyle}">
+                    <Border Style="{StaticResource SectionCardBorderStyle}">
                         <VerticalStackLayout Spacing="8">
                             <Label Text="Damage grades"
                                    FontAttributes="Bold"/>
@@ -56,10 +56,9 @@
                                 </CollectionView.ItemsLayout>
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate x:DataType="viewModels:DamagePresetVm">
-                                        <Frame Padding="10"
-                                               CornerRadius="12"
-                                               HasShadow="False"
-                                               BorderColor="{StaticResource SurfaceBorderColor}">
+                                        <Border Style="{StaticResource CardBorderStyle}" Padding="10"
+                                               StrokeShape="RoundRectangle 12"
+                                               Stroke="{StaticResource SurfaceBorderColor}">
                                             <Grid ColumnDefinitions="*,Auto"
                                                   ColumnSpacing="8">
                                                 <Label Text="{Binding Label}"
@@ -70,21 +69,21 @@
                                                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ApplyPresetCommand}"
                                                         CommandParameter="{Binding .}"/>
                                             </Grid>
-                                        </Frame>
+                                        </Border>
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
                         </VerticalStackLayout>
-                    </Frame>
+                    </Border>
 
-                    <Frame Style="{StaticResource SectionCardFrameStyle}">
+                    <Border Style="{StaticResource SectionCardBorderStyle}">
                         <VerticalStackLayout Spacing="8">
                             <Label Text="Damage type"
                                    FontAttributes="Bold"/>
                             <controls:ChipGroup Items="{Binding DamageTypeOptions}"
                                                 SelectedItem="{Binding SelectedDamageType}"/>
                         </VerticalStackLayout>
-                    </Frame>
+                    </Border>
 
                 </VerticalStackLayout>
             </ScrollView>
@@ -118,7 +117,7 @@
                                          Spacing="8">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="viewModels:DamageSpellVm">
-                                <Frame Style="{StaticResource SectionCardFrameStyle}"
+                                <Border Style="{StaticResource SectionCardBorderStyle}"
                                        IsVisible="{Binding IsVisible}">
                                     <Grid ColumnDefinitions="*,Auto"
                                           ColumnSpacing="8">
@@ -138,7 +137,7 @@
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ApplySpellCommand}"
                                                 CommandParameter="{Binding .}"/>
                                     </Grid>
-                                </Frame>
+                                </Border>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </VerticalStackLayout>
@@ -171,7 +170,7 @@
                     <Button Text="Total heal"
                             Command="{Binding TotalHealCommand}"/>
 
-                    <Frame Style="{StaticResource SectionCardFrameStyle}">
+                    <Border Style="{StaticResource SectionCardBorderStyle}">
                         <VerticalStackLayout Spacing="8">
                             <Label Text="Manual healing"
                                    FontAttributes="Bold"/>
@@ -190,7 +189,7 @@
                                         Command="{Binding ApplyManualHealingCommand}"/>
                             </Grid>
                         </VerticalStackLayout>
-                    </Frame>
+                    </Border>
 
                     <Entry Text="{Binding HealingSearch}"
                            Placeholder="Search healing miracles"/>
@@ -203,7 +202,7 @@
                                          Spacing="8">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="viewModels:HealingEntryVm">
-                                <Frame Style="{StaticResource SectionCardFrameStyle}"
+                                <Border Style="{StaticResource SectionCardBorderStyle}"
                                        IsVisible="{Binding IsVisible}">
                                     <Grid ColumnDefinitions="*,Auto"
                                           ColumnSpacing="8">
@@ -220,7 +219,7 @@
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ApplyHealingEntryCommand}"
                                                 CommandParameter="{Binding .}"/>
                                     </Grid>
-                                </Frame>
+                                </Border>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </VerticalStackLayout>

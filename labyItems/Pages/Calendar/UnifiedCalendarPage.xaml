@@ -97,8 +97,24 @@
                             <VerticalStackLayout x:Name="CalendarHost"
                                                  Spacing="10" />
 
-                            <VerticalStackLayout x:Name="LegendHost"
-                                                 Spacing="8" />
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnToggleLegendTapped" />
+                                </Grid.GestureRecognizers>
+                                <Label Text="Key" FontSize="14" FontAttributes="Bold"
+                                       VerticalTextAlignment="Center" />
+                                <controls:ChevronIconView x:Name="ToggleLegendChevron"
+                                                          Grid.Column="1"
+                                                          IsExpanded="False"
+                                                          AnimateRotation="True"
+                                                          GlyphSize="14"
+                                                          IconSize="28" />
+                            </Grid>
+                            <controls:AnimatedExpandView x:Name="LegendBodyHost"
+                                                         AnimationName="calendar-legend-expand"
+                                                         IsExpanded="False">
+                                <VerticalStackLayout x:Name="LegendHost" Spacing="8" />
+                            </controls:AnimatedExpandView>
                         </VerticalStackLayout>
                     </controls:AnimatedExpandView>
                 </VerticalStackLayout>

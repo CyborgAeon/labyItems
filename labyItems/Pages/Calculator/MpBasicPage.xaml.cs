@@ -1,3 +1,4 @@
+using labyItems.Models.Items;
 using labyItems.Controls;
 using labyItems.Models.Enums;
 
@@ -54,6 +55,14 @@ public partial class MpBasicPage : MpCalculatorPageBase
         }
     }
     private bool _apprenticeWeaponChecked;
+
+    public override void RestoreEditorState(MpEditorState state)
+    {
+        base.RestoreEditorState(state);
+        ApprenticeShieldChecked = string.Equals(TrimChipLabel(state.ApprenticeType), "Shield", StringComparison.OrdinalIgnoreCase);
+        ApprenticeWeaponChecked = string.Equals(TrimChipLabel(state.ApprenticeType), "Weapon", StringComparison.OrdinalIgnoreCase);
+        SelectedWeapon = state.SelectedWeapon;
+    }
 
     protected override DictionarySearchBar<SpellOption> SpellSearchControl => SpellSearch;
     protected override DictionarySearchBar<MiracleOption> MiracleSearchControl => MiracleSearch;

@@ -80,11 +80,10 @@
                         SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame Margin="0,0,0,8"
+                    <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,8"
                            Padding="10"
-                           BorderColor="{StaticResource SurfaceBorderColor}"
-                           BackgroundColor="{StaticResource White}"
-                           HasShadow="False">
+                           Stroke="{StaticResource SurfaceBorderColor}"
+                           BackgroundColor="{StaticResource White}">
                         <Grid ColumnDefinitions="Auto,*"
                               ColumnSpacing="8">
                             <Grid.GestureRecognizers>
@@ -103,7 +102,7 @@
                                 <controls:ChipGroup Items="{Binding DisplayChips}"/>
                             </VerticalStackLayout>
                         </Grid>
-                    </Frame>
+                    </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

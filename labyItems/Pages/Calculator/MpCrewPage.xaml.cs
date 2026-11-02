@@ -1,3 +1,4 @@
+using labyItems.Models.Items;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -321,6 +322,34 @@ AfterWeapon:
             return false;
 
         return string.Equals(trimmed.Trim(), expected, StringComparison.OrdinalIgnoreCase);
+    }
+
+    protected override MpEditorState CaptureEditorState()
+    {
+        var state = base.CaptureEditorState();
+        state.Mac2Checked = Mac2Checked;
+        state.Sac2Checked = Sac2Checked;
+        state.SelectedWeaponPowerType = SelectedWeaponPowerType;
+        state.SelectedWeaponType = SelectedWeaponType;
+        state.SelectedWeaponColour = SelectedWeaponColour;
+        state.SelectedWeaponAlignment = SelectedWeaponAlignment;
+        state.WeaponApprenticeStatus = WeaponApprenticeStatus;
+        state.SelectedBagType = SelectedBagType;
+        return state;
+    }
+
+    public override void RestoreEditorState(MpEditorState state)
+    {
+        base.RestoreEditorState(state);
+        Mac2Checked = state.Mac2Checked;
+        Sac2Checked = state.Sac2Checked;
+        SelectedWeaponPowerType = state.SelectedWeaponPowerType;
+        SelectedWeaponType = state.SelectedWeaponType;
+        SelectedWeaponColour = state.SelectedWeaponColour;
+        SelectedWeaponAlignment = state.SelectedWeaponAlignment;
+        WeaponApprenticeStatus = state.WeaponApprenticeStatus;
+        SelectedBagType = state.SelectedBagType;
+        Recalculate();
     }
 
     protected override DictionarySearchBar<SpellOption> SpellSearchControl => SpellSearch;

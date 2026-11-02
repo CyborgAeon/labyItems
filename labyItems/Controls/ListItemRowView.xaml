@@ -42,7 +42,7 @@
                        IsVisible="{Binding ShowTertiaryText, Source={x:Reference Root}}"
                        HorizontalTextAlignment="Center"
                        VerticalTextAlignment="Center" />
-                <Button Grid.Column="3"
+                <Button Grid.Column="3" AutomationProperties.Name="{Binding FirstActionAccessibilityText, Source={x:Reference Root}}"
                         Text="{Binding FirstActionGlyph, Source={x:Reference Root}}"
                         FontFamily="FASolid"
                         FontSize="12"
@@ -56,7 +56,7 @@
                         IsVisible="{Binding ShowFirstAction, Source={x:Reference Root}}"
                         Command="{Binding FirstActionCommand, Source={x:Reference Root}}"
                         CommandParameter="{Binding ActionCommandParameter, Source={x:Reference Root}}" />
-                <Button Grid.Column="4"
+                <Button Grid.Column="4" AutomationProperties.Name="{Binding SecondActionAccessibilityText, Source={x:Reference Root}}"
                         Text="{Binding SecondActionGlyph, Source={x:Reference Root}}"
                         FontFamily="FASolid"
                         FontSize="12"
@@ -70,7 +70,7 @@
                         IsVisible="{Binding ShowSecondAction, Source={x:Reference Root}}"
                         Command="{Binding SecondActionCommand, Source={x:Reference Root}}"
                         CommandParameter="{Binding ActionCommandParameter, Source={x:Reference Root}}" />
-                <Button Grid.Column="5"
+                <Button Grid.Column="5" AutomationProperties.Name="Information"
                         Text="{Binding InfoGlyph, Source={x:Reference Root}}"
                         FontFamily="FASolid"
                         FontSize="12"
@@ -85,7 +85,7 @@
                         Command="{Binding InfoCommand, Source={x:Reference Root}}"
                         CommandParameter="{Binding ActionCommandParameter, Source={x:Reference Root}}"
                         Clicked="OnInfoClicked" />
-                <Button Grid.Column="6"
+                <Button Grid.Column="6" AutomationProperties.Name="Delete"
                         Text="{x:Static helpers:FontAwesomeGlyphs.Delete}"
                         FontFamily="FASolid"
                         FontSize="12"

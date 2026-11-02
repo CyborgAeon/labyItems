@@ -9,18 +9,13 @@
             StrokeThickness="{Binding Row.BorderThickness, Source={x:Reference Root}}"
             Stroke="{Binding Row.BorderColor, Source={x:Reference Root}}"
             BackgroundColor="{Binding Row.RowBackgroundColor, Source={x:Reference Root}}">
+        <Border.GestureRecognizers>
+            <DragGestureRecognizer CanDrag="True" DragStarting="OnDragStarting" DropCompleted="OnDropCompleted"/>
+            <DropGestureRecognizer AllowDrop="True" DragOver="OnDragOver" Drop="OnDrop"/>
+            <TapGestureRecognizer Tapped="OnRowTapped"/>
+        </Border.GestureRecognizers>
         <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto,Auto" ColumnSpacing="5">
-            <Button Grid.Column="0"
-                    Text="{x:Static helpers:FontAwesomeGlyphs.GripVertical}"
-                    FontFamily="FASolid"
-                    FontSize="13"
-                    Padding="0"
-                    BackgroundColor="Transparent"
-                    TextColor="{StaticResource MutedTextColor}">
-                <Button.GestureRecognizers>
-                    <PanGestureRecognizer PanUpdated="OnHandlePanUpdated" />
-                </Button.GestureRecognizers>
-            </Button>
+            <Label Grid.Column="0" Text="{x:Static helpers:FontAwesomeGlyphs.GripVertical}" FontFamily="FASolid" FontSize="13" VerticalTextAlignment="Center" TextColor="{StaticResource MutedTextColor}"/>
             <Label Grid.Column="1" Text="{Binding Row.PositionText, Source={x:Reference Root}}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
             <Border Grid.Column="2" Padding="6,3" StrokeThickness="0" StrokeShape="RoundRectangle 8" BackgroundColor="{Binding Row.TypeBackgroundColor, Source={x:Reference Root}}" VerticalOptions="Center">
                 <Label Text="{Binding Row.TypeText, Source={x:Reference Root}}" FontSize="11" HorizontalTextAlignment="Center" LineBreakMode="TailTruncation" />
@@ -36,13 +31,7 @@
                     BackgroundColor="Transparent"
                     TextColor="{StaticResource SubtleTextColor}"
                     Clicked="OnOptionsClicked" />
-            <Button Grid.Column="1" Grid.ColumnSpan="5"
-                    x:Name="SelectionSurface"
-                    Padding="0"
-                    BackgroundColor="Transparent"
-                    Opacity="0.01"
-                    Pressed="OnSelectionPressed"
-                    Released="OnSelectionReleased" />
+
         </Grid>
     </Border>
 </ContentView>

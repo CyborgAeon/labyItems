@@ -63,7 +63,7 @@
                                  Spacing="12">
                 <ContentView IsVisible="{Binding Source={x:Reference Root}, Path=IsBaseStep}">
                     <VerticalStackLayout Spacing="12">
-                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                        <Border Style="{StaticResource SectionCardBorderStyle}">
                             <VerticalStackLayout Spacing="8">
                                 <Label Text="From Base"
                                        Style="{StaticResource SectionHeaderLabelStyle}"/>
@@ -81,27 +81,27 @@
                                             Clicked="OnSearchBaseClicked"/>
                                 </Grid>
                             </VerticalStackLayout>
-                        </Frame>
+                        </Border>
 
-                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                        <Border Style="{StaticResource SectionCardBorderStyle}">
                             <VerticalStackLayout Spacing="8">
                                 <Label Text="Class name"
                                        Style="{StaticResource SectionHeaderLabelStyle}"/>
                                 <Entry Text="{Binding Name, Mode=TwoWay}"
                                        Placeholder="Enter class name"/>
                             </VerticalStackLayout>
-                        </Frame>
+                        </Border>
 
-                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                        <Border Style="{StaticResource SectionCardBorderStyle}">
                             <VerticalStackLayout Spacing="8">
                                 <Label Text="Buy as"
                                        Style="{StaticResource SectionHeaderLabelStyle}"/>
                                 <controls:MultiChipGroup Items="{Binding BuyAsOptions}"
                                                          SelectedItems="{Binding SelectedBuyAsOptions, Mode=TwoWay}"/>
                             </VerticalStackLayout>
-                        </Frame>
+                        </Border>
 
-                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                        <Border Style="{StaticResource SectionCardBorderStyle}">
                             <VerticalStackLayout Spacing="8">
                                 <Label Text="Brackets"
                                        Style="{StaticResource SectionHeaderLabelStyle}"/>
@@ -111,9 +111,9 @@
                                        TextColor="{StaticResource MutedTextColor}"
                                        IsVisible="{Binding HasBracketWarning}"/>
                             </VerticalStackLayout>
-                        </Frame>
+                        </Border>
 
-                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                        <Border Style="{StaticResource SectionCardBorderStyle}">
                             <VerticalStackLayout Spacing="8">
                                 <Label Text="Path (optional)"
                                        Style="{StaticResource SectionHeaderLabelStyle}"/>
@@ -131,13 +131,13 @@
                                             Clicked="OnSearchPathClicked"/>
                                 </Grid>
                             </VerticalStackLayout>
-                        </Frame>
+                        </Border>
                     </VerticalStackLayout>
                 </ContentView>
 
                 <ContentView IsVisible="{Binding Source={x:Reference Root}, Path=IsLifeStep}">
                     <VerticalStackLayout Spacing="12">
-                        <Frame Style="{StaticResource SectionCardFrameStyle}"
+                        <Border Style="{StaticResource SectionCardBorderStyle}"
                                Opacity="{Binding LifeScaleSearchOpacity}">
                             <VerticalStackLayout Spacing="8">
                                 <Grid ColumnDefinitions="*,Auto"
@@ -203,9 +203,9 @@
                                     </CollectionView>
                                 </VerticalStackLayout>
                             </VerticalStackLayout>
-                        </Frame>
+                        </Border>
 
-                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                        <Border Style="{StaticResource SectionCardBorderStyle}">
                             <VerticalStackLayout Spacing="8">
                                 <Label Text="Race Assignments"
                                        Style="{StaticResource SectionHeaderLabelStyle}"/>
@@ -243,9 +243,9 @@
                                     </CollectionView.ItemTemplate>
                                 </CollectionView>
                             </VerticalStackLayout>
-                        </Frame>
+                        </Border>
 
-                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                        <Border Style="{StaticResource SectionCardBorderStyle}">
                             <VerticalStackLayout Spacing="8">
                                 <Grid ColumnDefinitions="*,Auto"
                                       ColumnSpacing="8">
@@ -295,22 +295,22 @@
                                     </CollectionView>
                                 </VerticalStackLayout>
                             </VerticalStackLayout>
-                        </Frame>
+                        </Border>
                     </VerticalStackLayout>
                 </ContentView>
 
                 <ContentView IsVisible="{Binding Source={x:Reference Root}, Path=IsArmourStep}">
                     <VerticalStackLayout Spacing="12">
-                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                        <Border Style="{StaticResource SectionCardBorderStyle}">
                             <VerticalStackLayout Spacing="8">
                                 <Label Text="Armour"
                                        Style="{StaticResource SectionHeaderLabelStyle}"/>
                                 <controls:MultiChipGroup Items="{Binding ArmourOptions}"
                                                          SelectedItems="{Binding SelectedArmourOptions, Mode=TwoWay}"/>
                             </VerticalStackLayout>
-                        </Frame>
+                        </Border>
 
-                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                        <Border Style="{StaticResource SectionCardBorderStyle}">
                             <VerticalStackLayout Spacing="8">
                                 <Label Text="Restrictions"
                                        Style="{StaticResource SectionHeaderLabelStyle}"/>
@@ -343,13 +343,13 @@
                                     </CollectionView.ItemTemplate>
                                 </CollectionView>
                             </VerticalStackLayout>
-                        </Frame>
+                        </Border>
                     </VerticalStackLayout>
                 </ContentView>
 
                 <ContentView IsVisible="{Binding Source={x:Reference Root}, Path=IsSkillsStep}">
                     <VerticalStackLayout Spacing="12">
-                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                        <Border Style="{StaticResource SectionCardBorderStyle}">
                             <VerticalStackLayout Spacing="8">
                                 <Label Text="Weapon skills by level"
                                        Style="{StaticResource SectionHeaderLabelStyle}"/>
@@ -358,7 +358,7 @@
                                                 HeightRequest="320">
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate>
-                                            <Frame Style="{StaticResource DetailCardFrameStyle}" Margin="0,0,0,8" Padding="12,10">
+                                            <Border Style="{StaticResource DetailCardBorderStyle}" Margin="0,0,0,8" Padding="12,10">
                                               <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
                                                 <Label Text="{Binding Level, StringFormat='Lv {0}'}" FontAttributes="Bold" VerticalTextAlignment="Center" TextColor="{StaticResource AccentMaroonColor}"/>
                                                 <Label Grid.Column="1" Text="{Binding SelectedSummary}" VerticalTextAlignment="Center" LineBreakMode="WordWrap"/>
@@ -369,14 +369,14 @@
                                                         Clicked="OnEditWeaponSkillLevelClicked"
                                                         CommandParameter="{Binding .}"/>
                                               </Grid>
-                                            </Frame>
+                                            </Border>
                                         </DataTemplate>
                                     </CollectionView.ItemTemplate>
                                 </CollectionView>
                             </VerticalStackLayout>
-                        </Frame>
+                        </Border>
 
-                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                        <Border Style="{StaticResource SectionCardBorderStyle}">
                             <VerticalStackLayout Spacing="8">
                                 <Label Text="Abilities by level"
                                        Style="{StaticResource SectionHeaderLabelStyle}"/>
@@ -385,7 +385,7 @@
                                                 HeightRequest="320">
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate>
-                                            <Frame Style="{StaticResource DetailCardFrameStyle}" Margin="0,0,0,8" Padding="12,10">
+                                            <Border Style="{StaticResource DetailCardBorderStyle}" Margin="0,0,0,8" Padding="12,10">
                                               <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
                                                 <Label Text="{Binding Level, StringFormat='Lv {0}'}" FontAttributes="Bold" VerticalTextAlignment="Center" TextColor="{StaticResource AccentMaroonColor}"/>
                                                 <Label Grid.Column="1" Text="{Binding SummaryText}" VerticalTextAlignment="Center" LineBreakMode="WordWrap"/>
@@ -396,14 +396,14 @@
                                                         Clicked="OnEditAbilityLevelClicked"
                                                         CommandParameter="{Binding .}"/>
                                               </Grid>
-                                            </Frame>
+                                            </Border>
                                         </DataTemplate>
                                     </CollectionView.ItemTemplate>
                                 </CollectionView>
                             </VerticalStackLayout>
-                        </Frame>
+                        </Border>
 
-                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                        <Border Style="{StaticResource SectionCardBorderStyle}">
                             <VerticalStackLayout Spacing="8">
                                 <Grid ColumnDefinitions="*,Auto"
                                       ColumnSpacing="8">
@@ -484,13 +484,13 @@
                                            Opacity="0.75"/>
                                 </VerticalStackLayout>
                             </VerticalStackLayout>
-                        </Frame>
+                        </Border>
                     </VerticalStackLayout>
                 </ContentView>
 
                 <ContentView IsVisible="{Binding Source={x:Reference Root}, Path=IsPowerStep}">
                     <VerticalStackLayout Spacing="12">
-                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                        <Border Style="{StaticResource SectionCardBorderStyle}">
                             <VerticalStackLayout Spacing="8">
                                 <Label Text="Powerbase"
                                        Style="{StaticResource SectionHeaderLabelStyle}"/>
@@ -508,9 +508,9 @@
                                     </BindableLayout.ItemTemplate>
                                 </VerticalStackLayout>
                             </VerticalStackLayout>
-                        </Frame>
+                        </Border>
 
-                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                        <Border Style="{StaticResource SectionCardBorderStyle}">
                             <VerticalStackLayout Spacing="8">
                                 <Label Text="Alignment"
                                        Style="{StaticResource SectionHeaderLabelStyle}"/>
@@ -521,13 +521,13 @@
                                            VerticalTextAlignment="Center"/>
                                 </HorizontalStackLayout>
                             </VerticalStackLayout>
-                        </Frame>
+                        </Border>
                     </VerticalStackLayout>
                 </ContentView>
 
                 <ContentView IsVisible="{Binding Source={x:Reference Root}, Path=IsReviewStep}">
                     <VerticalStackLayout Spacing="12">
-                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                        <Border Style="{StaticResource SectionCardBorderStyle}">
                             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                                 <VerticalStackLayout Spacing="2">
                                     <Label Text="Base" FontAttributes="Bold"/>
@@ -535,9 +535,9 @@
                                 </VerticalStackLayout>
                                 <Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.Edit}" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditBaseStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                             </Grid>
-                        </Frame>
+                        </Border>
 
-                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                        <Border Style="{StaticResource SectionCardBorderStyle}">
                             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                                 <VerticalStackLayout Spacing="2">
                                     <Label Text="Life" FontAttributes="Bold"/>
@@ -545,9 +545,9 @@
                                 </VerticalStackLayout>
                                 <Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.Edit}" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditLifeStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                             </Grid>
-                        </Frame>
+                        </Border>
 
-                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                        <Border Style="{StaticResource SectionCardBorderStyle}">
                             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                                 <VerticalStackLayout Spacing="2">
                                     <Label Text="Armour" FontAttributes="Bold"/>
@@ -555,9 +555,9 @@
                                 </VerticalStackLayout>
                                 <Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.Edit}" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditArmourStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                             </Grid>
-                        </Frame>
+                        </Border>
 
-                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                        <Border Style="{StaticResource SectionCardBorderStyle}">
                             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                                 <VerticalStackLayout Spacing="2">
                                     <Label Text="Skills" FontAttributes="Bold"/>
@@ -565,9 +565,9 @@
                                 </VerticalStackLayout>
                                 <Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.Edit}" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditSkillsStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                             </Grid>
-                        </Frame>
+                        </Border>
 
-                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                        <Border Style="{StaticResource SectionCardBorderStyle}">
                             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                                 <VerticalStackLayout Spacing="2">
                                     <Label Text="Post 8th progression" FontAttributes="Bold"/>
@@ -575,9 +575,9 @@
                                 </VerticalStackLayout>
                                 <Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.Edit}" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditSkillsStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                             </Grid>
-                        </Frame>
+                        </Border>
 
-                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                        <Border Style="{StaticResource SectionCardBorderStyle}">
                             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                                 <VerticalStackLayout Spacing="2">
                                     <Label Text="Power" FontAttributes="Bold"/>
@@ -585,7 +585,7 @@
                                 </VerticalStackLayout>
                                 <Button Grid.Column="1" Text="{x:Static helpers:FontAwesomeGlyphs.Edit}" Style="{StaticResource ListRowGlyphIconButtonStyle}" TextColor="{StaticResource AccentMaroonColor}" Clicked="OnEditPowerStepClicked" IsVisible="{Binding Source={x:Reference Root}, Path=ShowReviewEditActions}"/>
                             </Grid>
-                        </Frame>
+                        </Border>
 
                         <Label Text="{Binding Source={x:Reference Root}, Path=ReviewSaveHint}"
                                FontSize="12"

@@ -251,7 +251,7 @@
                             BindableLayout.ItemsSource="{Binding MetaChips, Source={x:Reference Root}}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
-                            <Frame Style="{StaticResource MetaChipFrameStyle}">
+                            <Border Style="{StaticResource MetaChipBorderStyle}">
                                 <HorizontalStackLayout Spacing="6">
                                     <Label Text="{Binding IconGlyph}"
                                            FontFamily="FASolid"
@@ -261,7 +261,7 @@
                                            FontSize="12"
                                            VerticalTextAlignment="Center"/>
                                 </HorizontalStackLayout>
-                            </Frame>
+                            </Border>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
                 </FlexLayout>

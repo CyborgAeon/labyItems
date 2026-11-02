@@ -322,10 +322,10 @@ public partial class CharacterWalletPage : ContentPage
 
     private void OnWalletCardBindingContextChanged(object sender, EventArgs e)
     {
-        if (sender is not Frame frame || frame.BindingContext is not CharacterWalletRowVm row)
+        if (sender is not Border border || border.BindingContext is not CharacterWalletRowVm row)
             return;
 
-        var expandedActions = FindDescendantByStyleId<VisualElement>(frame, "wallet-expanded-actions");
+        var expandedActions = FindDescendantByStyleId<VisualElement>(border, "wallet-expanded-actions");
         if (expandedActions == null)
             return;
 
@@ -346,7 +346,7 @@ public partial class CharacterWalletPage : ContentPage
         if (sender is not Element element)
             return false;
 
-        var card = FindAncestor<Frame>(element);
+        var card = FindAncestor<Border>(element);
         if (card == null)
             return false;
 

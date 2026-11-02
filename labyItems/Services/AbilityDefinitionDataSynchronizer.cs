@@ -11,11 +11,6 @@ using Microsoft.Maui.Storage;
 
 namespace labyItems.Services;
 
-public interface IAbilityDefinitionDataSynchronizer
-{
-    Task EnsureCurrentAsync(string dbPath, CancellationToken cancellationToken = default);
-}
-
 public sealed class AbilityDefinitionDataSynchronizer : IAbilityDefinitionDataSynchronizer
 {
     private const string SeedVersion = "ability-definitions-v1";
@@ -43,14 +38,6 @@ public sealed class AbilityDefinitionDataSynchronizer : IAbilityDefinitionDataSy
         EnsureTablesExist(conn);
 
         var existingChecksum = GetExistingChecksum(conn);
-        var existingBuildId = GetExistingBuildId(conn);
-        if (!string.IsNullOrWhiteSpace(existingChecksum)
-            && string.Equals(existingBuildId, buildId, StringComparison.OrdinalIgnoreCase))
-        {
-            _logger.LogInformation("Skipped ability definition sync: packaged build id '{BuildId}' already applied.", buildId);
-            return;
-        }
-
         var abilitiesJson = await ReadAssetTextAsync("specialisation/abilities.json", cancellationToken).ConfigureAwait(false);
         if (string.IsNullOrWhiteSpace(abilitiesJson))
         {
@@ -66,17 +53,21 @@ public sealed class AbilityDefinitionDataSynchronizer : IAbilityDefinitionDataSy
             return;
         }
 
-        if (string.Equals(existingChecksum, checksum, StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(existingChecksum, checksum, StringComparison.OrdinalIgnoreCase)
+            && HasExpectedDefinitions(conn, parsed))
         {
             SaveChecksum(conn, tx: null, checksum, buildId);
             return;
         }
 
         using var tx = conn.BeginTransaction();
+        var customKeys = LoadCustomDefinitionKeys(conn, tx);
         DeleteExistingDefaults(conn, tx);
 
         foreach (var row in parsed)
         {
+            if (customKeys.Contains(row.AbilityKey))
+                continue;
             UpsertDefinition(conn, tx, row);
             ReplaceInstructions(conn, tx, row.AbilityKey, row.Instructions);
         }
@@ -88,6 +79,43 @@ public sealed class AbilityDefinitionDataSynchronizer : IAbilityDefinitionDataSy
         AbilityDetailsLookupService.InvalidateCache();
 
         _logger.LogInformation("Ability definitions synchronized. Upserted {Count} defaults.", parsed.Count);
+    }
+
+    private static bool HasExpectedDefinitions(SqliteConnection conn, IReadOnlyList<AbilityDefinitionRow> defaults)
+    {
+        var customKeys = LoadCustomDefinitionKeys(conn, tx: null);
+        var keys = new HashSet<string>(customKeys, StringComparer.OrdinalIgnoreCase);
+        using (var cmd = conn.CreateCommand())
+        {
+            cmd.CommandText = "SELECT ability_key FROM ability_definitions WHERE is_default = 1;";
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read()) keys.Add(reader.GetString(0));
+        }
+
+        if (defaults.Any(row => !keys.Contains(row.AbilityKey)))
+            return false;
+
+        var instructionIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        using (var cmd = conn.CreateCommand())
+        {
+            cmd.CommandText = "SELECT id FROM ability_effect_instructions WHERE is_default = 1;";
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read()) instructionIds.Add(reader.GetString(0));
+        }
+
+        return defaults.All(row => customKeys.Contains(row.AbilityKey) || Enumerable.Range(0, row.Instructions.Count)
+            .All(index => instructionIds.Contains(DeterministicGuid($"ability-effect|{row.AbilityKey}|{index}"))));
+    }
+
+    private static HashSet<string> LoadCustomDefinitionKeys(SqliteConnection conn, SqliteTransaction? tx)
+    {
+        using var cmd = conn.CreateCommand();
+        cmd.Transaction = tx;
+        cmd.CommandText = "SELECT ability_key FROM ability_definitions WHERE COALESCE(is_default, 0) = 0;";
+        using var reader = cmd.ExecuteReader();
+        var keys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        while (reader.Read()) keys.Add(reader.GetString(0));
+        return keys;
     }
 
     private static List<AbilityDefinitionRow> ParseAbilityDefinitions(string rawJson)
@@ -332,19 +360,6 @@ VALUES ($seedVersion, $schemaVersion, $buildId, $checksum, $createdAt);";
         insert.Parameters.AddWithValue("$checksum", checksum);
         insert.Parameters.AddWithValue("$createdAt", DateTime.UtcNow.ToString("o"));
         insert.ExecuteNonQuery();
-    }
-
-    private static string? GetExistingBuildId(SqliteConnection conn)
-    {
-        using var cmd = conn.CreateCommand();
-        cmd.CommandText = @"
-SELECT build_id
-FROM seed_metadata
-WHERE seed_version = $seedVersion
-ORDER BY rowid DESC
-LIMIT 1;";
-        cmd.Parameters.AddWithValue("$seedVersion", SeedVersion);
-        return cmd.ExecuteScalar()?.ToString();
     }
 
     private static string? GetExistingChecksum(SqliteConnection conn)

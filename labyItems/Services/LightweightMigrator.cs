@@ -196,6 +196,8 @@ CREATE TABLE IF NOT EXISTS seed_metadata (
 ";
 				cmd.ExecuteNonQuery();
 
+				EnsureCharacterReferenceSchema(conn, tx);
+
 				tx.Commit();
 				logger?.LogInformation("Lightweight schema applied to {DbPath}", dbPath);
 				conn.Close();
@@ -206,6 +208,42 @@ CREATE TABLE IF NOT EXISTS seed_metadata (
 				throw;
 			}
 		}
+
+        internal static void EnsureCharacterReferenceSchema(SqliteConnection conn, SqliteTransaction? transaction = null)
+        {
+            using var cmd = conn.CreateCommand();
+            cmd.Transaction = transaction;
+            cmd.CommandText = @"
+CREATE TABLE IF NOT EXISTS classes (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  name_lower TEXT,
+  data_json TEXT,
+  created_at TEXT,
+  updated_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_classes_name_lower ON classes(name_lower);
+CREATE TABLE IF NOT EXISTS races (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  name_lower TEXT,
+  data_json TEXT,
+  created_at TEXT,
+  updated_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_races_name_lower ON races(name_lower);
+CREATE TABLE IF NOT EXISTS lifescales (
+  race TEXT NOT NULL,
+  ""class"" TEXT NOT NULL,
+  idx INTEGER NOT NULL,
+  body INTEGER NOT NULL,
+  loc INTEGER NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_lifescales_pk ON lifescales(race, ""class"", idx);
+CREATE INDEX IF NOT EXISTS idx_lifescales_race ON lifescales(race);
+CREATE INDEX IF NOT EXISTS idx_lifescales_class ON lifescales(""class"");";
+            cmd.ExecuteNonQuery();
+        }
 
 		private static void EnsureColumn(
 			SqliteConnection connection,

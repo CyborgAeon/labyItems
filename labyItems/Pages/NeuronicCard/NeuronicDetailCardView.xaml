@@ -71,11 +71,11 @@
                             BindableLayout.ItemsSource="{Binding MetaChips, Source={x:Reference Root}}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
-                            <Frame Style="{StaticResource MetaChipFrameStyle}">
+                            <Border Style="{StaticResource MetaChipBorderStyle}">
                                 <Label Text="{Binding Text}"
                                        FontSize="12"
                                        VerticalTextAlignment="Center"/>
-                            </Frame>
+                            </Border>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
                 </FlexLayout>

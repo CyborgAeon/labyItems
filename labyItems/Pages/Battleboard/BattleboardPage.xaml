@@ -54,10 +54,9 @@
                               </controls:ListItemRowView.CustomContent>
                             </controls:ListItemRowView>
 
-                            <Frame Padding="12"
-                                   CornerRadius="12"
-                                   HasShadow="False"
-                                   BorderColor="{StaticResource SurfaceBorderColor}"
+                            <Border Style="{StaticResource CardBorderStyle}" Padding="12"
+                                   StrokeShape="RoundRectangle 12"
+                                   Stroke="{StaticResource SurfaceBorderColor}"
                                    BackgroundColor="{Binding TotalLife.BackgroundColor}">
                                    <Grid RowDefinitions="Auto,Auto"
                                          ColumnDefinitions="*,Auto"
@@ -88,12 +87,11 @@
                                                  TextColor="{Binding TextColor}"
                                                  Opacity="0.7"/>
                                    </Grid>
-                            </Frame>
+                            </Border>
 
-                            <Frame Padding="12,8"
-                                   CornerRadius="12"
-                                   HasShadow="False"
-                                   BorderColor="{StaticResource SurfaceBorderColor}"
+                            <Border Style="{StaticResource CardBorderStyle}" Padding="12,8"
+                                   StrokeShape="RoundRectangle 12"
+                                   Stroke="{StaticResource SurfaceBorderColor}"
                                    BackgroundColor="#F9FAFB">
                                    <Grid ColumnDefinitions="*,Auto"
                                          ColumnSpacing="8">
@@ -104,31 +102,29 @@
                                                   HorizontalOptions="End"
                                                   VerticalOptions="Center"/>
                                    </Grid>
-                            </Frame>
+                            </Border>
 
-                            <Frame Padding="12"
-                                   CornerRadius="12"
-                                   HasShadow="False"
-                                   BorderColor="{StaticResource SurfaceBorderColor}">
+                            <Border Style="{StaticResource CardBorderStyle}" Padding="12"
+                                   StrokeShape="RoundRectangle 12"
+                                   Stroke="{StaticResource SurfaceBorderColor}">
                                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
                                          ColumnDefinitions="*,*,*,*"
                                          RowSpacing="4">
-                                          <Frame Grid.Row="0"
+                                          <Border Style="{StaticResource CardBorderStyle}" Grid.Row="0"
                                                  Grid.Column="1"
                                                  Grid.ColumnSpan="2"
                                                  Padding="8"
-                                                 CornerRadius="12"
-                                                 HasShadow="False"
-                                                 BorderColor="{StaticResource SurfaceBorderColor}"
+                                                 StrokeShape="RoundRectangle 12"
+                                                 Stroke="{StaticResource SurfaceBorderColor}"
                                                  BackgroundColor="{Binding BackgroundColor}"
                                                  BindingContext="{Binding Head}"
                                                  HorizontalOptions="Center"
                                                  HeightRequest="60"
                                                  WidthRequest="80">
-                                                 <Frame.GestureRecognizers>
+                                                 <Border.GestureRecognizers>
                                                         <TapGestureRecognizer Tapped="OnLifeTapped"
                                                                               CommandParameter="{Binding .}"/>
-                                                 </Frame.GestureRecognizers>
+                                                 </Border.GestureRecognizers>
                                                  <Grid>
                                                         <VerticalStackLayout Spacing="2"
                                                                              HorizontalOptions="Center"
@@ -151,22 +147,21 @@
                                                                HorizontalOptions="Center"
                                                                VerticalOptions="Center"/>
                                                  </Grid>
-                                          </Frame>
+                                          </Border>
 
-                                          <Frame Grid.Row="1"
+                                          <Border Style="{StaticResource CardBorderStyle}" Grid.Row="1"
                                                  Grid.RowSpan="2"
                                                  Grid.Column="0"
-                                                 CornerRadius="12"
-                                                 HasShadow="False"
-                                                 BorderColor="{StaticResource SurfaceBorderColor}"
+                                                 StrokeShape="RoundRectangle 12"
+                                                 Stroke="{StaticResource SurfaceBorderColor}"
                                                  BackgroundColor="{Binding BackgroundColor}"
                                                  BindingContext="{Binding LeftArm}"
                                                  WidthRequest="75"
                                                  Margin="35,0,0,0">
-                                                 <Frame.GestureRecognizers>
+                                                 <Border.GestureRecognizers>
                                                         <TapGestureRecognizer Tapped="OnLifeTapped"
                                                                               CommandParameter="{Binding .}"/>
-                                                 </Frame.GestureRecognizers>
+                                                 </Border.GestureRecognizers>
                                                  <Grid>
                                                         <VerticalStackLayout Spacing="2"
                                                                              HorizontalOptions="Center"
@@ -189,22 +184,21 @@
                                                                HorizontalOptions="Center"
                                                                VerticalOptions="Center"/>
                                                  </Grid>
-                                          </Frame>
+                                          </Border>
 
-                                          <Frame Grid.Row="1"
+                                          <Border Style="{StaticResource CardBorderStyle}" Grid.Row="1"
                                                  Grid.Column="1"
                                                  Grid.ColumnSpan="2"
-                                                 CornerRadius="12"
-                                                 HasShadow="False"
-                                                 BorderColor="{StaticResource SurfaceBorderColor}"
+                                                 StrokeShape="RoundRectangle 12"
+                                                 Stroke="{StaticResource SurfaceBorderColor}"
                                                  BackgroundColor="{Binding BackgroundColor}"
                                                  BindingContext="{Binding Chest}"
                                                  WidthRequest="140"
                                                  HorizontalOptions="Center">
-                                                 <Frame.GestureRecognizers>
+                                                 <Border.GestureRecognizers>
                                                         <TapGestureRecognizer Tapped="OnLifeTapped"
                                                                               CommandParameter="{Binding .}"/>
-                                                 </Frame.GestureRecognizers>
+                                                 </Border.GestureRecognizers>
                                                  <Grid>
                                                         <VerticalStackLayout Spacing="2"
                                                                              HorizontalOptions="Center"
@@ -227,22 +221,21 @@
                                                                HorizontalOptions="Center"
                                                                VerticalOptions="Center"/>
                                                  </Grid>
-                                          </Frame>
+                                          </Border>
 
-                                          <Frame Grid.Row="1"
+                                          <Border Style="{StaticResource CardBorderStyle}" Grid.Row="1"
                                                  Grid.RowSpan="2"
                                                  Grid.Column="3"
-                                                 CornerRadius="12"
-                                                 HasShadow="False"
-                                                 BorderColor="{StaticResource SurfaceBorderColor}"
+                                                 StrokeShape="RoundRectangle 12"
+                                                 Stroke="{StaticResource SurfaceBorderColor}"
                                                  BackgroundColor="{Binding BackgroundColor}"
                                                  BindingContext="{Binding RightArm}"
                                                  WidthRequest="75"
                                                  Margin="0,0,35,0">
-                                                 <Frame.GestureRecognizers>
+                                                 <Border.GestureRecognizers>
                                                         <TapGestureRecognizer Tapped="OnLifeTapped"
                                                                               CommandParameter="{Binding .}"/>
-                                                 </Frame.GestureRecognizers>
+                                                 </Border.GestureRecognizers>
                                                  <Grid>
                                                         <VerticalStackLayout Spacing="2"
                                                                              HorizontalOptions="Center"
@@ -265,22 +258,21 @@
                                                                HorizontalOptions="Center"
                                                                VerticalOptions="Center"/>
                                                  </Grid>
-                                          </Frame>
+                                          </Border>
 
-                                          <Frame Grid.Row="2"
+                                          <Border Style="{StaticResource CardBorderStyle}" Grid.Row="2"
                                                  Grid.Column="1"
                                                  Grid.ColumnSpan="2"
-                                                 CornerRadius="12"
-                                                 HasShadow="False"
-                                                 BorderColor="{StaticResource SurfaceBorderColor}"
+                                                 StrokeShape="RoundRectangle 12"
+                                                 Stroke="{StaticResource SurfaceBorderColor}"
                                                  BackgroundColor="{Binding BackgroundColor}"
                                                  BindingContext="{Binding Abdomen}"
                                                  WidthRequest="110"
                                                  HorizontalOptions="Center">
-                                                 <Frame.GestureRecognizers>
+                                                 <Border.GestureRecognizers>
                                                         <TapGestureRecognizer Tapped="OnLifeTapped"
                                                                               CommandParameter="{Binding .}"/>
-                                                 </Frame.GestureRecognizers>
+                                                 </Border.GestureRecognizers>
                                                  <Grid>
                                                         <VerticalStackLayout Spacing="2"
                                                                              HorizontalOptions="Center"
@@ -303,24 +295,23 @@
                                                                HorizontalOptions="Center"
                                                                VerticalOptions="Center"/>
                                                  </Grid>
-                                          </Frame>
+                                          </Border>
 
-                                          <Frame Grid.Row="3"
+                                          <Border Style="{StaticResource CardBorderStyle}" Grid.Row="3"
                                                  Grid.RowSpan="2"
                                                  Grid.Column="1"
                                                  Padding="8"
-                                                 CornerRadius="12"
-                                                 HasShadow="False"
-                                                 BorderColor="{StaticResource SurfaceBorderColor}"
+                                                 StrokeShape="RoundRectangle 12"
+                                                 Stroke="{StaticResource SurfaceBorderColor}"
                                                  BackgroundColor="{Binding BackgroundColor}"
                                                  BindingContext="{Binding LeftLeg}"
                                                  WidthRequest="80"
                                                  HeightRequest="130"
                                                  Margin="0,0,0,0">
-                                                 <Frame.GestureRecognizers>
+                                                 <Border.GestureRecognizers>
                                                         <TapGestureRecognizer Tapped="OnLifeTapped"
                                                                               CommandParameter="{Binding .}"/>
-                                                 </Frame.GestureRecognizers>
+                                                 </Border.GestureRecognizers>
                                                  <Grid>
                                                         <VerticalStackLayout Spacing="2"
                                                                              HorizontalOptions="Center"
@@ -343,23 +334,22 @@
                                                                HorizontalOptions="Center"
                                                                VerticalOptions="Center"/>
                                                  </Grid>
-                                          </Frame>
+                                          </Border>
 
-                                          <Frame Grid.Row="3"
+                                          <Border Style="{StaticResource CardBorderStyle}" Grid.Row="3"
                                                  Grid.Column="2"
                                                  Grid.RowSpan="2"
                                                  Padding="8"
-                                                 CornerRadius="12"
-                                                 HasShadow="False"
-                                                 BorderColor="{StaticResource SurfaceBorderColor}"
+                                                 StrokeShape="RoundRectangle 12"
+                                                 Stroke="{StaticResource SurfaceBorderColor}"
                                                  BackgroundColor="{Binding BackgroundColor}"
                                                  BindingContext="{Binding RightLeg}"
                                                  WidthRequest="80"
                                                  Margin="0,0,0,0">
-                                                 <Frame.GestureRecognizers>
+                                                 <Border.GestureRecognizers>
                                                         <TapGestureRecognizer Tapped="OnLifeTapped"
                                                                               CommandParameter="{Binding .}"/>
-                                                 </Frame.GestureRecognizers>
+                                                 </Border.GestureRecognizers>
                                                  <Grid>
                                                         <VerticalStackLayout Spacing="2"
                                                                              HorizontalOptions="Center"
@@ -382,9 +372,9 @@
                                                                HorizontalOptions="Center"
                                                                VerticalOptions="Center"/>
                                                  </Grid>
-                                          </Frame>
+                                          </Border>
                                    </Grid>
-                            </Frame>
+                            </Border>
 
                      </VerticalStackLayout>
               </ScrollView>
@@ -428,15 +418,14 @@
                                                BindableLayout.ItemsSource="{Binding AtWillAbilities}">
                                           <BindableLayout.ItemTemplate>
                                                  <DataTemplate>
-                                                        <Frame Padding="10,4"
-                                                               CornerRadius="14"
-                                                               HasShadow="False"
+                                                        <Border Style="{StaticResource CardBorderStyle}" Padding="10,4"
+                                                               StrokeShape="RoundRectangle 14"
                                                                Margin="4"
-                                                               BorderColor="{StaticResource SurfaceBorderColor}"
+                                                               Stroke="{StaticResource SurfaceBorderColor}"
                                                                BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}">
                                                                <Label Text="{Binding .}"
                                                                       FontSize="13"/>
-                                                        </Frame>
+                                                        </Border>
                                                  </DataTemplate>
                                           </BindableLayout.ItemTemplate>
                                    </FlexLayout>
@@ -545,10 +534,9 @@
                                                  Spacing="12">
                                    <BindableLayout.ItemTemplate>
                                           <DataTemplate>
-                                                 <Frame Padding="12"
-                                                        CornerRadius="12"
-                                                        HasShadow="False"
-                                                        BorderColor="{StaticResource SurfaceBorderColor}">
+                                                 <Border Style="{StaticResource CardBorderStyle}" Padding="12"
+                                                        StrokeShape="RoundRectangle 12"
+                                                        Stroke="{StaticResource SurfaceBorderColor}">
                                                         <VerticalStackLayout Spacing="8">
                                                                <Grid ColumnDefinitions="*,Auto,Auto,Auto"
                                                                      ColumnSpacing="6">
@@ -594,10 +582,9 @@
                                                                                       HeightRequest="220">
                                                                              <CollectionView.ItemTemplate>
                                                                                     <DataTemplate>
-                                                                                           <Frame Padding="10"
-                                                                                                  CornerRadius="12"
-                                                                                                  HasShadow="False"
-                                                                                                  BorderColor="{StaticResource SurfaceBorderColor}">
+                                                                                           <Border Style="{StaticResource CardBorderStyle}" Padding="10"
+                                                                                                  StrokeShape="RoundRectangle 12"
+                                                                                                  Stroke="{StaticResource SurfaceBorderColor}">
                                                                                                   <Grid ColumnDefinitions="*,Auto"
                                                                                                         ColumnSpacing="8">
                                                                                                          <VerticalStackLayout Spacing="2">
@@ -613,13 +600,13 @@
                                                                                                                  Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.CastSpellCommand}"
                                                                                                                  CommandParameter="{Binding .}"/>
                                                                                                   </Grid>
-                                                                                           </Frame>
+                                                                                           </Border>
                                                                                     </DataTemplate>
                                                                              </CollectionView.ItemTemplate>
                                                                       </CollectionView>
                                                                </VerticalStackLayout>
                                                         </VerticalStackLayout>
-                                                 </Frame>
+                                                 </Border>
                                           </DataTemplate>
                                    </BindableLayout.ItemTemplate>
                             </VerticalStackLayout>
@@ -633,22 +620,20 @@
               <ScrollView>
                      <VerticalStackLayout Padding="16"
                                           Spacing="16">
-                            <Frame Padding="12"
-                                   CornerRadius="12"
-                                   HasShadow="False"
-                                   BorderColor="{StaticResource SurfaceBorderColor}">
+                            <Border Style="{StaticResource CardBorderStyle}" Padding="12"
+                                   StrokeShape="RoundRectangle 12"
+                                   Stroke="{StaticResource SurfaceBorderColor}">
                                    <VerticalStackLayout Spacing="8">
                                           <Label Text="Vitae"
                                                  FontAttributes="Bold"/>
                                           <sliders:VitaeSlider Value="{Binding CurrentVitae}"
                                                                IsEnabled="False"/>
                                    </VerticalStackLayout>
-                            </Frame>
+                            </Border>
 
-                            <Frame Padding="12"
-                                   CornerRadius="12"
-                                   HasShadow="False"
-                                   BorderColor="{StaticResource SurfaceBorderColor}">
+                            <Border Style="{StaticResource CardBorderStyle}" Padding="12"
+                                   StrokeShape="RoundRectangle 12"
+                                   Stroke="{StaticResource SurfaceBorderColor}">
                                    <VerticalStackLayout Spacing="4">
                                           <Label Text="Identity"
                                                  FontAttributes="Bold"/>
@@ -656,12 +641,11 @@
                                           <Label Text="{Binding PlayerName}"
                                                  Opacity="0.7"/>
                                    </VerticalStackLayout>
-                            </Frame>
+                            </Border>
 
-                            <Frame Padding="12"
-                                   CornerRadius="12"
-                                   HasShadow="False"
-                                   BorderColor="{StaticResource SurfaceBorderColor}">
+                            <Border Style="{StaticResource CardBorderStyle}" Padding="12"
+                                   StrokeShape="RoundRectangle 12"
+                                   Stroke="{StaticResource SurfaceBorderColor}">
                                    <VerticalStackLayout Spacing="4">
                                           <Label Text="Race &amp; class"
                                                  FontAttributes="Bold"/>
@@ -669,12 +653,11 @@
                                           <Label Text="{Binding ClassDisplay}"
                                                  Opacity="0.7"/>
                                    </VerticalStackLayout>
-                            </Frame>
+                            </Border>
 
-                            <Frame Padding="12"
-                                   CornerRadius="12"
-                                   HasShadow="False"
-                                   BorderColor="{StaticResource SurfaceBorderColor}">
+                            <Border Style="{StaticResource CardBorderStyle}" Padding="12"
+                                   StrokeShape="RoundRectangle 12"
+                                   Stroke="{StaticResource SurfaceBorderColor}">
                                    <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto"
                                          ColumnSpacing="8">
                                           <Label Text="{Binding AlignmentDisplay}"
@@ -695,12 +678,11 @@
                                                   Padding="6,2"
                                                   Command="{Binding AddBlackMarkCommand}"/>
                                    </Grid>
-                            </Frame>
+                            </Border>
 
-                            <Frame Padding="12"
-                                   CornerRadius="12"
-                                   HasShadow="False"
-                                   BorderColor="{StaticResource SurfaceBorderColor}">
+                            <Border Style="{StaticResource CardBorderStyle}" Padding="12"
+                                   StrokeShape="RoundRectangle 12"
+                                   Stroke="{StaticResource SurfaceBorderColor}">
                                    <Grid ColumnDefinitions="*,Auto"
                                          RowDefinitions="Auto,Auto"
                                          ColumnSpacing="8"
@@ -718,12 +700,11 @@
                                                  Text="{Binding Points}"
                                                  HorizontalTextAlignment="End"/>
                                    </Grid>
-                            </Frame>
+                            </Border>
 
-                            <Frame Padding="12"
-                                   CornerRadius="12"
-                                   HasShadow="False"
-                                   BorderColor="{StaticResource SurfaceBorderColor}">
+                            <Border Style="{StaticResource CardBorderStyle}" Padding="12"
+                                   StrokeShape="RoundRectangle 12"
+                                   Stroke="{StaticResource SurfaceBorderColor}">
                                    <VerticalStackLayout Spacing="8">
                                           <Label Text="Guilds"
                                                  FontAttributes="Bold"/>
@@ -731,20 +712,19 @@
                                                       BindableLayout.ItemsSource="{Binding Guilds}">
                                                  <BindableLayout.ItemTemplate>
                                                         <DataTemplate>
-                                                               <Frame Padding="10,4"
-                                                                      CornerRadius="14"
-                                                                      HasShadow="False"
+                                                               <Border Style="{StaticResource CardBorderStyle}" Padding="10,4"
+                                                                      StrokeShape="RoundRectangle 14"
                                                                       Margin="4"
-                                                                      BorderColor="{StaticResource SurfaceBorderColor}"
+                                                                      Stroke="{StaticResource SurfaceBorderColor}"
                                                                       BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}">
                                                                       <Label Text="{Binding .}"
                                                                              FontSize="13"/>
-                                                               </Frame>
+                                                               </Border>
                                                         </DataTemplate>
                                                  </BindableLayout.ItemTemplate>
                                           </FlexLayout>
                                    </VerticalStackLayout>
-                            </Frame>
+                            </Border>
                      </VerticalStackLayout>
               </ScrollView>
        </ContentPage>

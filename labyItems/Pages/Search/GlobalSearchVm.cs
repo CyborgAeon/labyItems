@@ -170,6 +170,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
 
     public ICommand ToggleResultSelectionCommand { get; }
     public bool IsPickerMode => _picker?.SelectionOptions.SelectionType is SelectionType.Single or SelectionType.Multiple;
+    public bool ShowNavigationMenu => !IsPickerMode;
     public bool ShowKindChips => _picker == null || _picker.AllowAllKinds;
     public string PickerTitle => _picker?.Title ?? string.Empty;
     public string PickerConfirmText => _picker?.FooterOptions?.ConfirmText ?? "Save";

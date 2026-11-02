@@ -1,7 +1,8 @@
+using labyItems.Controls;
+using labyItems.Models.Items;
 using System.Text.Json;
 using labyItems.Helpers;
 using labyItems.Models;
-using labyItems.Pages.Calculator;
 using labyItems.Services;
 using Xunit;
 
@@ -9,6 +10,42 @@ namespace labyItems.Tests;
 
 public sealed class ItemEmailServiceTests
 {
+    [Fact]
+    public void ItemPayload_RoundTripPreservesMonsterPointEditorSettings()
+    {
+        var payload = new ItemJsonPayload
+        {
+            Item = new ItemJsonDetail
+            {
+                MpEditorState = new MpEditorState
+                {
+                    CalculatorType = "MpThemedayPage",
+                    LifeIndex = 3,
+                    SelectedWeaponKind = "Magic",
+                    SelectedWeaponType = Enum.GetValues<labyItems.Models.Enums.WeaponType>().Last(),
+                    SelectedWeaponColour = Enum.GetValues<labyItems.Models.Enums.MagicColours>().Last(),
+                    RepelGoodEvilTarget = "Good",
+                    RepelGoodEvilCount = 4,
+                    MagicPowerStorePoints = 3,
+                    SpellSelections = new() { new() { Option = new SpellOption("Fireblade", 6, false), Uses = 2 } }
+                }
+            }
+        };
+
+        var json = ItemEmailService.SerializeItemPayload(payload);
+        var restored = ItemEmailService.TryDeserializeItemPayload(json)?.Item.MpEditorState;
+
+        Assert.NotNull(restored);
+        Assert.Equal("MpThemedayPage", restored.CalculatorType);
+        Assert.Equal(3, restored.LifeIndex);
+        Assert.Equal(payload.Item.MpEditorState.SelectedWeaponType, restored.SelectedWeaponType);
+        Assert.Equal(payload.Item.MpEditorState.SelectedWeaponColour, restored.SelectedWeaponColour);
+        Assert.Equal(4, restored.RepelGoodEvilCount);
+        Assert.Equal(3, restored.MagicPowerStorePoints);
+        Assert.Equal(new SpellOption("Fireblade", 6, false), Assert.Single(restored.SpellSelections).Option);
+        Assert.Equal(2, restored.SpellSelections[0].Uses);
+    }
+
     [Fact]
     public void BuildItemPayload_DerivesCanonicalTypeArrayFromAbilities()
     {
@@ -126,7 +163,7 @@ public sealed class ItemEmailServiceTests
         {
             TotalIsp = 20,
             TotalMp = 120,
-            IspBreakdown = new List<MpSubmissionBreakdownEntry>
+            IspBreakdown = new List<ContributionRow>
             {
                 new() { Id = "isp-spell-0", Text = "Spell: Fireblade (Lvl 6) x1 = 12", RunningTotal = 12 },
                 new() { Id = "isp-miracle-0", Text = "Miracle: Heal (3) x1 = 8", RunningTotal = 20 }
@@ -167,7 +204,7 @@ public sealed class ItemEmailServiceTests
         {
             TotalIsp = 4,
             TotalMp = 40,
-            IspBreakdown = new List<MpSubmissionBreakdownEntry>
+            IspBreakdown = new List<ContributionRow>
             {
                 new() { Id = "isp-pac", Text = "+1 PAC = 4", RunningTotal = 4 }
             }
@@ -214,7 +251,7 @@ public sealed class ItemEmailServiceTests
                     }
                 }
             },
-            IspBreakdown = new List<MpSubmissionBreakdownEntry>
+            IspBreakdown = new List<ContributionRow>
             {
                 new() { Id = "general", Text = "General (10)", RunningTotal = 10 }
             }

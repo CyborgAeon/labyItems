@@ -14,6 +14,15 @@ public partial class LevelValueStripView : ContentView
     public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(
         nameof(ItemsSource), typeof(IEnumerable), typeof(LevelValueStripView));
 
+    public static readonly BindableProperty ValueFontSizeProperty = BindableProperty.Create(
+        nameof(ValueFontSize), typeof(double), typeof(LevelValueStripView), 16d);
+    public static readonly BindableProperty CellPaddingProperty = BindableProperty.Create(
+        nameof(CellPadding), typeof(Thickness), typeof(LevelValueStripView), new Thickness(8, 7),
+        propertyChanged: (bindable, _, _) => ((LevelValueStripView)bindable).OnPropertyChanged(nameof(CellDividerMargin)));
+    public double ValueFontSize { get => (double)GetValue(ValueFontSizeProperty); set => SetValue(ValueFontSizeProperty, value); }
+    public Thickness CellDividerMargin => new(-CellPadding.Left, -CellPadding.Top, 0, -CellPadding.Bottom);
+    public Thickness CellPadding { get => (Thickness)GetValue(CellPaddingProperty); set => SetValue(CellPaddingProperty, value); }
+
     public string Title
     {
         get => (string)GetValue(TitleProperty);

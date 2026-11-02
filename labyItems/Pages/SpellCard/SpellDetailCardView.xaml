@@ -20,7 +20,7 @@
                     </Label>
                     <HorizontalStackLayout Spacing="7">
                         <HorizontalStackLayout.GestureRecognizers><TapGestureRecognizer Tapped="OnColourTapped"/></HorizontalStackLayout.GestureRecognizers>
-                        <Frame Padding="0" WidthRequest="12" HeightRequest="12" CornerRadius="6" HasShadow="False" BorderColor="{Binding ColourCircleBorderColor, Source={x:Reference Root}}" BackgroundColor="{Binding ColourCircleColor, Source={x:Reference Root}}" VerticalOptions="Center"/>
+                        <Border Style="{StaticResource CardBorderStyle}" Padding="0" WidthRequest="12" HeightRequest="12" StrokeShape="RoundRectangle 6" Stroke="{Binding ColourCircleBorderColor, Source={x:Reference Root}}" BackgroundColor="{Binding ColourCircleColor, Source={x:Reference Root}}" VerticalOptions="Center"/>
                         <Label Text="{Binding ColourSubtitleText, Source={x:Reference Root}}" FontSize="14" VerticalTextAlignment="Center"/>
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
@@ -30,8 +30,8 @@
                         <Label Text="LEVEL" Style="{StaticResource KeyInfoLabelStyle}"/>
                         <Label Text="{Binding LevelDisplayText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/>
                     </VerticalStackLayout>
-                    <Frame Padding="8,4" CornerRadius="10" HasShadow="False" BackgroundColor="#FFF3D6" BorderColor="#E8C878" IsVisible="{Binding IsEditing, Source={x:Reference Root}}"><Frame.GestureRecognizers><TapGestureRecognizer Tapped="OnTierTapped"/></Frame.GestureRecognizers><Label Text="{Binding TierDisplayText, Source={x:Reference Root}}" FontSize="12" FontAttributes="Bold"/></Frame>
-                    <Frame Padding="8,4" CornerRadius="10" HasShadow="False" BackgroundColor="#FFF3D6" BorderColor="#E8C878" IsVisible="{Binding IsAdvanced, Source={x:Reference Root}}"><Frame.Triggers><DataTrigger TargetType="Frame" Binding="{Binding IsEditing, Source={x:Reference Root}}" Value="True"><Setter Property="IsVisible" Value="False"/></DataTrigger></Frame.Triggers><Label Text="★ Advanced" FontSize="12" FontAttributes="Bold"/></Frame>
+                    <Border Style="{StaticResource CardBorderStyle}" Padding="8,4" StrokeShape="RoundRectangle 10" BackgroundColor="#FFF3D6" Stroke="#E8C878" IsVisible="{Binding IsEditing, Source={x:Reference Root}}"><Border.GestureRecognizers><TapGestureRecognizer Tapped="OnTierTapped"/></Border.GestureRecognizers><Label Text="{Binding TierDisplayText, Source={x:Reference Root}}" FontSize="12" FontAttributes="Bold"/></Border>
+                    <Border Style="{StaticResource CardBorderStyle}" Padding="8,4" StrokeShape="RoundRectangle 10" BackgroundColor="#FFF3D6" Stroke="#E8C878" IsVisible="{Binding IsAdvanced, Source={x:Reference Root}}"><Border.Triggers><DataTrigger TargetType="Border" Binding="{Binding IsEditing, Source={x:Reference Root}}" Value="True"><Setter Property="IsVisible" Value="False"/></DataTrigger></Border.Triggers><Label Text="★ Advanced" FontSize="12" FontAttributes="Bold"/></Border>
                 </VerticalStackLayout>
             </Grid>
 
@@ -158,7 +158,7 @@
                             BindableLayout.ItemsSource="{Binding MetaChips, Source={x:Reference Root}}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
-                            <Frame Style="{StaticResource MetaChipFrameStyle}">
+                            <Border Style="{StaticResource MetaChipBorderStyle}">
                                 <HorizontalStackLayout Spacing="6">
                                     <Label Text="{Binding Icon}"
                                            FontSize="12"
@@ -167,7 +167,7 @@
                                            FontSize="13"
                                            VerticalTextAlignment="Center"/>
                                 </HorizontalStackLayout>
-                            </Frame>
+                            </Border>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
                 </FlexLayout>

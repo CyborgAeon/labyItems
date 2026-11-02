@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView x:Class="labyItems.Pages.Characters.CharacterReviewView" x:Name="Root"
  xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
- xmlns:controls="clr-namespace:labyItems.Controls">
+ xmlns:controls="clr-namespace:labyItems.Controls" xmlns:sliders="clr-namespace:labyItems.Controls.Sliders">
  <ScrollView>
   <VerticalStackLayout Padding="16" Spacing="14">
    <VerticalStackLayout Margin="-16,0" Padding="12,10" Spacing="10" IsVisible="{Binding ShowBuilderSummary, Source={x:Reference Root}}">
@@ -23,28 +23,26 @@
    </VerticalStackLayout>
 
    <controls:LevelValueStripView Title="LIFESCALE"
-                                 Subtitle="BODY / LOC"
+                                 Subtitle="BODY / LOC" ValueFontSize="10" CellPadding="2,7"
                                  ItemsSource="{Binding LifeScaleRows, Source={x:Reference Root}}"/>
 
    <VerticalStackLayout Spacing="7">
     <Label Text="PRE-8TH" Style="{StaticResource SectionHeaderLabelStyle}"/>
-    <Grid ColumnDefinitions="54,*,32" Padding="10,0"><Label Text="LVL" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center"/><Label Grid.Column="1" Text="ABILITY" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center"/><Label Grid.Column="2" Text="INFO" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center"/></Grid>
+    <Grid ColumnDefinitions="44,*,0,0,0,18,0" ColumnSpacing="8" Padding="10,0"><Label Text="LVL" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center"/><Label Grid.Column="1" Text="ABILITY" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center"/><Label Grid.Column="5" Text="INFO" Style="{StaticResource KeyInfoLabelStyle}" HorizontalTextAlignment="Center"/></Grid>
     <VerticalStackLayout BindableLayout.ItemsSource="{Binding PreEighthRows, Source={x:Reference Root}}" Spacing="0">
      <BindableLayout.ItemTemplate><DataTemplate><controls:ListItemRowView PrimaryText="{Binding LevelText}" SecondaryText="{Binding Name}" PrimaryColumnWidth="44" SecondaryColumnWidth="*" InfoColumnWidth="18" PrimaryTextAlignment="Center" SecondaryTextAlignment="Center" ShowSecondaryText="True" ShowInfo="True" ActionCommandParameter="{Binding .}" RowBackgroundColor="{Binding RowBackgroundColor}" InfoClicked="OnPreEighthInfoClicked" RowClicked="OnPreEighthInfoClicked"/></DataTemplate></BindableLayout.ItemTemplate>
     </VerticalStackLayout>
     <Label Text="No class or race abilities are granted before 8th level." TextColor="{StaticResource MutedTextColor}" IsVisible="{Binding HasNoPreEighthRows, Source={x:Reference Root}}"/>
    </VerticalStackLayout>
 
-   <VerticalStackLayout IsVisible="{Binding ShowPost8Card, Source={x:Reference Root}}" Spacing="7">
-    <Grid ColumnDefinitions="*,Auto"><Label Text="POST-8TH" Style="{StaticResource SectionHeaderLabelStyle}"/><controls:ChevronIconView Grid.Column="1" IsExpanded="{Binding IsAdvancementExpanded}" AnimateRotation="True" GlyphSize="14" GlyphColor="{StaticResource MutedTextColor}"><controls:ChevronIconView.GestureRecognizers><TapGestureRecognizer Command="{Binding ToggleAdvancementExpandedCommand}"/></controls:ChevronIconView.GestureRecognizers></controls:ChevronIconView></Grid>
-    <VerticalStackLayout x:Name="Post8ExpandedContent" IsVisible="False" Spacing="6">
-     <VerticalStackLayout BindableLayout.ItemsSource="{Binding AdvancementAbilityLines}" Spacing="0"><BindableLayout.ItemTemplate><DataTemplate><controls:ListItemRowView PrimaryText="{Binding Name}" SecondaryText="{Binding CostText}" PrimaryColumnWidth="*" SecondaryColumnWidth="72" PrimaryTextAlignment="Start" SecondaryTextAlignment="Center" ShowSecondaryText="True"/></DataTemplate></BindableLayout.ItemTemplate></VerticalStackLayout>
-     <Button Text="Open Advancement" Clicked="OnOpenAdvancementClicked"/>
-    </VerticalStackLayout>
+   <VerticalStackLayout x:Name="VitaeSection" IsVisible="False" Spacing="8">
+    <Label Text="CURRENT VITAE" Style="{StaticResource SectionHeaderLabelStyle}"/>
+    <sliders:VitaeSlider Value="{Binding CurrentVitae, Mode=TwoWay}" IsVisible="{Binding CanEditCurrentVitae}"/>
+    <Label Text="{Binding CurrentVitaeDisplayText}" IsVisible="{Binding CanEditCurrentVitae, Converter={StaticResource InverseBoolConverter}}" HorizontalTextAlignment="Center"/>
    </VerticalStackLayout>
 
    <VerticalStackLayout Spacing="7">
-    <Grid ColumnDefinitions="*,Auto"><Label Text="NOTES" Style="{StaticResource SectionHeaderLabelStyle}"/><controls:ChevronIconView x:Name="NotesChevron" Grid.Column="1" GlyphSize="14" GlyphColor="{StaticResource MutedTextColor}"><controls:ChevronIconView.GestureRecognizers><TapGestureRecognizer Tapped="OnNotesChevronTapped"/></controls:ChevronIconView.GestureRecognizers></controls:ChevronIconView></Grid>
+    <Grid ColumnDefinitions="*,Auto"><Label Text="NOTES" Style="{StaticResource SectionHeaderLabelStyle}"/><controls:ChevronIconView x:Name="NotesChevron" AnimateRotation="True" Grid.Column="1" GlyphSize="14" GlyphColor="{StaticResource MutedTextColor}"><controls:ChevronIconView.GestureRecognizers><TapGestureRecognizer Tapped="OnNotesChevronTapped"/></controls:ChevronIconView.GestureRecognizers></controls:ChevronIconView></Grid>
     <Label x:Name="NotesContentLabel" IsVisible="False" Text="{Binding NotesSummary}" LineBreakMode="WordWrap"/>
    </VerticalStackLayout>
   </VerticalStackLayout>

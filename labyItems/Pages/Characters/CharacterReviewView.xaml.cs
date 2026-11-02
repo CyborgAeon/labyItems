@@ -79,14 +79,14 @@ public partial class CharacterReviewView : ContentView
         RefreshProjection();
     }
 
+    public void ConfigureVitae(object viewModel)
+    {
+        VitaeSection.BindingContext = viewModel;
+        VitaeSection.IsVisible = true;
+    }
+
     private void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(WizardVm.IsAdvancementExpanded))
-        {
-            Post8ExpandedContent.IsVisible = BindingContext is WizardVm { IsAdvancementExpanded: true };
-            return;
-        }
-
         if (e.PropertyName is nameof(WizardVm.ClassLevelAbilityRows)
             or nameof(WizardVm.RaceLevelAbilityRows)
             or nameof(WizardVm.GuildReviewRows)
@@ -149,7 +149,6 @@ public partial class CharacterReviewView : ContentView
             });
         }
 
-        Post8ExpandedContent.IsVisible = vm.IsAdvancementExpanded;
         RaiseProjectionProperties();
     }
 

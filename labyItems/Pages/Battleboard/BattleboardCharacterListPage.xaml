@@ -24,14 +24,13 @@
                             ItemsSource="{Binding Characters}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame Margin="0,0,0,12"
+                        <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,12"
                                Padding="12"
-                               CornerRadius="12"
-                               HasShadow="False"
-                               BorderColor="{StaticResource SurfaceBorderColor}">
-                            <Frame.GestureRecognizers>
+                               StrokeShape="RoundRectangle 12"
+                               Stroke="{StaticResource SurfaceBorderColor}">
+                            <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnCardTapped"/>
-                            </Frame.GestureRecognizers>
+                            </Border.GestureRecognizers>
                             <Grid ColumnDefinitions="Auto, Auto"
                                   RowDefinitions="Auto, Auto">
 
@@ -52,7 +51,7 @@
                                        Opacity="0.7"/>
                             </Grid>
 
-                        </Frame>
+                        </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

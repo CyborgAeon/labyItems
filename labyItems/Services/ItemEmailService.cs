@@ -1,3 +1,4 @@
+using labyItems.Models.Items;
 using System;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,6 @@ using System.Text.RegularExpressions;
 using labyItems.Controls;
 using labyItems.Helpers;
 using labyItems.Models;
-using labyItems.Pages.Calculator;
 
 namespace labyItems.Services;
 
@@ -157,7 +157,8 @@ public static class ItemEmailService
                 description,
                 physicalRepresentation = payload.PhysicalRepresentation ?? string.Empty,
                 sourceFlow,
-                monsterPointCost = Math.Max(0, payload.TotalMp)
+                monsterPointCost = Math.Max(0, payload.TotalMp),
+                mpEditorState = payload.EditorState
             },
             ispTotal = payload.TotalIsp,
             mpTotal = payload.TotalMp,

@@ -5,7 +5,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <Frame Style="{StaticResource DetailCardFrameStyle}">
+    <Border Style="{StaticResource DetailCardBorderStyle}">
         <VerticalStackLayout Spacing="12">
             <Label Text="{Binding DisplayName, Source={x:Reference Root}}"
                    FontSize="28"
@@ -76,5 +76,5 @@
                 </VerticalStackLayout>
             </VerticalStackLayout>
         </VerticalStackLayout>
-    </Frame>
+    </Border>
 </ContentView>

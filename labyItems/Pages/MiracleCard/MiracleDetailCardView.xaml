@@ -18,7 +18,7 @@
                 <Grid.GestureRecognizers><TapGestureRecognizer Tapped="OnSphereTapped"/></Grid.GestureRecognizers>
                 <Label Text="{Binding SphereIconGlyph, Source={x:Reference Root}}" FontFamily="FASolid" FontSize="14" TextColor="{StaticResource SubtleTextColor}" VerticalTextAlignment="Center"/>
                 <Label Grid.Column="1" Text="{Binding SphereDisplayText, Source={x:Reference Root}}" FontSize="14" VerticalTextAlignment="Center"/>
-                <Frame Grid.Column="2" Padding="8,4" CornerRadius="10" HasShadow="False" BackgroundColor="{Binding TierBackgroundColor, Source={x:Reference Root}}" BorderColor="#E8C878" IsVisible="{Binding ShowTier, Source={x:Reference Root}}"><Frame.GestureRecognizers><TapGestureRecognizer Tapped="OnTierTapped"/></Frame.GestureRecognizers><Label Text="{Binding TierDisplayText, Source={x:Reference Root}}" FontSize="12" FontAttributes="Bold"/></Frame>
+                <Border Style="{StaticResource CardBorderStyle}" Grid.Column="2" Padding="8,4" StrokeShape="RoundRectangle 10" BackgroundColor="{Binding TierBackgroundColor, Source={x:Reference Root}}" Stroke="#E8C878" IsVisible="{Binding ShowTier, Source={x:Reference Root}}"><Border.GestureRecognizers><TapGestureRecognizer Tapped="OnTierTapped"/></Border.GestureRecognizers><Label Text="{Binding TierDisplayText, Source={x:Reference Root}}" FontSize="12" FontAttributes="Bold"/></Border>
             </Grid>
 
             <Label Text="Non-standard"

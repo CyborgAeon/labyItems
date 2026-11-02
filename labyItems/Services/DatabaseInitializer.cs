@@ -14,11 +14,6 @@ using labyItems.Helpers;
 
 namespace labyItems.Services;
 
-public interface IDatabaseInitializer
-{
-	Task InitializeAsync(CancellationToken cancellationToken = default);
-}
-
 public sealed class DatabaseInitializer : IDatabaseInitializer
 {
 	private readonly IServiceProvider _services;
@@ -27,6 +22,7 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
     private readonly IAbilityDefinitionDataSynchronizer _abilityDefinitionDataSynchronizer;
     private readonly ICharacterReferenceDataSynchronizer _characterReferenceDataSynchronizer;
     private readonly IPackagedDatabaseSynchronizer _packagedDatabaseSynchronizer;
+    private readonly IReferenceCatalogueDataSynchronizer _referenceCatalogueDataSynchronizer;
 	private readonly SemaphoreSlim _initLock = new(1, 1);
 	private bool _initialized;
 
@@ -36,7 +32,8 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
         IEvolutionDataSynchronizer evolutionDataSynchronizer,
         IAbilityDefinitionDataSynchronizer abilityDefinitionDataSynchronizer,
         ICharacterReferenceDataSynchronizer characterReferenceDataSynchronizer,
-        IPackagedDatabaseSynchronizer packagedDatabaseSynchronizer)
+        IPackagedDatabaseSynchronizer packagedDatabaseSynchronizer,
+        IReferenceCatalogueDataSynchronizer referenceCatalogueDataSynchronizer)
 	{
 		_services = services;
 		_logger = logger;
@@ -44,6 +41,7 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
         _abilityDefinitionDataSynchronizer = abilityDefinitionDataSynchronizer;
         _characterReferenceDataSynchronizer = characterReferenceDataSynchronizer;
         _packagedDatabaseSynchronizer = packagedDatabaseSynchronizer;
+        _referenceCatalogueDataSynchronizer = referenceCatalogueDataSynchronizer;
 	}
 
 	public async Task InitializeAsync(CancellationToken cancellationToken = default)
@@ -104,6 +102,7 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
 		{
 			RuntimeLog.Write("STARTUP", "Migration phase failed.", ex);
 			log2.LogError(ex, "Lightweight migrations failed on mobile platform: {Message}", ex.Message);
+            throw;
 		}
 #else
 		try
@@ -128,6 +127,7 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
 			catch (Exception inner)
 			{
 				log2.LogError(inner, "Lightweight migrations also failed: {Message}", inner.Message);
+                throw;
 			}
 		}
 #endif
@@ -145,7 +145,10 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
         {
 			RuntimeLog.Write("STARTUP", "Packaged DB sync phase failed.", ex);
             log2.LogError(ex, "Packaged database sync failed: {Message}", ex.Message);
+            throw;
         }
+
+        await _referenceCatalogueDataSynchronizer.EnsureCurrentAsync(dbPath, cancellationToken).ConfigureAwait(false);
 
         try
         {
@@ -160,6 +163,7 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
         {
 			RuntimeLog.Write("STARTUP", "Evolution data sync phase failed.", ex);
             log2.LogError(ex, "Evolution default sync failed: {Message}", ex.Message);
+            throw;
         }
 
         try
@@ -175,6 +179,7 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
         {
 			RuntimeLog.Write("STARTUP", "Ability definition sync phase failed.", ex);
             log2.LogError(ex, "Ability definition sync failed: {Message}", ex.Message);
+            throw;
         }
 
         try
@@ -190,7 +195,10 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
         {
 			RuntimeLog.Write("STARTUP", "Character reference sync phase failed.", ex);
             log2.LogError(ex, "Character reference sync failed: {Message}", ex.Message);
+            throw;
         }
+
+        ReferenceDatabaseReadiness.Validate(dbPath, cancellationToken);
 
 		total.Stop();
 		LogPhaseBoundary("Database initializer", $"finished in {total.ElapsedMilliseconds} ms");

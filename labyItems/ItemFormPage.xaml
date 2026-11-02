@@ -29,9 +29,9 @@
             <VerticalStackLayout x:Name="DescriptionList" BindableLayout.ItemsSource="{Binding DescriptionLines}" Spacing="8">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
-                        <Frame BorderColor="#DDD" CornerRadius="8" Padding="10" HasShadow="False">
+                        <Border Style="{StaticResource CardBorderStyle}" Stroke="#DDD" StrokeShape="RoundRectangle 8" Padding="10">
                             <Label LineBreakMode="WordWrap" Text="{Binding .}" />
-                        </Frame>
+                        </Border>
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
             </VerticalStackLayout>

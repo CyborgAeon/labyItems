@@ -6,17 +6,20 @@ namespace labyItems.Pages.Calendar;
 
 internal static class CalendarVisualHelper
 {
-    public static void PopulateLegend(VerticalStackLayout host)
+    public static void PopulateLegend(VerticalStackLayout host, bool includeHeading = true)
     {
         host.Children.Clear();
 
-        host.Children.Add(new Label
+        if (includeHeading)
         {
-            Text = "Key",
-            FontAttributes = FontAttributes.Bold,
-            FontSize = 14,
-            TextColor = ResolveColor("Gray950", Colors.Black)
-        });
+            host.Children.Add(new Label
+            {
+                Text = "Key",
+                FontAttributes = FontAttributes.Bold,
+                FontSize = 14,
+                TextColor = ResolveColor("Gray950", Colors.Black)
+            });
+        }
 
         var legendGrid = new Grid
         {

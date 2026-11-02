@@ -458,8 +458,8 @@
                                 <controls:SpendOrderRowView Row="{Binding .}"
                                                             RowTapped="OnSpendRowTapped"
                                                             RowLongPressed="OnSpendRowLongPressed"
-                                                            OptionsClicked="OnSpendRowOptionsClicked"
-                                                            MoveRequested="OnSpendRowMoveRequested" />
+                                                            RowDropped="OnSpendRowDropped"
+                                                            OptionsClicked="OnSpendRowOptionsClicked" />
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
@@ -472,7 +472,7 @@
                                              Spacing="12">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <Frame Style="{StaticResource SectionCardFrameStyle}">
+                                    <Border Style="{StaticResource SectionCardBorderStyle}">
                                         <VerticalStackLayout Spacing="8">
                                             <Grid ColumnDefinitions="*,Auto"
                                                   ColumnSpacing="8">
@@ -507,7 +507,7 @@
                                                 </BindableLayout.ItemTemplate>
                                             </VerticalStackLayout>
                                         </VerticalStackLayout>
-                                    </Frame>
+                                    </Border>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </VerticalStackLayout>
@@ -525,7 +525,7 @@
                                              Spacing="12">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <Frame Style="{StaticResource SectionCardFrameStyle}">
+                                    <Border Style="{StaticResource SectionCardBorderStyle}">
                                         <VerticalStackLayout Spacing="8">
                                             <Grid ColumnDefinitions="*,Auto"
                                                   ColumnSpacing="8">
@@ -560,7 +560,7 @@
                                                 </BindableLayout.ItemTemplate>
                                             </VerticalStackLayout>
                                         </VerticalStackLayout>
-                                    </Frame>
+                                    </Border>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </VerticalStackLayout>
@@ -578,7 +578,7 @@
                                              Spacing="12">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <Frame Style="{StaticResource SectionCardFrameStyle}">
+                                    <Border Style="{StaticResource SectionCardBorderStyle}">
                                         <VerticalStackLayout Spacing="8">
                                             <Grid ColumnDefinitions="*,Auto"
                                                   ColumnSpacing="8">
@@ -613,7 +613,7 @@
                                                 </BindableLayout.ItemTemplate>
                                             </VerticalStackLayout>
                                         </VerticalStackLayout>
-                                    </Frame>
+                                    </Border>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </VerticalStackLayout>
@@ -631,7 +631,7 @@
                                              Spacing="12">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <Frame Style="{StaticResource SectionCardFrameStyle}">
+                                    <Border Style="{StaticResource SectionCardBorderStyle}">
                                         <VerticalStackLayout Spacing="8">
                                             <Label Text="{Binding Title}"
                                                    FontAttributes="Bold" />
@@ -648,7 +648,7 @@
                                                 </BindableLayout.ItemTemplate>
                                             </VerticalStackLayout>
                                         </VerticalStackLayout>
-                                    </Frame>
+                                    </Border>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </VerticalStackLayout>
@@ -662,7 +662,7 @@
                             IsVisible="False">
                     <VerticalStackLayout Padding="16"
                                          Spacing="14">
-                        <Frame Style="{StaticResource SectionCardFrameStyle}">
+                        <Border Style="{StaticResource SectionCardBorderStyle}">
                             <VerticalStackLayout Spacing="8">
                                 <Label Text="Items"
                                        FontAttributes="Bold" />
@@ -688,30 +688,17 @@
                                                      Spacing="6">
                                     <BindableLayout.ItemTemplate>
                                         <DataTemplate>
-                                            <controls:ListItemRowView PrimaryText="{Binding PrimaryText}" SecondaryText="{Binding SecondaryText}" ShowSecondaryText="{Binding HasSecondaryText}" ShowInfo="True" ActionCommandParameter="{Binding .}" InfoClicked="OnReviewEntryInfoClicked"/>
+                                            <controls:ListItemRowView PrimaryText="{Binding PrimaryText}" SecondaryText="{Binding SecondaryText}" ShowSecondaryText="{Binding HasSecondaryText}" ShowInfo="True" ShowDelete="True" ShowFirstAction="True" ShowSecondAction="True" FirstActionGlyph="{x:Static helpers:FontAwesomeGlyphs.Edit}" SecondActionGlyph="{x:Static helpers:FontAwesomeGlyphs.Camera}" SecondActionAccessibilityText="Photograph item" FirstActionAccessibilityText="Edit item" FirstActionCommand="{Binding Source={x:Reference RootPage}, Path=EditItemCommand}" SecondActionCommand="{Binding Source={x:Reference RootPage}, Path=PhotographItemCommand}" ActionCommandParameter="{Binding .}" InfoClicked="OnReviewEntryInfoClicked" DeleteClicked="OnDeleteReviewItemClicked"/>
                                         </DataTemplate>
                                     </BindableLayout.ItemTemplate>
                                 </VerticalStackLayout>
-                                <Label Text="No Items Recorded Yet&#10;&#10;Items are managed during advancement."
+                                <Label Text="No items recorded yet."
                                        HorizontalTextAlignment="Center"
                                        TextColor="{StaticResource MutedTextColor}"
                                        IsVisible="{Binding HasItemReviewEntries, Converter={StaticResource InverseBoolConverter}}" />
-                                       <Button Grid.Column="1"
-                                                        Text="{x:Static helpers:FontAwesomeGlyphs.Edit}"
-                                                        FontFamily="FASolid"
-                                                        FontSize="14"
-                                                        Padding="0"
-                                                        BackgroundColor="Transparent"
-                                                        TextColor="{StaticResource SubtleTextColor}"
-                                                        HeightRequest="24"
-                                                        WidthRequest="24"
-                                                        MinimumHeightRequest="0"
-                                                        MinimumWidthRequest="0"
-                                                        AutomationProperties.Name="Edit spends"
-                                                        Clicked="OnEditAdvancementTabClicked"
-                                                        CommandParameter="spends" />
+
                             </VerticalStackLayout>
-                        </Frame>
+                        </Border>
                     </VerticalStackLayout>
                 </ScrollView>
             </Grid>

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <local:MpCalculatorPageBase x:Class="labyItems.Pages.Calculator.MpBasicPage"
                             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-                            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                            xmlns:itemModels="clr-namespace:labyItems.Models.Items"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:helpers="clr-namespace:labyItems.Helpers"
                             xmlns:controls="clr-namespace:labyItems.Controls"
                             xmlns:enums="clr-namespace:labyItems.Models.Enums"
@@ -37,7 +38,7 @@
             ColumnSpacing="12">
           <controls:DictionarySearchBar Grid.Column="0"
               x:Name="SpellSearch"
-              x:TypeArguments="local:SpellOption"
+              x:TypeArguments="itemModels:SpellOption"
               PlaceholderText="Type spell name)"
               SelectionDisplayMemberPath="Name"
               SelectedValue="{Binding SelectedSpellOption, Mode=TwoWay}"
@@ -69,7 +70,7 @@
             ColumnSpacing="12">
           <controls:DictionarySearchBar Grid.Column="0"
               x:Name="MiracleSearch"
-              x:TypeArguments="local:MiracleOption"
+              x:TypeArguments="itemModels:MiracleOption"
               PlaceholderText="Type miracle name"
               SelectionDisplayMemberPath="Name"
               SelectedValue="{Binding SelectedMiracleOption, Mode=TwoWay}"
@@ -102,7 +103,7 @@
           <controls:DictionarySearchBar IsEnabled="{Binding DbEnabled}"
               Grid.Column="0"
               x:Name="EvocationSearch"
-              x:TypeArguments="local:EvocationOption"
+              x:TypeArguments="itemModels:EvocationOption"
               PlaceholderText="Type evocation name"
               SelectionDisplayMemberPath="Name"
               SelectedValue="{Binding SelectedEvocationOption, Mode=TwoWay}"
@@ -133,7 +134,7 @@
             ColumnSpacing="12">
           <controls:DictionarySearchBar Grid.Column="0"
               x:Name="NeuroSearch"
-              x:TypeArguments="local:NeuroOption"
+              x:TypeArguments="itemModels:NeuroOption"
               PlaceholderText="Type neuronic ability"
               SelectionDisplayMemberPath="Name"
               SelectedValue="{Binding SelectedNeuroOption, Mode=TwoWay}"

@@ -121,6 +121,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<Services.IEvolutionDataSynchronizer, Services.EvolutionDataSynchronizer>();
 		builder.Services.AddSingleton<Services.IAbilityDefinitionDataSynchronizer, Services.AbilityDefinitionDataSynchronizer>();
 		builder.Services.AddSingleton<Services.ICharacterReferenceDataSynchronizer, Services.CharacterReferenceDataSynchronizer>();
+        builder.Services.AddSingleton<Services.IReferenceCatalogueDataSynchronizer, Services.ReferenceCatalogueDataSynchronizer>();
 		builder.Services.AddSingleton<Services.IPackagedDatabaseSynchronizer, Services.PackagedDatabaseSynchronizer>();
 		builder.Services.AddSingleton<Services.ICacheMaintenanceService, Services.CacheMaintenanceService>();
 		builder.Services.AddSingleton<Services.IDatabaseInitializer, Services.DatabaseInitializer>();

@@ -42,24 +42,6 @@
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="Current vitae"
-                               FontAttributes="Bold"/>
-                        <sliders:VitaeSlider Value="{Binding CurrentVitae, Mode=TwoWay}"
-                                             IsVisible="{Binding CanEditCurrentVitae}"/>
-                        <Border Stroke="{StaticResource SoftStrokeColor}"
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 10"
-                                BackgroundColor="#F9FAFB"
-                                Padding="12,10"
-                                IsVisible="{Binding CanEditCurrentVitae, Converter={StaticResource InverseBoolConverter}}">
-                            <Label Text="{Binding CurrentVitaeDisplayText}"
-                                   FontAttributes="Bold"
-                                   HorizontalTextAlignment="Center"
-                                   Opacity="0.8"/>
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <VerticalStackLayout Spacing="8">
                         <controls:AdvanceSectionActionRow x:Name="AbilitiesActionRow"
                                                           IconGlyph="{x:Static helpers:FontAwesomeGlyphs.Star}"
                                                           Heading="Abilities"
@@ -461,10 +443,9 @@
                                          Spacing="12">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate>
-                                <Frame Padding="12"
-                                       CornerRadius="12"
-                                       BorderColor="{StaticResource SurfaceBorderColor}"
-                                       HasShadow="False">
+                                <Border Style="{StaticResource CardBorderStyle}" Padding="12"
+                                       StrokeShape="RoundRectangle 12"
+                                       Stroke="{StaticResource SurfaceBorderColor}">
                                     <VerticalStackLayout Spacing="10">
                                         <Grid ColumnDefinitions="*,Auto"
                                               ColumnSpacing="8">
@@ -549,8 +530,8 @@
                                                                                       ShowSecondaryText="True"
                                                                                       RowBackgroundColor="{Binding RowBackgroundColor}"
                                                                                       ShowInfo="{Binding HasSpell}"
-                                                                                      ShowDelete="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.CanEdit}"
-                                                                                      DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.RemoveEntryCommand}"
+                                                                                      ShowDelete="{Binding Source={RelativeSource AncestorType={x:Type Border}}, Path=BindingContext.CanEdit}"
+                                                                                      DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type Border}}, Path=BindingContext.RemoveEntryCommand}"
                                                                                       ActionCommandParameter="{Binding .}"
                                                                                       InfoClicked="OnViewSpellDetailsClicked" />
                                                         </DataTemplate>
@@ -630,7 +611,7 @@
                                             </VerticalStackLayout>
                                         </controls:AnimatedExpandView>
                                     </VerticalStackLayout>
-                                </Frame>
+                                </Border>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </VerticalStackLayout>
@@ -665,10 +646,9 @@
                         <Label Text="Evil Stairway"
                                FontAttributes="Bold"
                                FontSize="18"/>
-                        <Frame Padding="12"
-                               CornerRadius="12"
-                               BorderColor="{StaticResource SurfaceBorderColor}"
-                               HasShadow="False"
+                        <Border Style="{StaticResource CardBorderStyle}" Padding="12"
+                               StrokeShape="RoundRectangle 12"
+                               Stroke="{StaticResource SurfaceBorderColor}"
                                BindingContext="{Binding EvilStairway}">
                             <VerticalStackLayout Spacing="10">
                                 <Label Text="{Binding ListSourceLabel}"
@@ -785,7 +765,7 @@
                                        FontSize="12"
                                        IsVisible="{Binding HasValidationError}"/>
                             </VerticalStackLayout>
-                        </Frame>
+                        </Border>
                     </VerticalStackLayout>
 
                     <VerticalStackLayout IsVisible="{Binding ShowPriestMiracleLists}"
@@ -794,10 +774,9 @@
                                              Spacing="14">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <Frame Padding="12"
-                                           CornerRadius="12"
-                                           BorderColor="{StaticResource SurfaceBorderColor}"
-                                           HasShadow="False">
+                                    <Border Style="{StaticResource CardBorderStyle}" Padding="12"
+                                           StrokeShape="RoundRectangle 12"
+                                           Stroke="{StaticResource SurfaceBorderColor}">
                                         <VerticalStackLayout Spacing="10">
                                             <Grid ColumnDefinitions="*,Auto,Auto"
                                                   ColumnSpacing="8">
@@ -916,8 +895,8 @@
                                                                                           ShowSecondaryText="True"
                                                                                           RowBackgroundColor="{Binding RowBackgroundColor}"
                                                                                           ShowInfo="{Binding HasMiracle}"
-                                                                                          ShowDelete="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.CanEdit}"
-                                                                                          DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.RemoveEntryCommand}"
+                                                                                          ShowDelete="{Binding Source={RelativeSource AncestorType={x:Type Border}}, Path=BindingContext.CanEdit}"
+                                                                                          DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type Border}}, Path=BindingContext.RemoveEntryCommand}"
                                                                                           ActionCommandParameter="{Binding .}"
                                                                                           InfoClicked="OnViewMiracleDetailsClicked" />
                                                             </DataTemplate>
@@ -1085,7 +1064,7 @@
                                                 </VerticalStackLayout>
                                             </controls:AnimatedExpandView>
                                         </VerticalStackLayout>
-                                    </Frame>
+                                    </Border>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </VerticalStackLayout>
@@ -1111,10 +1090,9 @@
                                          Spacing="12">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate>
-                                <Frame Padding="12"
-                                       CornerRadius="12"
-                                       BorderColor="{StaticResource SurfaceBorderColor}"
-                                       HasShadow="False">
+                                <Border Style="{StaticResource CardBorderStyle}" Padding="12"
+                                       StrokeShape="RoundRectangle 12"
+                                       Stroke="{StaticResource SurfaceBorderColor}">
                                     <VerticalStackLayout Spacing="10">
                                         <Grid ColumnDefinitions="*,Auto"
                                               ColumnSpacing="8">
@@ -1198,7 +1176,7 @@
                                                                                       RowBackgroundColor="{Binding RowBackgroundColor}"
                                                                                       ShowInfo="{Binding HasEvocation}"
                                                                                       ShowDelete="True"
-                                                                                      DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.RemoveEntryCommand}"
+                                                                                      DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type Border}}, Path=BindingContext.RemoveEntryCommand}"
                                                                                       ActionCommandParameter="{Binding .}"
                                                                                       InfoClicked="OnViewEvocationDetailsClicked" />
                                                         </DataTemplate>
@@ -1280,7 +1258,7 @@
                                             </VerticalStackLayout>
                                         </controls:AnimatedExpandView>
                                     </VerticalStackLayout>
-                                </Frame>
+                                </Border>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </VerticalStackLayout>

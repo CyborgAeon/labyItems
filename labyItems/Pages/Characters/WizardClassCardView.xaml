@@ -8,22 +8,25 @@
 
     <Grid
         Margin="0,0,0,5">
-        <Frame
+        <Border
             x:Name="CardFrame"
             BackgroundColor="{Binding CardBackgroundColor}"
-            Style="{StaticResource SelectableCardFrameStyle}">
-            <Frame.Triggers>
-                <DataTrigger TargetType="Frame"
+            Style="{StaticResource SelectableCardBorderStyle}">
+            <Border.Triggers>
+                <DataTrigger TargetType="Border"
                              Binding="{Binding IsSelected}"
                              Value="True">
-                    <Setter Property="HasShadow"
-                            Value="True"/>
-                    <Setter Property="BorderColor"
+                    <Setter Property="Shadow">
+                        <Setter.Value>
+                            <Shadow Brush="{StaticResource ShadowColor}" Offset="0,4" Radius="8" Opacity="0.5"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Stroke"
                             Value="{StaticResource AccentMaroonColor}"/>
                     <Setter Property="BackgroundColor"
                             Value="{StaticResource SelectedSurfaceBackgroundColor}"/>
                 </DataTrigger>
-            </Frame.Triggers>
+            </Border.Triggers>
             <Grid RowDefinitions="Auto,Auto">
 
                 <Grid Padding="16"
@@ -91,6 +94,6 @@
                 </Grid>
 
             </Grid>
-        </Frame>
+        </Border>
     </Grid>
 </ContentView>

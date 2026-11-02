@@ -13,9 +13,9 @@
     <Grid><Label Text="{Binding Icon, Source={x:Reference Root}}" FontSize="25" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding ShowIcon, Source={x:Reference Root}}"/><Image Source="{Binding Logo, Source={x:Reference Root}}" Aspect="AspectFit" WidthRequest="48" HeightRequest="48" IsVisible="{Binding ShowLogo, Source={x:Reference Root}}"/></Grid>
    </Border>
   </Grid>
-  <Frame Padding="8,4" CornerRadius="10" HasShadow="False" HorizontalOptions="Start" BackgroundColor="#FFF3D6" BorderColor="#E8C878" IsVisible="{Binding Has30KGift, Source={x:Reference Root}}">
+  <Border Style="{StaticResource CardBorderStyle}" Padding="8,4" StrokeShape="RoundRectangle 10" HorizontalOptions="Start" BackgroundColor="#FFF3D6" Stroke="#E8C878" IsVisible="{Binding Has30KGift, Source={x:Reference Root}}">
    <HorizontalStackLayout Spacing="5"><Label Text="{x:Static helpers:FontAwesomeGlyphs.Star}" FontFamily="FASolid" FontSize="11"/><Label Text="Has 30K Gift" FontSize="12" FontAttributes="Bold"/></HorizontalStackLayout>
-  </Frame>
+  </Border>
   <Border Stroke="{StaticResource SurfaceBorderColor}" StrokeShape="RoundRectangle 10" Padding="14,10">
    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnAvailabilityTapped"/></Border.GestureRecognizers>
    <VerticalStackLayout Spacing="8">

@@ -11,6 +11,10 @@ public partial class ListItemRowView : ContentView
     public static readonly BindableProperty ShowSecondaryTextProperty = Create(nameof(ShowSecondaryText), false);
     public static readonly BindableProperty TertiaryTextProperty = Create(nameof(TertiaryText), string.Empty);
     public static readonly BindableProperty ShowTertiaryTextProperty = Create(nameof(ShowTertiaryText), false);
+    public static readonly BindableProperty FirstActionAccessibilityTextProperty = Create(nameof(FirstActionAccessibilityText), "Action");
+    public static readonly BindableProperty SecondActionAccessibilityTextProperty = Create(nameof(SecondActionAccessibilityText), "Action");
+    public string FirstActionAccessibilityText { get => (string)GetValue(FirstActionAccessibilityTextProperty); set => SetValue(FirstActionAccessibilityTextProperty, value); }
+    public string SecondActionAccessibilityText { get => (string)GetValue(SecondActionAccessibilityTextProperty); set => SetValue(SecondActionAccessibilityTextProperty, value); }
     public static readonly BindableProperty ShowFirstActionProperty = Create(nameof(ShowFirstAction), false);
     public static readonly BindableProperty FirstActionGlyphProperty = Create(nameof(FirstActionGlyph), string.Empty);
     public static readonly BindableProperty FirstActionCommandProperty = Create<ICommand?>(nameof(FirstActionCommand), null);

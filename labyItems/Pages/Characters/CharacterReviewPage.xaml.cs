@@ -106,6 +106,12 @@ public partial class CharacterReviewPage : ContentPage
         Title = string.IsNullOrWhiteSpace(_draft.Name) ? "Character" : _draft.Name;
         BindingContext = this;
         DetailsSectionView.BindingContext = _vm;
+        DetailsSectionView.ConfigureVitae(_advanceVm);
+        _advanceVm.PropertyChanged += (_, args) =>
+        {
+            if (args.PropertyName == nameof(AdvanceCharacterVm.CurrentVitae))
+                LiteDbService.UpsertDraft(_draft);
+        };
     }
 
     protected override async void OnAppearing()
@@ -736,7 +742,7 @@ public partial class CharacterReviewPage : ContentPage
         }
 
         ItemReviewEntries.Clear();
-        foreach (var item in _character.ItemTemplates ?? new List<Item>())
+        foreach (var item in LiteDbService.GetItemsAssignedToCharacter(_draft.CharacterRecordId, _draft.Name, _draft.PlayerName))
         {
             ItemReviewEntries.Add(new ReviewEntryVm(
                 ReviewEntryKind.Item,
@@ -874,6 +880,8 @@ public partial class CharacterReviewPage : ContentPage
 
     private void OnSpendRowLongPressed(object? sender, CharacterSpendRowVm row)
     {
+        if (!row.IsSelected)
+            ClearSpendSelection();
         row.IsSelected = true;
         OnPropertyChanged(nameof(HasSelectedSpendRows));
     }
@@ -886,25 +894,16 @@ public partial class CharacterReviewPage : ContentPage
         OnPropertyChanged(nameof(HasSelectedSpendRows));
     }
 
-    private void OnSpendRowMoveRequested(object? sender, int direction)
+    private void OnSpendRowDropped(object? sender, CharacterSpendRowVm source)
     {
-        if (_selectedSpend == null || sender is not SpendOrderRowView { Row: { } row })
+        if (sender is not SpendOrderRowView { Row: { } target } || target.Id == source.Id)
             return;
-
-        if (!row.IsSelected)
+        if (!source.IsSelected)
         {
             ClearSpendSelection();
-            row.IsSelected = true;
+            source.IsSelected = true;
         }
-        var ids = SelectedSpendRowIds();
-        if (ids.Count == 0)
-            return;
-
-        var selectedRows = SpendRows.Where(candidate => candidate.IsSelected).ToList();
-        var targetPosition = direction < 0
-            ? selectedRows.Min(candidate => candidate.Position) - 1
-            : selectedRows.Max(candidate => candidate.Position) + 1;
-        MoveSpendRowsSafely(ids, targetPosition);
+        MoveSpendRowsSafely(SelectedSpendRowIds(), target.Position);
     }
 
     private async void OnSpendRowOptionsClicked(object? sender, CharacterSpendRowVm row)
@@ -1033,20 +1032,63 @@ public partial class CharacterReviewPage : ContentPage
             case ReviewEntryKind.Item when entry.Item != null:
                 await Navigation.PushAsync(new ItemDetailCardPage(entry.Item));
                 break;
+            case ReviewEntryKind.Item:
+                await DisplayAlert(entry.PrimaryText, "This older entry only records an item name.", "OK");
+                break;
             case ReviewEntryKind.Neuronic:
                 await DisplayAlert(entry.PrimaryText, entry.SecondaryText.Length == 0 ? "No further details available." : entry.SecondaryText, "OK");
                 break;
         }
     }
 
+    public System.Windows.Input.ICommand EditItemCommand => new Command<ReviewEntryVm>(async entry =>
+    {
+        if (entry == null)
+            return;
+        if (entry.Item == null)
+        {
+            await DisplayAlert("Item settings unavailable", "This older entry only records an item name. Add the item again to record its settings.", "OK");
+            return;
+        }
+        var editor = CreateItemEditor();
+        if (ItemDisplayHelper.IsMonsterPointItem(entry.Item))
+            await editor.OpenMonsterPointCalculatorAsync(entry.Item);
+        else
+            await editor.OpenIspItemCalculatorAsync(entry.Item);
+    });
+
+    public System.Windows.Input.ICommand PhotographItemCommand => new Command<ReviewEntryVm>(async _ =>
+        await DisplayAlert("Photograph item", "Item photographs are coming soon.", "OK"));
+
+    private CharacterItemEditor CreateItemEditor() => new(this, _advanceVm, () =>
+    {
+        LiteDbService.UpsertDraft(_draft);
+        BuildReviewGroups();
+    });
+
+    private void OnDeleteReviewItemClicked(object sender, EventArgs e)
+    {
+        if (sender is not ListItemRowView { ActionCommandParameter: ReviewEntryVm entry })
+            return;
+        if (entry.Item != null)
+        {
+            _advanceVm.RemoveItemCommand.Execute(new CharacterItemEntryVm(entry.Item));
+            _advanceVm.RefreshItems();
+        }
+        else
+            _draft.AdvancementItems.Remove(entry.PrimaryText);
+        LiteDbService.UpsertDraft(_draft);
+        BuildReviewGroups();
+    }
+
     private async void OnAddMpItemClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new MpCalculator());
+        await CreateItemEditor().OpenMonsterPointCalculatorAsync();
     }
 
     private async void OnAddIspItemClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new IspCalculator(0));
+        await CreateItemEditor().OpenIspItemCalculatorAsync();
     }
 
     private async void OnEditPortraitTapped(object sender, TappedEventArgs e)

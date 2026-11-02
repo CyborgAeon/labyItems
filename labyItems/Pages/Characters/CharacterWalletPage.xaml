@@ -47,15 +47,14 @@
                         ItemsSource="{Binding CharacterRows}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame Margin="0,0,0,12"
+                    <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,12"
                            Padding="0"
-                           CornerRadius="8"
-                           HasShadow="False"
-                           BorderColor="{StaticResource SurfaceBorderColor}"
+                           StrokeShape="RoundRectangle 8"
+                           Stroke="{StaticResource SurfaceBorderColor}"
                            BindingContextChanged="OnWalletCardBindingContextChanged">
-                        <Frame.GestureRecognizers>
+                        <Border.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnWalletCardTapped" />
-                        </Frame.GestureRecognizers>
+                        </Border.GestureRecognizers>
 
                         <Grid RowDefinitions="Auto,Auto"
                               RowSpacing="0">
@@ -143,7 +142,7 @@
                                 </BindableLayout.ItemTemplate>
                             </VerticalStackLayout>
                         </Grid>
-                    </Frame>
+                    </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

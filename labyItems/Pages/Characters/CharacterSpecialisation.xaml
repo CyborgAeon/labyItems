@@ -444,10 +444,9 @@
                                            Message="Loading specialisations..."
                                            Margin="0,18,0,0"/>
 
-                <Frame Padding="12"
-                       CornerRadius="12"
-                       HasShadow="False"
-                       BorderColor="{StaticResource CardBorderNeutralLight}"
+                <Border Style="{StaticResource CardBorderStyle}" Padding="12"
+                       StrokeShape="RoundRectangle 12"
+                       Stroke="{StaticResource CardBorderNeutralLight}"
                        IsVisible="{Binding HasNoChoices}">
                     <VerticalStackLayout Spacing="6">
                         <Label Text="No specialisation choices required."
@@ -455,7 +454,7 @@
                         <Label Text="If your race or class grants specialisations, they will appear here."
                                Opacity="0.75"/>
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
                 <specialisationControls:CascadingSpecialisationView
                     ItemsSource="{Binding Sections}"

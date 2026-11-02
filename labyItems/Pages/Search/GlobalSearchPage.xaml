@@ -17,7 +17,7 @@
               ColumnDefinitions="Auto,*"
               ColumnSpacing="8">
             <controls:BurgerMenuButton Grid.Column="0"
-                                       IsVisible="{Binding ShowKindChips}"
+                                       IsVisible="{Binding ShowNavigationMenu}"
                                        Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
             <controls:SearchFilterBar Grid.Column="1"
                                       Placeholder="{Binding SearchPlaceholder}"

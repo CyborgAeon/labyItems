@@ -18,19 +18,19 @@
         <Grid Grid.Row="1" Padding="16,4,16,8">
             <Label Text="No characters saved yet." IsVisible="{Binding IsEmpty}"
                    TextColor="{StaticResource MutedTextColor}" VerticalOptions="Center" HorizontalOptions="Center" />
-            <CollectionView ItemsSource="{Binding Rows}" SelectedItem="{Binding SelectedRow, Mode=TwoWay}"
-                            SelectionMode="Single" SelectionChanged="OnSelectionChanged"
+            <CollectionView ItemsSource="{Binding Rows}"
+                            SelectionMode="None"
                             SemanticProperties.Description="Saved characters">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame Margin="0,0,0,12" Padding="12" MinimumHeightRequest="76"
+                        <Border Margin="0,0,0,12" Padding="12" MinimumHeightRequest="76"
                                 BackgroundColor="{Binding SelectionBackground}"
-                                BorderColor="{Binding SelectionStroke}"
-                                CornerRadius="14" HasShadow="{Binding IsSelected}"
+                                Stroke="{Binding SelectionStroke}" StrokeThickness="{Binding SelectionStrokeThickness}"
+                                StrokeShape="RoundRectangle 14"
                                 SemanticProperties.Description="{Binding AccessibilityDescription}">
-                            <Frame.GestureRecognizers>
+                            <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnRowTapped" />
-                            </Frame.GestureRecognizers>
+                            </Border.GestureRecognizers>
                             <Grid ColumnDefinitions="52,*,Auto" ColumnSpacing="12">
                                 <controls:ClassBracketIconView IconSize="52"
                                                                HasSplitIcon="{Binding HasSplitIcon}"
@@ -57,7 +57,7 @@
                                        TextColor="{StaticResource AccentMaroonColor}" IsVisible="{Binding IsSelected}"
                                        VerticalTextAlignment="Center" />
                             </Grid>
-                        </Frame>
+                        </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

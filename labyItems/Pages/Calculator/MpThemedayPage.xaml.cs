@@ -1,3 +1,4 @@
+using labyItems.Models.Items;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,6 @@ using labyItems.Services;
 using Microsoft.Maui.ApplicationModel;
 
 namespace labyItems.Pages.Calculator;
-
-public readonly record struct LocationOption(string Name);
 
 public partial class MpThemedayPage : MpCalculatorPageBase
 {
@@ -673,6 +672,60 @@ public partial class MpThemedayPage : MpCalculatorPageBase
     private static string FormatEnum<T>(T value) where T : struct, Enum => EnumDisplayFormatter.Format(value);
 
     private sealed record CpBenefitOption(string Label, bool RequiresLocation);
+
+    protected override MpEditorState CaptureEditorState()
+    {
+        var state = base.CaptureEditorState();
+        state.SelectedWeaponKind = SelectedWeaponKind;
+        state.SelectedWeaponType = SelectedWeaponType;
+        state.SelectedWeaponColour = SelectedWeaponColour;
+        state.SelectedWeaponAlignment = SelectedWeaponAlignment;
+        state.WeaponApprenticeStatus = WeaponApprenticeStatus;
+        state.SelectedShieldType = SelectedShieldType;
+        state.SelectedShieldColour = SelectedShieldColour;
+        state.SelectedShieldAlignment = SelectedShieldAlignment;
+        state.SelectedBagType = SelectedBagType;
+        state.Mac2Checked = Mac2Checked;
+        state.Sac2Checked = Sac2Checked;
+        state.SpiritPowerStorePoints = SpiritPowerStorePoints;
+        state.SelectedSpiritSphere = SelectedSpiritSphere;
+        state.MagicPowerStorePoints = MagicPowerStorePoints;
+        state.SelectedMagicStoreColour = SelectedMagicStoreColour;
+        state.EarthpowerStorePoints = EarthpowerStorePoints;
+        state.SelectedEarthpowerField = SelectedEarthpowerField;
+        state.ShieldApprenticeStatus = ShieldApprenticeStatus;
+        state.SelectedCpOption = SelectedCpOption;
+        state.SelectedCpLocation = SelectedCpLocation;
+        state.CpLocationText = CpLocationText;
+        return state;
+    }
+
+    public override void RestoreEditorState(MpEditorState state)
+    {
+        base.RestoreEditorState(state);
+        SelectedWeaponKind = state.SelectedWeaponKind;
+        SelectedWeaponType = state.SelectedWeaponType;
+        SelectedWeaponColour = state.SelectedWeaponColour;
+        SelectedWeaponAlignment = state.SelectedWeaponAlignment;
+        WeaponApprenticeStatus = state.WeaponApprenticeStatus;
+        SelectedShieldType = state.SelectedShieldType;
+        SelectedShieldColour = state.SelectedShieldColour;
+        SelectedShieldAlignment = state.SelectedShieldAlignment;
+        SelectedBagType = state.SelectedBagType;
+        Mac2Checked = state.Mac2Checked;
+        Sac2Checked = state.Sac2Checked;
+        SpiritPowerStorePoints = state.SpiritPowerStorePoints;
+        SelectedSpiritSphere = state.SelectedSpiritSphere;
+        MagicPowerStorePoints = state.MagicPowerStorePoints;
+        SelectedMagicStoreColour = state.SelectedMagicStoreColour;
+        EarthpowerStorePoints = state.EarthpowerStorePoints;
+        SelectedEarthpowerField = state.SelectedEarthpowerField;
+        ShieldApprenticeStatus = state.ShieldApprenticeStatus;
+        SelectedCpOption = state.SelectedCpOption;
+        SelectedCpLocation = state.SelectedCpLocation;
+        CpLocationText = state.CpLocationText;
+        Recalculate();
+    }
 
     protected override DictionarySearchBar<SpellOption> SpellSearchControl => SpellSearch;
     protected override DictionarySearchBar<MiracleOption> MiracleSearchControl => MiracleSearch;
