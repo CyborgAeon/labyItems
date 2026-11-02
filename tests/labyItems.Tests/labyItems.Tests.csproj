@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <Compile Include="../../labyItems/Models/WorldMap/*.cs" Link="Source/WorldMap/%(Filename)%(Extension)" />
+    <Compile Include="../../labyItems/Helpers/WorldStatisticsSummaryFormatter.cs" Link="Source/WorldStatisticsSummaryFormatter.cs" />
     <Compile Include="../../labyItems/Services/IWorldRegionRepository.cs" Link="Source/IWorldRegionRepository.cs" />
     <Compile Include="../../labyItems/Services/WorldRegionRepository.cs" Link="Source/WorldRegionRepository.cs" />
     <Compile Include="../../labyItems/Services/ReferenceDatabaseReadiness.cs" Link="Source/ReferenceDatabaseReadiness.cs" />

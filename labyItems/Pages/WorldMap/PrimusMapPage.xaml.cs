@@ -16,7 +16,7 @@ public partial class PrimusMapPage : ContentPage
     {
         InitializeComponent();
         this.repository = repository;
-        Map.RegionSelected += OnRegionSelected;
+        Map.RegionDetailsRequested += OnRegionDetailsRequested;
     }
 
     protected override async void OnAppearing()
@@ -42,7 +42,9 @@ public partial class PrimusMapPage : ContentPage
         }
     }
 
-    private async void OnRegionSelected(object? sender, string id)
+    private async void OnBackClicked(object? sender, EventArgs e) => await Navigation.PopAsync();
+
+    private async void OnRegionDetailsRequested(object? sender, string id)
     {
         var region = regions.FirstOrDefault(r => r.Id == id);
         if (region != null) await ShowRegionAsync(region);
@@ -61,8 +63,7 @@ public partial class PrimusMapPage : ContentPage
         showingRegion = true;
         try
         {
-            var statistics = region.StatisticsId is null ? [] : repository.GetStatistics(region.StatisticsId, period);
-            var modal = new NavigationPage(new RegionDetailsPage(region, period, statistics, modal: true, repository: repository));
+            var modal = new NavigationPage(new RegionDetailsPage(region, period, repository));
             await Navigation.PushModalAsync(modal);
         }
         catch (Exception ex)

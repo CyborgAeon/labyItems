@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="100%" height="100%">
+  <style>
+    .cave-region {
+      fill: rgba(212, 175, 55, 0.2);
+      stroke: #d4af37;
+      stroke-width: 2.5;
+      stroke-linejoin: round;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .cave-region:hover {
+      fill: rgba(255, 218, 102, 0.45);
+      stroke: #ffffff;
+      stroke-width: 3.5;
+      filter: drop-shadow(0 0 6px #ffda66);
+    }
+    .room-label {
+      font-family: 'Cinzel', 'Georgia', serif;
+      font-size: 13px;
+      font-weight: bold;
+      fill: #ffffff;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      pointer-events: none;
+      text-shadow: 0px 0px 4px #000, 0px 0px 8px #000;
+    }
+  </style>
+
+  <!-- Area A Polygons & Labels -->
+  <g id="area-a-overlay">
+    <!-- Chamber A1 -->
+    <polygon id="area-a1" class="cave-region" points="650,710 750,700 760,750 660,760" />
+    <text x="705" y="730" class="room-label">A1</text>
+
+    <!-- Chamber A2 -->
+    <polygon id="area-a2" class="cave-region" points="520,670 620,660 630,720 520,730" />
+    <text x="572" y="695" class="room-label">A2</text>
+
+    <!-- Chamber A3: The AP Room -->
+    <polygon id="area-a3" class="cave-region" points="580,600 660,590 660,650 580,650" />
+    <text x="620" y="622" class="room-label">A3</text>
+
+    <!-- Chamber A4 -->
+    <polygon id="area-a4" class="cave-region" points="670,540 760,530 780,630 670,640" />
+    <text x="720" y="585" class="room-label">A4</text>
+
+    <!-- Chamber A5 -->
+    <polygon id="area-a5" class="cave-region" points="800,560 880,560 880,630 800,630" />
+    <text x="840" y="595" class="room-label">A5</text>
+
+    <!-- Chamber A6 -->
+    <polygon id="area-a6" class="cave-region" points="890,550 940,550 940,620 890,620" />
+    <text x="915" y="585" class="room-label">A6</text>
+
+    <!-- Chamber A7: Death Alley -->
+    <polygon id="area-a7" class="cave-region" points="910,410 1000,410 1000,510 910,510" />
+    <text x="955" y="460" class="room-label">A7</text>
+
+    <!-- Chamber A8 -->
+    <polygon id="area-a8" class="cave-region" points="990,300 1070,300 1070,390 990,390" />
+    <text x="1030" y="345" class="room-label">A8</text>
+
+    <!-- Chamber A9 -->
+    <polygon id="area-a9" class="cave-region" points="1000,160 1080,160 1080,280 1000,280" />
+    <text x="1040" y="220" class="room-label">A9</text>
+
+    <!-- Chamber A10 -->
+    <polygon id="area-a10" class="cave-region" points="970,200 1000,200 1000,260 970,260" />
+    <text x="985" y="230" class="room-label">A10</text>
+
+    <!-- Chamber A11 -->
+    <polygon id="area-a11" class="cave-region" points="980,50 1040,50 1040,110 980,110" />
+    <text x="1010" y="80" class="room-label">A11</text>
+
+    <!-- Chamber A12 -->
+    <polygon id="area-a12" class="cave-region" points="1040,40 1140,40 1140,90 1040,90" />
+    <text x="1090" y="65" class="room-label">A12</text>
+
+    <!-- Chamber A13: The Wet Room -->
+    <polygon id="area-a13" class="cave-region" points="1150,80 1250,80 1250,160 1150,160" />
+    <text x="1200" y="120" class="room-label">A13</text>
+
+    <!-- Chamber A14 -->
+    <polygon id="area-a14" class="cave-region" points="1190,170 1260,170 1260,260 1190,260" />
+    <text x="1225" y="215" class="room-label">A14</text>
+
+    <!-- Chamber A15: The Hole In The Wall -->
+    <polygon id="area-a15" class="cave-region" points="1110,260 1230,260 1230,330 1110,330" />
+    <text x="1170" y="295" class="room-label">A15</text>
+
+    <!-- Chamber A16 -->
+    <polygon id="area-a16" class="cave-region" points="1090,390 1180,390 1180,460 1090,460" />
+    <text x="1135" y="425" class="room-label">A16</text>
+
+    <!-- Chamber A17 -->
+    <polygon id="area-a17" class="cave-region" points="1190,390 1290,390 1290,460 1190,460" />
+    <text x="1240" y="425" class="room-label">A17</text>
+
+    <!-- Chamber A18 -->
+    <polygon id="area-a18" class="cave-region" points="1300,390 1400,390 1400,460 1300,460" />
+    <text x="1350" y="425" class="room-label">A18</text>
+
+    <!-- Chamber A19: The Double Doors -->
+    <polygon id="area-a19" class="cave-region" points="1400,390 1490,420 1460,500 1390,460" />
+    <text x="1435" y="442" class="room-label">A19</text>
+
+    <!-- Chamber A20: Die Again Alley -->
+    <polygon id="area-a20" class="cave-region" points="960,490 1040,490 1040,540 960,540" />
+    <text x="1000" y="515" class="room-label">A20</text>
+  </g>
+</svg>

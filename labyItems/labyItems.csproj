@@ -69,6 +69,10 @@
         <MauiImage Remove="Resources/Images/primus.svg;Resources/Images/primus-overlay.svg;Resources/Images/primus-base.png" />
         <MauiAsset Include="Resources/Images/primus-overlay.svg" LogicalName="primus-overlay.svg" />
         <MauiAsset Include="Resources/Images/primus-base.png" LogicalName="primus-map.png" Condition="Exists('Resources/Images/primus-base.png')" />
+        <MauiImage Update="Resources/Images/area-a.svg" Link="Resources/Images/area_a.svg" />
+        <MauiImage Update="Resources/Images/area-b.svg" Link="Resources/Images/area_b.svg" />
+        <MauiImage Update="Resources/Images/area-c.svg" Link="Resources/Images/area_c.svg" />
+        <MauiImage Update="Resources/Images/area-d.svg" Link="Resources/Images/area_d.svg" />
         <MauiImage Include="Resources\Splash\logo.svg" Link="Resources\Images\login_watermark.svg" TintColor="#AAAAAA" BaseSize="180,180" />
 		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
 		<MauiFont Include="Resources\Fonts\*" />

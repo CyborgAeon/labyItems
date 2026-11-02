@@ -9,10 +9,14 @@
 
     <ContentView.Resources>
         <Style TargetType="Button">
-            <Setter Property="BackgroundColor" Value="Transparent" />
-            <Setter Property="TextColor" Value="{StaticResource Gray950}" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="BackgroundColor"
+                    Value="Transparent"/>
+            <Setter Property="TextColor"
+                    Value="{StaticResource Gray950}"/>
+            <Setter Property="Padding"
+                    Value="0"/>
+            <Setter Property="CornerRadius"
+                    Value="0"/>
         </Style>
     </ContentView.Resources>
 
@@ -25,10 +29,9 @@
                 BackgroundColor="{StaticResource White}"
                 Padding="18,22"
                 Stroke="{StaticResource SurfaceBorderColor}"
-                StrokeThickness="1"
-                >
+                StrokeThickness="1">
             <Border.StrokeShape>
-                <RoundRectangle CornerRadius="0,28,28,0" />
+                <RoundRectangle CornerRadius="0,28,28,0"/>
             </Border.StrokeShape>
             <ScrollView>
                 <VerticalStackLayout Spacing="14">
@@ -38,7 +41,7 @@
                                HorizontalOptions="Center"
                                HorizontalTextAlignment="Center"
                                Text="Navigate"
-                               VerticalTextAlignment="Center" />
+                               VerticalTextAlignment="Center"/>
                         <Button Grid.Column="1"
                                 Clicked="OnCloseMenuClicked"
                                 FontSize="24"
@@ -54,7 +57,7 @@
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 18">
                         <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnHomeTapped" />
+                            <TapGestureRecognizer Tapped="OnHomeTapped"/>
                         </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="28,*,24"
                               ColumnSpacing="8">
@@ -62,15 +65,15 @@
                                    FontSize="18"
                                    Text="{x:Static helpers:FontAwesomeGlyphs.Home}"
                                    HorizontalTextAlignment="Center"
-                                   VerticalTextAlignment="Center" />
+                                   VerticalTextAlignment="Center"/>
                             <Label Grid.Column="1"
                                    HorizontalOptions="Fill"
                                    HorizontalTextAlignment="Start"
                                    Text="Home"
-                                   VerticalTextAlignment="Center" />
+                                   VerticalTextAlignment="Center"/>
                             <Label Grid.Column="2"
                                    Opacity="0"
-                                   Text="v" />
+                                   Text="v"/>
                         </Grid>
                     </Border>
 
@@ -79,7 +82,7 @@
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 18">
                         <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnMakeCharacterTapped" />
+                            <TapGestureRecognizer Tapped="OnMakeCharacterTapped"/>
                         </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="28,*,24"
                               ColumnSpacing="8">
@@ -87,15 +90,15 @@
                                    FontSize="18"
                                    Text="{x:Static helpers:FontAwesomeGlyphs.User}"
                                    HorizontalTextAlignment="Center"
-                                   VerticalTextAlignment="Center" />
+                                   VerticalTextAlignment="Center"/>
                             <Label Grid.Column="1"
                                    HorizontalOptions="Fill"
                                    HorizontalTextAlignment="Start"
                                    Text="Characters"
-                                   VerticalTextAlignment="Center" />
+                                   VerticalTextAlignment="Center"/>
                             <Label Grid.Column="2"
                                    Opacity="0"
-                                   Text="v" />
+                                   Text="v"/>
                         </Grid>
                     </Border>
 
@@ -110,14 +113,14 @@
                                        FontSize="18"
                                        Text="{x:Static helpers:FontAwesomeGlyphs.Items}"
                                        HorizontalTextAlignment="Center"
-                                       VerticalTextAlignment="Center" />
+                                       VerticalTextAlignment="Center"/>
                                 <Label Grid.Column="1"
                                        HorizontalOptions="Fill"
                                        HorizontalTextAlignment="Start"
                                        Text="Items"
                                        VerticalTextAlignment="Center">
                                     <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnItemsGroupTapped" />
+                                        <TapGestureRecognizer Tapped="OnItemsGroupTapped"/>
                                     </Label.GestureRecognizers>
                                 </Label>
                                 <controls:ChevronIconView Grid.Column="2"
@@ -128,7 +131,7 @@
                                                           HorizontalOptions="End"
                                                           VerticalOptions="Center">
                                     <controls:ChevronIconView.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnItemsGroupTapped" />
+                                        <TapGestureRecognizer Tapped="OnItemsGroupTapped"/>
                                     </controls:ChevronIconView.GestureRecognizers>
                                 </controls:ChevronIconView>
                             </Grid>
@@ -141,7 +144,7 @@
                                             StrokeThickness="0"
                                             StrokeShape="RoundRectangle 14">
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnCalculateIspTapped" />
+                                            <TapGestureRecognizer Tapped="OnCalculateIspTapped"/>
                                         </Border.GestureRecognizers>
                                         <Grid ColumnDefinitions="28,*"
                                               ColumnSpacing="8">
@@ -149,12 +152,12 @@
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
                                                    Text="{x:Static helpers:FontAwesomeGlyphs.Calculator}"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
                                                    HorizontalTextAlignment="Start"
                                                    Text="Calculate ISP"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                         </Grid>
                                     </Border>
                                     <Border x:Name="CreateMpRow"
@@ -162,7 +165,7 @@
                                             StrokeThickness="0"
                                             StrokeShape="RoundRectangle 14">
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnCreateMpTapped" />
+                                            <TapGestureRecognizer Tapped="OnCreateMpTapped"/>
                                         </Border.GestureRecognizers>
                                         <Grid ColumnDefinitions="28,*"
                                               ColumnSpacing="8">
@@ -170,12 +173,12 @@
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
                                                    Text="{x:Static helpers:FontAwesomeGlyphs.MonsterPointItem}"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
                                                    HorizontalTextAlignment="Start"
                                                    Text="Create MP Item"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                         </Grid>
                                     </Border>
                                     <Border x:Name="ScrollBuilderRow"
@@ -183,7 +186,7 @@
                                             StrokeThickness="0"
                                             StrokeShape="RoundRectangle 14">
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnScrollBuilderTapped" />
+                                            <TapGestureRecognizer Tapped="OnScrollBuilderTapped"/>
                                         </Border.GestureRecognizers>
                                         <Grid ColumnDefinitions="28,*"
                                               ColumnSpacing="8">
@@ -191,12 +194,12 @@
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
                                                    Text="{x:Static helpers:FontAwesomeGlyphs.Scroll}"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
                                                    HorizontalTextAlignment="Start"
                                                    Text="scroll builder"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                         </Grid>
                                     </Border>
                                     <Border x:Name="CraftingRow"
@@ -204,7 +207,7 @@
                                             StrokeThickness="0"
                                             StrokeShape="RoundRectangle 14">
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnCraftingTapped" />
+                                            <TapGestureRecognizer Tapped="OnCraftingTapped"/>
                                         </Border.GestureRecognizers>
                                         <Grid ColumnDefinitions="28,*"
                                               ColumnSpacing="8">
@@ -212,12 +215,12 @@
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
                                                    Text="{x:Static helpers:FontAwesomeGlyphs.Crafting}"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
                                                    HorizontalTextAlignment="Start"
                                                    Text="Crafting"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                         </Grid>
                                     </Border>
                                     <Border x:Name="ItemWalletRow"
@@ -225,7 +228,7 @@
                                             StrokeThickness="0"
                                             StrokeShape="RoundRectangle 14">
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnItemWalletTapped" />
+                                            <TapGestureRecognizer Tapped="OnItemWalletTapped"/>
                                         </Border.GestureRecognizers>
                                         <Grid ColumnDefinitions="28,*"
                                               ColumnSpacing="8">
@@ -233,12 +236,12 @@
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
                                                    Text="{x:Static helpers:FontAwesomeGlyphs.Wallet}"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
                                                    HorizontalTextAlignment="Start"
                                                    Text="Item Wallet"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                         </Grid>
                                     </Border>
                                 </VerticalStackLayout>
@@ -251,7 +254,7 @@
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 18">
                         <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnOpenNonStandardDashboardTapped" />
+                            <TapGestureRecognizer Tapped="OnOpenNonStandardDashboardTapped"/>
                         </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="28,*,24"
                               ColumnSpacing="8">
@@ -259,15 +262,15 @@
                                    FontSize="18"
                                    Text="{x:Static helpers:FontAwesomeGlyphs.Palette}"
                                    HorizontalTextAlignment="Center"
-                                   VerticalTextAlignment="Center" />
+                                   VerticalTextAlignment="Center"/>
                             <Label Grid.Column="1"
                                    HorizontalOptions="Fill"
                                    HorizontalTextAlignment="Start"
                                    Text="Creations"
-                                   VerticalTextAlignment="Center" />
+                                   VerticalTextAlignment="Center"/>
                             <Label Grid.Column="2"
                                    Opacity="0"
-                                   Text="v" />
+                                   Text="v"/>
                         </Grid>
                     </Border>
                     <Border x:Name="SearchRow"
@@ -281,14 +284,14 @@
                                        FontSize="18"
                                        Text="{x:Static helpers:FontAwesomeGlyphs.Search}"
                                        HorizontalTextAlignment="Center"
-                                       VerticalTextAlignment="Center" />
+                                       VerticalTextAlignment="Center"/>
                                 <Label Grid.Column="1"
                                        HorizontalOptions="Fill"
                                        HorizontalTextAlignment="Start"
                                        Text="Search"
                                        VerticalTextAlignment="Center">
                                     <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnSearchGroupTapped" />
+                                        <TapGestureRecognizer Tapped="OnSearchGroupTapped"/>
                                     </Label.GestureRecognizers>
                                 </Label>
                                 <controls:ChevronIconView Grid.Column="2"
@@ -299,7 +302,7 @@
                                                           HorizontalOptions="End"
                                                           VerticalOptions="Center">
                                     <controls:ChevronIconView.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnSearchGroupTapped" />
+                                        <TapGestureRecognizer Tapped="OnSearchGroupTapped"/>
                                     </controls:ChevronIconView.GestureRecognizers>
                                 </controls:ChevronIconView>
                             </Grid>
@@ -312,7 +315,7 @@
                                             StrokeThickness="0"
                                             StrokeShape="RoundRectangle 14">
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnGlobalSearchTapped" />
+                                            <TapGestureRecognizer Tapped="OnGlobalSearchTapped"/>
                                         </Border.GestureRecognizers>
                                         <Grid ColumnDefinitions="28,*"
                                               ColumnSpacing="8">
@@ -320,12 +323,12 @@
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
                                                    Text="{x:Static helpers:FontAwesomeGlyphs.Globe}"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
                                                    HorizontalTextAlignment="Start"
                                                    Text="Global"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                         </Grid>
                                     </Border>
                                     <Border x:Name="SearchSpellsRow"
@@ -333,7 +336,7 @@
                                             StrokeThickness="0"
                                             StrokeShape="RoundRectangle 14">
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnSearchSpellsTapped" />
+                                            <TapGestureRecognizer Tapped="OnSearchSpellsTapped"/>
                                         </Border.GestureRecognizers>
                                         <Grid ColumnDefinitions="28,*"
                                               ColumnSpacing="8">
@@ -341,12 +344,12 @@
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
                                                    Text="{x:Static helpers:FontAwesomeGlyphs.Wand}"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
                                                    HorizontalTextAlignment="Start"
                                                    Text="Spells"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                         </Grid>
                                     </Border>
                                     <Border x:Name="SearchMiraclesRow"
@@ -354,7 +357,7 @@
                                             StrokeThickness="0"
                                             StrokeShape="RoundRectangle 14">
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnSearchMiraclesTapped" />
+                                            <TapGestureRecognizer Tapped="OnSearchMiraclesTapped"/>
                                         </Border.GestureRecognizers>
                                         <Grid ColumnDefinitions="28,*"
                                               ColumnSpacing="8">
@@ -362,12 +365,12 @@
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
                                                    Text="{x:Static helpers:FontAwesomeGlyphs.Miracle}"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
                                                    HorizontalTextAlignment="Start"
                                                    Text="Miracles"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                         </Grid>
                                     </Border>
                                     <Border x:Name="SearchEvocationsRow"
@@ -375,7 +378,7 @@
                                             StrokeThickness="0"
                                             StrokeShape="RoundRectangle 14">
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnSearchEvocationsTapped" />
+                                            <TapGestureRecognizer Tapped="OnSearchEvocationsTapped"/>
                                         </Border.GestureRecognizers>
                                         <Grid ColumnDefinitions="28,*"
                                               ColumnSpacing="8">
@@ -383,12 +386,12 @@
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
                                                    Text="{x:Static helpers:FontAwesomeGlyphs.Tree}"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
                                                    HorizontalTextAlignment="Start"
                                                    Text="Evocations"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                         </Grid>
                                     </Border>
                                     <Border x:Name="SearchNeuronicsRow"
@@ -396,7 +399,7 @@
                                             StrokeThickness="0"
                                             StrokeShape="RoundRectangle 14">
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnSearchNeuronicsTapped" />
+                                            <TapGestureRecognizer Tapped="OnSearchNeuronicsTapped"/>
                                         </Border.GestureRecognizers>
                                         <Grid ColumnDefinitions="28,*"
                                               ColumnSpacing="8">
@@ -404,12 +407,12 @@
                                                    WidthRequest="17"
                                                    HeightRequest="17"
                                                    HorizontalOptions="Center"
-                                                   VerticalOptions="Center" />
+                                                   VerticalOptions="Center"/>
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
                                                    HorizontalTextAlignment="Start"
                                                    Text="Neuronics"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                         </Grid>
                                     </Border>
                                     <Border x:Name="SearchClassesRow"
@@ -417,7 +420,7 @@
                                             StrokeThickness="0"
                                             StrokeShape="RoundRectangle 14">
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnSearchClassesTapped" />
+                                            <TapGestureRecognizer Tapped="OnSearchClassesTapped"/>
                                         </Border.GestureRecognizers>
                                         <Grid ColumnDefinitions="28,*"
                                               ColumnSpacing="8">
@@ -425,12 +428,12 @@
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
                                                    Text="{x:Static helpers:FontAwesomeGlyphs.CharacterClass}"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
                                                    HorizontalTextAlignment="Start"
                                                    Text="Classes"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                         </Grid>
                                     </Border>
                                     <Border x:Name="SearchRacesRow"
@@ -438,7 +441,7 @@
                                             StrokeThickness="0"
                                             StrokeShape="RoundRectangle 14">
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnSearchRacesTapped" />
+                                            <TapGestureRecognizer Tapped="OnSearchRacesTapped"/>
                                         </Border.GestureRecognizers>
                                         <Grid ColumnDefinitions="28,*"
                                               ColumnSpacing="8">
@@ -446,12 +449,12 @@
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
                                                    Text="{x:Static helpers:FontAwesomeGlyphs.Race}"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
                                                    HorizontalTextAlignment="Start"
                                                    Text="Races"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                         </Grid>
                                     </Border>
                                     <Border x:Name="SearchAbilitiesRow"
@@ -459,7 +462,7 @@
                                             StrokeThickness="0"
                                             StrokeShape="RoundRectangle 14">
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnSearchAbilitiesTapped" />
+                                            <TapGestureRecognizer Tapped="OnSearchAbilitiesTapped"/>
                                         </Border.GestureRecognizers>
                                         <Grid ColumnDefinitions="28,*"
                                               ColumnSpacing="8">
@@ -467,12 +470,12 @@
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
                                                    Text="{x:Static helpers:FontAwesomeGlyphs.Lightning}"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
                                                    HorizontalTextAlignment="Start"
                                                    Text="Abilities"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                         </Grid>
                                     </Border>
                                     <Border x:Name="SearchGuildsRow"
@@ -480,7 +483,7 @@
                                             StrokeThickness="0"
                                             StrokeShape="RoundRectangle 14">
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnSearchGuildsTapped" />
+                                            <TapGestureRecognizer Tapped="OnSearchGuildsTapped"/>
                                         </Border.GestureRecognizers>
                                         <Grid ColumnDefinitions="28,*"
                                               ColumnSpacing="8">
@@ -488,12 +491,12 @@
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
                                                    Text="{x:Static helpers:FontAwesomeGlyphs.Guild}"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
                                                    HorizontalTextAlignment="Start"
                                                    Text="Guilds"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                         </Grid>
                                     </Border>
                                     <Border x:Name="SearchMultiClassesRow"
@@ -501,7 +504,7 @@
                                             StrokeThickness="0"
                                             StrokeShape="RoundRectangle 14">
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnSearchMultiClassesTapped" />
+                                            <TapGestureRecognizer Tapped="OnSearchMultiClassesTapped"/>
                                         </Border.GestureRecognizers>
                                         <Grid ColumnDefinitions="28,*"
                                               ColumnSpacing="8">
@@ -509,12 +512,12 @@
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
                                                    Text="{x:Static helpers:FontAwesomeGlyphs.MultiClass}"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
                                                    HorizontalTextAlignment="Start"
                                                    Text="Multi-classes"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                         </Grid>
                                     </Border>
                                     <Border x:Name="SearchMultiRacesRow"
@@ -522,7 +525,7 @@
                                             StrokeThickness="0"
                                             StrokeShape="RoundRectangle 14">
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnSearchMultiRacesTapped" />
+                                            <TapGestureRecognizer Tapped="OnSearchMultiRacesTapped"/>
                                         </Border.GestureRecognizers>
                                         <Grid ColumnDefinitions="28,*"
                                               ColumnSpacing="8">
@@ -530,12 +533,12 @@
                                                    FontSize="16"
                                                    HorizontalTextAlignment="Center"
                                                    Text="{x:Static helpers:FontAwesomeGlyphs.MultiRace}"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                             <Label Grid.Column="1"
                                                    HorizontalOptions="Fill"
                                                    HorizontalTextAlignment="Start"
                                                    Text="Multi-races"
-                                                   VerticalTextAlignment="Center" />
+                                                   VerticalTextAlignment="Center"/>
                                         </Grid>
                                     </Border>
                                 </VerticalStackLayout>
@@ -548,7 +551,7 @@
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 18">
                         <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnInitiateTradeTapped" />
+                            <TapGestureRecognizer Tapped="OnInitiateTradeTapped"/>
                         </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="28,*,24"
                               ColumnSpacing="8">
@@ -556,23 +559,23 @@
                                    FontSize="18"
                                    Text="{x:Static helpers:FontAwesomeGlyphs.Mobile}"
                                    HorizontalTextAlignment="Center"
-                                   VerticalTextAlignment="Center" />
+                                   VerticalTextAlignment="Center"/>
                             <Label Grid.Column="1"
                                    HorizontalOptions="Fill"
                                    HorizontalTextAlignment="Start"
                                    Text="Trade"
-                                   VerticalTextAlignment="Center" />
+                                   VerticalTextAlignment="Center"/>
                             <Label Grid.Column="2"
                                    Opacity="0"
-                                   Text="v" />
+                                   Text="v"/>
                         </Grid>
                     </Border>
-<Border x:Name="CalendarRow"
+                    <Border x:Name="CalendarRow"
                             Padding="12,10"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 18">
                         <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnOpenCalendarTapped" />
+                            <TapGestureRecognizer Tapped="OnOpenCalendarTapped"/>
                         </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="28,*,24"
                               ColumnSpacing="8">
@@ -580,30 +583,69 @@
                                    FontSize="18"
                                    Text="{x:Static helpers:FontAwesomeGlyphs.Calendar}"
                                    HorizontalTextAlignment="Center"
-                                   VerticalTextAlignment="Center" />
+                                   VerticalTextAlignment="Center"/>
                             <Label Grid.Column="1"
                                    HorizontalOptions="Fill"
                                    HorizontalTextAlignment="Start"
                                    Text="Calendar"
-                                   VerticalTextAlignment="Center" />
+                                   VerticalTextAlignment="Center"/>
                             <Label x:Name="CalendarLockIcon"
                                    Grid.Column="2"
                                    IsVisible="False"
                                    FontFamily="FASolid"
                                    Text="{x:Static helpers:FontAwesomeGlyphs.Lock}"
                                    VerticalTextAlignment="Center"
-                                   SemanticProperties.Description="Calendar requires a member login" />
+                                   SemanticProperties.Description="Calendar requires a member login"/>
                         </Grid>
                     </Border>
-                    <Button Text="Primus map and world stats" Clicked="OnOpenPrimusMapClicked" MinimumHeightRequest="44" />
-                    <Button Text="Switch account" Clicked="OnSwitchAccountClicked"
-                            Margin="0,8,0,0" MinimumHeightRequest="44" />
+                    <Border x:Name="MapRow"
+                            Padding="12,10"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 18">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnOpenPrimusMapClicked"/>
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="28,*,24"
+                              ColumnSpacing="8">
+                            <Label FontFamily="FASolid"
+                                   FontSize="18"
+                                   Text="{x:Static helpers:FontAwesomeGlyphs.Map}"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="Center"/>
+                            <Label Grid.Column="1"
+                                   HorizontalOptions="Fill"
+                                   HorizontalTextAlignment="Start"
+                                   Text="Map of Primus"
+                                   VerticalTextAlignment="Center"/>
+                        </Grid>
+                    </Border>
+                    <Border x:Name="LogoutRow"
+                            Padding="12,10"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 18">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSwitchAccountClicked"/>
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="28,*,24"
+                              ColumnSpacing="8">
+                            <Label FontFamily="FASolid"
+                                   FontSize="18"
+                                   Text="{x:Static helpers:FontAwesomeGlyphs.Logout}"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="Center"/>
+                            <Label Grid.Column="1"
+                                   HorizontalOptions="Fill"
+                                   HorizontalTextAlignment="Start"
+                                   Text="Switch account"
+                                   VerticalTextAlignment="Center"/>
+                        </Grid>
+                    </Border>
                     <Border x:Name="SettingsRow"
                             Padding="12,10"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 18">
                         <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnSettingsTapped" />
+                            <TapGestureRecognizer Tapped="OnSettingsTapped"/>
                         </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="28,*,24"
                               ColumnSpacing="8">
@@ -611,15 +653,15 @@
                                    FontSize="18"
                                    Text="{x:Static helpers:FontAwesomeGlyphs.Settings}"
                                    HorizontalTextAlignment="Center"
-                                   VerticalTextAlignment="Center" />
+                                   VerticalTextAlignment="Center"/>
                             <Label Grid.Column="1"
                                    HorizontalOptions="Fill"
                                    HorizontalTextAlignment="Start"
                                    Text="Settings"
-                                   VerticalTextAlignment="Center" />
+                                   VerticalTextAlignment="Center"/>
                             <Label Grid.Column="2"
                                    Opacity="0"
-                                   Text="v" />
+                                   Text="v"/>
                         </Grid>
                     </Border>
                 </VerticalStackLayout>
@@ -629,7 +671,7 @@
         <BoxView Grid.Column="1"
                  BackgroundColor="Transparent">
             <BoxView.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnCloseMenuTapped" />
+                <TapGestureRecognizer Tapped="OnCloseMenuTapped"/>
             </BoxView.GestureRecognizers>
         </BoxView>
     </Grid>

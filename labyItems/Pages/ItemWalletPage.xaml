@@ -50,15 +50,15 @@
                                        Text="{Binding HeaderText}"
                                        FontAttributes="Bold"
                                        FontSize="16"/>
-                                <Label Grid.Column="1"
-                                       Text="{Binding ExpandGlyph}"
-                                       VerticalTextAlignment="Center"
-                                       HorizontalTextAlignment="End"
-                                       FontSize="20"/>
+                                <controls:ChevronIconView Grid.Column="1"
+                                                          IsExpanded="{Binding IsExpanded}"
+                                                          AnimateRotation="True"
+                                                          InputTransparent="True"
+                                                          IconSize="28" GlyphSize="14" />
                             </Grid>
 
-                            <VerticalStackLayout IsVisible="{Binding IsExpanded}"
-                                                 Spacing="8">
+                            <controls:AnimatedExpandView IsExpanded="{Binding IsExpanded}">
+                            <VerticalStackLayout Spacing="8">
                                 <VerticalStackLayout Spacing="0"
                                                      BindableLayout.ItemsSource="{Binding DetailRows}">
                                     <BindableLayout.ItemTemplate>
@@ -109,6 +109,7 @@
                                             Clicked="OnChangeAssignmentClicked"/>
                                 </Grid>
                             </VerticalStackLayout>
+                            </controls:AnimatedExpandView>
                         </VerticalStackLayout>
                     </Border>
                 </DataTemplate>

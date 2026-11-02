@@ -107,6 +107,8 @@ public static class FontAwesomeGlyphs
     public const string Lifescale = "\uf44b";
     public const string PlusSquare = "\uf0fe";
     public const string MinusSquare = "\uf146";
+    public const string Map = "\uf5a0";
+    public const string Logout = "\ue5a9";
     public static string GetSphereIcon(string? sphere)
     {
         var token = NormalizeSphereToken(sphere);

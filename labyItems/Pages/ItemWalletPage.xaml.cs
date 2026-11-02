@@ -216,11 +216,8 @@ public partial class ItemWalletPage : ContentPage
 
                 _isExpanded = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(ExpandGlyph));
             }
         }
-
-        public string ExpandGlyph => IsExpanded ? "⌄" : "›";
 
         public void Refresh()
         {

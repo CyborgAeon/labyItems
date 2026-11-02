@@ -155,7 +155,7 @@
 
         <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
                                         Grid.RowSpan="3"
-                                        IsVisible="{Binding ShowKindChips}"
+                                        IsVisible="{Binding ShowNavigationMenu}"
                                         SelectedRoute="{x:Static controls:ToolsetRouteKeys.Search}" />
     </Grid>
 

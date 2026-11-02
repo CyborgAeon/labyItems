@@ -14,7 +14,8 @@ svg='''<svg xmlns="http://www.w3.org/2000/svg"><g transform="translate(100,100)"
 <path id="a-overlap" data-type="region" d="M400 0H500V100H400Z"/>
 </g></svg>'''
 checks='''
-const results=[];
+const results=[],notifications=[];
+notify=url=>notifications.push(url);
 function check(name,condition){if(!condition)throw Error(name);results.push(name);}
 function hit(x,y){return hitTest(viewport.toScreen(x,y))?.id;}
 try{
@@ -34,6 +35,17 @@ try{
  send('pointerdown',1,100,100);send('pointerdown',2,200,100);send('pointerup',2,200,100);
  check('pinch stays suppressed after one finger lifts',pinched);send('pointerup',1,100,100);
  check('drag and pinch do not select',selected===null);
+ check('drag and pinch never request a selection',!notifications.some(url=>url.startsWith('primus://select/')));
+ const before={x:viewport.x,y:viewport.y,scale:viewport.scale};
+ const tap=viewport.toScreen(300,150);
+ send('pointerdown',3,tap.x,tap.y);send('pointerup',3,tap.x,tap.y);
+ check('tap selects path for the name tooltip',selected?.id==='location');
+ check('tap bridge includes normalized tooltip anchor',notifications.at(-1).startsWith('primus://select/location?x='));
+ check('tap does not request details',!notifications.some(url=>url.includes('details')));
+ check('tap preserves viewport',viewport.x===before.x&&viewport.y===before.y&&viewport.scale===before.scale);
+ document.querySelector('#clear').click();
+ check('clear removes selection and tooltip',selected===null&&notifications.at(-1)==='primus://hide');
+
  document.querySelector('#result').textContent='PASS '+results.length+' '+results.join('; ');
 }catch(e){document.querySelector('#result').textContent='FAIL '+e.stack;}
 '''

@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:helpers="clr-namespace:labyItems.Helpers"
              xmlns:controls="clr-namespace:labyItems.Controls"
              x:Class="labyItems.Pages.WorldMap.PrimusMapPage"
              NavigationPage.HasNavigationBar="False" Shell.NavBarIsVisible="False" Title="Primus">
+    <Grid>
     <Grid Padding="16" RowDefinitions="Auto,Auto,Auto,Auto,*" RowSpacing="8">
-        <controls:DetailPageHeader HeaderText="Primus" />
+        <Grid Margin="-16,-16,-16,0" HeightRequest="64">
+            <Image Source="login_watermark.png" Aspect="AspectFill" InputTransparent="True" />
+            <BoxView Color="{StaticResource Primary}" Opacity="0.82" InputTransparent="True" />
+            <Grid Padding="12,8" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                <Button Text="{x:Static helpers:FontAwesomeGlyphs.Menu}" TextColor="White" BackgroundColor="Transparent" FontSize="26"
+                        WidthRequest="44" HeightRequest="44" Padding="0" Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}"
+                        SemanticProperties.Description="Open toolset menu" />
+                <Label Grid.Column="1" Text="Primus" FontSize="26" FontAttributes="Bold" TextColor="White" VerticalTextAlignment="Center" />
+                <Button Grid.Column="2" Text="{x:Static helpers:FontAwesomeGlyphs.Back}" FontFamily="FASolid" TextColor="White" BackgroundColor="Transparent"
+                        WidthRequest="44" HeightRequest="44" Padding="0" Clicked="OnBackClicked" SemanticProperties.Description="Back" />
+            </Grid>
+        </Grid>
         <Label x:Name="StatusLabel" Grid.Row="1" TextColor="{StaticResource MutedTextColor}" FontSize="13" />
         <Picker x:Name="PeriodPicker" Grid.Row="2" Title="Statistics month" SemanticProperties.Description="Statistics month" />
         <Grid Grid.Row="3" ColumnDefinitions="*,Auto" ColumnSpacing="8">
@@ -13,5 +26,7 @@
             <Button Grid.Column="1" Text="View stats" Clicked="OnViewStatisticsClicked" />
         </Grid>
         <controls:PrimusMapView x:Name="Map" Grid.Row="4" />
+    </Grid>
+    <controls:ToolsetNavigationMenu x:Name="ToolsetMenu" />
     </Grid>
 </ContentPage>

@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="100%" height="100%">
+  <style>
+    .cave-region {
+      fill: rgba(212, 175, 55, 0.2);
+      stroke: #d4af37;
+      stroke-width: 2.5;
+      stroke-linejoin: round;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .cave-region:hover {
+      fill: rgba(255, 218, 102, 0.45);
+      stroke: #ffffff;
+      stroke-width: 3.5;
+      filter: drop-shadow(0 0 6px #ffda66);
+    }
+    .room-label {
+      font-family: 'Cinzel', 'Georgia', serif;
+      font-size: 13px;
+      font-weight: bold;
+      fill: #ffffff;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      pointer-events: none;
+      text-shadow: 0px 0px 4px #000, 0px 0px 8px #000;
+    }
+  </style>
+
+<!-- Chamber C2 -->
+<polygon id="area-c2" class="cave-region" points="490,480 600,480 600,550 490,550" />
+<text x="545" y="515" class="room-label">C2</text>
+
+<!-- Chamber C3 -->
+<polygon id="area-c3" class="cave-region" points="510,270 600,270 600,340 510,340" />
+<text x="555" y="305" class="room-label">C3</text>
+
+<!-- Chamber C4 -->
+<polygon id="area-c4" class="cave-region" points="640,510 740,510 740,610 640,610" />
+<text x="690" y="560" class="room-label">C4</text>
+
+<!-- Chamber C5 -->
+<polygon id="area-c5" class="cave-region" points="610,610 690,610 690,670 610,670" />
+<text x="650" y="640" class="room-label">C5</text>
+
+<!-- Chamber C6: The Graveyard -->
+<polygon id="area-c6" class="cave-region" points="580,670 700,670 700,800 580,800" />
+<text x="640" y="735" class="room-label">C6</text>
+
+<!-- Chamber C7 -->
+<polygon id="area-c7" class="cave-region" points="550,750 630,750 630,860 550,860" />
+<text x="590" y="805" class="room-label">C7</text>
+
+<!-- Chamber C8 -->
+<polygon id="area-c8" class="cave-region" points="630,780 710,780 710,860 630,860" />
+<text x="670" y="820" class="room-label">C8</text>
+
+<!-- Chamber C9 -->
+<polygon id="area-c9" class="cave-region" points="720,530 780,530 780,620 720,620" />
+<text x="750" y="575" class="room-label">C9</text>
+
+<!-- Chamber C10 -->
+<polygon id="area-c10" class="cave-region" points="740,270 820,270 820,340 740,340" />
+<text x="780" y="305" class="room-label">C10</text>
+
+<!-- Chamber C11 -->
+<polygon id="area-c11" class="cave-region" points="770,160 840,160 840,270 770,270" />
+<text x="805" y="215" class="room-label">C11</text>
+
+<!-- Chamber C12 -->
+<polygon id="area-c12" class="cave-region" points="840,250 970,250 970,320 840,320" />
+<text x="905" y="285" class="room-label">C12</text>
+
+<!-- Chamber C13 -->
+<polygon id="area-c13" class="cave-region" points="870,320 930,320 930,380 870,380" />
+<text x="900" y="350" class="room-label">C13</text>
+
+<!-- Chamber C14 -->
+<polygon id="area-c14" class="cave-region" points="890,210 950,210 950,260 890,260" />
+<text x="920" y="235" class="room-label">C14</text>
+
+<!-- Chamber C15 -->
+<polygon id="area-c15" class="cave-region" points="910,380 970,380 970,510 910,510" />
+<text x="940" y="445" class="room-label">C15</text>
+
+<!-- Chamber C16 -->
+<polygon id="area-c16" class="cave-region" points="890,460 970,460 970,530 890,530" />
+<text x="930" y="495" class="room-label">C16</text>
+
+<!-- Chamber C17: The Pentagram -->
+<polygon id="area-c17" class="cave-region" points="800,450 900,450 900,570 800,570" />
+<text x="850" y="510" class="room-label">C17</text>
+
+<!-- Generic Unassigned Landmark Placeholders -->
+<polygon id="todo-goodly-temple" class="cave-region" points="190,490 280,490 280,570 190,570" />
+<polygon id="todo-box-room" class="cave-region" points="10,660 80,660 80,740 10,740" />
+
+</svg>

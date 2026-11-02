@@ -8,7 +8,7 @@ Open **Primus map and world stats** in the toolset navigation menu. It is public
 
 One parent SVG group applies pan and zoom to the background and overlay together. The viewport fits initially, clamps zoom to 1–12 times fit, anchors pinch zoom at the fingers' midpoint, bounds panning, and preserves the center and relative zoom on resize. Pointer state suppresses selection after dragging or pinching. Exact `isPointInFill` checks use each path's inverse screen matrix. Locations win overlapping hits, followed by the territory with the smallest bounding area, then ordinal SVG ID. Bounding boxes order hits; they never decide containment.
 
-Selection highlights the exact path and opens a native modal navigation stack. Dragons and Deities and Orders reuse `ExpandableSectionCard`; full details push inside the modal. Dismissing it preserves the existing WebView and its viewport. Content security policy blocks network resources. All scripts and data are local.
+Selection highlights the exact path using its SVG fill and stroke colours and shows a small native name tooltip anchored above the tap. Only the tooltip’s information glyph opens the region overview. Pan, zoom, reset, empty taps and clearing selection dismiss the tooltip. Dismissing the overview preserves the WebView and its viewport. The overview uses a translucent primary-red header over the splash image, with a toolset menu, highest category statistics, clickable month, region/date options and placeholder description. Statistics use `ListItemRowView` under unframed subheadings with `ChevronIconView` and `AnimatedExpandView`; the redundant full-details route has been removed. The item wallet’s legacy text caret also uses these shared animation controls now. Content security policy blocks network resources. All scripts and data are local.
 
 `IWorldRegionRepository` separates map metadata and monthly statistics from rendering. `WorldRegionRepository` reads reference data only from `account-vaults/public.db`, never from an active member database. Startup seeds that database from trusted bundled SQL in one transaction. There is no member-derived cache or personal data in the map.
 
@@ -51,10 +51,10 @@ Add `"2026-12"` to `Resources/Raw/world-map/stats-index.json`, leaving existing 
 ## Verification
 
 - Android: `dotnet build labyItems/labyItems.csproj -f net10.0-android -t:Compile --no-restore` passed. Existing package advisory warnings remain.
-- Focused C# tests: three `WorldRegionRepositoryTests` passed, covering idempotent import, historical retention, source values, explicit mappings and differing deity collections. The runner requires a permitted local socket.
+- Focused C# tests: three `WorldRegionRepositoryTests` and two `WorldStatisticsSummaryFormatterTests` passed, covering highest-stat selection, composite-place attribution, missing values, idempotent import, historical retention, source values, explicit mappings and differing deity collections. The runner requires a permitted local socket.
 - `node --test tools/worldstats/viewport.test.cjs`: four tests passed (round trips, limits, midpoint anchoring, clamping and resize).
 - `python3 -m unittest discover -s tools/worldstats -p '*_test.py'`: two tests passed (invalid extraction rejection and month-specific replacement).
-- `python3 tools/worldstats/test_browser.py`: ten headless Chrome checks passed, including concavity, Bézier geometry, inherited transforms, overlap ordering and tap suppression. Requires installed macOS Chrome and permission to launch its subprocesses.
+- `python3 tools/worldstats/test_browser.py`: sixteen headless Chrome checks passed, including concavity, Bézier geometry, inherited transforms, overlap ordering, tap suppression, tooltip bridge coordinates and selection preserving the viewport. Requires installed macOS Chrome and permission to launch its subprocesses.
 - Changed XAML and project XML parse successfully; `git diff --check` passed.
 - iOS compile attempted with `-p:UseIosWorkload=true`: blocked by missing `net10.0-ios` restore target. The installed workloads do not include iOS.
 - Android/iOS device gesture behavior, phone-width layout, large text, modal dismissal, app lifecycle and alignment on devices remain unverified. Browser checks do not establish native device behavior.
@@ -64,11 +64,12 @@ Add `"2026-12"` to `Resources/Raw/world-map/stats-index.json`, leaving existing 
 Created:
 
 - `labyItems/Controls/PrimusMapView.cs`, `WorldStatisticsView.cs`
-- `labyItems/Models/WorldMap/WorldRegion.cs`, `WorldStatistic.cs`, `WorldStatsPeriod.cs`
+- `labyItems/Models/WorldMap/WorldRegion.cs`, `WorldStatistic.cs`, `WorldStatsPeriod.cs`, `WorldStatisticsGroup.cs`
 - `labyItems/Services/IWorldRegionRepository.cs`, `WorldRegionRepository.cs`
 - `labyItems/Pages/WorldMap/PrimusMapPage.xaml`, `PrimusMapPage.xaml.cs`, `RegionDetailsPage.cs`
 - `labyItems/Resources/Raw/world-map/regions.json`, `stats-index.json`, `stats/2026-11.sql`, `viewport.js`, `map.js`
-- `tests/labyItems.Tests/WorldRegionRepositoryTests.cs`
+- `labyItems/Helpers/WorldStatisticsSummaryFormatter.cs`
+- `tests/labyItems.Tests/WorldRegionRepositoryTests.cs`, `WorldStatisticsSummaryFormatterTests.cs`
 - `tools/worldstats/extract_background.py`, `extract-layout.swift`, `import_stats.py`, `import_stats_test.py`, `viewport.test.cjs`, `test_browser.py`
 - This document.
 
@@ -79,4 +80,4 @@ Modified:
 - `labyItems/Controls/ToolsetNavigationMenu.xaml` and `.xaml.cs`: public map entry.
 - `tests/labyItems.Tests/labyItems.Tests.csproj`: links repository and model source for tests.
 
-The user's existing `dotnet-install.sh` changes and supplied image files were not edited.
+The user's existing `dotnet-install.sh`, glyph catalogue and toolset-menu edits were preserved. The new area SVGs use underscore MAUI aliases; missing SVG root closers were added to area-b, area-c and area-d so resource processing can compile them.

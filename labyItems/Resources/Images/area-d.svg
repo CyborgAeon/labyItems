@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="100%" height="100%">
+  <style>
+    .cave-region {
+      fill: rgba(212, 175, 55, 0.2);
+      stroke: #d4af37;
+      stroke-width: 2.5;
+      stroke-linejoin: round;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .cave-region:hover {
+      fill: rgba(255, 218, 102, 0.45);
+      stroke: #ffffff;
+      stroke-width: 3.5;
+      filter: drop-shadow(0 0 6px #ffda66);
+    }
+    .room-label {
+      font-family: 'Cinzel', 'Georgia', serif;
+      font-size: 13px;
+      font-weight: bold;
+      fill: #ffffff;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      pointer-events: none;
+      text-shadow: 0px 0px 4px #000, 0px 0px 8px #000;
+    }
+  </style>
+
+<!-- Chamber D3 -->
+<polygon id="area-d3" class="cave-region" points="470,300 530,300 530,370 470,370" />
+<text x="500" y="335" class="room-label">D3</text>
+
+<!-- Chamber D4 -->
+<polygon id="area-d4" class="cave-region" points="520,230 580,230 580,300 520,300" />
+<text x="550" y="265" class="room-label">D4</text>
+
+<!-- Chamber D5 -->
+<polygon id="area-d5" class="cave-region" points="740,360 830,400 790,470 700,420" />
+<text x="765" y="412" class="room-label">D5</text>
+
+<!-- Chamber D6 -->
+<polygon id="area-d6" class="cave-region" points="440,540 560,540 560,630 440,630" />
+<text x="500" y="585" class="room-label">D6</text>
+
+<!-- Chamber D7: Figure of Eight (North Loop) -->
+<polygon id="area-d7" class="cave-region" points="560,260 760,260 760,360 560,360" />
+<text x="660" y="310" class="room-label">D7</text>
+
+<!-- Chamber D8: Figure of Eight (South Loop) -->
+<polygon id="area-d8" class="cave-region" points="610,470 720,470 720,570 610,570" />
+<text x="665" y="520" class="room-label">D8</text>
+
+<!-- Chamber D9 -->
+<polygon id="area-d9" class="cave-region" points="680,560 740,560 740,630 680,630" />
+<text x="710" y="595" class="room-label">D9</text>
+
+<!-- Chamber D10: Double Altars -->
+<polygon id="area-d10" class="cave-region" points="740,560 830,560 830,640 740,640" />
+<text x="785" y="600" class="room-label">D10</text>
+
+<!-- Chamber D11 -->
+<polygon id="area-d11" class="cave-region" points="830,580 910,580 910,650 830,650" />
+<text x="870" y="615" class="room-label">D11</text>
+
+<!-- Chamber D12 -->
+<polygon id="area-d12" class="cave-region" points="880,630 950,650 920,720 850,700" />
+<text x="900" y="675" class="room-label">D12</text>
+
+<!-- Chamber D13 -->
+<polygon id="area-d13" class="cave-region" points="840,710 910,730 870,800 800,770" />
+<text x="855" y="752" class="room-label">D13</text>
+
+<!-- Chamber D14 -->
+<polygon id="area-d14" class="cave-region" points="760,700 870,720 840,810 730,780" />
+<text x="800" y="752" class="room-label">D14</text>
+
+<!-- Chamber D15 -->
+<polygon id="area-d15" class="cave-region" points="690,620 780,650 740,720 650,680" />
+<text x="715" y="667" class="room-label">D15</text>
+
+<!-- Chamber D16 -->
+<polygon id="area-d16" class="cave-region" points="840,770 950,830 890,910 790,850" />
+<text x="867" y="840" class="room-label">D16</text>
+
+<!-- Chamber D17 -->
+<polygon id="area-d17" class="cave-region" points="750,850 840,900 790,970 710,920" />
+<text x="772" y="910" class="room-label">D17</text>
+
+<!-- Chamber D18 -->
+<polygon id="area-d18" class="cave-region" points="670,740 760,780 710,870 620,830" />
+<text x="690" y="805" class="room-label">D18</text>
+
+<!-- Chamber D19 -->
+<polygon id="area-d19" class="cave-region" points="610,690 690,730 650,800 570,750" />
+<text x="630" y="742" class="room-label">D19</text>
+
+</svg>

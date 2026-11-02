@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="100%" height="100%">
+  <style>
+    .cave-region {
+      fill: rgba(212, 175, 55, 0.2);
+      stroke: #d4af37;
+      stroke-width: 2.5;
+      stroke-linejoin: round;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .cave-region:hover {
+      fill: rgba(255, 218, 102, 0.45);
+      stroke: #ffffff;
+      stroke-width: 3.5;
+      filter: drop-shadow(0 0 6px #ffda66);
+    }
+    .room-label {
+      font-family: 'Cinzel', 'Georgia', serif;
+      font-size: 13px;
+      font-weight: bold;
+      fill: #ffffff;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      pointer-events: none;
+      text-shadow: 0px 0px 4px #000, 0px 0px 8px #000;
+    }
+  </style>
+
+<!-- Chamber B2: Big Rock Room -->
+<polygon id="area-b2" class="cave-region" points="210,290 310,290 310,450 210,450" />
+<text x="260" y="370" class="room-label">B2</text>
+
+<!-- Chamber B3 -->
+<polygon id="area-b3" class="cave-region" points="360,200 420,240 380,300 330,260" />
+<text x="372" y="250" class="room-label">B3</text>
+
+<!-- Chamber B4 -->
+<polygon id="area-b4" class="cave-region" points="330,290 410,290 410,360 330,360" />
+<text x="370" y="325" class="room-label">B4</text>
+
+<!-- Chamber B5 -->
+<polygon id="area-b5" class="cave-region" points="330,380 430,380 430,500 330,500" />
+<text x="380" y="440" class="room-label">B5</text>
+
+<!-- Chamber B6 -->
+<polygon id="area-b6" class="cave-region" points="440,340 520,380 480,450 410,410" />
+<text x="462" y="395" class="room-label">B6</text>
+
+<!-- Chamber B7: Sand Pit -->
+<polygon id="area-b7" class="cave-region" points="230,460 330,460 330,530 230,530" />
+<text x="280" y="495" class="room-label">B7</text>
+
+<!-- Chamber B8: Double Bridge -->
+<polygon id="area-b8" class="cave-region" points="190,500 270,500 270,630 190,630" />
+<text x="230" y="565" class="room-label">B8</text>
+
+<!-- Chamber B9: Double Cages -->
+<polygon id="area-b9" class="cave-region" points="200,640 270,640 270,720 200,720" />
+<text x="235" y="680" class="room-label">B9</text>
+
+<!-- Chamber B10 -->
+<polygon id="area-b10" class="cave-region" points="260,670 350,670 350,740 260,740" />
+<text x="305" y="705" class="room-label">B10</text>
+
+<!-- Chamber B11 -->
+<polygon id="area-b11" class="cave-region" points="340,610 430,610 430,670 340,670" />
+<text x="385" y="640" class="room-label">B11</text>
+
+<!-- Chamber B12 -->
+<polygon id="area-b12" class="cave-region" points="370,510 440,510 440,600 370,600" />
+<text x="405" y="555" class="room-label">B12</text>
+
+<!-- Chamber B13 -->
+<polygon id="area-b13" class="cave-region" points="450,560 600,660 550,720 400,610" />
+<text x="500" y="637" class="room-label">B13</text>
+
+<!-- Chamber B14 -->
+<polygon id="area-b14" class="cave-region" points="590,750 710,750 710,830 590,830" />
+<text x="650" y="790" class="room-label">B14</text>
+
+<!-- Chamber B15 -->
+<polygon id="area-b15" class="cave-region" points="520,760 590,760 590,830 520,830" />
+<text x="555" y="795" class="room-label">B15</text>
+
+<!-- Chamber B16 -->
+<polygon id="area-b16" class="cave-region" points="720,700 830,700 830,790 720,790" />
+<text x="775" y="745" class="room-label">B16</text>
+
+<!-- Chamber B17 -->
+<polygon id="area-b17" class="cave-region" points="800,670 880,700 840,770 780,740" />
+<text x="825" y="720" class="room-label">B17</text>
+
+<!-- Chamber B18 -->
+<polygon id="area-b18" class="cave-region" points="830,780 970,810 930,950 820,900" />
+<text x="887" y="860" class="room-label">B18</text>
+
+</svg>
