@@ -5,12 +5,18 @@ namespace labyItems.Services;
 
 public static class SpecialisationService
 {
+    public static void InvalidateCache()
+    {
+        _cache = null;
+    }
+
     private static Dictionary<string, SpecialisationRecord>? _cache;
 
     public static async Task<Dictionary<string, SpecialisationRecord>> GetAllAsync()
     {
+        var accountCacheVersion = labyItems.Services.LabyrintheSession.Shared.Version;
         if (_cache != null)
-            return _cache;
+            return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
 
         var index = await SpecialisationDefinitionRepository.GetIndexAsync();
         var records = new Dictionary<string, SpecialisationRecord>(StringComparer.OrdinalIgnoreCase);
@@ -18,8 +24,8 @@ public static class SpecialisationService
         foreach (var entry in index.Definitions)
             records[entry.Key] = ConvertDefinition(entry.Value);
 
-        _cache = records;
-        return _cache;
+        labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = records);
+        return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
     }
 
     private static SpecialisationRecord ConvertDefinition(SpecialisationDefinition definition)

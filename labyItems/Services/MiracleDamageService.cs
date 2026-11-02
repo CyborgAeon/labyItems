@@ -8,10 +8,13 @@ namespace labyItems.Services;
 
 public static class MiracleDamageService
 {
+    public static void InvalidateCache() => _cache = null;
+
     private static List<DamageSpell>? _cache;
 
     public static async Task<List<DamageSpell>> GetDamagingMiraclesAsync()
     {
+        var accountCacheVersion = LabyrintheSession.Shared.Version;
         if (_cache != null) return _cache;
 
         IReadOnlyList<MiracleService.MiracRaw> all;
@@ -21,18 +24,18 @@ public static class MiracleDamageService
         }
         catch
         {
-            _cache = new List<DamageSpell>();
+            LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = new List<DamageSpell>());
             return _cache;
         }
 
-        _cache = all
+        LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = all
             .Where(m => m.GetDamageAmounts().Count > 0 || !string.IsNullOrWhiteSpace(m.damageOverride))
             .Select(m => new DamageSpell(
                 Name: m.name,
                 Level: m.power,
                 Kind: "Miracle",
                 Parts: BuildParts(m)))
-            .ToList();
+            .ToList());
 
         return _cache;
     }

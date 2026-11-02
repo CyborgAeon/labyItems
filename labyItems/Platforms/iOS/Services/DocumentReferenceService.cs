@@ -1,3 +1,5 @@
+using labyItems.Models.Documents;
+using labyItems.Models.NonStandard;
 using Foundation;
 using Photos;
 using UIKit;
@@ -153,8 +155,9 @@ public sealed partial class DocumentReferenceService
             if (asset == null)
                 throw new FileNotFoundException("That linked photo is no longer available on this device.");
 
-            var tempPath = Path.Combine(FileSystem.CacheDirectory, $"creation-preview-{document.Id}.jpg");
+            var tempPath = Path.Combine((labyItems.Services.AccountDataAccess.CacheDirectoryProvider?.Invoke() ?? FileSystem.CacheDirectory), $"creation-preview-{document.Id}.jpg");
             await ExportPhotoAssetAsync(asset, tempPath);
+            NonStandardContentService.RequireDocumentAccess(document);
             await Launcher.Default.OpenAsync(new OpenFileRequest
             {
                 File = new ReadOnlyFile(tempPath)
@@ -173,6 +176,7 @@ public sealed partial class DocumentReferenceService
                 // The resolved URL is still usable, so open it even if iOS reports the bookmark as stale.
             }
 
+            NonStandardContentService.RequireDocumentAccess(document);
             await Launcher.Default.OpenAsync(new Uri(url.AbsoluteString ?? url.Path ?? string.Empty));
         }
         finally
@@ -278,7 +282,7 @@ public sealed partial class DocumentReferenceService
                 if (data == null)
                     throw new InvalidOperationException("The linked photo data is unavailable.");
 
-                Directory.CreateDirectory(Path.GetDirectoryName(targetPath) ?? FileSystem.CacheDirectory);
+                Directory.CreateDirectory(Path.GetDirectoryName(targetPath) ?? (labyItems.Services.AccountDataAccess.CacheDirectoryProvider?.Invoke() ?? FileSystem.CacheDirectory));
                 await File.WriteAllBytesAsync(targetPath, data.ToArray());
                 tcs.TrySetResult();
             }

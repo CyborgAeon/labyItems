@@ -43,7 +43,7 @@ public sealed class BattleboardExportService : IBattleboardExportService
     //     using PdfDocument pdfDocument = renderer.ConvertToPDF(workbook);
 
     //     var pdfPath = Path.Combine(
-    //         FileSystem.CacheDirectory,
+    //         (labyItems.Services.AccountDataAccess.CacheDirectoryProvider?.Invoke() ?? FileSystem.CacheDirectory),
     //         $"Battleboard_{Sanitize(draft.Name)}.pdf"
     //     );
 
@@ -270,7 +270,7 @@ public sealed class BattleboardExportService : IBattleboardExportService
         var advancementDamageTexts = await ResolveAdvancementDamageTextsAsync(draft.AdvancementAbilities);
         WriteDamageSheet(wb, draft, assignedItems, advancementDamageTexts);
 
-        var outPath = Path.Combine(FileSystem.CacheDirectory, $"Battleboard_{Sanitize(draft.Name)}.xlsx");
+        var outPath = Path.Combine((labyItems.Services.AccountDataAccess.CacheDirectoryProvider?.Invoke() ?? FileSystem.CacheDirectory), $"Battleboard_{Sanitize(draft.Name)}.xlsx");
         wb.SaveAs(outPath);
         return outPath;
     }

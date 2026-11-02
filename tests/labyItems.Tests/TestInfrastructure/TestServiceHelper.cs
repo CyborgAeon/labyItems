@@ -9,6 +9,7 @@ namespace labyItems.Services;
 
 public static class ServiceHelper
 {
+    public static Func<string>? RuntimeDatabasePathProvider { get; set; }
     public const string DbFileName = "laby.db";
 
     private static string? _dbPath;

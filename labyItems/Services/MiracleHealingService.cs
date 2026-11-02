@@ -8,10 +8,13 @@ namespace labyItems.Services;
 
 public static class MiracleHealingService
 {
+    public static void InvalidateCache() => _cache = null;
+
     private static List<HealingEntry>? _cache;
 
     public static async Task<List<HealingEntry>> GetHealingMiraclesAsync()
     {
+        var accountCacheVersion = LabyrintheSession.Shared.Version;
         if (_cache != null) return _cache;
 
         IReadOnlyList<MiracleService.MiracRaw> all;
@@ -21,16 +24,16 @@ public static class MiracleHealingService
         }
         catch
         {
-            _cache = new List<HealingEntry>();
+            LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = new List<HealingEntry>());
             return _cache;
         }
 
-        _cache = all
+        LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = all
             .Where(m => m.GetHealAmounts().Count > 0)
             .Select(m => new HealingEntry(
                 Name: m.name,
                 Parts: BuildParts(m)))
-            .ToList();
+            .ToList());
 
         return _cache;
     }

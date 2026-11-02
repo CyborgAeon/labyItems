@@ -133,7 +133,8 @@ public static class DruidEvocationService
 
     public static async Task<IReadOnlyList<EvocRaw>> GetAllAsync()
     {
-        if (_cache != null) return _cache;
+        var accountCacheVersion = labyItems.Services.LabyrintheSession.Shared.Version;
+        if (_cache != null) return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
 
         var merged = new Dictionary<string, EvocRaw>(StringComparer.OrdinalIgnoreCase);
 
@@ -158,8 +159,8 @@ public static class DruidEvocationService
             merged[item.name.Trim()] = item;
         }
 
-        _cache = Normalize(merged.Values);
-        return _cache;
+        labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = Normalize(merged.Values));
+        return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
     }
 
     public static void InvalidateCache()

@@ -61,6 +61,8 @@ public partial class RecipientPage : ContentPage
         {
             ItemNameEntry.Text = submission.ItemName.Trim();
         }
+        if (string.IsNullOrWhiteSpace(RecipientPlayerNameEntry.Text))
+            RecipientPlayerNameEntry.Text = LabyrintheSession.Shared.Account?.DisplayName ?? string.Empty;
         BindingContext = this;
     }
 

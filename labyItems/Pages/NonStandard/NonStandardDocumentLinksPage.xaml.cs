@@ -1,3 +1,5 @@
+using labyItems.Models.Documents;
+using labyItems.Models.NonStandard;
 using System.Collections.ObjectModel;
 using labyItems.Services;
 using Microsoft.Maui.ApplicationModel;
@@ -35,6 +37,7 @@ public sealed class NonStandardDocumentLinkVm
 
 public partial class NonStandardDocumentLinksPage : ContentPage
 {
+    private readonly string _pointsAppOwner = PointsAppAccess.CurrentOwnerKey ?? string.Empty;
     private readonly NonStandardWalletEntry _entry;
     private readonly IDocumentReferenceService _documentReferenceService;
 
@@ -48,6 +51,7 @@ public partial class NonStandardDocumentLinksPage : ContentPage
 
     public NonStandardDocumentLinksPage(NonStandardWalletEntry entry)
     {
+        PointsAppAccess.RequireOwner(entry.OwnerAccountKey);
         _entry = entry;
         _documentReferenceService = ServiceHelper.ResolveService<IDocumentReferenceService>() ?? new DocumentReferenceService();
         InitializeComponent();
@@ -64,6 +68,7 @@ public partial class NonStandardDocumentLinksPage : ContentPage
     {
         try
         {
+            PointsAppAccess.RequireOwner(_pointsAppOwner);
             var documents = await NonStandardContentService.GetDocumentLinksAsync(_entry.EntityType, _entry.Name);
             Documents.Clear();
             foreach (var document in documents)
@@ -74,6 +79,7 @@ public partial class NonStandardDocumentLinksPage : ContentPage
         }
         catch (Exception ex)
         {
+            if (Window == null || PointsAppAccess.CurrentOwnerKey != _pointsAppOwner) return;
             await DisplayAlert("Load failed", ex.Message, "OK");
         }
     }
@@ -82,7 +88,9 @@ public partial class NonStandardDocumentLinksPage : ContentPage
     {
         try
         {
+            PointsAppAccess.RequireOwner(_pointsAppOwner);
             var file = await PickDocumentAsync();
+            PointsAppAccess.RequireOwner(_pointsAppOwner);
 
             if (file == null)
                 return;
@@ -103,12 +111,14 @@ public partial class NonStandardDocumentLinksPage : ContentPage
                 _entry.EntityType,
                 _entry.Name,
                 displayName,
-                file);
+                file,
+                _pointsAppOwner);
 
             await ReloadAsync();
         }
         catch (Exception ex)
         {
+            if (Window == null || PointsAppAccess.CurrentOwnerKey != _pointsAppOwner) return;
             await DisplayAlert("Upload failed", ex.Message, "OK");
         }
     }
@@ -161,6 +171,7 @@ public partial class NonStandardDocumentLinksPage : ContentPage
         }
         catch (Exception ex)
         {
+            if (Window == null || PointsAppAccess.CurrentOwnerKey != _pointsAppOwner) return;
             await DisplayAlert("Open failed", ex.Message, "OK");
         }
     }
@@ -182,6 +193,7 @@ public partial class NonStandardDocumentLinksPage : ContentPage
         }
         catch (Exception ex)
         {
+            if (Window == null || PointsAppAccess.CurrentOwnerKey != _pointsAppOwner) return;
             await DisplayAlert("Remove failed", ex.Message, "OK");
         }
     }

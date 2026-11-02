@@ -1,3 +1,4 @@
+using labyItems.Models.NonStandard;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -12,6 +13,8 @@ namespace labyItems.Pages.NonStandard;
 
 public partial class NonStandardEvocationCreatePage : ContentPage, INotifyPropertyChanged
 {
+    private readonly string _pointsAppOwner = PointsAppAccess.CurrentOwnerKey ?? string.Empty;
+
     // EvocRaw deliberately supports both the current `immunity` property and the
     // legacy `Immunity` property. Case-insensitive metadata treats those as the
     // same JSON name and throws before serialization starts.
@@ -174,8 +177,7 @@ public partial class NonStandardEvocationCreatePage : ContentPage, INotifyProper
         try
         {
             Draft.nonStandard = true;
-            await NonStandardContentService.SaveAsync(new NonStandardSaveRequest
-            {
+            await NonStandardContentService.SaveAsync(new NonStandardSaveRequest { OwnerAccountKey = _pointsAppOwner,
                 EntityType = NonStandardEntityType.Evocation,
                 Name = Draft.name.Trim(),
                 DataJson = JsonSerializer.Serialize(Draft, JsonOptions),

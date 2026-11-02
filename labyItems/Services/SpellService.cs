@@ -110,8 +110,9 @@ public static class SpellService
 
     public static async Task<List<SpellRaw>> GetAllAsync()
     {
+        var accountCacheVersion = labyItems.Services.LabyrintheSession.Shared.Version;
         if (_cache is { Count: > 0 })
-            return _cache;
+            return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
 
         var dbPath = ResolveDbPath();
         Debug.WriteLine($"[SPELLS] ResolveDbPath => {dbPath ?? "<none>"}");
@@ -119,16 +120,16 @@ public static class SpellService
         if (dbList is { Count: > 0 })
         {
             Debug.WriteLine($"[SPELLS] Loaded {dbList.Count} spells from DB.");
-            _cache = dbList;
-            return _cache;
+            labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = dbList);
+            return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
         }
 
         var packaged = await LoadFromPackageAsync();
         if (packaged.Count > 0)
         {
             Debug.WriteLine($"[SPELLS] Loaded {packaged.Count} spells from packaged JSON.");
-            _cache = packaged;
-            return _cache;
+            labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = packaged);
+            return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
         }
 
         Debug.WriteLine("[SPELLS] No spell records loaded from DB or package.");
@@ -326,6 +327,7 @@ public static class SpellService
 
     private static string? ResolveDbPath()
     {
+        if (ServiceHelper.RuntimeDatabasePathProvider != null) return ServiceHelper.EnsureDbPath();
         var appDb = Path.Combine(FileSystem.AppDataDirectory, "laby.db");
         if (File.Exists(appDb))
         {

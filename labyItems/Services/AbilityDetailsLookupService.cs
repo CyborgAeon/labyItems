@@ -16,14 +16,15 @@ public static class AbilityDetailsLookupService
 
     public static async Task<IReadOnlyDictionary<string, EvolutionService.AbilityResult>> GetLookupAsync()
     {
+        var accountCacheVersion = labyItems.Services.LabyrintheSession.Shared.Version;
         if (_lookup is not null)
-            return _lookup;
+            return _lookup ?? throw new InvalidOperationException("The account cache changed. Please retry.");
 
         await LookupLock.WaitAsync();
         try
         {
             if (_lookup is not null)
-                return _lookup;
+                return _lookup ?? throw new InvalidOperationException("The account cache changed. Please retry.");
 
             var abilities = await EvolutionService.GetAllAbilitiesAsync();
             var map = new Dictionary<string, EvolutionService.AbilityResult>(StringComparer.OrdinalIgnoreCase);
@@ -56,8 +57,8 @@ public static class AbilityDetailsLookupService
                 AddLookupEntries(map, resolved, candidates);
             }
 
-            _lookup = map;
-            return _lookup;
+            labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _lookup = map);
+            return _lookup ?? throw new InvalidOperationException("The account cache changed. Please retry.");
         }
         finally
         {

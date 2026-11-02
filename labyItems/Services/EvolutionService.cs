@@ -33,8 +33,9 @@ public static class EvolutionService
 
     public static async Task<IReadOnlyList<EvolutionResult>> GetAllAsync()
     {
+        var accountCacheVersion = labyItems.Services.LabyrintheSession.Shared.Version;
         await EnsureDatabaseInitializedAsync();
-        if (_cache is not null) return _cache;
+        if (_cache is not null) return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
 
         try
         {
@@ -44,8 +45,8 @@ public static class EvolutionService
                 .Select(ToEvolutionResult)
                 .ToList();
 
-            _cache = list;
-            return _cache;
+            labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = list);
+            return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
         }
         catch (Exception ex)
         {
@@ -77,6 +78,7 @@ public static class EvolutionService
 
     public static async Task<IReadOnlyList<AbilityResult>> GetAllAbilitiesAsync()
     {
+        var accountCacheVersion = labyItems.Services.LabyrintheSession.Shared.Version;
         await EnsureDatabaseInitializedAsync();
         if (_abilityCache is not null) return _abilityCache;
 
@@ -98,7 +100,7 @@ public static class EvolutionService
                 list.Add(ToAbilityResult(r));
             }
 
-            _abilityCache = list;
+            labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _abilityCache = list);
             return _abilityCache;
         }
         catch (Exception ex)

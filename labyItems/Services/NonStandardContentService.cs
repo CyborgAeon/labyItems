@@ -1,80 +1,10 @@
+using labyItems.Models.Documents;
+using labyItems.Models.NonStandard;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.Data.Sqlite;
 
 namespace labyItems.Services;
-
-public enum NonStandardEntityType
-{
-    CharacterClass,
-    CharacterRace,
-    Ability,
-    Miracle,
-    Spell,
-    Evocation,
-    Neuronic
-}
-
-public sealed record NonStandardTemplate(
-    string Name,
-    string Json,
-    string Subtitle);
-
-public sealed record NonStandardFieldAlternative(
-    string SourceName,
-    string ValueJson,
-    string DisplayText);
-
-public sealed record NonStandardWalletEntry(
-    NonStandardEntityType EntityType,
-    string Name,
-    string DataJson,
-    string Subtitle)
-{
-    public DateTimeOffset UpdatedAtUtc { get; init; } = DateTimeOffset.UtcNow;
-}
-
-public sealed record NonStandardDocumentLink(
-    string Id,
-    NonStandardEntityType EntityType,
-    string EntityName,
-    string DisplayName,
-    string FilePath,
-    string FileKind,
-    string? ContentType,
-    string StorageKind,
-    string PersistentReference,
-    string? SourceUri,
-    string? AccessReference,
-    DateTimeOffset UpdatedAtUtc);
-
-public sealed class NonStandardLifeScaleAssignment
-{
-    public string RaceName { get; set; } = string.Empty;
-    public string? ClassName { get; set; }
-    public IReadOnlyList<LifeScalePoint>? Points { get; set; }
-}
-
-public sealed class RaceLifeScaleClassEntry
-{
-    public string ClassName { get; set; } = string.Empty;
-    public IReadOnlyList<LifeScalePoint>? Points { get; set; }
-}
-
-public sealed class NonStandardSaveRequest
-{
-    public NonStandardEntityType EntityType { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string DataJson { get; set; } = "{}";
-    public string? LifeScaleRaceName { get; set; }
-    public string? LifeScaleClassName { get; set; }
-    public IReadOnlyList<LifeScalePoint>? LifeScalePoints { get; set; }
-    public IReadOnlyList<NonStandardLifeScaleAssignment>? LifeScaleAssignments { get; set; }
-    public IReadOnlyList<RaceLifeScaleClassEntry>? RaceLifeScaleEntries { get; set; }
-    public string? AssignedCharacterId { get; set; }
-    public string? AssignedCharacterName { get; set; }
-    public string? AssignedCharacterPlayerName { get; set; }
-}
 
 public static class NonStandardContentService
 {
@@ -179,18 +109,21 @@ public static class NonStandardContentService
 
     public static Task SaveAsync(NonStandardSaveRequest request)
     {
+        _ = PointsAppAccess.RequireDatabase();
+        using var accountWrite = AccountDataAccess.BeginWrite();
         if (request == null)
             throw new ArgumentNullException(nameof(request));
+        var owner = PointsAppAccess.RequireOwner(request.OwnerAccountKey);
 
         var requestedName = (request.Name ?? string.Empty).Trim();
         if (requestedName.Length == 0)
             throw new InvalidOperationException("Name is required.");
 
-        var dbPath = ServiceHelper.EnsureDbPath();
+        var dbPath = PointsAppAccess.RequireDatabase();
         if (string.IsNullOrWhiteSpace(dbPath))
             throw new InvalidOperationException("Database path is unavailable.");
 
-        using var conn = new SqliteConnection($"Data Source={dbPath}");
+        using var conn = new SqliteConnection($"Data Source={dbPath};Pooling=False");
         conn.Open();
 
         EnsureTables(conn);
@@ -200,6 +133,9 @@ public static class NonStandardContentService
 
         request.Name = saveName;
         var payload = BuildPayload(request.EntityType, saveName, request.DataJson);
+        foreach (var key in payload.Select(pair => pair.Key).Where(key => key.Equals("ownerAccountKey", StringComparison.OrdinalIgnoreCase)).ToList())
+            payload.Remove(key);
+        payload["ownerAccountKey"] = owner;
         AppendAssignmentMetadata(payload, request);
 
         switch (request.EntityType)
@@ -245,12 +181,15 @@ public static class NonStandardContentService
 
     public static Task<IReadOnlyList<NonStandardWalletEntry>> GetWalletEntriesAsync()
     {
-        var dbPath = ServiceHelper.EnsureDbPath();
+        if (PointsAppAccess.CurrentOwnerKey == null)
+            return Task.FromResult<IReadOnlyList<NonStandardWalletEntry>>(Array.Empty<NonStandardWalletEntry>());
+        using var accountRead = AccountDataAccess.Workspace?.BeginRead();
+        var dbPath = PointsAppAccess.RequireDatabase();
         if (string.IsNullOrWhiteSpace(dbPath))
             return Task.FromResult<IReadOnlyList<NonStandardWalletEntry>>(Array.Empty<NonStandardWalletEntry>());
 
         var entries = new List<NonStandardWalletEntry>();
-        using var conn = new SqliteConnection($"Data Source={dbPath}");
+        using var conn = new SqliteConnection($"Data Source={dbPath};Pooling=False");
         conn.Open();
 
         AppendWalletEntries(conn, entries, NonStandardEntityType.CharacterClass, "classes", "name");
@@ -261,7 +200,9 @@ public static class NonStandardContentService
         AppendWalletEntries(conn, entries, NonStandardEntityType.Evocation, "evocs", "name");
         AppendWalletEntries(conn, entries, NonStandardEntityType.Neuronic, "neuronics", "name");
 
-        var ordered = entries
+        var owner = PointsAppAccess.CurrentOwnerKey!;
+        var ordered = entries.Where(entry => PointsAppAccess.CanSeeDefinition(entry.DataJson))
+            .Select(entry => entry with { OwnerAccountKey = owner })
             .OrderBy(entry => entry.EntityType)
             .ThenBy(entry => entry.Name, StringComparer.OrdinalIgnoreCase)
             .ToList();
@@ -273,15 +214,18 @@ public static class NonStandardContentService
         NonStandardEntityType entityType,
         string entityName)
     {
+        var owner = PointsAppAccess.CurrentOwnerKey;
+        if (owner == null) return Task.FromResult<IReadOnlyList<NonStandardDocumentLink>>(Array.Empty<NonStandardDocumentLink>());
+        using var accountRead = AccountDataAccess.Workspace?.BeginRead();
         var normalizedEntityName = (entityName ?? string.Empty).Trim();
         if (normalizedEntityName.Length == 0)
             return Task.FromResult<IReadOnlyList<NonStandardDocumentLink>>(Array.Empty<NonStandardDocumentLink>());
 
-        var dbPath = ServiceHelper.EnsureDbPath();
+        var dbPath = PointsAppAccess.RequireDatabase();
         if (string.IsNullOrWhiteSpace(dbPath))
             return Task.FromResult<IReadOnlyList<NonStandardDocumentLink>>(Array.Empty<NonStandardDocumentLink>());
 
-        using var conn = new SqliteConnection($"Data Source={dbPath}");
+        using var conn = new SqliteConnection($"Data Source={dbPath};Pooling=False");
         conn.Open();
         EnsureTables(conn);
 
@@ -322,7 +266,7 @@ ORDER BY lower(display_name), updated_at DESC;";
                 PersistentReference: string.IsNullOrWhiteSpace(persistentReference) ? filePath : persistentReference,
                 SourceUri: sourceUri,
                 AccessReference: accessReference,
-                UpdatedAtUtc: ParseTimestamp(updatedAtRaw)));
+                UpdatedAtUtc: ParseTimestamp(updatedAtRaw)) { OwnerAccountKey = owner });
         }
 
         return Task.FromResult<IReadOnlyList<NonStandardDocumentLink>>(links);
@@ -332,8 +276,12 @@ ORDER BY lower(display_name), updated_at DESC;";
         NonStandardEntityType entityType,
         string entityName,
         string displayName,
-        DocumentReferenceCapture documentReference)
+        DocumentReferenceCapture documentReference,
+        string expectedOwnerKey)
     {
+        PointsAppAccess.RequireOwner(expectedOwnerKey);
+        _ = PointsAppAccess.RequireDatabase();
+        using var accountWrite = AccountDataAccess.BeginWrite();
         var normalizedEntityName = (entityName ?? string.Empty).Trim();
         var normalizedDisplayName = (displayName ?? string.Empty).Trim();
         var normalizedFilePath = (documentReference.DisplayPath ?? documentReference.FileName ?? string.Empty).Trim();
@@ -348,11 +296,11 @@ ORDER BY lower(display_name), updated_at DESC;";
         if (normalizedStorageKind.Length == 0)
             throw new InvalidOperationException("A document storage kind is required.");
 
-        var dbPath = ServiceHelper.EnsureDbPath();
+        var dbPath = PointsAppAccess.RequireDatabase();
         if (string.IsNullOrWhiteSpace(dbPath))
             throw new InvalidOperationException("Database path is unavailable.");
 
-        using var conn = new SqliteConnection($"Data Source={dbPath}");
+        using var conn = new SqliteConnection($"Data Source={dbPath};Pooling=False");
         conn.Open();
         EnsureTables(conn);
 
@@ -378,17 +326,50 @@ VALUES ($id, $entityType, $entityName, $displayName, $filePath, $fileKind, $cont
         return Task.CompletedTask;
     }
 
+    public static bool CanAccessDocument(NonStandardDocumentLink document)
+    {
+        if (PointsAppAccess.CurrentOwnerKey is not { } owner || document.OwnerAccountKey != owner) return false;
+        using var accountRead = AccountDataAccess.Workspace!.BeginRead();
+        using var connection = new SqliteConnection($"Data Source={PointsAppAccess.RequireDatabase()};Pooling=False");
+        connection.Open();
+        using var command = connection.CreateCommand();
+        command.CommandText = "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='non_standard_documents'";
+        if (Convert.ToInt32(command.ExecuteScalar()) == 0) return false;
+        command.CommandText = "SELECT storage_kind, persistent_reference, file_path, source_uri, access_reference, content_type FROM non_standard_documents WHERE id=$id AND entity_type=$type AND entity_name=$name";
+        command.Parameters.AddWithValue("$id", document.Id);
+        command.Parameters.AddWithValue("$type", document.EntityType.ToString());
+        command.Parameters.AddWithValue("$name", document.EntityName);
+        using var reader = command.ExecuteReader();
+        if (!reader.Read()) return false;
+        string? Value(int column) => reader.IsDBNull(column) ? null : reader.GetString(column);
+        var kind = Value(0);
+        var reference = Value(1);
+        var path = Value(2) ?? string.Empty;
+        return document.OwnerAccountKey == AccountDataAccess.Workspace.RequireMemberKey()
+            && (string.IsNullOrWhiteSpace(kind) ? DocumentReferenceKinds.LegacyPath : kind) == document.StorageKind
+            && (string.IsNullOrWhiteSpace(reference) ? path : reference) == document.PersistentReference
+            && path == document.FilePath && Value(3) == document.SourceUri
+            && Value(4) == document.AccessReference && Value(5) == document.ContentType;
+    }
+    public static void RequireDocumentAccess(NonStandardDocumentLink document)
+    {
+        if (!CanAccessDocument(document))
+            throw new InvalidOperationException("Sign in to the member account that owns this linked document.");
+    }
+
     public static Task DeleteDocumentLinkAsync(string id)
     {
+        _ = PointsAppAccess.RequireDatabase();
+        using var accountWrite = AccountDataAccess.BeginWrite();
         var normalizedId = (id ?? string.Empty).Trim();
         if (normalizedId.Length == 0)
             return Task.CompletedTask;
 
-        var dbPath = ServiceHelper.EnsureDbPath();
+        var dbPath = PointsAppAccess.RequireDatabase();
         if (string.IsNullOrWhiteSpace(dbPath))
             return Task.CompletedTask;
 
-        using var conn = new SqliteConnection($"Data Source={dbPath}");
+        using var conn = new SqliteConnection($"Data Source={dbPath};Pooling=False");
         conn.Open();
         EnsureTables(conn);
         Execute(conn, "DELETE FROM non_standard_documents WHERE id=$id;", ("$id", normalizedId));

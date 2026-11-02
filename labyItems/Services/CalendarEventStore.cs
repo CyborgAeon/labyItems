@@ -35,12 +35,15 @@ public sealed class CalendarEventStore
     {
         if (month.Date < new DateTime(Today.Year, Today.Month, 1))
             return Array.Empty<CalendarEventRecord>();
+        var operationVersion = _session.Version;
         await _requests.WaitAsync();
         try
         {
+            _session.RequireVersion(operationVersion);
             await EnsureCacheLoadedAsync();
-            var html = await _session.GetHtmlAsync($"/members/upcoming-events/?month={month.ToString("yyyy-MM", System.Globalization.CultureInfo.InvariantCulture)}");
-            var bookings = await FetchBookingsAsync();
+            _session.RequireVersion(operationVersion);
+            var html = await _session.GetHtmlAsync($"/members/upcoming-events/?month={month.ToString("yyyy-MM", System.Globalization.CultureInfo.InvariantCulture)}", operationVersion);
+            var bookings = await FetchBookingsAsync(operationVersion);
             var roles = bookings.ToDictionary(e => e.Id, e => e.MyBookedRole);
             var events = LabyrintheEventParser.ParseMonth(html, month).Where(e => e.Date.Date >= Today).ToDictionary(e => e.Id);
             // Include booked events even if the upcoming-events page omits full events.
@@ -49,9 +52,10 @@ public sealed class CalendarEventStore
             var results = new List<CalendarEventRecord>();
             foreach (var record in events.Values)
             {
-                if (await PopulateEventAsync(record, roles.GetValueOrDefault(record.Id)))
+                if (await PopulateEventAsync(record, roles.GetValueOrDefault(record.Id), operationVersion))
                     results.Add(record);
             }
+            _session.RequireVersion(operationVersion);
             ReplaceBookedRoles(bookings);
             foreach (var id in _events.Values.Where(e => e.Date.Year == month.Year && e.Date.Month == month.Month).Select(e => e.Id).ToList())
                 _events.Remove(id);
@@ -70,7 +74,7 @@ public sealed class CalendarEventStore
             await SaveCacheAsync();
             return results.OrderBy(e => e.Date).ThenBy(e => e.Name, StringComparer.OrdinalIgnoreCase).ToList();
         }
-        catch (Exception ex) when (IsConnectionFailure(ex) && GetMonthStatus(month) != null)
+        catch (Exception ex) when (_session.Version == operationVersion && IsConnectionFailure(ex) && GetMonthStatus(month) != null)
         {
             _offlineMonths.Add(MonthKey(month));
             return GetEventsForMonth(month);
@@ -80,18 +84,22 @@ public sealed class CalendarEventStore
 
     public async Task<IReadOnlyList<CalendarEventRecord>> LoadBookedEventsAsync()
     {
+        var operationVersion = _session.Version;
         await _requests.WaitAsync();
         try
         {
+            _session.RequireVersion(operationVersion);
             await EnsureCacheLoadedAsync();
-            var bookings = await FetchBookingsAsync();
+            _session.RequireVersion(operationVersion);
+            var bookings = await FetchBookingsAsync(operationVersion);
             var results = new List<CalendarEventRecord>();
             foreach (var record in bookings)
             {
-                if (await PopulateEventAsync(record, record.MyBookedRole)) results.Add(record);
+                if (await PopulateEventAsync(record, record.MyBookedRole, operationVersion)) results.Add(record);
             }
             // Publish only a complete successful response, so a failed request cannot
             // clear existing booking state or leave a partially loaded list.
+            _session.RequireVersion(operationVersion);
             ReplaceBookedRoles(results);
             foreach (var record in results) _events[record.Id] = record;
             _bookingsUpdated = _time.GetUtcNow();
@@ -99,7 +107,7 @@ public sealed class CalendarEventStore
             await SaveCacheAsync();
             return results;
         }
-        catch (Exception ex) when (IsConnectionFailure(ex) && _bookingsUpdated.HasValue)
+        catch (Exception ex) when (_session.Version == operationVersion && IsConnectionFailure(ex) && _bookingsUpdated.HasValue)
         {
             _bookingsOffline = true;
             return GetBookedEvents();
@@ -107,9 +115,9 @@ public sealed class CalendarEventStore
         finally { _requests.Release(); }
     }
 
-    private async Task<IReadOnlyList<CalendarEventRecord>> FetchBookingsAsync()
+    private async Task<IReadOnlyList<CalendarEventRecord>> FetchBookingsAsync(long operationVersion)
     {
-        var html = await _session.GetHtmlAsync("/members/bookings/");
+        var html = await _session.GetHtmlAsync("/members/bookings/", operationVersion);
         var bookings = LabyrintheEventParser.ParseBookings(html, Today);
         // The website omits years. Do not roll a known, just-expired event into
         // next year while it remains in the site's bookings response.
@@ -120,9 +128,9 @@ public sealed class CalendarEventStore
         return bookings.Where(e => e.Date.Date >= Today).ToList();
     }
 
-    private async Task<bool> PopulateEventAsync(CalendarEventRecord record, CalendarEventRole? bookedRole)
+    private async Task<bool> PopulateEventAsync(CalendarEventRecord record, CalendarEventRole? bookedRole, long operationVersion)
     {
-        var detail = await _session.GetHtmlAsync($"/members/event/{record.Id}/");
+        var detail = await _session.GetHtmlAsync($"/members/event/{record.Id}/", operationVersion);
         if (!LabyrintheEventParser.PopulateDetails(record, detail, _session.DisplayName)) return false;
         // Membership and role come from the current user's bookings page, not a
         // potentially ambiguous name match in the public roster.
@@ -142,26 +150,30 @@ public sealed class CalendarEventStore
     }
 
     public IReadOnlyList<CalendarEventRecord> GetEventsForMonth(DateTime month)
-        => _events.Values.Where(e => e.Date.Date >= Today && e.Date.Year == month.Year && e.Date.Month == month.Month).OrderBy(e => e.Date).ToList();
+        => (_session.CanViewCalendar && string.Equals(_loadedAccount, _session.Email.Trim(), StringComparison.OrdinalIgnoreCase) ? _events.Values : Enumerable.Empty<CalendarEventRecord>()).Where(e => e.Date.Date >= Today && e.Date.Year == month.Year && e.Date.Month == month.Month).OrderBy(e => e.Date).ToList();
     public IReadOnlyList<CalendarEventRecord> GetBookedEvents()
-        => _events.Values.Where(e => e.Date.Date >= Today && e.MyBookedRole.HasValue).OrderBy(e => e.Date).ToList();
+        => (_session.CanViewCalendar && string.Equals(_loadedAccount, _session.Email.Trim(), StringComparison.OrdinalIgnoreCase) ? _events.Values : Enumerable.Empty<CalendarEventRecord>()).Where(e => e.Date.Date >= Today && e.MyBookedRole.HasValue).OrderBy(e => e.Date).ToList();
     public CalendarEventRecord? GetEvent(string id)
-        => _events.TryGetValue(id, out var record) && record.Date.Date >= Today ? record : null;
+        => _session.CanViewCalendar && string.Equals(_loadedAccount, _session.Email.Trim(), StringComparison.OrdinalIgnoreCase)
+            && _events.TryGetValue(id, out var record) && record.Date.Date >= Today ? record : null;
     public bool IsDateDisabled(DateTime date) => false;
     public IReadOnlyCollection<DateTime> GetDisabledDatesForMonth(DateTime month) => Array.Empty<DateTime>();
 
     public async Task RefreshEventAsync(string id)
     {
+        var operationVersion = _session.Version;
         await _requests.WaitAsync();
         try
         {
+            _session.RequireVersion(operationVersion);
             await EnsureCacheLoadedAsync();
+            _session.RequireVersion(operationVersion);
             var record = GetEvent(id) ?? throw new InvalidOperationException("Event not found.");
             var role = _bookedRoles.TryGetValue(id, out var bookedRole) ? bookedRole : (CalendarEventRole?)null;
-            if (!await PopulateEventAsync(record, role)) _events.Remove(id);
+            if (!await PopulateEventAsync(record, role, operationVersion)) _events.Remove(id);
             await SaveCacheAsync();
         }
-        catch (Exception ex) when (IsConnectionFailure(ex) && GetEventStatus(id) != null)
+        catch (Exception ex) when (_session.Version == operationVersion && IsConnectionFailure(ex) && GetEventStatus(id) != null)
         {
             _offlineEvents.Add(id);
         }
@@ -170,11 +182,15 @@ public sealed class CalendarEventStore
 
     public async Task<bool> JoinRoleAsync(string id, CalendarEventRole role)
     {
+        var operationVersion = _session.Version;
         await _requests.WaitAsync();
         try
         {
+            _session.RequireVersion(operationVersion);
             await EnsureCacheLoadedAsync();
-            if (GetEvent(id) == null || !await _session.PostBookingAsync(id, role)) return false;
+            _session.RequireVersion(operationVersion);
+            if (GetEvent(id) == null || !await _session.PostBookingAsync(id, role, operationVersion)) return false;
+            _session.RequireVersion(operationVersion);
             _bookedRoles[id] = role;
             if (_events.TryGetValue(id, out var record))
             {
@@ -195,13 +211,17 @@ public sealed class CalendarEventStore
 
     public async Task<bool> CancelBookingAsync(string id)
     {
+        var operationVersion = _session.Version;
         await _requests.WaitAsync();
         try
         {
+            _session.RequireVersion(operationVersion);
             await EnsureCacheLoadedAsync();
+            _session.RequireVersion(operationVersion);
             var record = GetEvent(id);
             if (record == null || !record.MyBookedRole.HasValue) return false;
-            if (!await _session.PostBookingAsync(id, null)) return false;
+            if (!await _session.PostBookingAsync(id, null, operationVersion)) return false;
+            _session.RequireVersion(operationVersion);
             RemoveCurrentUser(record);
             record.MyBookedRole = null;
             _bookedRoles.Remove(id);
@@ -242,8 +262,9 @@ public sealed class CalendarEventStore
 
     public async Task ExpireAsync()
     {
+        var operationVersion = _session.Version;
         await _requests.WaitAsync();
-        try { await EnsureCacheLoadedAsync(); }
+        try { _session.RequireVersion(operationVersion); await EnsureCacheLoadedAsync(); }
         finally { _requests.Release(); }
     }
 
@@ -255,7 +276,9 @@ public sealed class CalendarEventStore
         {
             ResetMemory();
             _loadedAccount = account;
+            var version = _session.Version;
             var snapshot = Cache == null ? null : await Cache.LoadAsync(account);
+            _session.RequireVersion(version);
             if (snapshot != null)
             {
                 foreach (var record in snapshot.Events) _events[record.Id] = record;
@@ -279,6 +302,8 @@ public sealed class CalendarEventStore
         foreach (var month in _monthsUpdated.Keys.Where(m => string.CompareOrdinal(m, MonthKey(Today)) < 0).ToList())
             _monthsUpdated.Remove(month);
         if (Cache == null || _loadedAccount == null) return;
+        if (!_session.CanViewCalendar || !string.Equals(_loadedAccount, _session.Email.Trim(), StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("The account session has changed.");
         await Cache.SaveAsync(_loadedAccount, new CalendarCacheSnapshot
         {
             Events = _events.Values.ToList(),

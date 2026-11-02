@@ -10,9 +10,11 @@ public static class ServiceHelper
 {
     public const string DbFileName = "laby.db";
     private static string? _dbPath;
+    public static Func<string>? RuntimeDatabasePathProvider { get; set; }
 
     public static string? EnsureDbPath()
     {
+        if (RuntimeDatabasePathProvider != null) return RuntimeDatabasePathProvider();
         if (!string.IsNullOrWhiteSpace(_dbPath) && File.Exists(_dbPath))
             return _dbPath;
 

@@ -49,9 +49,11 @@ public sealed class OptimizedSearchService
         int pageSize = DefaultPageSize,
         CancellationToken cancellationToken = default)
     {
-        return await Task.Run(
-            () => PerformSearch(searchText, filterKind, pageNumber, pageSize),
-            cancellationToken);
+        var version = LabyrintheSession.Shared.Version;
+        var result = await Task.Run(
+            () => PerformSearch(searchText, filterKind, pageNumber, pageSize), cancellationToken);
+        LabyrintheSession.Shared.RequireVersion(version);
+        return result;
     }
 
     /// <summary>
@@ -65,9 +67,11 @@ public sealed class OptimizedSearchService
         int pageSize = DefaultPageSize,
         CancellationToken cancellationToken = default)
     {
-        return await Task.Run(
-            () => PerformSearchByKind(kind, searchText, subFilters ?? new HashSet<string>(), pageNumber, pageSize),
-            cancellationToken);
+        var version = LabyrintheSession.Shared.Version;
+        var result = await Task.Run(
+            () => PerformSearchByKind(kind, searchText, subFilters ?? new HashSet<string>(), pageNumber, pageSize), cancellationToken);
+        LabyrintheSession.Shared.RequireVersion(version);
+        return result;
     }
 
     private PaginatedResults PerformSearch(
@@ -102,7 +106,7 @@ public sealed class OptimizedSearchService
                 results.AddRange(SearchNeuronics(conn, normalizedSearch, isEmptySearch));
 
             // Sort and paginate
-            var sorted = SortResults(results);
+            var sorted = SortResults(results.Where(r => PointsAppAccess.CanSeeDefinition(r.DataJson)).ToList());
             var paged = Paginate(sorted, pageNumber, pageSize);
 
             return new PaginatedResults
@@ -145,6 +149,7 @@ public sealed class OptimizedSearchService
                 _ => new List<SearchResultDto>()
             };
 
+            results = results.Where(r => PointsAppAccess.CanSeeDefinition(r.DataJson)).ToList();
             var paged = Paginate(results, pageNumber, pageSize);
 
             return new PaginatedResults

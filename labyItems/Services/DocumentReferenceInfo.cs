@@ -1,3 +1,4 @@
+using labyItems.Models.Documents;
 namespace labyItems.Services;
 
 public sealed record DocumentReferenceInfo(

@@ -6,6 +6,7 @@ namespace labyItems.Pages.Calendar;
 
 public partial class EventDetailsPage : ContentPage
 {
+    private readonly long _accountVersion = LabyrintheSession.Shared.Version;
     private readonly CalendarEventStore _eventStore;
     private readonly CalendarStatusLabelUpdater _statusLabel;
     private readonly string _eventId;
@@ -81,7 +82,7 @@ public partial class EventDetailsPage : ContentPage
 
     private async Task JoinRoleAsync(CalendarEventRole role)
     {
-        if (_isSubmitting) return;
+        if (_isSubmitting || _accountVersion != LabyrintheSession.Shared.Version) return;
         _isSubmitting = true;
         IsEnabled = false;
         try
@@ -96,6 +97,7 @@ public partial class EventDetailsPage : ContentPage
         }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException)
         {
+            if (_accountVersion != LabyrintheSession.Shared.Version) return;
             await DisplayAlert("Booking failed", "an error occurred", "OK");
         }
         finally { _isSubmitting = false; IsEnabled = true; }
@@ -103,7 +105,7 @@ public partial class EventDetailsPage : ContentPage
 
     private async Task CancelBookingAsync()
     {
-        if (_isSubmitting || _event?.MyBookedRole == null) return;
+        if (_isSubmitting || _accountVersion != LabyrintheSession.Shared.Version || _event?.MyBookedRole == null) return;
         _isSubmitting = true;
         IsEnabled = false;
         try
@@ -118,6 +120,7 @@ public partial class EventDetailsPage : ContentPage
         }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException)
         {
+            if (_accountVersion != LabyrintheSession.Shared.Version) return;
             await DisplayAlert("Cancellation failed", "an error occurred", "OK");
         }
         finally { _isSubmitting = false; IsEnabled = true; }
@@ -132,6 +135,7 @@ public partial class EventDetailsPage : ContentPage
         }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException)
         {
+            if (_accountVersion != LabyrintheSession.Shared.Version) return;
             await DisplayAlert("Unable to refresh event", ex.Message, "OK");
         }
         finally { _statusLabel.Update(); }

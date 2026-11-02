@@ -14,6 +14,13 @@ namespace labyItems.Pages.Characters.ViewModels;
 
 public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
 {
+    public static void InvalidateAccountCache()
+    {
+        _cachedAbilities = null;
+        _cachedAbilityLookup = null;
+        _cachedSourceBooks = null;
+    }
+
     private const int MaxVisibleResults = 100;
     private const int SearchDebounceMs = 500;
     private static readonly string[] DefaultSourceBookPriority =
@@ -726,6 +733,7 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
 
     private async Task EnsureAbilityCacheAsync()
     {
+        var accountCacheVersion = labyItems.Services.LabyrintheSession.Shared.Version;
         if (_cachedAbilities is not null
             && _cachedAbilityLookup is not null
             && _cachedSourceBooks is not null)
@@ -763,9 +771,9 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
                 .OrderBy(sourceBook => sourceBook, Comparer<string>.Create(CompareSourceBooks))
                 .ToList();
 
-            _cachedAbilities = entries;
-            _cachedAbilityLookup = lookup;
-            _cachedSourceBooks = sourceBooks;
+            labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cachedAbilities = entries);
+            labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cachedAbilityLookup = lookup);
+            labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cachedSourceBooks = sourceBooks);
         }
         finally
         {

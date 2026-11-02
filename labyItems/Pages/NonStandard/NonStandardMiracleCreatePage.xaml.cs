@@ -1,3 +1,4 @@
+using labyItems.Models.NonStandard;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -9,6 +10,8 @@ namespace labyItems.Pages.NonStandard;
 
 public partial class NonStandardMiracleCreatePage : ContentPage, INotifyPropertyChanged
 {
+    private readonly string _pointsAppOwner = PointsAppAccess.CurrentOwnerKey ?? string.Empty;
+
     private static readonly JsonSerializerOptions JsonOptions = new();
     private MiracleService.MiracRaw _draft = NewDraft();
     private CharacterAssignmentOptionVm? _character;
@@ -87,7 +90,7 @@ public partial class NonStandardMiracleCreatePage : ContentPage, INotifyProperty
     private async Task SaveAsync()
     {
         if (!CanSave || _character == null) return; IsBusy = true;
-        try { Draft.nonStandard = true; await NonStandardContentService.SaveAsync(new NonStandardSaveRequest { EntityType = NonStandardEntityType.Miracle, Name = Draft.name.Trim(), DataJson = JsonSerializer.Serialize(Draft, JsonOptions), AssignedCharacterId = _character.Id, AssignedCharacterName = _character.Name, AssignedCharacterPlayerName = _character.PlayerName }); await Navigation.PopAsync(); }
+        try { Draft.nonStandard = true; await NonStandardContentService.SaveAsync(new NonStandardSaveRequest { OwnerAccountKey = _pointsAppOwner, EntityType = NonStandardEntityType.Miracle, Name = Draft.name.Trim(), DataJson = JsonSerializer.Serialize(Draft, JsonOptions), AssignedCharacterId = _character.Id, AssignedCharacterName = _character.Name, AssignedCharacterPlayerName = _character.PlayerName }); await Navigation.PopAsync(); }
         catch (Exception ex) { await DisplayAlert("Save failed", ex.Message, "OK"); } finally { IsBusy = false; }
     }
 

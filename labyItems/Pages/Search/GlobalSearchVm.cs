@@ -19,6 +19,7 @@ namespace labyItems.Pages.Search;
 
 public sealed class GlobalSearchVm : INotifyPropertyChanged
 {
+    private readonly long _accountVersion = LabyrintheSession.Shared.Version;
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private const int MaxVisibleResults = 300;
@@ -444,7 +445,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
                 }
             }
             
-            FilteredResults = converted;
+            LabyrintheSession.Shared.Publish(_accountVersion, () => FilteredResults = converted);
         }
         catch (OperationCanceledException)
         {
@@ -474,7 +475,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             {
                 var name = kvp.Key;
                 var rec = kvp.Value;
-                if (rec == null) continue;
+                if (rec == null || !PointsAppAccess.CanSeeDefinition(JsonSerializer.Serialize(rec))) continue;
 
                 var (_, category, bracketTags) = ClassCardVm.ParseBrackets(rec.Brackets);
                 var summary = ClassCardVm.BuildSummaryFromLevels(rec.Levels);
@@ -510,7 +511,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             {
                 var name = kvp.Key;
                 var rec = kvp.Value;
-                if (rec == null) continue;
+                if (rec == null || !PointsAppAccess.CanSeeDefinition(JsonSerializer.Serialize(rec))) continue;
 
                 var peopleType = rec.PeopleType != null ? string.Join(", ", rec.PeopleType) : string.Empty;
                 var desc = rec.Description ?? string.Empty;
@@ -544,7 +545,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             {
                 var name = kvp.Key;
                 var rec = kvp.Value;
-                if (rec == null) continue;
+                if (rec == null || !PointsAppAccess.CanSeeDefinition(JsonSerializer.Serialize(rec))) continue;
 
                 var ethos = rec.Ethos ?? string.Empty;
                 var background = rec.Background ?? string.Empty;

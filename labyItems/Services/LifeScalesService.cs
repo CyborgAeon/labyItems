@@ -15,19 +15,22 @@ public static class LifeScalesService
 
     public static async Task<Dictionary<string, Dictionary<string, List<int[]>>>> GetAllAsync()
     {
+        var accountCacheVersion = labyItems.Services.LabyrintheSession.Shared.Version;
         if (_cache != null)
-            return _cache;
+            return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
 
         await CacheLock.WaitAsync().ConfigureAwait(false);
         try
         {
             if (_cache != null)
-                return _cache;
+                return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
 
 #if DEBUG
-            _cache = await LoadDebugMergedAsync().ConfigureAwait(false);
+            var accountCacheLoad1 = await LoadDebugMergedAsync().ConfigureAwait(false);
+            labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = accountCacheLoad1);
 #else
-            _cache = await Task.Run(LoadFromDb).ConfigureAwait(false);
+            var accountCacheLoad2 = await Task.Run(LoadFromDb).ConfigureAwait(false);
+            labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = accountCacheLoad2);
 #endif
         }
         catch (Exception ex)
@@ -40,7 +43,7 @@ public static class LifeScalesService
             CacheLock.Release();
         }
 
-        return _cache;
+        return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
     }
 
     public static void InvalidateCache()

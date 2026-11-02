@@ -23,6 +23,8 @@ public partial class AddCharacter : ContentPage
             PointsEntry.Text = character.Points.ToString();
             PlayerEntry.Text = character.PlayerName;
         }
+        if (character == null)
+            PlayerEntry.Text = LabyrintheSession.Shared.Account?.DisplayName ?? string.Empty;
         BindingContext = this;
     }
 

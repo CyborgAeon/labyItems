@@ -8,22 +8,25 @@ namespace labyItems.Services;
 
 public static class SpellDamageService
 {
+    public static void InvalidateCache() => _cache = null;
+
     private static List<DamageSpell>? _cache;
 
     public static async Task<List<DamageSpell>> GetDamagingSpellsAsync()
     {
+        var accountCacheVersion = LabyrintheSession.Shared.Version;
         if (_cache != null) return _cache;
 
         var all = await SpellService.GetAllAsync();
 
-        _cache = all
+        LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = all
             .Where(s => s.GetDamageAmounts().Count > 0 || !string.IsNullOrWhiteSpace(s.damageOverride))
             .Select(s => new DamageSpell(
                 Name: s.name,
                 Level: s.level,
                 Kind: "Spell",
                 Parts: BuildParts(s)))
-            .ToList();
+            .ToList());
 
         return _cache;
     }

@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 using labyItems.Helpers;
+using labyItems.Services;
 using labyItems.Models.Characters;
 using labyItems.Pages.Characters.ViewModels;
 
@@ -11,7 +12,11 @@ public partial class Wizard : ContentPage
     public Wizard(CharacterDraft? draft = null, Func<Task>? onFinished = null)
     {
         InitializeComponent();
-        BindingContext = new WizardVm(draft, onFinished);
+        var characterDraft = draft ?? new CharacterDraft
+        {
+            PlayerName = LabyrintheSession.Shared.Account?.DisplayName ?? string.Empty
+        };
+        BindingContext = new WizardVm(characterDraft, onFinished);
     }
 
     protected override bool OnBackButtonPressed()

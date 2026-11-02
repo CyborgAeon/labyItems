@@ -1,3 +1,5 @@
+using labyItems.Models.Documents;
+using labyItems.Models.NonStandard;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Storage;
 
@@ -67,18 +69,21 @@ public sealed partial class DocumentReferenceService : IDocumentReferenceService
 #endif
     }
 
-    public Task<bool> IsAvailableAsync(NonStandardDocumentLink document)
+    public async Task<bool> IsAvailableAsync(NonStandardDocumentLink document)
     {
+        if (!NonStandardContentService.CanAccessDocument(document)) return false;
 #if ANDROID || IOS
-        return IsAvailablePlatformAsync(document);
+        var available = await IsAvailablePlatformAsync(document);
+        return available && NonStandardContentService.CanAccessDocument(document);
 #else
         var reference = ResolvePathReference(document);
-        return Task.FromResult(reference.Length > 0 && File.Exists(reference));
+        return reference.Length > 0 && File.Exists(reference);
 #endif
     }
 
     public async Task OpenAsync(NonStandardDocumentLink document)
     {
+        NonStandardContentService.RequireDocumentAccess(document);
 #if ANDROID || IOS
         await OpenPlatformAsync(document);
 #else

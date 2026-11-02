@@ -5,7 +5,6 @@ namespace labyItems.Pages;
 
 public partial class LoginPage : ContentPage
 {
-    private readonly SavedLoginStore _savedLogin = new(new DeviceSavedLoginStorage(), BiometricLogin.AuthenticateAsync);
     private bool _isSigningIn;
 
     public LoginPage()
@@ -15,72 +14,33 @@ public partial class LoginPage : ContentPage
         PasswordEntry.HandlerChanged += (_, _) => ConfigureAutofill();
     }
 
-    protected override void OnAppearing()
-    {
-        base.OnAppearing();
-        RefreshSavedLoginActions();
-    }
-
-    private void RefreshSavedLoginActions()
-    {
-        BiometricActions.IsVisible = _savedLogin.HasSavedLogin && BiometricLogin.IsAvailable;
-        ForgetLoginButton.IsVisible = _savedLogin.HasSavedLogin;
-    }
-
     private async void OnLoginClicked(object sender, EventArgs e)
     {
         if (_isSigningIn) return;
-        await SignInAsync((UsernameEntry.Text ?? "").Trim(), PasswordEntry.Text ?? "", offerSave: true);
+        await SignInAsync((UsernameEntry.Text ?? "").Trim(), PasswordEntry.Text ?? "");
     }
 
-    private async void OnBiometricLoginClicked(object sender, EventArgs e)
-    {
-        if (_isSigningIn) return;
-        SetSigningIn(true);
-        try
-        {
-            var login = await _savedLogin.UnlockAsync();
-            if (login == null) return;
-            // Credentials remain out of the entry controls and are sent only after authentication.
-            await CompleteSignInAsync(login.Email, login.Password, offerSave: false);
-        }
-        catch (Exception)
-        {
-            await DisplayAlert("Unable to sign in", "Please enter your email address and password to sign in.", "OK");
-        }
-        finally { SetSigningIn(false); RefreshSavedLoginActions(); }
-    }
-
-    private async Task SignInAsync(string email, string password, bool offerSave)
+    private async Task SignInAsync(string email, string password)
     {
         SetSigningIn(true);
-        try { await CompleteSignInAsync(email, password, offerSave); }
+        try { await CompleteSignInAsync(email, password); }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException)
         {
             await DisplayAlert("Login failed", "incorrect username or password", "OK");
         }
+        catch (Exception ex) when (ex is System.Security.Cryptography.CryptographicException or IOException or UnauthorizedAccessException)
+        {
+            await DisplayAlert("Account storage locked", "Your local account data could not be opened. It has been preserved. Please try again.", "OK");
+        }
         finally { SetSigningIn(false); }
     }
 
-    private async Task CompleteSignInAsync(string email, string password, bool offerSave)
+    private async Task CompleteSignInAsync(string email, string password)
     {
         if (!await LabyrintheSession.Shared.LoginAsync(email, password))
         {
             await DisplayAlert("Login failed", "incorrect username or password", "OK");
             return;
-        }
-        if (offerSave && !LabyrintheSession.Shared.IsFallback)
-        {
-            var save = await DisplayAlert(_savedLogin.HasSavedLogin ? "Update saved login?" : "Save login?",
-                "Save your login securely on this device? You can use biometrics to sign in when available.", "Save", "Not now");
-            if (save)
-            {
-                try { await _savedLogin.SaveAsync(email, password); }
-                catch (Exception)
-                {
-                    await DisplayAlert("Login not saved", "Your device could not save the login. You can still sign in with your password.", "OK");
-                }
-            }
         }
         PasswordEntry.Text = string.Empty;
         await OpenHomeAsync();
@@ -88,33 +48,24 @@ public partial class LoginPage : ContentPage
 
     private async Task OpenHomeAsync()
     {
-        var homePage = new ItemRoutePage();
-        Navigation.InsertPageBefore(homePage, this);
-        await Navigation.PopAsync();
+        try
+        {
+            await AccountDataAccess.Workspace!.OpenAsync();
+            AccountStorageCoordinator.ResetCaches();
+            if (Window != null) Window.Page = new NavigationPage(new ItemRoutePage());
+        }
+        catch
+        {
+            LabyrintheSession.Shared.Logout();
+            throw;
+        }
     }
 
     private void SetSigningIn(bool value)
     {
         _isSigningIn = value;
-        LoginButton.IsEnabled = BiometricLoginButton.IsEnabled = ForgetLoginButton.IsEnabled = GuestLoginButton.IsEnabled = PasswordVisibilityButton.IsEnabled = !value;
+        LoginButton.IsEnabled = GuestLoginButton.IsEnabled = PasswordVisibilityButton.IsEnabled = !value;
         UsernameEntry.IsEnabled = PasswordEntry.IsEnabled = !value;
-    }
-
-    private async void OnForgetLoginClicked(object sender, EventArgs e)
-    {
-        if (_isSigningIn) return;
-        SetSigningIn(true);
-        try
-        {
-            if (BiometricLogin.IsAvailable)
-            {
-                if (!await BiometricLogin.AuthenticateAsync()) return;
-            }
-            else if (!await DisplayAlert("Forget saved login?", "Remove the login saved on this device?", "Remove", "Cancel")) return;
-            _savedLogin.Remove();
-        }
-        catch (Exception) { await DisplayAlert("Unable to remove login", "Please try again.", "OK"); }
-        finally { SetSigningIn(false); RefreshSavedLoginActions(); }
     }
 
     private void ConfigureAutofill()

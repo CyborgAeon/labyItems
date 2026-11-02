@@ -25,6 +25,13 @@ namespace labyItems.Pages.Calculator;
 
 public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropertyChanged
 {
+    public static void InvalidateAccountCache()
+    {
+        SpellLookupCache.Clear();
+        MiracleLookupCache.Clear();
+        NeuroLookupCache.Clear();
+    }
+
     private bool _dataLoaded;
     private bool _isReady;
     private readonly ObservableCollection<ContributionRow> _breakdown = new();
@@ -52,9 +59,9 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     private static readonly string[] ApprenticeTypeChipOptions = { "🛡️ Shield", "🗡️ Weapon" };
     private static readonly string[] RepelGoodEvilChipOptions = { "👼 Good", "😈 Evil" };
 
-    private static readonly ConcurrentDictionary<Type, Task<Dictionary<string, SpellOption>>> SpellLookupCache = new();
-    private static readonly ConcurrentDictionary<Type, Task<Dictionary<string, MiracleOption>>> MiracleLookupCache = new();
-    private static readonly ConcurrentDictionary<Type, Task<Dictionary<string, NeuroOption>>> NeuroLookupCache = new();
+    private static readonly ConcurrentDictionary<(Type, long), Task<Dictionary<string, SpellOption>>> SpellLookupCache = new();
+    private static readonly ConcurrentDictionary<(Type, long), Task<Dictionary<string, MiracleOption>>> MiracleLookupCache = new();
+    private static readonly ConcurrentDictionary<(Type, long), Task<Dictionary<string, NeuroOption>>> NeuroLookupCache = new();
     private static Task<IReadOnlyList<DruidEvocationService.EvocRaw>>? _evocationCatalogueTask;
     private static Task<IReadOnlyList<NeuronicService.NeuronicRaw>>? _neuronicCatalogueTask;
 
@@ -539,11 +546,13 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
 
     protected virtual async Task<Dictionary<string, SpellOption>> BuildSpellLookupAsync()
     {
-        var pageType = GetType();
+        var pageType = (GetType(), LabyrintheSession.Shared.Version);
         var lookupTask = SpellLookupCache.GetOrAdd(pageType, _ => BuildSpellLookupCoreAsync());
         try
         {
-            return await lookupTask;
+            var result = await lookupTask;
+            LabyrintheSession.Shared.RequireVersion(pageType.Item2);
+            return result;
         }
         catch
         {
@@ -554,11 +563,13 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
 
     protected virtual async Task<Dictionary<string, MiracleOption>> BuildMiracleLookupAsync()
     {
-        var pageType = GetType();
+        var pageType = (GetType(), LabyrintheSession.Shared.Version);
         var lookupTask = MiracleLookupCache.GetOrAdd(pageType, _ => BuildMiracleLookupCoreAsync());
         try
         {
-            return await lookupTask;
+            var result = await lookupTask;
+            LabyrintheSession.Shared.RequireVersion(pageType.Item2);
+            return result;
         }
         catch
         {
@@ -569,11 +580,13 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
 
     protected virtual async Task<Dictionary<string, NeuroOption>> BuildNeuroLookupAsync()
     {
-        var pageType = GetType();
+        var pageType = (GetType(), LabyrintheSession.Shared.Version);
         var lookupTask = NeuroLookupCache.GetOrAdd(pageType, _ => BuildNeuroLookupCoreAsync());
         try
         {
-            return await lookupTask;
+            var result = await lookupTask;
+            LabyrintheSession.Shared.RequireVersion(pageType.Item2);
+            return result;
         }
         catch
         {

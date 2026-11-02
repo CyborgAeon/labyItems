@@ -25,7 +25,7 @@ public sealed class BattleboardDocumentService : IBattleboardDocumentService
                 throw new FileNotFoundException("Battleboard spreadsheet not found.", inputPath);
 
             var outputName = BuildOutputFileName(inputPath, outputFileName);
-            var outputPath = Path.Combine(FileSystem.CacheDirectory, outputName);
+            var outputPath = Path.Combine((labyItems.Services.AccountDataAccess.CacheDirectoryProvider?.Invoke() ?? FileSystem.CacheDirectory), outputName);
 
             await Task.Run(() => ConvertInternal(inputPath, outputPath), ct).ConfigureAwait(false);
             return outputPath;

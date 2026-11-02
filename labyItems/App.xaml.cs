@@ -103,6 +103,7 @@ public partial class App : Application
                 MainThread.BeginInvokeOnMainThread(() => _startupPage.SetWorking(info.Phase, info.Message));
             });
 
+            await AccountStorageCoordinator.InitializeAsync();
             var result = await _startupInitializationService.InitializeAsync(progress, cancellationToken);
             startupStopwatch.Stop();
 
@@ -111,6 +112,7 @@ public partial class App : Application
                 $"Startup sequence finished in {startupStopwatch.ElapsedMilliseconds} ms. " +
                 $"PhaseCount={result.Phases.Count}.");
 
+            AccountStorageCoordinator.ResetCaches();
             var navigationTimer = System.Diagnostics.Stopwatch.StartNew();
             RuntimeLog.Write("STARTUP", "First navigation phase started.");
             await MainThread.InvokeOnMainThreadAsync(() =>

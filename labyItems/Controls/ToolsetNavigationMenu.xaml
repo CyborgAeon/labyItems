@@ -595,6 +595,8 @@
                                    SemanticProperties.Description="Calendar requires a member login" />
                         </Grid>
                     </Border>
+                    <Button Text="Switch account" Clicked="OnSwitchAccountClicked"
+                            Margin="0,8,0,0" MinimumHeightRequest="44" />
                     <Border x:Name="SettingsRow"
                             Padding="12,10"
                             StrokeThickness="0"

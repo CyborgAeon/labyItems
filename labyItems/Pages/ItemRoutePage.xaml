@@ -88,6 +88,7 @@
               <Label FontAttributes="Bold"
                      FontSize="20"
                      Text="Session" />
+              <Button Text="Switch account" Clicked="OnSwitchAccountClicked" MinimumHeightRequest="44" />
               <Label>
                 <Label.FormattedText>
                   <FormattedString>

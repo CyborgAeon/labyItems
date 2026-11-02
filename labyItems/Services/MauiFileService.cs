@@ -6,8 +6,16 @@ namespace labyItems.Services;
 
 public sealed class MauiFileService : IFileService
 {
-    public string CacheDirectory => FileSystem.CacheDirectory;
-    public string AppDataDirectory => FileSystem.AppDataDirectory;
+    public string CacheDirectory => PrivateDirectory("exports");
+    public string AppDataDirectory => PrivateDirectory("documents");
+
+    private static string PrivateDirectory(string name)
+    {
+        var root = AccountDataAccess.Workspace?.RequireDirectory() ?? FileSystem.AppDataDirectory;
+        var path = Path.Combine(root, name);
+        Directory.CreateDirectory(path);
+        return path;
+    }
 
     public string CombineCachePath(string fileName)
         => Path.Combine(CacheDirectory, fileName ?? string.Empty);
@@ -19,6 +27,10 @@ public sealed class MauiFileService : IFileService
         return await reader.ReadToEndAsync();
     }
 
-    public Task WriteTextAsync(string path, string content)
-        => File.WriteAllTextAsync(path, content ?? string.Empty);
+    public async Task WriteTextAsync(string path, string content)
+    {
+        var version = LabyrintheSession.Shared.Version;
+        await File.WriteAllTextAsync(path, content ?? string.Empty);
+        LabyrintheSession.Shared.RequireVersion(version);
+    }
 }

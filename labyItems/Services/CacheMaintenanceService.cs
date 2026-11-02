@@ -30,7 +30,7 @@ public sealed class CacheMaintenanceService : ICacheMaintenanceService
         if (string.IsNullOrWhiteSpace(cacheDirectory) || !Directory.Exists(cacheDirectory))
             return;
 
-        var files = SafeEnumerateFiles(cacheDirectory).ToList();
+        var files = SafeEnumerateFiles(cacheDirectory).Where(file => !IsAccountWorkspace(file)).ToList();
         var now = DateTimeOffset.UtcNow;
 
         foreach (var file in files)
@@ -69,7 +69,7 @@ public sealed class CacheMaintenanceService : ICacheMaintenanceService
     private void TrimCacheDirectory(string cacheDirectory, CancellationToken cancellationToken)
     {
         var files = SafeEnumerateFiles(cacheDirectory)
-            .Where(file => file.Exists)
+            .Where(file => file.Exists && !IsAccountWorkspace(file))
             .OrderBy(file => file.LastWriteTimeUtc)
             .ToList();
 
@@ -94,6 +94,10 @@ public sealed class CacheMaintenanceService : ICacheMaintenanceService
             }
         }
     }
+
+    private static bool IsAccountWorkspace(FileInfo file)
+        => file.FullName.StartsWith(Path.Combine(FileSystem.CacheDirectory, "account-workspaces") + Path.DirectorySeparatorChar,
+            StringComparison.Ordinal);
 
     private static bool IsGeneratedExport(string fileName)
     {

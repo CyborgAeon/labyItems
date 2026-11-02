@@ -14,6 +14,7 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
 {
     private const double MonthSwipeThreshold = 48;
     private const double HorizontalGestureBias = 1.2;
+    private readonly long _accountVersion = LabyrintheSession.Shared.Version;
     private readonly CalendarEventStore _eventStore;
     private readonly CalendarStatusLabelUpdater _statusLabel;
     private bool _isAnimatingCalendarCollapse;
@@ -241,6 +242,7 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
         try { return await _eventStore.LoadMonthAsync(_visibleMonth); }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException)
         {
+            if (_accountVersion != LabyrintheSession.Shared.Version) return Array.Empty<CalendarEventRecord>();
             await DisplayAlert("Unable to load events", ex.Message, "OK");
             return Array.Empty<CalendarEventRecord>();
         }

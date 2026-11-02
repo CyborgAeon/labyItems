@@ -8,23 +8,26 @@ namespace labyItems.Services;
 
 public static class EvocationDamageService
 {
+    public static void InvalidateCache() => _cache = null;
+
     private static List<DamageSpell>? _cache;
 
     public static async Task<List<DamageSpell>> GetDamagingEvocationsAsync()
     {
+        var accountCacheVersion = LabyrintheSession.Shared.Version;
         if (_cache != null)
             return _cache;
 
         var all = await EvocationCatalogService.GetAllAsync();
 
-        _cache = all
+        LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = all
             .Where(e => !string.IsNullOrWhiteSpace(e.name))
             .Select(e => new DamageSpell(
                 Name: e.name,
                 Level: e.power,
                 Kind: "Evocation",
                 Parts: BuildParts(e)))
-            .ToList();
+            .ToList());
 
         return _cache;
     }

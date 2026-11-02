@@ -7,6 +7,7 @@ namespace labyItems.Services;
 public sealed class CharacterDraftStore : ICharacterDraftStore
 {
     public CharacterDraft Draft { get; }
+    private readonly long _accountVersion = LabyrintheSession.Shared.Version;
 
     public CharacterDraftStore(CharacterDraft draft)
     {
@@ -15,6 +16,7 @@ public sealed class CharacterDraftStore : ICharacterDraftStore
 
     public void Save()
     {
+        if (AccountDataAccess.Workspace != null) LabyrintheSession.Shared.RequireVersion(_accountVersion);
         try
         {
             LiteDbService.UpsertDraft(Draft);

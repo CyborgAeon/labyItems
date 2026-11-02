@@ -80,18 +80,20 @@ public static class SpecialisationDefinitionRepository
 
     public static async Task<SpecialisationIndex> GetIndexAsync()
     {
+        var accountCacheVersion = labyItems.Services.LabyrintheSession.Shared.Version;
         if (_cache != null)
-            return _cache;
+            return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
 
         var fragmented = await TryBuildFragmentedIndexAsync();
         if (fragmented != null)
         {
-            _cache = fragmented;
-            return _cache;
+            labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = fragmented);
+            return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
         }
 
-        _cache = await BuildLegacyIndexAsync();
-        return _cache;
+        var accountCacheLoad1 = await BuildLegacyIndexAsync();
+            labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = accountCacheLoad1);
+        return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
     }
 
     private static async Task<SpecialisationIndex> BuildLegacyIndexAsync()

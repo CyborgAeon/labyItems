@@ -41,6 +41,13 @@ public partial class ItemRoutePage : ContentPage
         SemanticProperties.SetDescription(CalendarCard, allowed ? "Calendar" : "Calendar locked. Sign in with a member account.");
     }
 
+    private async void OnSwitchAccountClicked(object sender, EventArgs e)
+    {
+        if (Window == null) return;
+        try { await AccountNavigation.SwitchAsync(Window); }
+        catch (Exception) { /* The coordinator leaves a locked screen on failure. */ }
+    }
+
     private async void OnOpenCalendarTapped(object sender, TappedEventArgs e)
     {
         if (!LabyrintheSession.Shared.CanViewCalendar) return;

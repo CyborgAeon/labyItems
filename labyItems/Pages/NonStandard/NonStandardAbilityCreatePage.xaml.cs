@@ -1,3 +1,4 @@
+using labyItems.Models.NonStandard;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -10,6 +11,8 @@ namespace labyItems.Pages.NonStandard;
 
 public partial class NonStandardAbilityCreatePage : ContentPage, INotifyPropertyChanged
 {
+    private readonly string _pointsAppOwner = PointsAppAccess.CurrentOwnerKey ?? string.Empty;
+
     private EvolutionService.AbilityResult _draft = NewDraft();
     private CharacterAssignmentOptionVm? _character;
     private bool _isBusy;
@@ -115,8 +118,7 @@ public partial class NonStandardAbilityCreatePage : ContentPage, INotifyProperty
                 available = Draft.Available, canBuyMultiple = Draft.CanBuyMultiple, preReqs = Draft.PreReqs,
                 maxAvailable = Draft.MaxAvailable, asPer = Draft.AsPer, nonStandard = true
             };
-            await NonStandardContentService.SaveAsync(new NonStandardSaveRequest
-            {
+            await NonStandardContentService.SaveAsync(new NonStandardSaveRequest { OwnerAccountKey = _pointsAppOwner,
                 EntityType = NonStandardEntityType.Ability, Name = Draft.Index.Trim(), DataJson = JsonSerializer.Serialize(payload),
                 AssignedCharacterId = _character.Id, AssignedCharacterName = _character.Name,
                 AssignedCharacterPlayerName = _character.PlayerName

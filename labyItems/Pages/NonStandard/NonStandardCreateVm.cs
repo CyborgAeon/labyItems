@@ -1,3 +1,4 @@
+using labyItems.Models.NonStandard;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -12,6 +13,8 @@ namespace labyItems.Pages.NonStandard;
 
 public sealed class NonStandardCreateVm : INotifyPropertyChanged
 {
+    private readonly string _pointsAppOwner = PointsAppAccess.CurrentOwnerKey ?? string.Empty;
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private static readonly IReadOnlyList<string> GuildOverrideTypes =
@@ -1149,8 +1152,7 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         try
         {
             var payloadJson = BuildPayloadJson();
-            var request = new NonStandardSaveRequest
-            {
+            var request = new NonStandardSaveRequest { OwnerAccountKey = _pointsAppOwner,
                 EntityType = CurrentType,
                 Name = (Name ?? string.Empty).Trim(),
                 DataJson = payloadJson

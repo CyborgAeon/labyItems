@@ -84,12 +84,13 @@ public static class NeuronicService
 
     public static async Task<IReadOnlyList<NeuronicRaw>> GetAllAsync()
     {
+        var accountCacheVersion = labyItems.Services.LabyrintheSession.Shared.Version;
         if (_cache is { Count: > 0 })
-            return _cache;
+            return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
 
         var loaded = await Task.Run(LoadFromDatabase);
-        _cache = loaded;
-        return _cache;
+        labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = loaded);
+        return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
     }
 
     public static async Task<IReadOnlyList<NeuronicRaw>> SearchAsync(

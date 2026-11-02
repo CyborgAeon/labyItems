@@ -1,3 +1,5 @@
+using labyItems.Models.Documents;
+using labyItems.Models.NonStandard;
 using Android.App;
 using Android.Content;
 using Android.Database;
@@ -113,6 +115,7 @@ public sealed partial class DocumentReferenceService
             var intent = new Intent(Intent.ActionView);
             intent.SetDataAndType(uri, contentType);
             intent.AddFlags(ActivityFlags.GrantReadUriPermission | ActivityFlags.NewTask);
+            NonStandardContentService.RequireDocumentAccess(document);
             Android.App.Application.Context.StartActivity(intent);
         });
 

@@ -13,6 +13,12 @@ namespace labyItems.Services;
 
 public static class GuildsService
 {
+    public static void InvalidateCache()
+    {
+        _cache = null;
+        _miracleSearchCache = null;
+    }
+
     private static readonly JsonSerializerOptions _jsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -26,14 +32,15 @@ public static class GuildsService
 
     public static async Task<Dictionary<string, GuildRecord>> GetAllAsync()
     {
+        var accountCacheVersion = labyItems.Services.LabyrintheSession.Shared.Version;
         if (_cache != null)
-            return _cache;
+            return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
 
         await CacheLock.WaitAsync().ConfigureAwait(false);
         try
         {
             if (_cache != null)
-                return _cache;
+                return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
 
             var json = await ServiceHelper.ReadPackageTextAsync("people/guilds.json").ConfigureAwait(false);
             var records = await Task.Run(() =>
@@ -42,8 +49,8 @@ public static class GuildsService
                 .ConfigureAwait(false);
 
             await NormalizeGuildBenefitsAsync(records).ConfigureAwait(false);
-            _cache = records;
-            return _cache;
+            labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = records);
+            return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
         }
         finally
         {

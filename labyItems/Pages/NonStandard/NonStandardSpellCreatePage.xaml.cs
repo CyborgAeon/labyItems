@@ -1,3 +1,4 @@
+using labyItems.Models.NonStandard;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -11,6 +12,8 @@ namespace labyItems.Pages.NonStandard;
 
 public partial class NonStandardSpellCreatePage : ContentPage, INotifyPropertyChanged
 {
+    private readonly string _pointsAppOwner = PointsAppAccess.CurrentOwnerKey ?? string.Empty;
+
     private static readonly JsonSerializerOptions JsonOptions = new();
     private SpellService.SpellRaw _draft = NewDraft();
     private CharacterAssignmentOptionVm? _character;
@@ -134,7 +137,7 @@ public partial class NonStandardSpellCreatePage : ContentPage, INotifyPropertyCh
         try
         {
             Draft.nonStandard = true;
-            await NonStandardContentService.SaveAsync(new NonStandardSaveRequest { EntityType = NonStandardEntityType.Spell, Name = Draft.name.Trim(), DataJson = JsonSerializer.Serialize(Draft, JsonOptions), AssignedCharacterId = _character.Id, AssignedCharacterName = _character.Name, AssignedCharacterPlayerName = _character.PlayerName });
+            await NonStandardContentService.SaveAsync(new NonStandardSaveRequest { OwnerAccountKey = _pointsAppOwner, EntityType = NonStandardEntityType.Spell, Name = Draft.name.Trim(), DataJson = JsonSerializer.Serialize(Draft, JsonOptions), AssignedCharacterId = _character.Id, AssignedCharacterName = _character.Name, AssignedCharacterPlayerName = _character.PlayerName });
             await DisplayAlert("Spell saved", $"'{Draft.name.Trim()}' was saved for {_character.Name}.", "OK"); await Navigation.PopAsync();
         }
         catch (Exception ex) { await DisplayAlert("Save failed", ex.Message, "OK"); }

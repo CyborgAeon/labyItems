@@ -149,17 +149,18 @@ public static class MiracleService
         }
     }
     private static List<MiracRaw>? _cache;
-    private static readonly string? _dbPath = ResolveDbPath();
+    private static string? _dbPath => ResolveDbPath();
 
     public static async Task<IReadOnlyList<MiracRaw>> GetAllAsync()
     {
-        if (_cache != null) return _cache;
+        var accountCacheVersion = labyItems.Services.LabyrintheSession.Shared.Version;
+        if (_cache != null) return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
 
         var dbList = await Task.Run(() => LoadFromDatabase());
         if (dbList is { Count: > 0 })
         {
-            _cache = dbList;
-            return _cache;
+            labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = dbList);
+            return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
         }
 
         throw new InvalidOperationException("Miracles DB not found or empty; ensure laby.db is installed.");
@@ -258,6 +259,7 @@ public static class MiracleService
 
     private static string? ResolveDbPath()
     {
+        if (ServiceHelper.RuntimeDatabasePathProvider != null) return ServiceHelper.EnsureDbPath();
         var appDb = Path.Combine(FileSystem.AppDataDirectory, "laby.db");
         if (File.Exists(appDb))
         {

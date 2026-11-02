@@ -39,7 +39,7 @@ public sealed class ScrollDocumentService : IScrollDocumentService
             throw new InvalidOperationException("Scroll text is required.");
 
         var outputPath = Path.Combine(
-            Microsoft.Maui.Storage.FileSystem.CacheDirectory,
+            (labyItems.Services.AccountDataAccess.CacheDirectoryProvider?.Invoke() ?? Microsoft.Maui.Storage.FileSystem.CacheDirectory),
             BuildFileName(request.DocumentName, request.Language));
         RuntimeLog.Write("SCROLL_PDF", $"Normalized text length={text.Length}. Output path='{outputPath}'.");
 
@@ -70,7 +70,7 @@ public sealed class ScrollDocumentService : IScrollDocumentService
         PdfSharpFontResolverBootstrapper.EnsureInitialized();
 
         var outputPath = Path.Combine(
-            Microsoft.Maui.Storage.FileSystem.CacheDirectory,
+            (labyItems.Services.AccountDataAccess.CacheDirectoryProvider?.Invoke() ?? Microsoft.Maui.Storage.FileSystem.CacheDirectory),
             BuildFileName(request.DocumentName, request.Language));
 
         try
@@ -98,7 +98,7 @@ public sealed class ScrollDocumentService : IScrollDocumentService
             throw new InvalidOperationException("Scroll text is required.");
 
         var outputPath = System.IO.Path.Combine(
-            Microsoft.Maui.Storage.FileSystem.CacheDirectory,
+            (labyItems.Services.AccountDataAccess.CacheDirectoryProvider?.Invoke() ?? Microsoft.Maui.Storage.FileSystem.CacheDirectory),
             BuildFileName(request.DocumentName, request.Language));
 
         var typeface = await LoadAndroidTypefaceAsync(request.Language, request.ManaGlyphVariant).ConfigureAwait(false);
@@ -109,7 +109,7 @@ public sealed class ScrollDocumentService : IScrollDocumentService
     private static async Task<ScrollPdfResult> CreateAndroidCribSheetPdfAsync(ScrollCribSheetPdfRequest request, CancellationToken cancellationToken)
     {
         var outputPath = System.IO.Path.Combine(
-            Microsoft.Maui.Storage.FileSystem.CacheDirectory,
+            (labyItems.Services.AccountDataAccess.CacheDirectoryProvider?.Invoke() ?? Microsoft.Maui.Storage.FileSystem.CacheDirectory),
             BuildFileName(request.DocumentName, request.Language));
 
         var typeface = await LoadAndroidTypefaceAsync(request.Language, request.ManaGlyphVariant).ConfigureAwait(false);

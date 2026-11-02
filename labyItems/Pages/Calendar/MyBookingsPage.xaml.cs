@@ -4,6 +4,7 @@ namespace labyItems.Pages.Calendar;
 
 public partial class MyBookingsPage : ContentPage
 {
+    private readonly long _accountVersion = LabyrintheSession.Shared.Version;
     private readonly CalendarEventStore _eventStore;
     private readonly CalendarStatusLabelUpdater _statusLabel;
     private bool _isLoading;
@@ -69,6 +70,7 @@ public partial class MyBookingsPage : ContentPage
         }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException)
         {
+            if (_accountVersion != LabyrintheSession.Shared.Version) return;
             await DisplayAlert("Unable to load bookings", ex.Message, "OK");
             BookingsHost.Children.Add(new Label { Text = "Bookings could not be loaded. Please try again." });
         }

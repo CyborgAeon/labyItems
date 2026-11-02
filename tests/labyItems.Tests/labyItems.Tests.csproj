@@ -31,6 +31,14 @@
   <ItemGroup>
     <Compile Include="../../labyItems/Services/ReferenceDatabaseReadiness.cs" Link="Source/ReferenceDatabaseReadiness.cs" />
     <Compile Include="../../labyItems/Models/Items/*.cs" Link="Source/Items/%(Filename)%(Extension)" />
+    <Compile Include="../../labyItems/Models/NonStandard/*.cs" Link="Source/NonStandard/%(Filename)%(Extension)" />
+    <Compile Include="../../labyItems/Models/Documents/*.cs" Link="Source/Documents/%(Filename)%(Extension)" />
+    <Compile Include="../../labyItems/Services/NonStandardContentService.cs" Link="Source/NonStandardContentService.cs" />
+    <Compile Include="../../labyItems/Services/PointsAppAccess.cs" Link="Source/PointsAppAccess.cs" />
+    <Compile Include="../../labyItems/Services/DocumentReferenceKinds.cs" Link="Source/DocumentReferenceKinds.cs" />
+    <Compile Include="../../labyItems/Services/AccountWorkspace.cs" Link="Source/AccountWorkspace.cs" />
+    <Compile Include="../../labyItems/Services/AccountDataAccess.cs" Link="Source/AccountDataAccess.cs" />
+    <Compile Include="../../labyItems/Services/WorkspaceCalendarEventCache.cs" Link="Source/WorkspaceCalendarEventCache.cs" />
     <Compile Include="../../labyItems/Services/ISavedLoginStorage.cs" Link="Source/ISavedLoginStorage.cs" />
     <Compile Include="../../labyItems/Services/SavedLoginStore.cs" Link="Source/SavedLoginStore.cs" />
     <Compile Include="../../labyItems/Services/IAccountProfileCache.cs" Link="Source/IAccountProfileCache.cs" />

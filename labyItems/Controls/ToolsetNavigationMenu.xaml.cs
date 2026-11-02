@@ -205,6 +205,13 @@ public partial class ToolsetNavigationMenu : ContentView
     private async void OnInitiateTradeTapped(object sender, TappedEventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new TradePage()));
 
+    private async void OnSwitchAccountClicked(object sender, EventArgs e)
+    {
+        if (Window == null) return;
+        try { await AccountNavigation.SwitchAsync(Window); }
+        catch (Exception) { /* The coordinator leaves a locked screen on failure. */ }
+    }
+
     private async void OnSettingsClicked(object sender, EventArgs e)
     {
         var page = Application.Current?.Windows.FirstOrDefault()?.Page ?? Application.Current?.MainPage;

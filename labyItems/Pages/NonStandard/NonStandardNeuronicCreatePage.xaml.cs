@@ -1,3 +1,4 @@
+using labyItems.Models.NonStandard;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -11,6 +12,7 @@ namespace labyItems.Pages.NonStandard;
 
 public partial class NonStandardNeuronicCreatePage : ContentPage, INotifyPropertyChanged
 {
+    private readonly string _pointsAppOwner = PointsAppAccess.CurrentOwnerKey ?? string.Empty;
     private NeuronicService.NeuronicRaw _draft = new();
     private CharacterAssignmentOptionVm? _character;
     private bool _isBusy;
@@ -50,7 +52,7 @@ public partial class NonStandardNeuronicCreatePage : ContentPage, INotifyPropert
         }
         Draft=d;
     }
-    private async Task SaveAsync(){if(!CanSave||_character==null)return;IsBusy=true;try{Draft.tree=NeuronicService.FormatType(Draft.Type==NeuroOptionType.None?NeuronicService.ParseType(Draft.tree):Draft.Type);await NonStandardContentService.SaveAsync(new(){EntityType=NonStandardEntityType.Neuronic,Name=Draft.name.Trim(),DataJson=JsonSerializer.Serialize(Draft),AssignedCharacterId=_character.Id,AssignedCharacterName=_character.Name,AssignedCharacterPlayerName=_character.PlayerName});await DisplayAlert("Neuronic saved",$"'{Draft.name.Trim()}' was saved for {_character.Name}.","OK");await Navigation.PopAsync();}catch(Exception ex){await DisplayAlert("Save failed",ex.Message,"OK");}finally{IsBusy=false;}}
+    private async Task SaveAsync(){if(!CanSave||_character==null)return;IsBusy=true;try{Draft.tree=NeuronicService.FormatType(Draft.Type==NeuroOptionType.None?NeuronicService.ParseType(Draft.tree):Draft.Type);await NonStandardContentService.SaveAsync(new(){OwnerAccountKey=_pointsAppOwner,EntityType=NonStandardEntityType.Neuronic,Name=Draft.name.Trim(),DataJson=JsonSerializer.Serialize(Draft),AssignedCharacterId=_character.Id,AssignedCharacterName=_character.Name,AssignedCharacterPlayerName=_character.PlayerName});await DisplayAlert("Neuronic saved",$"'{Draft.name.Trim()}' was saved for {_character.Name}.","OK");await Navigation.PopAsync();}catch(Exception ex){await DisplayAlert("Save failed",ex.Message,"OK");}finally{IsBusy=false;}}
     private async Task<string> Prompt(string title,string message,string initial,Keyboard? keyboard=null)=>(await DisplayPromptAsync(title,message,"Apply","Cancel",initialValue:initial??"",keyboard:keyboard??Keyboard.Default))??initial??"";
     private static NeuronicService.NeuronicRaw Clone(NeuronicService.NeuronicRaw value)
     {

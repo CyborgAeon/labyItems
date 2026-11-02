@@ -13,10 +13,12 @@ public static class LiteDbService
     private const string CharactersTableName = "wallet_characters";
     private const string ItemsTableName = "wallet_items";
     private static readonly object SchemaSync = new();
-    private static bool _schemaEnsured;
+    private static readonly HashSet<string> _schemaEnsured = new();
+    public static Func<string>? PersonalDatabasePathProvider { get; set; }
 
     public static void InsertItem(Item item)
     {
+        using var accountWrite = AccountDataAccess.BeginWrite();
         ArgumentNullException.ThrowIfNull(item);
 
         item.Id = EnsureId(item.Id);
@@ -107,6 +109,7 @@ ON CONFLICT(id) DO UPDATE SET
 
     public static bool UpdateItem(Item item)
     {
+        using var accountWrite = AccountDataAccess.BeginWrite();
         ArgumentNullException.ThrowIfNull(item);
 
         var id = (item.Id ?? string.Empty).Trim();
@@ -151,6 +154,7 @@ WHERE id = @id;";
 
     public static bool DeleteItem(string id)
     {
+        using var accountWrite = AccountDataAccess.BeginWrite();
         var normalizedId = (id ?? string.Empty).Trim();
         if (normalizedId.Length == 0)
             return false;
@@ -164,6 +168,7 @@ WHERE id = @id;";
 
     public static void DeleteChar(string id)
     {
+        using var accountWrite = AccountDataAccess.BeginWrite();
         var normalizedId = (id ?? string.Empty).Trim();
         if (normalizedId.Length == 0)
             return;
@@ -199,6 +204,7 @@ WHERE assigned_character_id = @id;";
 
     public static void RepairItemsCollection()
     {
+        using var accountWrite = AccountDataAccess.BeginWrite();
         // Legacy LiteDB corruption-recovery hook. SQLite storage no longer needs collection-level repair.
         using var conn = OpenConnection();
         _ = conn;
@@ -380,6 +386,7 @@ LIMIT 1;";
 
     public static void UpsertCharacter(Character c)
     {
+        using var accountWrite = AccountDataAccess.BeginWrite();
         ArgumentNullException.ThrowIfNull(c);
 
         c.Id = EnsureId(c.Id);
@@ -391,6 +398,7 @@ LIMIT 1;";
 
     public static Character UpsertDraft(CharacterDraft draft)
     {
+        using var accountWrite = AccountDataAccess.BeginWrite();
         ArgumentNullException.ThrowIfNull(draft);
 
         using var conn = OpenConnection();
@@ -714,21 +722,31 @@ ON CONFLICT(id) DO UPDATE SET
 
     private static SqliteConnection OpenConnection()
     {
-        var dbPath = Path.Combine(FileSystem.AppDataDirectory, ServiceHelper.DbFileName);
-        Directory.CreateDirectory(Path.GetDirectoryName(dbPath) ?? FileSystem.AppDataDirectory);
-        EnsureWritableDatabaseFiles(dbPath);
+        var accountRead = AccountDataAccess.Workspace?.BeginRead();
         try
         {
-            return OpenConnectionInternal(dbPath);
+            var dbPath = PersonalDatabasePathProvider?.Invoke() ?? Path.Combine(FileSystem.AppDataDirectory, ServiceHelper.DbFileName);
+            Directory.CreateDirectory(Path.GetDirectoryName(dbPath) ?? FileSystem.AppDataDirectory);
+            EnsureWritableDatabaseFiles(dbPath);
+            SqliteConnection connection;
+            try { connection = OpenConnectionInternal(dbPath); }
+            catch (SqliteException ex) when (IsReadonlySqlite(ex))
+            {
+                Helpers.RuntimeLog.Write("SQLITE_RO_RECOVER", "Retrying an account database with a writable clone.", ex);
+                RecoverWritableDatabase(dbPath);
+                connection = OpenConnectionInternal(dbPath);
+            }
+            if (accountRead != null)
+                connection.StateChange += (_, args) =>
+                {
+                    if (args.CurrentState == System.Data.ConnectionState.Closed) accountRead.Dispose();
+                };
+            return connection;
         }
-        catch (SqliteException ex) when (IsReadonlySqlite(ex))
+        catch
         {
-            Helpers.RuntimeLog.Write(
-                "SQLITE_RO_RECOVER",
-                $"Readonly SQLite write failure at '{dbPath}'. FileState: {DescribeFileState(dbPath)}. Retrying with writable clone.",
-                ex);
-            RecoverWritableDatabase(dbPath);
-            return OpenConnectionInternal(dbPath);
+            accountRead?.Dispose();
+            throw;
         }
     }
 
@@ -760,10 +778,14 @@ ON CONFLICT(id) DO UPDATE SET
 
     private static SqliteConnection OpenConnectionInternal(string dbPath)
     {
-        var conn = new SqliteConnection($"Data Source={dbPath};Mode=ReadWriteCreate");
-        conn.Open();
-        EnsureSchema(conn);
-        return conn;
+        var conn = new SqliteConnection($"Data Source={dbPath};Mode=ReadWriteCreate;Pooling=False");
+        try
+        {
+            conn.Open();
+            EnsureSchema(conn);
+            return conn;
+        }
+        catch { conn.Dispose(); throw; }
     }
 
     private static bool IsReadonlySqlite(SqliteException ex)
@@ -855,12 +877,12 @@ ON CONFLICT(id) DO UPDATE SET
 
     private static void EnsureSchema(SqliteConnection conn)
     {
-        if (_schemaEnsured)
+        if (_schemaEnsured.Contains(conn.DataSource))
             return;
 
         lock (SchemaSync)
         {
-            if (_schemaEnsured)
+            if (_schemaEnsured.Contains(conn.DataSource))
                 return;
 
             using var cmd = conn.CreateCommand();
@@ -943,7 +965,7 @@ CREATE INDEX IF NOT EXISTS idx_wallet_items_maker_id
             EnsureColumn(conn, CharactersTableName, "avatar_display_path", "TEXT NOT NULL DEFAULT ''");
             EnsureColumn(conn, CharactersTableName, "avatar_file_name", "TEXT NOT NULL DEFAULT ''");
             EnsureColumn(conn, CharactersTableName, "avatar_content_type", "TEXT NOT NULL DEFAULT ''");
-            _schemaEnsured = true;
+            _schemaEnsured.Add(conn.DataSource);
         }
     }
 

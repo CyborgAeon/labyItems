@@ -217,7 +217,7 @@ public partial class MakeSheetPage : ContentPage
                 @"[^A-Za-z0-9_-]+",
                 "-");
             var filename = $"{safeCharacter}-make-sheet-{DateTime.UtcNow:yyyyMMdd-HHmmss}.txt";
-            var path = Path.Combine(FileSystem.CacheDirectory, filename);
+            var path = Path.Combine((labyItems.Services.AccountDataAccess.CacheDirectoryProvider?.Invoke() ?? FileSystem.CacheDirectory), filename);
             await File.WriteAllTextAsync(path, exportText);
 
             await Share.Default.RequestAsync(new ShareFileRequest

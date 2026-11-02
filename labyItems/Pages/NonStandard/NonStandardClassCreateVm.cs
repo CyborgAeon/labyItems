@@ -1,3 +1,4 @@
+using labyItems.Models.NonStandard;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -14,6 +15,8 @@ namespace labyItems.Pages.NonStandard;
 
 public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
 {
+    private readonly string _pointsAppOwner = PointsAppAccess.CurrentOwnerKey ?? string.Empty;
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private static readonly JsonSerializerOptions PrettyJson = new()
@@ -1083,8 +1086,7 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
         try
         {
             var payload = BuildClassPayload();
-            var request = new NonStandardSaveRequest
-            {
+            var request = new NonStandardSaveRequest { OwnerAccountKey = _pointsAppOwner,
                 EntityType = NonStandardEntityType.CharacterClass,
                 Name = (Name ?? string.Empty).Trim(),
                 DataJson = payload.ToJsonString(PrettyJson),

@@ -32,7 +32,8 @@ public static class EarthPowerService
         public bool isAdvanced { get; set; }
     }
 
-    private static string? _dbPath;
+    private static string? _legacyDbPath;
+    private static string? _dbPath => ServiceHelper.RuntimeDatabasePathProvider?.Invoke() ?? _legacyDbPath;
 
     public static bool HasDatabase => !string.IsNullOrEmpty(_dbPath) && File.Exists(_dbPath);
 
@@ -41,7 +42,7 @@ public static class EarthPowerService
         var appDb = Path.Combine(FileSystem.AppDataDirectory, "laby.db");
         if (File.Exists(appDb))
         {
-            _dbPath = appDb;
+            _legacyDbPath = appDb;
             return;
         }
 
@@ -53,12 +54,12 @@ public static class EarthPowerService
         {
             if (File.Exists(candidate))
             {
-                _dbPath = candidate;
+                _legacyDbPath = candidate;
                 return;
             }
         }
 
-        _dbPath = null;
+        _legacyDbPath = null;
     }
 
     public static async Task<IReadOnlyList<EvocRaw>> GetAllAsync()
