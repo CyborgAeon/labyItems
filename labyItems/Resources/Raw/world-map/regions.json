@@ -1,0 +1,443 @@
+[
+  {
+    "Id": "region-far-north",
+    "Name": "The Far North",
+    "Category": "region",
+    "StatisticsId": "Far North"
+  },
+  {
+    "Id": "region-empire-of-glass",
+    "Name": "The Empire of Glass",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "region-deci",
+    "Name": "Deci",
+    "Category": "region",
+    "StatisticsId": "Deci"
+  },
+  {
+    "Id": "region-alguz",
+    "Name": "Alguz & Gileenim",
+    "Category": "region",
+    "StatisticsId": null,
+    "RelatedStatisticsIds": [
+      "Alguz"
+    ]
+  },
+  {
+    "Id": "region-ruin-of-keys",
+    "Name": "Ruin of Keys / Armastas",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "region-great-alg",
+    "Name": "The Great Alg",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "region-elohion",
+    "Name": "The Elohion",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "region-halgar",
+    "Name": "Halgar",
+    "Category": "region",
+    "StatisticsId": "Halgar"
+  },
+  {
+    "Id": "region-rodanne",
+    "Name": "Rodanne",
+    "Category": "region",
+    "StatisticsId": "Rodane"
+  },
+  {
+    "Id": "region-amoris-doom",
+    "Name": "Amoris' Doom",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "region-bildteve",
+    "Name": "Bildteve",
+    "Category": "region",
+    "StatisticsId": "Bildteve"
+  },
+  {
+    "Id": "region-mordreds-rest",
+    "Name": "Mordred's Rest & Scarlene",
+    "Category": "region",
+    "StatisticsId": null,
+    "RelatedStatisticsIds": [
+      "Mordreds Rest",
+      "Scarlene"
+    ]
+  },
+  {
+    "Id": "region-forest-of-trollville",
+    "Name": "Forest of Trollville",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "region-broken-lands",
+    "Name": "The Broken Lands",
+    "Category": "region",
+    "StatisticsId": "Tribal Brokenlands"
+  },
+  {
+    "Id": "region-sellaville-west",
+    "Name": "Sellaville West Coast",
+    "Category": "region",
+    "StatisticsId": null,
+    "RelatedStatisticsIds": [
+      "Sellaville"
+    ]
+  },
+  {
+    "Id": "region-schtoy",
+    "Name": "Schtoy",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "region-crag-holme",
+    "Name": "Crag Holme",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "region-jenderburg",
+    "Name": "Jenderburg Coast",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "region-eisenstein",
+    "Name": "Eisenstein",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "region-kasnia",
+    "Name": "Kasnia",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "region-alunkhand",
+    "Name": "Alunkhand",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "region-tartovia",
+    "Name": "Tartovia",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "region-ulno",
+    "Name": "Ulno",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "region-wallastovia",
+    "Name": "Wallastovia",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "region-amles",
+    "Name": "Amles",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "region-ishma",
+    "Name": "Ishma",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "region-port-miere",
+    "Name": "Port Miere",
+    "Category": "region",
+    "StatisticsId": "Port Miere"
+  },
+  {
+    "Id": "region-torn-isles",
+    "Name": "The Torn Isles",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "region-nordins",
+    "Name": "The Nordins",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "region-dragon-isle",
+    "Name": "The Dragon Isles",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "region-gothiel",
+    "Name": "Gothiel & Eartholme",
+    "Category": "region",
+    "StatisticsId": null,
+    "RelatedStatisticsIds": [
+      "Gothiel",
+      "Eartholme"
+    ]
+  },
+  {
+    "Id": "region-sellaville-hollow",
+    "Name": "Sellaville Hollow",
+    "Category": "region",
+    "StatisticsId": null,
+    "RelatedStatisticsIds": [
+      "Sellaville"
+    ]
+  },
+  {
+    "Id": "region-reclaimed-lands",
+    "Name": "Reclaimed Lands",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "region-bulaslavia",
+    "Name": "Bulaslavia & Thimon",
+    "Category": "region",
+    "StatisticsId": null,
+    "RelatedStatisticsIds": [
+      "Bulaslavia",
+      "Thimon"
+    ]
+  },
+  {
+    "Id": "region-habderburg",
+    "Name": "Habderburg",
+    "Category": "region",
+    "StatisticsId": "Habderburg"
+  },
+  {
+    "Id": "region-dhaemalund",
+    "Name": "Dhaemalund",
+    "Category": "region",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-deci",
+    "Name": "Deci",
+    "Category": "location",
+    "StatisticsId": "Deci"
+  },
+  {
+    "Id": "loc-eartholme",
+    "Name": "Eartholme",
+    "Category": "location",
+    "StatisticsId": "Eartholme"
+  },
+  {
+    "Id": "loc-gothiel",
+    "Name": "Gothiel",
+    "Category": "location",
+    "StatisticsId": "Gothiel"
+  },
+  {
+    "Id": "loc-halgar",
+    "Name": "Halgar",
+    "Category": "location",
+    "StatisticsId": "Halgar"
+  },
+  {
+    "Id": "loc-rodanne",
+    "Name": "Rodanne",
+    "Category": "location",
+    "StatisticsId": "Rodane"
+  },
+  {
+    "Id": "loc-bildteve",
+    "Name": "Bildteve",
+    "Category": "location",
+    "StatisticsId": "Bildteve"
+  },
+  {
+    "Id": "loc-alguz",
+    "Name": "Alguz",
+    "Category": "location",
+    "StatisticsId": "Alguz"
+  },
+  {
+    "Id": "loc-gileenim",
+    "Name": "Gileenim",
+    "Category": "location",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-ruin-of-keys",
+    "Name": "Ruin of Keys / Armastas",
+    "Category": "location",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-port-miere",
+    "Name": "Port Miere",
+    "Category": "location",
+    "StatisticsId": "Port Miere"
+  },
+  {
+    "Id": "loc-mordreds-rest",
+    "Name": "Mordred's Rest",
+    "Category": "location",
+    "StatisticsId": "Mordreds Rest"
+  },
+  {
+    "Id": "loc-scarlene",
+    "Name": "Scarlene",
+    "Category": "location",
+    "StatisticsId": "Scarlene"
+  },
+  {
+    "Id": "loc-sellaville",
+    "Name": "Sellaville",
+    "Category": "location",
+    "StatisticsId": "Sellaville"
+  },
+  {
+    "Id": "loc-thimon",
+    "Name": "Thimon",
+    "Category": "location",
+    "StatisticsId": "Thimon"
+  },
+  {
+    "Id": "loc-takalia",
+    "Name": "Takalia",
+    "Category": "location",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-caer-mauros",
+    "Name": "Caer Mauros",
+    "Category": "location",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-caer-tabthar",
+    "Name": "Caer Tabthar",
+    "Category": "location",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-arothelia",
+    "Name": "Arothelia",
+    "Category": "location",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-gaurade",
+    "Name": "Gaurade",
+    "Category": "location",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-merrandalum",
+    "Name": "Merrandalum",
+    "Category": "location",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-jenderburg-city",
+    "Name": "Jenderburg",
+    "Category": "location",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-crag-holme-city",
+    "Name": "Crag Holme",
+    "Category": "location",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-ulno-city",
+    "Name": "Ulno",
+    "Category": "location",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-ritter-expedition",
+    "Name": "Ritter Expedition",
+    "Category": "location",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-myretoria",
+    "Name": "Myretoria",
+    "Category": "location",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-ruined-city",
+    "Name": "The Ruined City",
+    "Category": "location",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-virgrin",
+    "Name": "Virgrin",
+    "Category": "location",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-ruins-of-meron",
+    "Name": "Ruins of Meron",
+    "Category": "location",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-cave-of-ages",
+    "Name": "Cave of Ages",
+    "Category": "location",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-amoris-doom-site",
+    "Name": "Amoris' Doom",
+    "Category": "location",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-oedombhad",
+    "Name": "Oedombhad",
+    "Category": "location",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-khaniskhad",
+    "Name": "Khaniskhad",
+    "Category": "location",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-dashkhad",
+    "Name": "Dashkhad",
+    "Category": "location",
+    "StatisticsId": null
+  },
+  {
+    "Id": "loc-galakhad",
+    "Name": "Galakhad",
+    "Category": "location",
+    "StatisticsId": null
+  }
+]

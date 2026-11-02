@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:labyItems.Controls"
+             x:Class="labyItems.Pages.WorldMap.PrimusMapPage"
+             NavigationPage.HasNavigationBar="False" Shell.NavBarIsVisible="False" Title="Primus">
+    <Grid Padding="16" RowDefinitions="Auto,Auto,Auto,Auto,*" RowSpacing="8">
+        <controls:DetailPageHeader HeaderText="Primus" />
+        <Label x:Name="StatusLabel" Grid.Row="1" TextColor="{StaticResource MutedTextColor}" FontSize="13" />
+        <Picker x:Name="PeriodPicker" Grid.Row="2" Title="Statistics month" SemanticProperties.Description="Statistics month" />
+        <Grid Grid.Row="3" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+            <Picker x:Name="PlacePicker" Title="Browse all published places" SemanticProperties.Description="Published places" />
+            <Button Grid.Column="1" Text="View stats" Clicked="OnViewStatisticsClicked" />
+        </Grid>
+        <controls:PrimusMapView x:Name="Map" Grid.Row="4" />
+    </Grid>
+</ContentPage>

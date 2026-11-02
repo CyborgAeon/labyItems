@@ -595,6 +595,7 @@
                                    SemanticProperties.Description="Calendar requires a member login" />
                         </Grid>
                     </Border>
+                    <Button Text="Primus map and world stats" Clicked="OnOpenPrimusMapClicked" MinimumHeightRequest="44" />
                     <Button Text="Switch account" Clicked="OnSwitchAccountClicked"
                             Margin="0,8,0,0" MinimumHeightRequest="44" />
                     <Border x:Name="SettingsRow"

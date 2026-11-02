@@ -24,6 +24,7 @@ public static class AccountStorageCoordinator
         // Populate only from trusted packaged data; never copy an installed shared
         // database back into this public reference catalogue.
         LightweightMigrator.ApplyInitialSchema(publicDb, null);
+        await WorldRegionRepository.SeedAsync(publicDb);
         await (ServiceHelper.ResolveService<IEvolutionDataSynchronizer>() ?? throw new InvalidOperationException("Reference synchronizer unavailable.")).EnsureCurrentAsync(publicDb);
         await (ServiceHelper.ResolveService<IAbilityDefinitionDataSynchronizer>() ?? throw new InvalidOperationException("Reference synchronizer unavailable.")).EnsureCurrentAsync(publicDb);
         await (ServiceHelper.ResolveService<ICharacterReferenceDataSynchronizer>() ?? throw new InvalidOperationException("Reference synchronizer unavailable.")).EnsureCurrentAsync(publicDb);

@@ -89,6 +89,8 @@ public partial class ToolsetNavigationMenu : ContentView
         => await SetMenuOpenAsync(false);
     private async void OnHomeTapped(object sender, TappedEventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new ItemRoutePage()));
+    private async void OnOpenPrimusMapClicked(object sender, EventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new labyItems.Pages.WorldMap.PrimusMapPage()));
     private async void OnOpenCalendarTapped(object sender, TappedEventArgs e)
     {
         if (!LabyrintheSession.Shared.CanViewCalendar) return;
