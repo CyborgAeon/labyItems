@@ -45,6 +45,19 @@ try{
  check('tap preserves viewport',viewport.x===before.x&&viewport.y===before.y&&viewport.scale===before.scale);
  document.querySelector('#clear').click();
  check('clear removes selection and tooltip',selected===null&&notifications.at(-1)==='primus://hide');
+ const filteredViewport={x:viewport.x,y:viewport.y,scale:viewport.scale};
+ setMatchingRegions(['curve','location']);
+ check('town filter marks only explicit mapped paths',paths.filter(path=>path.classList.contains('matching')).map(path=>path.id).sort().join(',')==='curve,location');
+ check('filtering preserves viewport',viewport.x===filteredViewport.x&&viewport.y===filteredViewport.y&&viewport.scale===filteredViewport.scale);
+ selectRegion('location',true);
+ check('town result selects its location',selected?.id==='location');
+ const focused=viewport.toScreen(300,150);
+ check('town focus accounts for inherited transforms',Math.abs(focused.x-viewport.width/2)<1e-8&&focused.y>=0&&focused.y<=viewport.height&&hit(300,150)==='location');
+ setMatchingRegions(null);
+ check('clearing town filters removes match highlighting',paths.every(path=>!path.classList.contains('matching')));
+ selectRegion('not-mapped',true);
+ check('unmapped town does not select an unrelated path',selected===null);
+
 
  document.querySelector('#result').textContent='PASS '+results.length+' '+results.join('; ');
 }catch(e){document.querySelector('#result').textContent='FAIL '+e.stack;}

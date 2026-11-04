@@ -109,6 +109,9 @@ public static class FontAwesomeGlyphs
     public const string MinusSquare = "\uf146";
     public const string Map = "\uf5a0";
     public const string Logout = "\ue5a9";
+    public const string Administration = "\uf21b";
+    public const string Deity = "\uf67f";
+    public const string Dragon = "\uf38d";
     public static string GetSphereIcon(string? sphere)
     {
         var token = NormalizeSphereToken(sphere);

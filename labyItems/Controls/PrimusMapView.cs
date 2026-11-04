@@ -11,12 +11,20 @@ public sealed class PrimusMapView : ContentView
 {
     private readonly WebView browser = new();
     private bool loaded;
+    private bool ready;
+    private string? pendingSelection;
+    private bool pendingFocus;
+    private string matchingIds = "null";
+#if ANDROID
+    private Android.Webkit.WebView? nativeBrowser;
+#endif
     private readonly AbsoluteLayout canvas = new();
     private readonly Label selectionName = new() { VerticalTextAlignment = TextAlignment.Center, LineBreakMode = LineBreakMode.WordWrap };
     private readonly Border tooltip;
     private readonly Dictionary<string, string> regionNames = new();
     private string? selectedId;
     public event EventHandler<string>? RegionDetailsRequested;
+    public event EventHandler<string>? RegionSelectionChanged;
 
     public PrimusMapView()
     {
@@ -36,8 +44,44 @@ public sealed class PrimusMapView : ContentView
         canvas.Add(tooltip);
         Content = canvas;
         SizeChanged += (_, _) => tooltip.IsVisible = false;
+#if ANDROID
+        browser.HandlerChanging += (_, _) =>
+        {
+            if (nativeBrowser is not null) nativeBrowser.Touch -= OnNativeTouch;
+            nativeBrowser = null;
+        };
+        browser.HandlerChanged += (_, _) =>
+        {
+            nativeBrowser = browser.Handler?.PlatformView as Android.Webkit.WebView;
+            if (nativeBrowser is not null) nativeBrowser.Touch += OnNativeTouch;
+        };
+#endif
         browser.Navigating += OnNavigating;
+        browser.Navigated += async (_, e) =>
+        {
+            if (e.Result != WebNavigationResult.Success || e.Url.StartsWith("primus:", StringComparison.OrdinalIgnoreCase)) return;
+            ready = true;
+            try
+            {
+                await browser.EvaluateJavaScriptAsync($"setMatchingRegions({matchingIds})");
+                if (pendingSelection is not null)
+                    await browser.EvaluateJavaScriptAsync($"selectRegion({JsonSerializer.Serialize(pendingSelection)}, {pendingFocus.ToString().ToLowerInvariant()})");
+            }
+            catch (Exception ex) { RuntimeLog.Write("WORLD_MAP", "Failed preparing map selection.", ex); }
+        };
     }
+
+#if ANDROID
+    private void OnNativeTouch(object? sender, Android.Views.View.TouchEventArgs e)
+    {
+        // Keep the surrounding results list from taking over map pan/pinch gestures.
+        if (e.Event?.ActionMasked == Android.Views.MotionEventActions.Down)
+            nativeBrowser?.Parent?.RequestDisallowInterceptTouchEvent(true);
+        else if (e.Event?.ActionMasked is Android.Views.MotionEventActions.Up or Android.Views.MotionEventActions.Cancel)
+            nativeBrowser?.Parent?.RequestDisallowInterceptTouchEvent(false);
+        e.Handled = false;
+    }
+#endif
 
     private void OnNavigating(object? sender, WebNavigatingEventArgs e)
     {
@@ -60,6 +104,7 @@ public sealed class PrimusMapView : ContentView
             var y = Math.Clamp(Coordinate("y") * canvas.Height - 86, 8, Math.Max(8, canvas.Height - 86));
             AbsoluteLayout.SetLayoutBounds(tooltip, new Rect(x, y, width, AbsoluteLayout.AutoSize));
             tooltip.IsVisible = true;
+            RegionSelectionChanged?.Invoke(this, selectedId);
         }
         else if (!e.Url.StartsWith("about:", StringComparison.OrdinalIgnoreCase)
                  && !e.Url.StartsWith("data:", StringComparison.OrdinalIgnoreCase)
@@ -89,19 +134,44 @@ public sealed class PrimusMapView : ContentView
         var surfaceBorder = CssColor("SurfaceBorderColor", "#E5E7EB");
         var viewport = await ServiceHelper.ReadPackageTextAsync("world-map/viewport.js");
         var script = await ServiceHelper.ReadPackageTextAsync("world-map/map.js");
+        ready = false;
         browser.Source = new HtmlWebViewSource { Html = $$"""
             <!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
             <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
             <style>
-            body{margin:0;background:{{mutedSurface}};font-family:Georgia,serif}#map{position:fixed;inset:0;touch-action:none}svg{width:100%;height:100%;touch-action:none}
+            body{margin:0;background:{{mutedSurface}};font-family:Georgia,serif}#map{position:fixed;inset:0;touch-action:none}svg{display:block;width:100%;height:100%;touch-action:none}
             .artwork .region,.artwork .loc{fill-opacity:0;stroke-opacity:0}.chosen{fill-opacity:.38!important;stroke-opacity:1!important;stroke-width:3!important;vector-effect:non-scaling-stroke}
-            nav{position:fixed;bottom:12px;left:12px;display:flex;gap:8px}button{min-width:44px;min-height:44px;border:1px solid {{surfaceBorder}};background:white;border-radius:8px;color:{{primary}};font:16px Georgia}
+            .matching:not(.chosen){fill-opacity:.2!important;stroke-opacity:.8!important;vector-effect:non-scaling-stroke}
+            nav{display:none;position:fixed;bottom:12px;left:12px;display:flex;gap:8px}button{min-width:44px;min-height:44px;border:1px solid {{surfaceBorder}};background:white;border-radius:8px;color:{{primary}};font:16px Georgia}
             </style></head><body><div id="map">{{document.Root}}</div>
             <nav aria-label="Map controls"><button id="plus" aria-label="Zoom in">+</button><button id="minus" aria-label="Zoom out">−</button><button id="fit">Fit</button><button id="clear">Clear selection</button></nav>
             <script>const background={{JsonSerializer.Serialize(background)}};{{viewport}}
             {{script}}</script></body></html>
             """ };
         loaded = true;
+    }
+
+    public async Task SelectRegionAsync(string id, bool focus)
+    {
+        tooltip.IsVisible = false;
+        pendingSelection = id;
+        pendingFocus = focus;
+        if (ready) await browser.EvaluateJavaScriptAsync($"selectRegion({JsonSerializer.Serialize(id)}, {focus.ToString().ToLowerInvariant()})");
+    }
+
+    public async Task SetMatchingRegionsAsync(IEnumerable<string>? ids)
+    {
+        matchingIds = JsonSerializer.Serialize(ids?.ToArray());
+        if (ready) await browser.EvaluateJavaScriptAsync($"setMatchingRegions({matchingIds})");
+    }
+
+    public Task ZoomInAsync() => InvokeControlAsync("plus");
+    public Task ZoomOutAsync() => InvokeControlAsync("minus");
+    public Task FitAsync() => InvokeControlAsync("fit");
+    private async Task InvokeControlAsync(string id)
+    {
+        tooltip.IsVisible = false;
+        if (ready) await browser.EvaluateJavaScriptAsync($"document.getElementById('{id}').click()");
     }
 
     private static string CssColor(string key, string fallback)

@@ -36,3 +36,25 @@ document.querySelector('#plus').onclick=()=>{notify('primus://hide');viewport.zo
 document.querySelector('#minus').onclick=()=>{notify('primus://hide');viewport.zoomAt(1/1.5,viewport.width/2,viewport.height/2);draw();};
 document.querySelector('#fit').onclick=()=>{notify('primus://hide');viewport.fit();draw();};
 document.querySelector('#clear').onclick=()=>{notify('primus://hide');if(selected)selected.classList.remove('chosen');selected=null;};
+
+// Native controls and town results share the renderer's existing viewport.
+function selectRegion(id,focus){
+ if(selected)selected.classList.remove('chosen');
+ selected=paths.find(path=>path.id===id)||null;
+ if(!selected)return;
+ selected.classList.add('chosen');
+ if(focus){
+  const box=selected.getBBox(),matrix=selected.getCTM();
+  const parent=layer.getCTM();
+  const center=new DOMPoint(box.x+box.width/2,box.y+box.height/2).matrixTransform(matrix).matrixTransform(parent.inverse());
+  const targetScale=Math.min(viewport.min*4,viewport.min*viewport.maxZoom);
+  viewport.scale=targetScale;
+  viewport.x=viewport.width/2-center.x*targetScale;
+  viewport.y=viewport.height/2-center.y*targetScale;
+  viewport.clamp();draw();
+ }
+}
+function setMatchingRegions(ids){
+ const matching=ids===null?null:new Set(ids);
+ for(const path of paths)path.classList.toggle('matching',matching!==null&&matching.has(path.id));
+}
