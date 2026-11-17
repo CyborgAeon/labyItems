@@ -28234,23 +28234,6 @@
   {
     "available": [
       {
-        "Field": "Bracket",
-        "Operator": "In",
-        "Value": [
-          "🛡️ Warrior"
-        ]
-      }
-    ],
-    "displayName": "Mystical Rages",
-    "index": "mystical-rages",
-    "desc": "Any rage that grants a percentage reduction now also applies against magic damage.",
-    "table": 9,
-    "cost": 60,
-    "sourceBook": "Engarde"
-  },
-  {
-    "available": [
-      {
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": [
