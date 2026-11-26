@@ -71,6 +71,21 @@ public static class BattleboardInnateCalculator
             .ToList();
     }
 
+    public static async Task<List<InnateAbilityDraft>> CalculateAsync(CharacterDraft draft, IEnumerable<Item> assignedItems)
+    {
+        var baseInnates = Calculate(draft, assignedItems);
+        var additional = await MultiRaceInnateResolver.ResolveAsync(draft).ConfigureAwait(false);
+        if (additional.Count == 0)
+            return baseInnates;
+
+        var totals = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        foreach (var innate in baseInnates.Concat(additional))
+            AddInnate(totals, innate.Name, innate.Rank);
+        return totals.OrderBy(entry => entry.Key, StringComparer.OrdinalIgnoreCase)
+            .Select(entry => new InnateAbilityDraft { Name = entry.Key, Rank = entry.Value })
+            .ToList();
+    }
+
     private static void AddInnate(Dictionary<string, int> totals, string? rawName, int rank)
     {
         var name = NormalizeInnateName(rawName);

@@ -41,6 +41,17 @@ public sealed class CharacterDraft
         new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<string, int> GuildBenefitSelections { get; set; } =
         new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, Dictionary<string, List<string>>> GuildGrantSelections { get; set; } =
+        new(StringComparer.OrdinalIgnoreCase);
+    [System.Text.Json.Serialization.JsonIgnore]
+    public Dictionary<string, Dictionary<string, List<string>>> AdventureGuildGrantSelections { get; } =
+        new(StringComparer.OrdinalIgnoreCase);
+    [System.Text.Json.Serialization.JsonIgnore]
+    public IReadOnlyDictionary<string, IReadOnlyList<string>>? AdventureGuildMemberBrackets { get; set; }
+    public Dictionary<string, HashSet<string>> CompletedGuildAdventureMigrations { get; set; } =
+        new(StringComparer.OrdinalIgnoreCase);
+    internal object GuildSelectionGate { get; } = new();
+    public labyItems.Models.Enums.Outlawhood Outlawhood { get; set; }
     public List<string> AdvancementAbilities { get; set; } = new();
     public List<string> AdvancementItems { get; set; } = new();
     public Dictionary<string, CharacterSpend> Spends { get; set; } =

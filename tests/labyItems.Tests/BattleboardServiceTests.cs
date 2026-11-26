@@ -5,12 +5,60 @@ using ClosedXML.Excel;
 using labyItems.Models;
 using labyItems.Models.Characters;
 using labyItems.Services;
+using labyItems.Services.Guilds;
 using Xunit;
 
 namespace labyItems.Tests;
 
 public sealed class BattleboardServiceTests : ServiceTestBase
 {
+    [Fact]
+    public async Task ExportAsync_UsesTheSameConditionalGuildEffectsAsTheInteractiveBoard()
+    {
+        const string guild = "Knights Errant";
+        var draft = new CharacterDraft
+        {
+            Name = "Knights Errant Fixture",
+            Class = "Pathfinder",
+            Race = "Human",
+            Points = 250,
+            TBLP = 40,
+            Loc = 5,
+            MaxAC = 20,
+            Guilds = [guild]
+        };
+        var records = await GuildsService.GetAllAsync();
+        var resolution = GuildCharacterBenefitResolver.ResolveGrants(records[guild], draft, guild);
+        draft.Abilities.AddRange(resolution.Grants.SelectMany(grant =>
+            AbilityDraftBuilder.ParseAbility(GuildCharacterBenefitResolver.MaterializeGrant(records[guild], grant), null)));
+        draft.Abilities.AddRange(AbilityDraftBuilder.ParseAbility(new AbilityDefinition
+        {
+            GrantId = "Knights Errant::fixture-immunity",
+            Name = "Immunity to Repels",
+            Type = "Immunity",
+            Duration = "5 minutes"
+        }, null));
+
+        var armour = ArmourBonusResolver.ResolveMaxPerSourceTotals(draft.Abilities);
+        var effects = BattleboardAbilityEffectResolver.ResolveFallback(draft);
+        Assert.Equal(0, armour.Mac);
+        Assert.Equal(0, armour.Sac);
+        Assert.DoesNotContain("Immunity to Repels", effects.Immunities);
+
+        var service = new BattleboardExportService(_ => []);
+        var outputPath = await service.ExportAsync(draft);
+        using var workbook = new XLWorkbook(outputPath);
+        var sheet = workbook.Worksheet("BBoard");
+        Assert.True(sheet.Cell("U5").IsEmpty());
+        Assert.True(sheet.Cell("U6").IsEmpty());
+        Assert.DoesNotContain(sheet.Range("AC26:AC33").Cells(), cell =>
+            cell.GetString().Contains("Repels", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(sheet.Range("N4:N54").Cells(), cell =>
+            cell.GetString().Contains("+1 MAC vs Red/Blue/Green/Brown magic", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(sheet.Range("N4:N54").Cells(), cell =>
+            cell.GetString().Contains("+1 SAC vs Evil", StringComparison.OrdinalIgnoreCase));
+    }
+
     [Fact]
     public async Task ExportAsync_WritesBattleboardWorkbook()
     {

@@ -24,8 +24,6 @@ public partial class ToolsetNavigationMenu : ContentView
     {
         OpenMenuCommand = new Command(async () => await SetMenuOpenAsync(true));
         InitializeComponent();
-        Loaded += OnLoaded;
-        Unloaded += OnUnloaded;
     }
 
     public ICommand OpenMenuCommand { get; }
@@ -69,18 +67,6 @@ public partial class ToolsetNavigationMenu : ContentView
     {
         get => (bool)GetValue(SearchExpandedProperty);
         set => SetValue(SearchExpandedProperty, value);
-    }
-
-    private async void OnLoaded(object? sender, EventArgs e)
-    {
-        await SetMenuOpenAsync(false, immediate: true);
-        ApplySelectionState();
-    }
-
-    private void OnUnloaded(object? sender, EventArgs e)
-    {
-        Loaded -= OnLoaded;
-        Unloaded -= OnUnloaded;
     }
 
     private async void OnCloseMenuClicked(object sender, EventArgs e)
@@ -260,6 +246,8 @@ public partial class ToolsetNavigationMenu : ContentView
                 MenuPanel.TranslationX = -320;
                 MenuOverlay.Opacity = 0;
                 MenuOverlay.IsVisible = true;
+                // The full-screen ContentView must participate in hit testing only while open.
+                IsVisible = true;
 
                 if (immediate)
                 {
@@ -277,7 +265,10 @@ public partial class ToolsetNavigationMenu : ContentView
             }
 
             if (!MenuOverlay.IsVisible)
+            {
+                IsVisible = false;
                 return;
+            }
 
             if (immediate)
             {
@@ -292,6 +283,7 @@ public partial class ToolsetNavigationMenu : ContentView
             }
 
             MenuOverlay.IsVisible = false;
+            IsVisible = false;
         }
         finally
         {

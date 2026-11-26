@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Text.Json;
 using labyItems.Helpers;
+using labyItems.Models.Rules;
 using labyItems.Services;
 
 namespace labyItems.Pages.AbilityCard;
@@ -74,6 +75,33 @@ public partial class AbilityDetailCardView : ContentView
     public ObservableCollection<AbilityPreReqEntryVm> PreReqEntries { get; } = new();
     public ObservableCollection<AbilityPreReqEntryVm> AsPerEntries { get; } = new();
     public bool HasAsPer => AsPerEntries.Count > 0;
+    public IReadOnlyList<RelatedRuleRow> RelatedRules { get; private set; } = [];
+    public bool IsGrant => !string.IsNullOrWhiteSpace(Ability?.GrantId);
+    public bool ShowPurchaseFacts => !IsGrant;
+    public string GrantParameters
+    {
+        get
+        {
+            if (!IsGrant || Ability is not { } ability)
+                return string.Empty;
+
+            var values = new List<string>();
+            if (ability.GrantInnateCount is { } count)
+                values.Add(count == 1 ? "1 innate" : $"{count} innates");
+            if (!string.IsNullOrWhiteSpace(ability.GrantFrequency))
+                values.Add(ability.GrantFrequency);
+            if (!string.IsNullOrWhiteSpace(ability.GrantDuration))
+                values.Add($"Duration {ability.GrantDuration}");
+            return string.Join(" · ", values);
+        }
+    }
+
+    public bool HasGrantParameters => GrantParameters.Length > 0;
+    public string? RuleSource => Ability?.RuleSource;
+    public bool HasRuleSource => !string.IsNullOrWhiteSpace(RuleSource);
+    public string RuleDiagnostics { get; private set; } = string.Empty;
+    public bool HasRuleDiagnostics => RuleDiagnostics.Length > 0;
+    public bool HasRuleDetails => RelatedRules.Count > 0 || HasRuleDiagnostics;
 
     private bool _isAvailabilityExpanded;
     public bool IsAvailabilityExpanded
@@ -151,6 +179,7 @@ public partial class AbilityDetailCardView : ContentView
         ScheduleExpandabilityRefresh();
         _ = RebuildPreReqEntriesAsync();
         _ = RebuildAsPerEntriesAsync();
+        _ = RebuildRelatedRulesAsync();
     }
 
     private void RaiseComputedProperties()
@@ -170,6 +199,11 @@ public partial class AbilityDetailCardView : ContentView
         OnPropertyChanged(nameof(InfiniteCostPrefixText));
         OnPropertyChanged(nameof(InfinityGlyph));
         OnPropertyChanged(nameof(DescriptionText));
+        OnPropertyChanged(nameof(ShowPurchaseFacts));
+        OnPropertyChanged(nameof(GrantParameters));
+        OnPropertyChanged(nameof(HasGrantParameters));
+        OnPropertyChanged(nameof(RuleSource));
+        OnPropertyChanged(nameof(HasRuleSource));
         OnPropertyChanged(nameof(NotesText));
         OnPropertyChanged(nameof(HasNotesText));
         OnPropertyChanged(nameof(HasNotesSection));
@@ -253,6 +287,76 @@ public partial class AbilityDetailCardView : ContentView
         AsPerEntries.Clear();
         foreach (var name in names.Select(x => (x ?? string.Empty).Trim()).Where(x => x.Length > 0).Distinct(StringComparer.OrdinalIgnoreCase))
             AsPerEntries.Add(new AbilityPreReqEntryVm(name, AbilityDetailsLookupService.FindByIndex(lookup, name)));
+    }
+
+    private async Task RebuildRelatedRulesAsync()
+    {
+        RelatedRules = [];
+        RuleDiagnostics = string.Empty;
+        NotifyRuleDetailsChanged();
+
+        var ability = Ability;
+        if (ability == null || ability.IsNonStandard || IsEditing
+            || !ability.AbilityRef.StartsWith("ability.", StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        var version = LabyrintheSession.Shared.Version;
+        try
+        {
+            var resolution = await RuleCatalogueService.ResolveAbilityAsync(ability.AbilityRef, ability.RuleReferences);
+            if (!ReferenceEquals(Ability, ability) || LabyrintheSession.Shared.Version != version
+                || resolution.Root == null && !IsGrant)
+                return;
+
+            var incomingLinks = resolution.Links.ToLookup(link => (link.To.Catalogue, link.To.Identifier));
+            var rows = new List<RelatedRuleRow>();
+            if (resolution.Root is { Text: { Length: > 0 } } root
+                && !string.Equals(root.Text, ability.Description, StringComparison.Ordinal))
+            {
+                rows.Add(new(root.Name, root.Text, root.Source, "Canonical rule"));
+            }
+
+            foreach (var rule in resolution.RelatedRules)
+            {
+                var relationships = incomingLinks[(rule.Catalogue, rule.Identifier)]
+                    .Select(link => $"{RelationshipText(link.Relationship)} · {link.From.Name}")
+                    .Distinct(StringComparer.Ordinal);
+                rows.Add(new(rule.Name, rule.Text, rule.Source, string.Join("\n", relationships)));
+            }
+
+            RelatedRules = rows;
+            RuleDiagnostics = string.Join("\n", resolution.Diagnostics.Select(diagnostic => diagnostic.Kind switch
+            {
+                RuleResolutionDiagnosticKind.MissingReference => $"Missing {diagnostic.Catalogue} reference {diagnostic.Identifier}",
+                RuleResolutionDiagnosticKind.AmbiguousReference => $"Ambiguous {diagnostic.Catalogue} reference {diagnostic.Identifier}",
+                _ => $"Circular rule inheritance at {diagnostic.Identifier}"
+            }));
+            NotifyRuleDetailsChanged();
+        }
+        catch (Exception ex)
+        {
+            RuntimeLog.Write("ABILITY_DETAIL", "Failed loading related rules.", ex);
+        }
+    }
+
+    private static string RelationshipText(RuleRelationship relationship) => relationship switch
+    {
+        RuleRelationship.Inherits => "Inherited by",
+        RuleRelationship.Modifies => "Modified by",
+        RuleRelationship.Requires => "Required by",
+        RuleRelationship.ComparableTo => "Compared in",
+        RuleRelationship.Terminology => "Term used in",
+        _ => "Referenced by"
+    };
+
+    private void NotifyRuleDetailsChanged()
+    {
+        OnPropertyChanged(nameof(RelatedRules));
+        OnPropertyChanged(nameof(RuleDiagnostics));
+        OnPropertyChanged(nameof(HasRuleDiagnostics));
+        OnPropertyChanged(nameof(HasRuleDetails));
     }
 
     private void ScheduleExpandabilityRefresh()

@@ -13,7 +13,8 @@ public sealed class GuildBenefitChoiceSummaryRow
         string? guildName = null,
         string? tier = null,
         int? optionNumber = null,
-        bool isTierAvailableNow = true)
+        bool isTierAvailableNow = true,
+        bool isStructured = false)
     {
         DisplayText = string.IsNullOrWhiteSpace(displayText) ? "Choose one guild benefit" : displayText.Trim();
         SelectionKey = selectionKey?.Trim() ?? string.Empty;
@@ -23,6 +24,7 @@ public sealed class GuildBenefitChoiceSummaryRow
         Tier = (tier ?? string.Empty).Trim();
         OptionNumber = optionNumber;
         IsTierAvailableNow = isTierAvailableNow;
+        IsStructured = isStructured;
         _applySelection = applySelection ?? throw new ArgumentNullException(nameof(applySelection));
     }
 
@@ -34,6 +36,7 @@ public sealed class GuildBenefitChoiceSummaryRow
     public string Tier { get; }
     public int? OptionNumber { get; }
     public bool IsTierAvailableNow { get; }
+    public bool IsStructured { get; }
 
     public void ApplySelection(int? selectedIndex)
     {

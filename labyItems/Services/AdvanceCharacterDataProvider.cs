@@ -1,3 +1,6 @@
+using labyItems.Models.Characters;
+using labyItems.Services.Guilds;
+
 namespace labyItems.Services;
 
 public sealed class AdvanceCharacterDataProvider : IAdvanceCharacterDataProvider
@@ -8,7 +11,8 @@ public sealed class AdvanceCharacterDataProvider : IAdvanceCharacterDataProvider
         if (dbInitializer != null)
             await dbInitializer.InitializeAsync();
 
-        var guildsTask = GuildsService.GetAllAsync();
+        var guildMiracleListsTask = GuildMiracleListCatalogue.GetAllAsync();
+        var guildsTask = GuildsService.GetMiracleSearchAsync();
         var classesTask = ClassService.GetAllAsync();
         var racesTask = PeopleService.GetAllAsync();
         var miraclesTask = MiracleService.GetAllAsync();
@@ -16,6 +20,7 @@ public sealed class AdvanceCharacterDataProvider : IAdvanceCharacterDataProvider
         var evocationsTask = EvocationCatalogService.GetAllAsync();
 
         await Task.WhenAll(
+            guildMiracleListsTask,
             guildsTask,
             classesTask,
             racesTask,
@@ -24,6 +29,7 @@ public sealed class AdvanceCharacterDataProvider : IAdvanceCharacterDataProvider
             evocationsTask);
 
         return new AdvanceCharacterReferenceData(
+            GuildMiracleLists: guildMiracleListsTask.Result,
             Guilds: guildsTask.Result,
             Classes: classesTask.Result,
             Races: racesTask.Result,

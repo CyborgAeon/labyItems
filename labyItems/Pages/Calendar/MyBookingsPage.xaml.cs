@@ -19,6 +19,8 @@ public partial class MyBookingsPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        _eventStore.Refreshed -= OnStoreRefreshed;
+        _eventStore.Refreshed += OnStoreRefreshed;
         _statusLabel.Start();
         await LoadBookingsAsync();
     }
@@ -31,6 +33,7 @@ public partial class MyBookingsPage : ContentPage
 
     protected override void OnDisappearing()
     {
+        _eventStore.Refreshed -= OnStoreRefreshed;
         _statusLabel.Stop();
         base.OnDisappearing();
     }
@@ -38,6 +41,38 @@ public partial class MyBookingsPage : ContentPage
     private async void OnBackClicked(object sender, EventArgs e)
     {
         await Navigation.PopAsync();
+    }
+
+    private void OnStoreRefreshed() => Dispatcher.Dispatch(() =>
+    {
+        if (_accountVersion != LabyrintheSession.Shared.Version || Window == null) return;
+        RenderBookings(_eventStore.GetBookedEvents());
+        _statusLabel.Update();
+    });
+
+    private void RenderBookings(IReadOnlyList<labyItems.Models.Calendar.CalendarEventRecord> bookedEvents)
+    {
+        BookingsHost.Children.Clear();
+        CalendarVisualHelper.PopulateLegend(LegendHost);
+        if (bookedEvents.Count == 0)
+        {
+            BookingsHost.Children.Add(new Label
+            {
+                Text = _eventStore.BookingsStatus == null
+                    ? "No saved bookings are available. Connect to load your bookings."
+                    : "You are not currently booked onto any events.",
+                FontAttributes = FontAttributes.Italic,
+                HorizontalTextAlignment = TextAlignment.Center
+            });
+            return;
+        }
+        foreach (var evt in bookedEvents)
+        {
+            BookingsHost.Children.Add(CalendarVisualHelper.BuildEventCard(evt, async () =>
+            {
+                await Navigation.PushAsync(new EventDetailsPage(evt.Id));
+            }));
+        }
     }
 
     private async Task LoadBookingsAsync()
@@ -48,25 +83,9 @@ public partial class MyBookingsPage : ContentPage
         BookingsHost.Children.Clear();
         try
         {
-            var bookedEvents = await _eventStore.LoadBookedEventsAsync();
-            CalendarVisualHelper.PopulateLegend(LegendHost);
-            if (bookedEvents.Count == 0)
-            {
-                BookingsHost.Children.Add(new Label
-                {
-                    Text = "You are not currently booked onto any events.",
-                    FontAttributes = FontAttributes.Italic,
-                    HorizontalTextAlignment = TextAlignment.Center
-                });
-                return;
-            }
-            foreach (var evt in bookedEvents)
-            {
-                BookingsHost.Children.Add(CalendarVisualHelper.BuildEventCard(evt, async () =>
-                {
-                    await Navigation.PushAsync(new EventDetailsPage(evt.Id));
-                }));
-            }
+            var bookedEvents = await _eventStore.ReadBookingsAndRefreshAsync();
+            if (_accountVersion != LabyrintheSession.Shared.Version) return;
+            RenderBookings(bookedEvents);
         }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException)
         {

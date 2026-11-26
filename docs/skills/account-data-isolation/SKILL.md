@@ -57,6 +57,10 @@ For asynchronous reads/searches, capture `session.Version` before starting and c
 
 Every new static cache containing database-derived content needs account-aware invalidation in `AccountStorageCoordinator.ResetCaches` or an equivalent versioned design. This includes rule lookups because the active database also contains private custom definitions. Do not let a pending load repopulate a cleared cache after a switch.
 
+Previously server-verified credentials are checked against `AccountProfileCache` in platform secure storage before any network wait. A matching profile unlocks its workspace immediately with `IsOfflineSession` set while background authentication obtains PHP session cookies. This uses the existing password fingerprint; do not persist plaintext passwords or bypass matching credentials. A successful background response upgrades the same session without changing its version, so it does not invalidate the open workspace. Late responses must retain their originating version and never unlock a different account.
+
+Calendar pages use `ReadMonthAndRefreshAsync` / `ReadBookingsAndRefreshAsync` for immediate cached snapshots, then subscribe to `CalendarEventStore.Refreshed` to render refreshed results. Detach on disappearance and verify the page's session version before updating UI. Direct `LoadMonthAsync` / `LoadBookedEventsAsync` await live results and are intended for the background refresh path. A refresh in progress must not block reading another cached month or bookings. Keep saved timestamps and stale/offline labels until fresh results succeed.
+
 Current shared-device login requires credentials; device-wide biometric identity cannot distinguish members sharing a phone. Do not restore automatic biometric access to another member's saved credentials as an incidental change.
 
 ## Verification for changes to the boundary

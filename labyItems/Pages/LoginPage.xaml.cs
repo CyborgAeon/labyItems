@@ -10,6 +10,8 @@ public partial class LoginPage : ContentPage
     public LoginPage()
     {
         InitializeComponent();
+        UsernameEntry.Autofilled += OnCredentialsAutofilled;
+        PasswordEntry.Autofilled += OnCredentialsAutofilled;
         UsernameEntry.HandlerChanged += (_, _) => ConfigureAutofill();
         PasswordEntry.HandlerChanged += (_, _) => ConfigureAutofill();
     }
@@ -22,6 +24,7 @@ public partial class LoginPage : ContentPage
 
     private async Task SignInAsync(string email, string password)
     {
+        DismissCredentialKeyboard();
         SetSigningIn(true);
         try { await CompleteSignInAsync(email, password); }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException)
@@ -66,6 +69,31 @@ public partial class LoginPage : ContentPage
         _isSigningIn = value;
         LoginButton.IsEnabled = GuestLoginButton.IsEnabled = PasswordVisibilityButton.IsEnabled = !value;
         UsernameEntry.IsEnabled = PasswordEntry.IsEnabled = !value;
+    }
+
+    private void OnCredentialsAutofilled()
+    {
+        // Run after both fields have been filled and the provider restores focus.
+        Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(150), () =>
+        {
+            if (Window == null || string.IsNullOrWhiteSpace(UsernameEntry.Text) || string.IsNullOrEmpty(PasswordEntry.Text)) return;
+            DismissCredentialKeyboard();
+        });
+    }
+
+    private void DismissCredentialKeyboard()
+    {
+        UsernameEntry.Unfocus();
+        PasswordEntry.Unfocus();
+#if ANDROID
+        if (Handler?.PlatformView is Android.Views.View page)
+        {
+            page.FocusableInTouchMode = true;
+            page.RequestFocus();
+            if (page.Context?.GetSystemService(Android.Content.Context.InputMethodService) is Android.Views.InputMethods.InputMethodManager keyboard)
+                keyboard.HideSoftInputFromWindow(page.WindowToken, Android.Views.InputMethods.HideSoftInputFlags.None);
+        }
+#endif
     }
 
     private void ConfigureAutofill()

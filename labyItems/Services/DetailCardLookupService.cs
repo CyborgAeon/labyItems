@@ -148,6 +148,15 @@ public static class DetailCardLookupService
             Index = name,
             DisplayName = name,
             Description = source.Effect ?? string.Empty,
+            AbilityRef = source.AbilityRef ?? source.Key ?? resolvedKey,
+            GrantId = source.GrantId,
+            RuleSource = source.Source,
+            GrantDuration = source.Duration,
+            GrantFrequency = source.Frequency,
+            GrantInnateCount = string.Equals(source.GrantType ?? source.Type, "Innate", StringComparison.OrdinalIgnoreCase)
+                ? source.Count
+                : null,
+            RuleReferences = source.RuleReferences,
             Cost = 0,
             Table = 0,
             Available = source.Source ?? "ALL",

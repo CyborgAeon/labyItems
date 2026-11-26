@@ -13,25 +13,51 @@ public static class MultiRaceService
         Converters = { new JsonStringEnumConverter() }
     };
 
+    private static readonly SemaphoreSlim LoadLock = new(1, 1);
     private static MultiRaceCatalog? _cache;
 
     public static async Task<MultiRaceCatalog> GetCatalogAsync()
     {
-        if (_cache != null)
-            return _cache;
+        var session = LabyrintheSession.Shared;
+        var version = session.Version;
+        if (_cache is { } existing)
+            return existing;
 
+        await LoadLock.WaitAsync().ConfigureAwait(false);
+        try
+        {
+            session.RequireVersion(version);
+            if (_cache is { } cached)
+                return cached;
+
+            var catalog = await LoadCatalogueAsync().ConfigureAwait(false);
+            session.Publish(version, () => _cache = catalog);
+            return catalog;
+        }
+        finally
+        {
+            LoadLock.Release();
+        }
+    }
+
+    private static async Task<MultiRaceCatalog> LoadCatalogueAsync()
+    {
         try
         {
             var json = await ServiceHelper.ReadPackageTextAsync("people/multi-races.json");
-            _cache = JsonSerializer.Deserialize<MultiRaceCatalog>(json, JsonOptions)
-                     ?? new MultiRaceCatalog();
+            var catalog = JsonSerializer.Deserialize<MultiRaceCatalog>(json, JsonOptions)
+                ?? new MultiRaceCatalog();
+            if (catalog.SchemaVersion == 2)
+                await MultiPathCatalogueAbilityResolver.BindAsync(catalog.MultiRaces.Values
+                    .SelectMany(definition => definition.Levels.Values)
+                    .SelectMany(level => level)).ConfigureAwait(false);
+            return catalog;
         }
-        catch
+        catch (Exception ex)
         {
-            _cache = new MultiRaceCatalog();
+            System.Diagnostics.Debug.WriteLine($"[MultiRaceService] Catalogue load failed: {ex.Message}");
+            return new MultiRaceCatalog();
         }
-
-        return _cache;
     }
 
     public static void InvalidateCache()
@@ -40,6 +66,9 @@ public static class MultiRaceService
 
 public sealed class MultiRaceCatalog
 {
+    [JsonPropertyName("$schemaVersion")]
+    public int SchemaVersion { get; set; } = 1;
+
     [JsonPropertyName("metadata")]
     public JsonElement Metadata { get; set; }
 
@@ -61,19 +90,8 @@ public sealed class MultiRaceDefinition :
         = new(StringComparer.OrdinalIgnoreCase);
     public List<string> Notes { get; set; } = new();
     public string? RequiresBracketPure { get; set; }
-}
-
-public sealed class MultiRaceLevelAbility : IMultiPathLevelAbility
-{
-    public string Name { get; set; } = string.Empty;
-    public string AbilityRef { get; set; } = string.Empty;
-    public string Type { get; set; } = string.Empty;
-    public string Effect { get; set; } = string.Empty;
-    public int? Count { get; set; }
-    public AbilityCountProgression? Progression { get; set; }
-    public List<string>? AsPerAbilityRefs { get; set; }
-    public List<string>? PreReqs { get; set; }
-    public List<string>? ChoiceSetRefs { get; set; }
+    public string? RacialProgressionRef { get; set; }
+    public int? InnateLevelOverride { get; set; }
 }
 
 public sealed class MultiRaceAvailabilityOption : IMultiPathAvailabilityOption

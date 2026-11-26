@@ -1,3 +1,5 @@
+using labyItems.Models.Guilds;
+using labyItems.Services.Guilds;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -53,7 +55,9 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     private IReadOnlyList<MiracleService.MiracRaw> _allMiracles = Array.Empty<MiracleService.MiracRaw>();
     private IReadOnlyList<SpellService.SpellRaw> _allSpells = Array.Empty<SpellService.SpellRaw>();
     private IReadOnlyList<DruidEvocationService.EvocRaw> _allEvocations = Array.Empty<DruidEvocationService.EvocRaw>();
-    private Dictionary<string, GuildRecord> _guilds = new(StringComparer.OrdinalIgnoreCase);
+    private IReadOnlyDictionary<string, GuildRecord> _miracleGuildRecords = new Dictionary<string, GuildRecord>();
+    private IReadOnlyDictionary<string, IReadOnlyDictionary<string, IReadOnlyList<string>>> _guildMiracleLists
+        = new Dictionary<string, IReadOnlyDictionary<string, IReadOnlyList<string>>>(StringComparer.OrdinalIgnoreCase);
     private Dictionary<string, ServiceCharacterClassRecord> _classes = new(StringComparer.OrdinalIgnoreCase);
     private Dictionary<string, PeopleRecord> _races = new(StringComparer.OrdinalIgnoreCase);
     private Dictionary<string, AbilityOption> _abilityOptions = new(StringComparer.OrdinalIgnoreCase);
@@ -417,9 +421,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
     private void ApplyReferenceData(AdvanceCharacterReferenceData referenceData)
     {
-        _guilds = new Dictionary<string, GuildRecord>(
-            referenceData.Guilds ?? new Dictionary<string, GuildRecord>(StringComparer.OrdinalIgnoreCase),
-            StringComparer.OrdinalIgnoreCase);
+        _guildMiracleLists = referenceData.GuildMiracleLists;
+        _miracleGuildRecords = referenceData.Guilds;
         _classes = new Dictionary<string, ServiceCharacterClassRecord>(
             referenceData.Classes ?? new Dictionary<string, ServiceCharacterClassRecord>(StringComparer.OrdinalIgnoreCase),
             StringComparer.OrdinalIgnoreCase);
@@ -1837,27 +1840,40 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             OnEvilStairwayValidationChanged);
     }
 
+    private (string? Guild, IReadOnlyDictionary<string, IReadOnlyList<string>>? List) ResolveChurchMiracleList()
+    {
+        var (guild, list) = GuildMiracleAccessResolver.ResolveMembership(_draft.Guilds, _guildMiracleLists);
+        if (guild == null || list == null || !_miracleGuildRecords.TryGetValue(guild, out var record))
+            return (guild, list);
+
+        var grants = GuildCharacterBenefitResolver.ResolveGrants(record, _draft, guild);
+        if (grants.MiracleAdditions.Count == 0)
+            return (guild, list);
+
+        return (guild, GuildMiracleAccessResolver.AddOrdinaryAccess(list, grants.MiracleAdditions, ResolveOrdinary));
+
+        (string Name, int Level)? ResolveOrdinary(string reference)
+        {
+            if (string.Equals(reference, record.DenominationalMiracle?.Ref, StringComparison.OrdinalIgnoreCase))
+                return null;
+
+            var matches = _allMiracles.Where(miracle =>
+                    string.Equals(miracle.name, reference, StringComparison.OrdinalIgnoreCase)
+                    && !string.Equals(miracle.sphere, "Denominational", StringComparison.OrdinalIgnoreCase))
+                .Take(2).ToArray();
+            return matches.Length == 1 ? (matches[0].name, matches[0].power) : null;
+        }
+    }
+
     private (string? ChurchName, HashSet<string>? MiracleNames) TryGetChurchMiracleNames()
     {
-        if (_draft.Guilds == null || _draft.Guilds.Count == 0)
-            return (null, null);
-
-        var church = _draft.Guilds
-            .Select(g => g ?? string.Empty)
-            .FirstOrDefault(g =>
-                _guilds.TryGetValue(g, out var rec)
-                && rec?.MiracleList != null
-                && rec.MiracleList.Count > 0);
-
-        if (string.IsNullOrWhiteSpace(church))
-            return (null, null);
-
-        if (!_guilds.TryGetValue(church, out var record) || record?.MiracleList == null)
+        var (church, miracleList) = ResolveChurchMiracleList();
+        if (church == null || miracleList == null)
             return (null, null);
 
         var sourceName = CleanChurchName(church);
-        var allNames = record.MiracleList.Values
-            .SelectMany(v => v ?? new List<string>())
+        var allNames = miracleList.Values
+            .SelectMany(v => v)
             .Select(n => (n ?? string.Empty).Trim())
             .Where(n => n.Length > 0)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
@@ -1867,20 +1883,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
     private MiracleListDraft? TryBuildChurchMiracleList()
     {
-        if (_draft.Guilds == null || _draft.Guilds.Count == 0)
-            return null;
-
-        var church = _draft.Guilds
-            .Select(g => g ?? string.Empty)
-            .FirstOrDefault(g =>
-                _guilds.TryGetValue(g, out var rec)
-                && rec?.MiracleList != null
-                && rec.MiracleList.Count > 0);
-
-        if (string.IsNullOrWhiteSpace(church))
-            return null;
-
-        if (!_guilds.TryGetValue(church, out var record) || record?.MiracleList == null)
+        var (church, miracleList) = ResolveChurchMiracleList();
+        if (church == null || miracleList == null)
             return null;
 
         var sourceName = CleanChurchName(church);
@@ -1894,8 +1898,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             IsScriptures = false
         };
 
-        var allNames = record.MiracleList.Values
-            .SelectMany(v => v ?? new List<string>())
+        var allNames = miracleList.Values
+            .SelectMany(v => v)
             .Select(n => (n ?? string.Empty).Trim())
             .Where(n => n.Length > 0)
             .ToList();

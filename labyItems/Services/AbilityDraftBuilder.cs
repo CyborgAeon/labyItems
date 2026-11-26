@@ -130,11 +130,24 @@ public static class AbilityDraftBuilder
         var draft = new AbilityDraft
         {
             AbilityKey = AbilityKey.Build(def),
+            GrantInstanceId = def.GrantId,
+            GrantDuration = def.GrantId == null ? null : def.Duration,
+            GrantSystemEffects = def.GrantId == null ? null : def.SystemEffects?.Select(effect => new AbilitySystemEffect
+            {
+                EffectType = effect.EffectType,
+                DisplayName = effect.DisplayName,
+                ResistanceType = effect.ResistanceType,
+                Level = effect.Level,
+                ImmunityName = effect.ImmunityName
+            }).ToList(),
+            HasConditionalArmour = def.SystemEffects?.Any(effect =>
+                string.Equals(effect.EffectType, "ConditionalArmour", StringComparison.OrdinalIgnoreCase)) == true,
             Name = def.Name ?? string.Empty,
             BattleboardNameOverride = def.BattleboardNameOverride,
             UpdateKey = def.UpdateKey,
             AbilityType = type,
             LevelGained = levelGained,
+            ApplicableLevel = levelGained.HasValue ? achievedLevel : null,
             TableGained = tableGained,
             Effect = def.Effect,
             Source = def.Source,
@@ -176,46 +189,48 @@ public static class AbilityDraftBuilder
         return def.Progression.ResolveCount(achievedLevel);
     }
 
-    public static int ResolveInnateRank(AbilityDraft? ability, int achievedLevel = 8)
+    public static int ResolveInnateRank(
+        AbilityDraft? ability, int? achievedLevel = null, IEnumerable<int>? permittedAdditionalLevels = null)
     {
         if (ability == null)
             return 0;
 
-        var baseCount = Math.Max(ability.Count ?? 1, 0);
-        var total = baseCount;
+        var applicableLevel = achievedLevel ?? ability.ApplicableLevel ?? 8;
+        if (ability.LevelGained is int acquiredAt && applicableLevel < acquiredAt)
+            return 0;
 
-        if (TryResolveFrequencySkillRank(ability, out var skillRank, out var frequency, achievedLevel))
-        {
-            var additional = Math.Max(0, skillRank - 1) / frequency;
-            total = baseCount + additional;
-        }
+        if (ability.Count.HasValue)
+            return Math.Max(0, ability.Count.Value);
 
-        return Math.Clamp(total, 0, 8);
+        if (!TryResolveFrequencySkillRank(ability, out var levels, out var frequency, applicableLevel))
+            return 1;
+
+        if (permittedAdditionalLevels != null)
+            levels = AbilityQuantityResolver.AddPermittedEffectiveLevels(levels, permittedAdditionalLevels);
+        return AbilityQuantityResolver.GetFrequencyIncrements(levels, frequency);
     }
 
     public static bool TryResolveFrequencySkillRank(
         AbilityDraft? ability,
         out int rank,
-        int achievedLevel = 8)
+        int? achievedLevel = null)
         => TryResolveFrequencySkillRank(ability, out rank, out _, achievedLevel);
 
     public static bool TryResolveFrequencySkillRank(
         AbilityDraft? ability,
         out int rank,
         out int frequency,
-        int achievedLevel = 8)
+        int? achievedLevel = null)
     {
         rank = 0;
         frequency = 0;
 
-        if (ability == null || !ability.LevelGained.HasValue)
+        if (ability?.LevelGained is not int acquiredAt
+            || !TryParseFrequency(ability.Frequency, out frequency) || frequency <= 0)
             return false;
 
-        if (!TryParseFrequency(ability.Frequency, out frequency) || frequency <= 0)
-            return false;
-
-        var resolvedAchievedLevel = Math.Max(0, achievedLevel);
-        rank = Math.Max(0, resolvedAchievedLevel - ability.LevelGained.Value + 1);
+        var applicableLevel = achievedLevel ?? ability.ApplicableLevel ?? 8;
+        rank = AbilityQuantityResolver.GetEffectiveLevels(applicableLevel, acquiredAt);
         return rank > 0;
     }
 

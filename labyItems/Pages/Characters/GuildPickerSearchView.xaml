@@ -55,6 +55,12 @@
                                     <Label Text="{Binding MetaText}" FontSize="12" Opacity="0.75" LineBreakMode="WordWrap" />
                                     <Label Text="{Binding DescriptionText}" FontSize="12" Opacity="0.8" MaxLines="2"
                                            LineBreakMode="WordWrap" IsVisible="{Binding HasDescription}" />
+                                    <Button Text="Benefit choices"
+                                            Style="{StaticResource ExpandedActionButtonStyle}"
+                                            IsVisible="{Binding IsSelected}"
+                                            CommandParameter="{Binding Name}"
+                                            Clicked="OnBenefitChoicesClicked"
+                                            HorizontalOptions="Start" />
                                 </VerticalStackLayout>
                                 <Border Grid.Column="2"
                                         Stroke="{StaticResource SubtleTextColor}"

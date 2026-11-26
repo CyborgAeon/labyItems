@@ -17,8 +17,18 @@ public static class BattleboardAbilityEffectResolver
 
         foreach (var ability in abilities ?? Array.Empty<AbilityDraft>())
         {
-            if (ability == null)
+            if (ability == null || ability.IsActivatedGrant)
                 continue;
+
+            if (ability.GrantSystemEffects is { Count: > 0 } grantEffects)
+            {
+                AbilityEffectEvaluator.ApplyInstructions(
+                    AbilityEffectEvaluator.FromSystemEffects(grantEffects),
+                    resistance,
+                    immunities,
+                    multipliers,
+                    infiniteResistanceTypes);
+            }
 
             foreach (var candidate in EnumerateFallbackTextCandidates(ability))
                 TextFallbackEffectApplier.Apply(candidate, resistance, immunities, multipliers, infiniteResistanceTypes);
@@ -70,20 +80,23 @@ public static class BattleboardAbilityEffectResolver
             .ToList();
 
         var fallback = ResolveFallback(abilityList);
+        if (abilityList.All(ability => ability.GrantInstanceId != null))
+            return fallback;
+
         var resistance = new Dictionary<string, int>(fallback.ResistanceOverrides, StringComparer.OrdinalIgnoreCase);
         var multipliers = new Dictionary<string, int>(fallback.ResistanceMultipliers, StringComparer.OrdinalIgnoreCase);
         var infiniteResistanceTypes = new HashSet<string>(fallback.InfiniteResistanceTypes, StringComparer.OrdinalIgnoreCase);
         var perSixths = new Dictionary<string, int>(fallback.ResistancePerSixths, StringComparer.OrdinalIgnoreCase);
         var immunities = new HashSet<string>(fallback.Immunities, StringComparer.OrdinalIgnoreCase);
 
-        if (abilityList.Count == 0)
-            return new BattleboardAdvancementEffects(resistance, immunities.ToList(), multipliers, infiniteResistanceTypes, perSixths);
-
         try
         {
             var definitionLookup = await AbilityDefinitionLookupService.GetLookupAsync();
             foreach (var ability in abilityList)
             {
+                if (ability.GrantInstanceId != null)
+                    continue;
+
                 var definition = ResolveDefinition(definitionLookup, ability);
                 var effects = definition?.SystemEffects;
                 if (effects is { Count: > 0 })
@@ -157,6 +170,18 @@ public static class BattleboardAbilityEffectResolver
         yield return ability.Name;
         yield return ability.Effect;
         yield return ability.ShortStringValue;
+    }
+
+    public static bool IsPermanentImmunity(AbilityDraft? ability)
+    {
+        if (ability == null || ability.IsActivatedGrant)
+            return false;
+        if (ability.AbilityType == AbilityType.Immunity)
+            return true;
+
+        var text = (ability.Name ?? ability.ShortStringValue ?? string.Empty).Trim();
+        return text.StartsWith("Immunity to ", StringComparison.OrdinalIgnoreCase)
+            || text.StartsWith("Total Immunity to ", StringComparison.OrdinalIgnoreCase);
     }
 
     private static BattleboardAdvancementEffects Merge(

@@ -3,6 +3,15 @@ namespace labyItems.Models.Characters;
 public sealed class AbilityDraft
 {
     public string? AbilityKey { get; set; }
+    public string? GrantInstanceId { get; set; }
+    public string? GrantDuration { get; set; }
+    public List<AbilitySystemEffect>? GrantSystemEffects { get; set; }
+    public bool HasConditionalArmour { get; set; }
+
+    [System.Text.Json.Serialization.JsonIgnore]
+    public bool IsActivatedGrant => GrantInstanceId != null
+        && (AbilityType == AbilityType.Innate || (!string.IsNullOrWhiteSpace(GrantDuration)
+            && !GrantDuration.Equals("Permanent", StringComparison.OrdinalIgnoreCase)));
     public string Name { get; set; } = "";
     public string? BattleboardNameOverride { get; set; }
     public string? UpdateKey { get; set; }
@@ -18,35 +27,7 @@ public sealed class AbilityDraft
     public List<string> GuildOverrides { get; } = new();
 
     public AbilityType AbilityType { get; set; }
+    public int? ApplicableLevel { get; set; }
     public int? LevelGained { get; set; }
     public int? TableGained { get; set; }
-}
-
-public enum AbilityType
-{
-    Immunity,
-    Resistance,
-    AtWill,
-    Static,
-    Pac,
-    Dac,
-    Mac,
-    Sac,
-    Life,
-    WeaponSkill,
-    Innate,
-    Craft,
-    Power,
-    Overwrite,
-    Replace,
-    CastingList,
-    GuildOverride,
-    Update,
-    LTM
-}
-
-public sealed class InnateAbilityDraft
-{
-    public string Name { get; set; } = "";
-    public int Rank { get; set; }
 }

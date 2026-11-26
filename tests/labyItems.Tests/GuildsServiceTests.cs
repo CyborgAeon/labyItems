@@ -1,8 +1,10 @@
+using labyItems.Models.Guilds;
 using System.Linq;
 using System.Text.Json;
 using labyItems.Models.Characters;
 using labyItems.Models.Rules;
 using labyItems.Services;
+using labyItems.Services.Guilds;
 using Xunit;
 
 namespace labyItems.Tests;
@@ -267,95 +269,48 @@ public sealed class GuildsServiceTests : ServiceTestBase
     }
 
     [Fact]
-    public async Task GetAllAsync_LoadsLoThiUpdatesAndAdvancedTotemicMajorChoices()
+    public async Task ResolvesLoThiOwlWisdomProgression()
     {
-        var all = await GuildsService.GetAllAsync();
+        var guild = (await GuildsService.GetAllAsync())["Lo'Thi"];
+        var basic = ResolveGrant(guild, "Lo'Thi", 1, "b.owl-s-wisdom");
+        var advanced = ResolveGrant(guild, "Lo'Thi", 10000, "b.owl-s-wisdom");
 
-        Assert.True(all.TryGetValue("Lo'Thi", out var guild));
-        Assert.NotNull(guild);
+        Assert.Equal(1, basic.Count);
+        Assert.Equal(2, advanced.Count);
+        Assert.Contains("major prayer", advanced.Effect ?? "", System.StringComparison.OrdinalIgnoreCase);
 
-        var intermediateOwlsWisdom = guild!.Benefits.Intermediate
-            .Select(entry => entry.Ability)
-            .FirstOrDefault(ability => string.Equals(ability?.Name, "Owl's Wisdom", System.StringComparison.OrdinalIgnoreCase));
-        Assert.NotNull(intermediateOwlsWisdom);
-        Assert.Equal("Update", intermediateOwlsWisdom!.Type);
-        Assert.Equal(1, intermediateOwlsWisdom.Count);
-        Assert.Contains("major prayer", intermediateOwlsWisdom.Effect ?? string.Empty, System.StringComparison.OrdinalIgnoreCase);
-
-        var advancedOwlsWisdom = guild.Benefits.Advanced
-            .Select(entry => entry.Ability)
-            .FirstOrDefault(ability => string.Equals(ability?.Name, "Owl's Wisdom", System.StringComparison.OrdinalIgnoreCase));
-        Assert.NotNull(advancedOwlsWisdom);
-        Assert.Equal(2, advancedOwlsWisdom!.Count);
-
-        var advancedTotemicMarkings = guild.Benefits.Advanced
-            .Select(entry => entry.Ability)
-            .FirstOrDefault(ability => string.Equals(ability?.Name, "Totemic Markings", System.StringComparison.OrdinalIgnoreCase));
-        Assert.NotNull(advancedTotemicMarkings);
-        Assert.Equal(new List<int> { 6, 2 }, advancedTotemicMarkings!.Amount);
-
-        var advancedChoiceNames = guild.Benefits.Advanced
-            .SelectMany(entry => entry.Options ?? new List<GuildBenefitOption>())
-            .SelectMany(option => option.Abilities ?? new List<AbilityDefinition>())
-            .Select(ability => ability.Name ?? string.Empty)
-            .Where(name => !string.IsNullOrWhiteSpace(name))
-            .ToList();
-
-        Assert.Contains(advancedChoiceNames, name => name.StartsWith("Predator Major:", System.StringComparison.OrdinalIgnoreCase));
-        Assert.Contains(advancedChoiceNames, name => name.StartsWith("Prey Major:", System.StringComparison.OrdinalIgnoreCase));
+        var advancedOptions = guild.Benefits.Advanced.SelectMany(entry => entry.Options)
+            .SelectMany(option => option.Abilities).Select(ability => ability.Name);
+        Assert.Contains(advancedOptions, name => name.StartsWith("Predator Major:"));
+        Assert.Contains(advancedOptions, name => name.StartsWith("Prey Major:"));
     }
 
     [Fact]
-    public async Task GetAllAsync_NormalizesShadowLegionCanonicalGrantReferencesAndUpgrades()
+    public async Task ResolvesShadowLegionUpgradesAgainstTheirOriginalGrant()
     {
-        var all = await GuildsService.GetAllAsync();
+        const string name = "Shadow Legion";
+        const string id = "shadow-legion.basic.war-cry";
+        var guild = (await GuildsService.GetAllAsync())[name];
+        var basic = ResolveGrant(guild, name, 1, id);
+        var advanced = ResolveGrant(guild, name, 10000, id);
+        var firstAid = ResolveGrant(guild, name, 1, "shadow-legion.basic.first-aid");
 
-        Assert.True(all.TryGetValue("Shadow Legion", out var guild));
-        Assert.NotNull(guild);
+        Assert.Equal("ability.war-cry", basic.AbilityRef);
+        Assert.Equal("Shadow Legion!", basic.Name);
+        Assert.Equal("Innate", basic.Type);
+        Assert.Equal("ability.bandaging", firstAid.AbilityRef);
+        Assert.Equal(basic.GrantId, advanced.GrantId);
+        Assert.Equal(1, advanced.Count);
+        Assert.Contains("Determination", advanced.Effect ?? "", System.StringComparison.OrdinalIgnoreCase);
 
-        var basicWarCry = guild!.Benefits.Basic
-            .Select(entry => entry.Ability)
-            .FirstOrDefault(ability =>
-                string.Equals(ability?.GrantId, "shadow-legion.basic.war-cry", System.StringComparison.OrdinalIgnoreCase));
-        Assert.NotNull(basicWarCry);
-        Assert.Equal("ability.war-cry", basicWarCry!.AbilityRef);
-        Assert.Equal("Innate", basicWarCry.Type);
-        Assert.Equal("Shadow Legion!", basicWarCry.Name);
-
-        var basicFirstAid = guild.Benefits.Basic
-            .Select(entry => entry.Ability)
-            .FirstOrDefault(ability =>
-                string.Equals(ability?.GrantId, "shadow-legion.basic.first-aid", System.StringComparison.OrdinalIgnoreCase));
-        Assert.NotNull(basicFirstAid);
-        Assert.Equal("ability.bandaging", basicFirstAid!.AbilityRef);
-
-        var intermediateUpgrade = guild.Benefits.Intermediate
-            .Select(entry => entry.Ability)
-            .FirstOrDefault(ability =>
-                string.Equals(ability?.GrantId, "shadow-legion.intermediate.shadow-legion-upgrade", System.StringComparison.OrdinalIgnoreCase));
-        Assert.NotNull(intermediateUpgrade);
-        Assert.Equal("ability.determination", intermediateUpgrade!.AbilityRef);
-        Assert.Equal("Innate", intermediateUpgrade.Type);
-        Assert.Equal("Shadow Legion!", intermediateUpgrade.Name);
-
-        var advancedUpgrade = guild.Benefits.Advanced
-            .Select(entry => entry.Ability)
-            .FirstOrDefault(ability =>
-                string.Equals(ability?.GrantId, "shadow-legion.advanced.shadow-legion-extra-use", System.StringComparison.OrdinalIgnoreCase));
-        Assert.NotNull(advancedUpgrade);
-        Assert.Equal(2, advancedUpgrade!.Count);
-        Assert.Equal("ability.determination", advancedUpgrade.AbilityRef);
-
-        var advancedChoiceNames = guild.Benefits.Advanced
-            .SelectMany(entry => entry.Options ?? new List<GuildBenefitOption>())
-            .SelectMany(option => option.Abilities ?? new List<AbilityDefinition>())
-            .Select(ability => (ability.Name ?? string.Empty).Trim())
-            .Where(name => name.Length > 0)
-            .ToList();
-
-        Assert.Contains("Shadow Legion!", advancedChoiceNames);
-        Assert.Contains("Battle Fury", advancedChoiceNames);
-        Assert.Contains("Medic", advancedChoiceNames);
+        var draft = new CharacterDraft { Points = 10000 };
+        var resolution = GuildCharacterBenefitResolver.ResolveGrants(guild, draft, name);
+        var choice = Assert.Single(resolution.Choices, choice => choice.Choice.Id == "a.mercenary-soldier-choice.choice");
+        var options = choice.Options.SelectMany(option => option.Option.Grants)
+            .Select(grant => GuildCharacterBenefitResolver.MaterializeGrantOption(guild, grant).Name).ToArray();
+        Assert.Contains("Shadow Legion!", options);
+        Assert.Contains("Battle Fury", options);
+        Assert.Contains("Medic", options);
     }
 
     [Fact]
@@ -384,61 +339,31 @@ public sealed class GuildsServiceTests : ServiceTestBase
     }
 
     [Fact]
-    public async Task GetAllAsync_MapsDukesHeadSweethavenAndDisciplineOtherToCanonicalRefs()
+    public async Task ResolvesSweethavenTierPatchAndDisciplineOther()
     {
-        var all = await GuildsService.GetAllAsync();
+        const string name = "The Duke's Head Society";
+        const string id = "dukes-head.basic.the-people-of-sweethaven-have-spoken";
+        var guild = (await GuildsService.GetAllAsync())[name];
+        var basic = ResolveGrant(guild, name, 1, id);
+        var advanced = ResolveGrant(guild, name, 10000, id);
+        var discipline = ResolveGrant(guild, name, 10000, "dukes-head.intermediate.discipline-other");
 
-        Assert.True(all.TryGetValue("The Duke's Head Society", out var guild));
-        Assert.NotNull(guild);
-
-        var basicGrant = guild!.Benefits.Basic
-            .Select(entry => entry.Ability)
-            .FirstOrDefault(ability =>
-                string.Equals(ability?.GrantId, "dukes-head.basic.the-people-of-sweethaven-have-spoken", System.StringComparison.OrdinalIgnoreCase));
-        Assert.NotNull(basicGrant);
-        Assert.Equal("ability.the-people-of-sweethaven-have-spoken", basicGrant!.AbilityRef);
-        Assert.Equal("The People of Sweethaven have spoken", basicGrant.Name);
-
-        var intermediateUpgrade = guild.Benefits.Intermediate
-            .Select(entry => entry.Ability)
-            .FirstOrDefault(ability =>
-                string.Equals(ability?.GrantId, "dukes-head.intermediate.the-people-of-sweethaven-have-spoken-upgrade", System.StringComparison.OrdinalIgnoreCase));
-        Assert.NotNull(intermediateUpgrade);
-        Assert.Equal("ability.the-people-of-sweethaven-have-spoken", intermediateUpgrade!.AbilityRef);
-        Assert.Equal(2, intermediateUpgrade.Count);
-
-        var disciplineOther = guild.Benefits.Intermediate
-            .Select(entry => entry.Ability)
-            .FirstOrDefault(ability =>
-                string.Equals(ability?.GrantId, "dukes-head.intermediate.discipline-other", System.StringComparison.OrdinalIgnoreCase));
-        Assert.NotNull(disciplineOther);
-        Assert.Equal("ability.discipline", disciplineOther!.AbilityRef);
-        Assert.Equal("Discipline Other", disciplineOther.Name);
+        Assert.Equal("ability.the-people-of-sweethaven-have-spoken", basic.AbilityRef);
+        Assert.Equal("The People of Sweethaven have spoken", basic.Name);
+        Assert.Equal(2, advanced.Count);
+        Assert.Equal("ability.discipline", discipline.AbilityRef);
+        Assert.Equal("Discipline Other", discipline.Name);
     }
 
     [Fact]
-    public async Task GetAllAsync_MapsOrderOfMercenariesUniteToGenericSelfOnlyGrantAndUpgrade()
+    public async Task MercenariesUniteAdditionalUseRequiresPurchasedStatus()
     {
-        var all = await GuildsService.GetAllAsync();
-
-        Assert.True(all.TryGetValue("The Order of Mercenaries", out var guild));
-        Assert.NotNull(guild);
-
-        var baseGrant = guild!.Benefits.Advanced
-            .Select(entry => entry.Ability)
-            .FirstOrDefault(ability =>
-                string.Equals(ability?.GrantId, "order-of-mercenaries.advanced.mercenaries-unite", System.StringComparison.OrdinalIgnoreCase));
-        Assert.NotNull(baseGrant);
-        Assert.Equal("ability.use-self-only-beneficial-ability-on-other", baseGrant!.AbilityRef);
-        Assert.Equal(1, baseGrant.Count);
-
-        var upgradedGrant = guild.Benefits.Advanced
-            .Select(entry => entry.Ability)
-            .FirstOrDefault(ability =>
-                string.Equals(ability?.GrantId, "order-of-mercenaries.advanced.mercenaries-unite-extra-use", System.StringComparison.OrdinalIgnoreCase));
-        Assert.NotNull(upgradedGrant);
-        Assert.Equal("ability.use-self-only-beneficial-ability-on-other", upgradedGrant!.AbilityRef);
-        Assert.Equal(2, upgradedGrant.Count);
+        const string name = "The Order of Mercenaries";
+        var guild = (await GuildsService.GetAllAsync())[name];
+        var grant = ResolveGrant(guild, name, 10000, "order-of-mercenaries.advanced.mercenaries-unite");
+        Assert.Equal("ability.use-self-only-beneficial-ability-on-other", grant.AbilityRef);
+        Assert.Equal(1, grant.Count);
+        Assert.Contains(guild.Details, detail => detail.Value.Contains("Experienced Mercenary"));
     }
 
     [Fact]
@@ -478,126 +403,75 @@ public sealed class GuildsServiceTests : ServiceTestBase
     }
 
     [Fact]
-    public async Task GuildsJson_DoesNotLeaveExactCanonicalAliasNameBenefitsUnmapped()
+    public async Task GuildsJson_UsesStableGrantIdsAndCanonicalReferences()
     {
-        var abilitiesJson = await ServiceHelper.ReadPackageTextAsync("specialisation/abilities.json");
-        using var abilitiesDoc = JsonDocument.Parse(abilitiesJson);
-        var aliases = abilitiesDoc.RootElement.GetProperty("aliases")
-            .EnumerateObject()
-            .Select(property => property.Name)
-            .Where(name => !string.IsNullOrWhiteSpace(name))
-            .ToHashSet(System.StringComparer.OrdinalIgnoreCase);
-
-        var guildsJson = await ServiceHelper.ReadPackageTextAsync("people/guilds.json");
-        using var guildsDoc = JsonDocument.Parse(guildsJson);
-
-        var offenders = new List<string>();
-        foreach (var guild in guildsDoc.RootElement.EnumerateObject())
+        using var document = JsonDocument.Parse(await ServiceHelper.ReadPackageTextAsync("people/guilds.json"));
+        Assert.Equal(3, document.RootElement.GetProperty("$schemaVersion").GetInt32());
+        foreach (var guild in document.RootElement.GetProperty("guilds").EnumerateObject())
         {
-            if (!guild.Value.TryGetProperty("Benefits", out var benefits) || benefits.ValueKind != JsonValueKind.Object)
-                continue;
-
-            foreach (var tier in new[] { "Basic", "Intermediate", "Advanced" })
+            Assert.False(guild.Value.TryGetProperty("MiracleList", out _));
+            foreach (var tier in guild.Value.GetProperty("Benefits").EnumerateObject())
             {
-                if (!benefits.TryGetProperty(tier, out var tierElement))
-                    continue;
-
-                CollectUnmappedAliasEntries(guild.Name, tier, tierElement, aliases, offenders);
+                foreach (var node in tier.Value.EnumerateArray())
+                {
+                    Assert.False(string.IsNullOrWhiteSpace(node.GetProperty("Id").GetString()));
+                    if (!node.TryGetProperty("Kind", out var kind) || kind.GetString() == "Grant")
+                    {
+                        var abilityRef = node.GetProperty("AbilityRef").GetString();
+                        Assert.False(string.IsNullOrWhiteSpace(abilityRef));
+                        if (node.TryGetProperty("Key", out var key))
+                            Assert.NotEqual(abilityRef, key.GetString());
+                    }
+                }
             }
         }
-
-        Assert.True(offenders.Count == 0, $"Found unmapped exact alias guild benefits: {string.Join("; ", offenders)}");
     }
 
     [Fact]
-    public async Task GuildsJson_BenefitAbilitiesContainKeyAndAbilityRef()
+    public async Task MiracleListsAreSeparateAndFirstEligibleMembershipIsPreserved()
     {
-        var guildsJson = await ServiceHelper.ReadPackageTextAsync("people/guilds.json");
-        using var guildsDoc = JsonDocument.Parse(guildsJson);
-
-        var offenders = new List<string>();
-        foreach (var guild in guildsDoc.RootElement.EnumerateObject())
-        {
-            if (!guild.Value.TryGetProperty("Benefits", out var benefits) || benefits.ValueKind != JsonValueKind.Object)
-                continue;
-
-            foreach (var tier in new[] { "Basic", "Intermediate", "Advanced" })
-            {
-                if (!benefits.TryGetProperty(tier, out var tierElement))
-                    continue;
-
-                CollectMissingIdentityEntries(guild.Name, tier, tierElement, offenders);
-            }
-        }
-
-        Assert.True(offenders.Count == 0, $"Found guild benefits missing Key/AbilityRef: {string.Join("; ", offenders)}");
+        var lists = await GuildMiracleListCatalogue.GetAllAsync();
+        Assert.Equal(17, lists.Count);
+        Assert.Equal(309, lists.Values.SelectMany(levels => levels.Values).Sum(entries => entries.Count));
+        var (guild, list) = GuildMiracleAccessResolver.ResolveMembership(
+            ["Shadow Legion", "church of the tryst", "Church of Knowledge"], lists);
+        Assert.Equal("church of the tryst", guild);
+        Assert.Contains("Halt", list!["1"]);
+        Assert.Equal((null, null), GuildMiracleAccessResolver.ResolveMembership(["Shadow Legion"], lists));
     }
 
-    private static void CollectUnmappedAliasEntries(
-        string guildName,
-        string tier,
-        JsonElement element,
-        IReadOnlySet<string> aliases,
-        ICollection<string> offenders)
+    [Theory]
+    [InlineData(0, 3, 1)]
+    [InlineData(250, 6, 2)]
+    [InlineData(1000, 9, 3)]
+    public async Task MercenaryLifeSetsOneCumulativeAmount(int points, int body, int locations)
     {
-        if (element.ValueKind == JsonValueKind.Array)
-        {
-            foreach (var child in element.EnumerateArray())
-                CollectUnmappedAliasEntries(guildName, tier, child, aliases, offenders);
-            return;
-        }
-
-        if (element.ValueKind != JsonValueKind.Object)
-            return;
-
-        if (!element.TryGetProperty("Name", out var nameElement) || nameElement.ValueKind != JsonValueKind.String)
-            return;
-
-        var name = (nameElement.GetString() ?? string.Empty).Trim();
-        if (name.Length == 0 || !aliases.Contains(name))
-            return;
-
-        var hasRef = element.TryGetProperty("AbilityRef", out var refElement)
-                     && refElement.ValueKind == JsonValueKind.String
-                     && !string.IsNullOrWhiteSpace(refElement.GetString());
-        if (hasRef)
-            return;
-
-        offenders.Add($"{guildName}/{tier}:{name}");
+        const string name = "The Order of Mercenaries";
+        var guild = (await GuildsService.GetAllAsync())[name];
+        var ability = ResolveGrant(guild, name, points, "b.guild-life");
+        Assert.Equal(new[] { body, locations }, ability.Amount);
     }
 
-    private static void CollectMissingIdentityEntries(
-        string guildName,
-        string tier,
-        JsonElement element,
-        ICollection<string> offenders)
+    [Fact]
+    public async Task TierMiracleAccessDoesNotMutateThePackagedList()
     {
-        if (element.ValueKind == JsonValueKind.Array)
-        {
-            foreach (var child in element.EnumerateArray())
-                CollectMissingIdentityEntries(guildName, tier, child, offenders);
-            return;
-        }
+        const string rings = "The Rings of Talthar";
+        var records = await GuildsService.GetAllAsync();
+        var ordinary = (await GuildMiracleListCatalogue.GetAllAsync())[rings];
+        var additions = GuildCharacterBenefitResolver.ResolveGrants(records[rings], new CharacterDraft(), rings)
+            .MiracleAdditions;
+        var effective = GuildMiracleAccessResolver.AddOrdinaryAccess(ordinary, additions,
+            name => name == "Dismiss Ghoul" ? (name, 3) : null);
 
-        if (element.ValueKind != JsonValueKind.Object)
-            return;
+        Assert.Contains("Dismiss Ghoul", effective["3"]);
+        Assert.DoesNotContain("Dismiss Ghoul", ordinary["3"]);
+    }
 
-        if (!element.TryGetProperty("Name", out var nameElement) || nameElement.ValueKind != JsonValueKind.String)
-            return;
-
-        var name = (nameElement.GetString() ?? string.Empty).Trim();
-        if (name.Length == 0)
-            return;
-
-        var hasKey = element.TryGetProperty("Key", out var keyElement)
-                     && keyElement.ValueKind == JsonValueKind.String
-                     && !string.IsNullOrWhiteSpace(keyElement.GetString());
-        var hasRef = element.TryGetProperty("AbilityRef", out var refElement)
-                     && refElement.ValueKind == JsonValueKind.String
-                     && !string.IsNullOrWhiteSpace(refElement.GetString());
-
-        if (!hasKey || !hasRef)
-            offenders.Add($"{guildName}/{tier}:{name}");
+    private static AbilityDefinition ResolveGrant(GuildRecord guild, string name, int points, string id)
+    {
+        var result = GuildCharacterBenefitResolver.ResolveGrants(guild, new CharacterDraft { Points = points }, name);
+        var grant = Assert.Single(result.Grants, grant => grant.Id == id);
+        return GuildCharacterBenefitResolver.MaterializeGrant(guild, grant);
     }
 
     private static bool ContainsAlignmentRuleKey(JsonElement element)

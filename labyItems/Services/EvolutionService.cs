@@ -63,6 +63,12 @@ public static class EvolutionService
         public int Cost { get; init; }
         public int Table { get; init; }
         public string AbilityRef { get; init; } = string.Empty;
+        public string? GrantId { get; init; }
+        public string? RuleSource { get; init; }
+        public string? GrantDuration { get; init; }
+        public string? GrantFrequency { get; init; }
+        public int? GrantInnateCount { get; init; }
+        public IReadOnlyList<labyItems.Models.Rules.RuleReference>? RuleReferences { get; init; }
         public string Available { get; init; } = string.Empty;
         public string SourceBook { get; init; } = string.Empty;
         public string AvailabilityDisplay { get; init; } = string.Empty;

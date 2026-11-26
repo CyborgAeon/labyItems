@@ -136,17 +136,35 @@ public sealed class PrimusMapView : ContentView
         var script = await ServiceHelper.ReadPackageTextAsync("world-map/map.js");
         ready = false;
         browser.Source = new HtmlWebViewSource { Html = $$"""
-            <!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-            <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
-            <style>
-            body{margin:0;background:{{mutedSurface}};font-family:Georgia,serif}#map{position:fixed;inset:0;touch-action:none}svg{display:block;width:100%;height:100%;touch-action:none}
-            .artwork .region,.artwork .loc{fill-opacity:0;stroke-opacity:0}.chosen{fill-opacity:.38!important;stroke-opacity:1!important;stroke-width:3!important;vector-effect:non-scaling-stroke}
-            .matching:not(.chosen){fill-opacity:.2!important;stroke-opacity:.8!important;vector-effect:non-scaling-stroke}
-            nav{display:none;position:fixed;bottom:12px;left:12px;display:flex;gap:8px}button{min-width:44px;min-height:44px;border:1px solid {{surfaceBorder}};background:white;border-radius:8px;color:{{primary}};font:16px Georgia}
-            </style></head><body><div id="map">{{document.Root}}</div>
-            <nav aria-label="Map controls"><button id="plus" aria-label="Zoom in">+</button><button id="minus" aria-label="Zoom out">−</button><button id="fit">Fit</button><button id="clear">Clear selection</button></nav>
-            <script>const background={{JsonSerializer.Serialize(background)}};{{viewport}}
-            {{script}}</script></body></html>
+            <!doctype html>
+            <html>
+                <head>
+                    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+                    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+                    <style>
+                        body
+                        {margin:0;background:{{mutedSurface}};font-family:Georgia,serif}
+                        #map{position:fixed;inset:0;touch-action:none}
+                        svg{display:block;width:100%;height:100%;touch-action:none}
+                        .artwork .region,.artwork .loc
+                        {fill-opacity:0;stroke-opacity:0}
+                        .chosen
+                        {fill-opacity:.38!important;stroke-opacity:1!important;stroke-width:3!important;vector-effect:non-scaling-stroke}
+                        .matching:not(.chosen)
+                        {fill-opacity:.2!important;stroke-opacity:.8!important;vector-effect:non-scaling-stroke}
+                        nav
+                        {display:none;position:fixed;bottom:12px;left:12px;display:flex;gap:8px}
+                        button
+                        {min-width:44px;min-height:44px;border:1px solid {{surfaceBorder}};background:white;border-radius:8px;color:{{primary}};font:16px Georgia}
+                    </style>
+                </head>
+                <body>
+                    <div id="map">{{document.Root}}</div>
+                    <script>const background={{JsonSerializer.Serialize(background)}};{{viewport}}
+                    {{script}}
+                    </script>
+                </body>
+            </html>
             """ };
         loaded = true;
     }

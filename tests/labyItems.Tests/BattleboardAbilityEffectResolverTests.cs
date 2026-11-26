@@ -7,6 +7,46 @@ namespace labyItems.Tests;
 public sealed class BattleboardAbilityEffectResolverTests : ServiceTestBase
 {
     [Fact]
+    public async Task ResolvedGuildGrant_DoesNotImportCanonicalEffectsDiscardedByTheGrant()
+    {
+        var draft = Assert.Single(AbilityDraftBuilder.ParseAbility(new AbilityDefinition
+        {
+            Key = "ability.immunity-to-repels",
+            GrantId = "Guild::restricted",
+            Name = "Restricted Repel Benefit",
+            Type = "Static",
+            Effect = "This award provides resistance instead.",
+            SystemEffects = [new() { EffectType = "lor:Spirit", Level = 9 }]
+        }, null));
+
+        var fallback = BattleboardAbilityEffectResolver.ResolveFallback([draft]);
+        var resolved = await BattleboardAbilityEffectResolver.ResolveAsync([draft]);
+
+        Assert.Equal(9, fallback.ResistanceOverrides["Spirit"]);
+        Assert.Equal(9, resolved.ResistanceOverrides["Spirit"]);
+        Assert.Empty(fallback.Immunities);
+        Assert.Empty(resolved.Immunities);
+    }
+
+    [Fact]
+    public async Task TimedGuildImmunity_DoesNotCountAsPermanent()
+    {
+        var draft = Assert.Single(AbilityDraftBuilder.ParseAbility(new AbilityDefinition
+        {
+            Key = "ability.immunity-to-repels",
+            GrantId = "Guild::temporary-immunity",
+            Name = "Immunity to Repels",
+            Type = "Immunity",
+            Duration = "5 minutes",
+            SystemEffects = [new() { EffectType = "immunity", ImmunityName = "Repels" }]
+        }, null));
+
+        Assert.False(BattleboardAbilityEffectResolver.IsPermanentImmunity(draft));
+        Assert.Empty(BattleboardAbilityEffectResolver.ResolveFallback([draft]).Immunities);
+        Assert.Empty((await BattleboardAbilityEffectResolver.ResolveAsync([draft])).Immunities);
+    }
+
+    [Fact]
     public void ResolveFallback_ParsesTextualResistanceAndImmunity()
     {
         var resolved = BattleboardAbilityEffectResolver.ResolveFallback(new[]

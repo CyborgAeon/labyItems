@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Text.Json;
 using labyItems.Controls;
 using labyItems.Helpers;
+using labyItems.Models.Characters;
 using labyItems.Services;
 using Microsoft.Maui.Graphics;
 

@@ -816,12 +816,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             if (cancellationToken.IsCancellationRequested || !IsLatestSelectionRecalc(version))
                 return;
 
-            await RefreshPrereqOptionsAsync();
-            if (cancellationToken.IsCancellationRequested || !IsLatestSelectionRecalc(version))
-                return;
-
             _builder.NotifyGatingChanged();
-            _ = _builder.RefreshDraftAbilitiesAsync();
+            await _builder.RefreshDraftAbilitiesAsync(cancellationToken);
         }
         catch (OperationCanceledException)
         {
@@ -989,12 +985,16 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         return (abilities, selectedGuildOverrides);
     }
 
-    public Task<(List<AbilityDraft> Abilities, GuildOverrideRules? GuildOverrides)> BuildSelectedAbilityDraftsWithRulesAsync()
+    public Task<(List<AbilityDraft> Abilities, GuildOverrideRules? GuildOverrides, IReadOnlyList<AlignmentRule> Alignments)>
+        BuildSelectedResolutionAsync()
     {
-        if (MainThread.IsMainThread)
-            return Task.FromResult(BuildSelectedAbilityDraftsWithRules());
+        (List<AbilityDraft>, GuildOverrideRules?, IReadOnlyList<AlignmentRule>) Build()
+        {
+            var (abilities, overrides) = BuildSelectedAbilityDraftsWithRules();
+            return (abilities, overrides, BuildSelectedAlignmentRules());
+        }
 
-        return MainThread.InvokeOnMainThreadAsync(BuildSelectedAbilityDraftsWithRules);
+        return MainThread.IsMainThread ? Task.FromResult(Build()) : MainThread.InvokeOnMainThreadAsync(Build);
     }
 
     public IReadOnlyList<AlignmentRule> BuildSelectedAlignmentRules()
@@ -1036,14 +1036,6 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         }
 
         return rules;
-    }
-
-    public Task<IReadOnlyList<AlignmentRule>> BuildSelectedAlignmentRulesAsync()
-    {
-        if (MainThread.IsMainThread)
-            return Task.FromResult((IReadOnlyList<AlignmentRule>)BuildSelectedAlignmentRules());
-
-        return MainThread.InvokeOnMainThreadAsync(() => BuildSelectedAlignmentRules());
     }
 
     private static ChoiceOption? FindOptionBySelectionToken(SpecialisationSectionSpec spec, string? token)
@@ -1238,7 +1230,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         }
     }
 
-    public async Task RefreshPrereqOptionsAsync()
+    public async Task RefreshPrereqOptionsAsync(CancellationToken cancellationToken = default)
     {
         if (_isRefreshingPrereqs)
             return;
@@ -1256,6 +1248,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
+                if (cancellationToken.IsCancellationRequested)
+                    return;
+
                 foreach (var group in Sections.OfType<SpecialisationGroupVm>())
                 {
                     if (!_specBySectionId.TryGetValue(group.SectionId, out var spec))

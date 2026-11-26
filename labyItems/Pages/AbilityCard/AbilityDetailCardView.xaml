@@ -5,7 +5,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:helpers="clr-namespace:labyItems.Helpers"
-    xmlns:controls="clr-namespace:labyItems.Controls">
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    xmlns:rules="clr-namespace:labyItems.Models.Rules">
 
     <ContentView>
         <VerticalStackLayout Spacing="12">
@@ -22,13 +23,13 @@
                    FontAttributes="Bold"
                    IsVisible="{Binding ShowNonStandardBadge, Source={x:Reference Root}}"/>
 
-            <Grid x:Name="AbilityKeyInformationGrid" Margin="-16,0" Padding="12,10" ColumnDefinitions="*,1,*">
+            <Grid x:Name="AbilityKeyInformationGrid" IsVisible="{Binding ShowPurchaseFacts, Source={x:Reference Root}}" Margin="-16,0" Padding="12,10" ColumnDefinitions="*,1,*">
                 <VerticalStackLayout><VerticalStackLayout.GestureRecognizers><TapGestureRecognizer Tapped="OnCostTapped"/></VerticalStackLayout.GestureRecognizers><Label Text="COST" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding CostValueText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
                 <BoxView Grid.Column="1" Color="{StaticResource SurfaceBorderColor}"/>
                 <VerticalStackLayout Grid.Column="2"><VerticalStackLayout.GestureRecognizers><TapGestureRecognizer Tapped="OnTableTapped"/></VerticalStackLayout.GestureRecognizers><Label Text="TABLE" Style="{StaticResource KeyInfoLabelStyle}"/><Label Text="{Binding TableValueText, Source={x:Reference Root}}" Style="{StaticResource KeyInfoValueStyle}"/></VerticalStackLayout>
             </Grid>
 
-            <VerticalStackLayout Spacing="4">
+            <VerticalStackLayout Spacing="4" IsVisible="{Binding ShowPurchaseFacts, Source={x:Reference Root}}">
                 <Border Stroke="{StaticResource SurfaceBorderColor}" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#F9FAFB" Padding="12,10">
                     <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnAvailabilityEditTapped"/></Border.GestureRecognizers>
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
@@ -48,6 +49,10 @@
                     </Border>
                 </controls:AnimatedExpandView>
             </VerticalStackLayout>
+
+            <Label Text="{Binding GrantParameters, Source={x:Reference Root}}"
+                   IsVisible="{Binding HasGrantParameters, Source={x:Reference Root}}"
+                   TextColor="{StaticResource MutedTextColor}"/>
 
             <Grid ColumnDefinitions="*,Auto"
                   ColumnSpacing="8">
@@ -134,6 +139,32 @@
                         </BindableLayout.ItemTemplate>
                     </VerticalStackLayout>
                 </VerticalStackLayout>
+            </VerticalStackLayout>
+
+            <Label Text="{Binding RuleSource, Source={x:Reference Root}}"
+                   IsVisible="{Binding HasRuleSource, Source={x:Reference Root}}"
+                   TextColor="{StaticResource MutedTextColor}" FontSize="12"/>
+            <VerticalStackLayout Spacing="6" IsVisible="{Binding HasRuleDetails, Source={x:Reference Root}}">
+                <BoxView Style="{StaticResource SectionDividerBoxStyle}"/>
+                <Label Text="RELATED RULES" Style="{StaticResource SectionHeaderLabelStyle}"/>
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding RelatedRules, Source={x:Reference Root}}" Spacing="4">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="rules:RelatedRuleRow">
+                            <controls:ExpandableSectionCard HeaderText="{Binding Name}" IsExpanded="False">
+                                <controls:ExpandableSectionCard.BodyContent>
+                                    <VerticalStackLayout Spacing="6">
+                                        <Label Text="{Binding RelationshipText}" TextColor="{StaticResource MutedTextColor}" FontSize="12"/>
+                                        <Label Text="{Binding Text}" LineBreakMode="WordWrap"/>
+                                        <Label Text="{Binding Source}" TextColor="{StaticResource MutedTextColor}" FontSize="12"/>
+                                    </VerticalStackLayout>
+                                </controls:ExpandableSectionCard.BodyContent>
+                            </controls:ExpandableSectionCard>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+                <Label Text="{Binding RuleDiagnostics, Source={x:Reference Root}}"
+                       IsVisible="{Binding HasRuleDiagnostics, Source={x:Reference Root}}"
+                       TextColor="{StaticResource MutedTextColor}" FontSize="12"/>
             </VerticalStackLayout>
 
             <VerticalStackLayout Spacing="6" IsVisible="{Binding HasAsPer, Source={x:Reference Root}}">

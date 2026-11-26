@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using labyItems.Models.Characters;
+using labyItems.Services.Specialisations;
 using SQLite;
 
 namespace labyItems.Services;
@@ -34,12 +35,12 @@ public static class PeopleService
                 return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
 
 #if DEBUG
-            var accountCacheLoad1 = await LoadDebugMergedAsync().ConfigureAwait(false);
-            labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = accountCacheLoad1);
+            var records = await LoadDebugMergedAsync().ConfigureAwait(false);
 #else
-            var accountCacheLoad2 = await Task.Run(LoadFromDb).ConfigureAwait(false);
-            labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = accountCacheLoad2);
+            var records = await Task.Run(LoadFromDb).ConfigureAwait(false);
 #endif
+            await ResolveAbilityReferencesAsync(records).ConfigureAwait(false);
+            LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = records);
         }
         catch (Exception ex)
         {
@@ -56,6 +57,26 @@ public static class PeopleService
 
     public static void InvalidateCache()
         => _cache = null;
+
+    private static async Task ResolveAbilityReferencesAsync(Dictionary<string, PeopleRecord> records)
+    {
+        var racesWithReferences = records.Values
+            .Where(race => !race.NonStandard && race.LevelledAbilities.Values.Any(grants =>
+                grants.Any(grant => !string.IsNullOrWhiteSpace(grant.AbilityRef))))
+            .ToArray();
+        if (racesWithReferences.Length == 0)
+            return;
+
+        var index = await SpecialisationDefinitionRepository.GetIndexAsync().ConfigureAwait(false);
+        foreach (var race in racesWithReferences)
+        {
+            foreach (var level in race.LevelledAbilities.Values)
+            {
+                for (var i = 0; i < level.Count; i++)
+                    level[i] = SpecialisationDefinitionRepository.ResolveAbilityGrant(level[i], index.AbilityReferences);
+            }
+        }
+    }
 
     private static Dictionary<string, PeopleRecord> LoadFromDb()
     {
@@ -83,12 +104,15 @@ public static class PeopleService
         try
         {
             var json = await ServiceHelper.ReadPackageTextAsync("people/people.json").ConfigureAwait(false);
-            var packaged = await Task.Run(() =>
-                    JsonSerializer.Deserialize<Dictionary<string, PeopleRecord>>(json, _jsonOptions)
-                    ?? new Dictionary<string, PeopleRecord>(StringComparer.OrdinalIgnoreCase))
-                .ConfigureAwait(false);
-            foreach (var kvp in packaged)
-                dict[kvp.Key] = kvp.Value;
+            using var document = JsonDocument.Parse(json);
+            foreach (var property in document.RootElement.EnumerateObject())
+            {
+                if (property.Value.ValueKind == JsonValueKind.Object
+                    && property.Value.Deserialize<PeopleRecord>(_jsonOptions) is { } race)
+                {
+                    dict[property.Name] = race;
+                }
+            }
         }
         catch (Exception ex)
         {

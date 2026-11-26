@@ -272,7 +272,8 @@ VALUES (@id, @name, @name_lower, @data_json, @created_at, @updated_at);";
         var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         foreach (var prop in doc.RootElement.EnumerateObject())
         {
-            dict[prop.Name] = prop.Value.GetRawText();
+            if (prop.Value.ValueKind == JsonValueKind.Object)
+                dict[prop.Name] = prop.Value.GetRawText();
         }
 
         return dict;

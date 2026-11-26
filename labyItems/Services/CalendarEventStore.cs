@@ -31,6 +31,56 @@ public sealed class CalendarEventStore
         _session.SessionChanged += ResetMemory;
     }
 
+    public event Action? Refreshed;
+    private readonly HashSet<string> _backgroundRefreshes = new();
+
+    public async Task<IReadOnlyList<CalendarEventRecord>> ReadMonthAndRefreshAsync(DateTime month)
+    {
+        var version = _session.Version;
+        if (!string.Equals(_loadedAccount, _session.Email.Trim(), StringComparison.OrdinalIgnoreCase))
+            await ExpireAsync();
+        _session.RequireVersion(version);
+        var cached = GetEventsForMonth(month);
+        if (_session.IsOfflineSession) _offlineMonths.Add(MonthKey(month));
+        RefreshInBackground($"{version}:month:{MonthKey(month)}", version, async () => { await LoadMonthAsync(month); });
+        return cached;
+    }
+
+    public async Task<IReadOnlyList<CalendarEventRecord>> ReadBookingsAndRefreshAsync()
+    {
+        var version = _session.Version;
+        if (!string.Equals(_loadedAccount, _session.Email.Trim(), StringComparison.OrdinalIgnoreCase))
+            await ExpireAsync();
+        _session.RequireVersion(version);
+        var cached = GetBookedEvents();
+        if (_session.IsOfflineSession) _bookingsOffline = true;
+        RefreshInBackground($"{version}:bookings", version, async () => { await LoadBookedEventsAsync(); });
+        return cached;
+    }
+
+    private void RefreshInBackground(string key, long version, Func<Task> refresh)
+    {
+        lock (_backgroundRefreshes)
+            if (!_backgroundRefreshes.Add(key)) return;
+        _ = RunAsync();
+        async Task RunAsync()
+        {
+            try
+            {
+                // Return the snapshot to the caller before starting any network work.
+                await Task.Yield();
+                _session.RequireVersion(version);
+                await refresh();
+            }
+            catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException or ObjectDisposedException) { }
+            finally
+            {
+                lock (_backgroundRefreshes) _backgroundRefreshes.Remove(key);
+                if (_session.Version == version) Refreshed?.Invoke();
+            }
+        }
+    }
+
     public async Task<IReadOnlyList<CalendarEventRecord>> LoadMonthAsync(DateTime month)
     {
         if (month.Date < new DateTime(Today.Year, Today.Month, 1))

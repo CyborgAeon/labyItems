@@ -1,3 +1,4 @@
+using labyItems.Models.Guilds;
 using labyItems.Pages.Characters;
 using labyItems.Services;
 

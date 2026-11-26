@@ -1,3 +1,4 @@
+using labyItems.Models.Rules;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -153,7 +154,7 @@ public sealed class ReferenceCatalogueDataSynchronizer : IReferenceCatalogueData
         Dictionary<string, object?> row, string identity)
     {
         var now = DateTime.UtcNow.ToString("O");
-        row["id"] = new Guid(SHA256.HashData(Encoding.UTF8.GetBytes($"catalogue|{catalogue.Table}|{identity}"))[..16]).ToString();
+        row["id"] = StableId(catalogue, identity);
         row["created_at"] = now;
         row["updated_at"] = now;
         using var command = connection.CreateCommand();
@@ -162,6 +163,39 @@ public sealed class ReferenceCatalogueDataSynchronizer : IReferenceCatalogueData
         foreach (var (key, value) in row)
             command.Parameters.AddWithValue("$" + key, value ?? DBNull.Value);
         return command.ExecuteNonQuery();
+    }
+
+    private static string StableId(Catalogue catalogue, string identity)
+        => new Guid(SHA256.HashData(Encoding.UTF8.GetBytes($"catalogue|{catalogue.Table}|{identity}"))[..16]).ToString();
+
+    internal static async Task<IReadOnlyList<RuleDefinition>> ReadPackagedRulesAsync()
+    {
+        var definitions = new List<RuleDefinition>();
+        foreach (var catalogue in Catalogues)
+        {
+            var kind = catalogue.Table switch
+            {
+                "spells" => RuleCatalogueKind.Spell,
+                "miracles" => RuleCatalogueKind.Miracle,
+                "evocs" => RuleCatalogueKind.Evocation,
+                "neuronics" => RuleCatalogueKind.Neuronic,
+                _ => throw new InvalidDataException($"Unrecognised rule catalogue {catalogue.Table}.")
+            };
+
+            var json = await ServiceHelper.ReadPackageTextAsync(catalogue.Asset).ConfigureAwait(false);
+            foreach (var row in ParseRows(catalogue, json).DistinctBy(row => Identity(catalogue, row)))
+            {
+                using var entry = JsonDocument.Parse((string)row["data_json"]!);
+                var page = Text(entry.RootElement, "sourcePage");
+                var source = page.Length == 0
+                    ? $"Existing transcription ({catalogue.Asset})"
+                    : $"Existing transcription ({catalogue.Asset}, p. {page})";
+                definitions.Add(new(kind, StableId(catalogue, Identity(catalogue, row)),
+                    (string)row["name"]!, (string?)row["description"], source, []));
+            }
+        }
+
+        return definitions;
     }
 
     private static string Identity(Catalogue catalogue, IReadOnlyDictionary<string, object?> row)

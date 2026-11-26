@@ -430,6 +430,20 @@
                                           </BindableLayout.ItemTemplate>
                                    </FlexLayout>
                             </VerticalStackLayout>
+                            <VerticalStackLayout Spacing="8"
+                                                 IsVisible="{Binding HasIntervalAbilities}">
+                                   <Label Text="Interval-limited abilities" FontAttributes="Bold"/>
+                                   <VerticalStackLayout BindableLayout.ItemsSource="{Binding IntervalAbilities}">
+                                          <BindableLayout.ItemTemplate>
+                                                 <DataTemplate>
+                                                        <VerticalStackLayout Spacing="3">
+                                                               <Label Text="{Binding DisplayName}" FontSize="13" FontAttributes="Bold"/>
+                                                               <Label Text="{Binding PublishedEffect}" FontSize="13"/>
+                                                        </VerticalStackLayout>
+                                                 </DataTemplate>
+                                          </BindableLayout.ItemTemplate>
+                                   </VerticalStackLayout>
+                            </VerticalStackLayout>
                      </VerticalStackLayout>
               </ScrollView>
        </ContentPage>

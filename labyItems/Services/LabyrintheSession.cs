@@ -13,6 +13,8 @@ public sealed class LabyrintheSession
     private CookieContainer? _cookies;
     private SavedLogin? _offlineCredentials;
     private AccountProfile? _account;
+    private Task _authenticationTask = Task.CompletedTask;
+    private readonly SemaphoreSlim _reconnect = new(1, 1);
     private long _version;
     private readonly object _sessionSync = new();
     public string Email { get; private set; } = string.Empty;
@@ -63,6 +65,7 @@ public sealed class LabyrintheSession
             Email = DisplayName = string.Empty;
             _account = null;
             _offlineCredentials = null;
+            _authenticationTask = Task.CompletedTask;
             if (_ownsClient) { _client.Dispose(); _client = CreateClient(); }
             request = new RequestContext(Version, _client, _cookies, null);
         }
@@ -82,6 +85,20 @@ public sealed class LabyrintheSession
         if (email.Contains("admin", StringComparison.OrdinalIgnoreCase) && password.Contains("admin", StringComparison.OrdinalIgnoreCase))
         {
             Publish(request.Version, () => { IsFallback = IsAuthenticated = true; Email = email; DisplayName = "admin"; });
+            return true;
+        }
+        var verifiedProfile = AccountProfiles == null ? null : await AccountProfiles.GetAsync(email, password);
+        RequireVersion(request.Version);
+        if (verifiedProfile != null)
+        {
+            Publish(request.Version, () =>
+            {
+                Email = email.Trim(); _account = verifiedProfile; DisplayName = verifiedProfile.DisplayName;
+                IsAuthenticated = IsOfflineSession = true;
+                _offlineCredentials = new SavedLogin(email, password);
+                _authenticationTask = AuthenticateInBackgroundAsync(
+                    new RequestContext(request.Version, request.Client, request.Cookies, _offlineCredentials));
+            });
             return true;
         }
         using var content = LoginForm(email, password);
@@ -187,15 +204,37 @@ public sealed class LabyrintheSession
             && !(response.Headers.Location?.ToString().Contains("/login", StringComparison.OrdinalIgnoreCase) ?? false);
     }
 
+    private async Task AuthenticateInBackgroundAsync(RequestContext request)
+    {
+        // A verified local login remains usable when the website cannot authenticate it.
+        try { await ReconnectCoreAsync(request); }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException or ObjectDisposedException) { }
+    }
+
     private async Task ReconnectAsync(RequestContext request)
     {
+        Task authentication;
+        lock (_sessionSync) { RequireVersion(request.Version); authentication = _authenticationTask; }
+        await authentication;
+        await ReconnectCoreAsync(request);
+    }
+
+    private async Task ReconnectCoreAsync(RequestContext request)
+    {
         if (request.OfflineCredentials == null) return;
-        using var form = LoginForm(request.OfflineCredentials.Email, request.OfflineCredentials.Password);
-        using var response = await request.Client.PostAsync("https://www.labyrinthe.co.uk/login/", form);
-        RequireVersion(request.Version);
-        if (response.StatusCode != HttpStatusCode.Found)
-            throw new InvalidOperationException("Please sign in again to refresh your calendar.");
-        Publish(request.Version, () => { IsOfflineSession = false; _offlineCredentials = null; });
+        await _reconnect.WaitAsync();
+        try
+        {
+            RequireVersion(request.Version);
+            if (!IsOfflineSession) return;
+            using var form = LoginForm(request.OfflineCredentials.Email, request.OfflineCredentials.Password);
+            using var response = await request.Client.PostAsync("https://www.labyrinthe.co.uk/login/", form);
+            RequireVersion(request.Version);
+            if (response.StatusCode != HttpStatusCode.Found)
+                throw new InvalidOperationException("Please sign in again to refresh your calendar.");
+            Publish(request.Version, () => { IsOfflineSession = false; _offlineCredentials = null; });
+        }
+        finally { _reconnect.Release(); }
     }
     private static FormUrlEncodedContent LoginForm(string email, string password) => new(new Dictionary<string, string>
     {

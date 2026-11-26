@@ -30,6 +30,9 @@
 
   <ItemGroup>
     <Compile Include="../../labyItems/Models/WorldMap/*.cs" Link="Source/WorldMap/%(Filename)%(Extension)" />
+    <Compile Include="../../labyItems/Models/Guilds/*.cs" Link="Source/Guilds/%(Filename)%(Extension)" />
+    <Compile Include="../../labyItems/Services/GuildGrantResolver.cs" Link="Source/GuildGrantResolver.cs" />
+    <Compile Include="../../labyItems/Services/GuildBenefitTierService.cs" Link="Source/GuildBenefitTierService.cs" />
     <Compile Include="../../labyItems/Helpers/WorldMapFilterEvaluator.cs" Link="Source/WorldMapFilterEvaluator.cs" />
     <Compile Include="../../labyItems/Helpers/WorldStatisticsSummaryFormatter.cs" Link="Source/WorldStatisticsSummaryFormatter.cs" />
     <Compile Include="../../labyItems/Services/IWorldRegionRepository.cs" Link="Source/IWorldRegionRepository.cs" />
@@ -73,6 +76,10 @@
     <Compile Include="../../labyItems/Services/ILookupService.cs" Link="Source/ILookupService.cs" />
     <Compile Include="../../labyItems/Services/SpellService.cs" Link="Source/SpellService.cs" />
     <Compile Include="../../labyItems/Services/MiracleService.cs" Link="Source/MiracleService.cs" />
+    <Compile Include="../../labyItems/Services/AbilityQuantityResolver.cs" Link="Source/AbilityQuantityResolver.cs" />
+    <Compile Include="../../labyItems/Models/Characters/AbilityUsagePolicy.cs" Link="Source/AbilityUsagePolicy.cs" />
+    <Compile Include="../../labyItems/Models/Characters/ResolvedAbilityUsage.cs" Link="Source/ResolvedAbilityUsage.cs" />
+    <Compile Include="../../labyItems/Services/AbilityUsageResolver.cs" Link="Source/AbilityUsageResolver.cs" />
     <Compile Include="../../labyItems/Services/AbilityDraftBuilder.cs" Link="Source/AbilityDraftBuilder.cs" />
     <Compile Include="../../labyItems/Services/ArmourBonusResolver.cs" Link="Source/ArmourBonusResolver.cs" />
     <Compile Include="../../labyItems/Services/DruidEvocationService.cs" Link="Source/DruidEvocationService.cs" />
@@ -84,6 +91,7 @@
     <Compile Include="../../labyItems/Services/BookDirectory.cs" Link="Source/BookDirectory.cs" />
     <Compile Include="../../labyItems/Services/AbilityDetailsLookupService.cs" Link="Source/AbilityDetailsLookupService.cs" />
     <Compile Include="../../labyItems/Services/ClassService.cs" Link="Source/ClassService.cs" />
+    <Compile Include="../../labyItems/Services/Guilds/*.cs" Link="Source/%(Filename)%(Extension)" />
     <Compile Include="../../labyItems/Services/GuildsService.cs" Link="Source/GuildsService.cs" />
     <Compile Include="../../labyItems/Services/RuleTreeEvaluator.cs" Link="Source/RuleTreeEvaluator.cs" />
     <Compile Include="../../labyItems/Services/IAbilityAvailabilityService.cs" Link="Source/IAbilityAvailabilityService.cs" />
@@ -112,7 +120,14 @@
     <Compile Include="../../labyItems/Services/BattleboardDamageReductionEffectResolver.cs" Link="Source/BattleboardDamageReductionEffectResolver.cs" />
     <Compile Include="../../labyItems/Services/BattleboardResistanceLevelService.cs" Link="Source/BattleboardResistanceLevelService.cs" />
     <Compile Include="../../labyItems/Services/MultiPathContracts.cs" Link="Source/MultiPathContracts.cs" />
+    <Compile Include="../../labyItems/Services/MultiRaceInnateResolver.cs" Link="Source/MultiRaceInnateResolver.cs" />
     <Compile Include="../../labyItems/Services/MultiRaceService.cs" Link="Source/MultiRaceService.cs" />
+    <Compile Include="../../labyItems/Services/MultiPathCatalogueAbilityResolver.cs" Link="Source/MultiPathCatalogueAbilityResolver.cs" />
+    <Compile Include="../../labyItems/Services/MultiClassUsageService.cs" Link="Source/MultiClassUsageService.cs" />
+    <Compile Include="../../labyItems/Services/MultiClassService.cs" Link="Source/MultiClassService.cs" />
+    <Compile Include="../../labyItems/Models/Characters/MultiPathLevelAbility.cs" Link="Source/MultiPathLevelAbility.cs" />
+    <Compile Include="../../labyItems/Models/Characters/MultiRaceLevelAbility.cs" Link="Source/MultiRaceLevelAbility.cs" />
+    <Compile Include="../../labyItems/Models/Characters/MultiClassLevelAbility.cs" Link="Source/MultiClassLevelAbility.cs" />
     <Compile Include="../../labyItems/Services/AbilityPrerequisiteService.cs" Link="Source/AbilityPrerequisiteService.cs" />
     <Compile Include="../../labyItems/Services/AbilityOwnershipService.cs" Link="Source/AbilityOwnershipService.cs" />
     <Compile Include="../../labyItems/Services/AbilityDefinitionLookupService.cs" Link="Source/AbilityDefinitionLookupService.cs" />
@@ -148,14 +163,27 @@
     <Compile Include="../../labyItems/Models/ItemJsonPayload.cs" Link="Source/ItemJsonPayload.cs" />
     <Compile Include="../../labyItems/Models/ItemTypeEnum.cs" Link="Source/ItemTypeEnum.cs" />
     <Compile Include="../../labyItems/Models/RecipientInfo.cs" Link="Source/RecipientInfo.cs" />
-    <Compile Include="../../labyItems/Models/Characters/Ability.cs" Link="Source/Ability.cs" />
+    <Compile Include="../../labyItems/Models/Characters/AbilityDraft.cs" Link="Source/AbilityDraft.cs" />
+    <Compile Include="../../labyItems/Models/Characters/AbilityType.cs" Link="Source/AbilityType.cs" />
+    <Compile Include="../../labyItems/Models/Characters/InnateAbilityDraft.cs" Link="Source/InnateAbilityDraft.cs" />
     <Compile Include="../../labyItems/Models/Abilities/AbilityKey.cs" Link="Source/AbilityKey.cs" />
     <Compile Include="../../labyItems/Models/Abilities/Effects/AbilityEffectInstruction.cs" Link="Source/AbilityEffectInstruction.cs" />
     <Compile Include="../../labyItems/Models/Abilities/Effects/EffectCondition.cs" Link="Source/EffectCondition.cs" />
     <Compile Include="../../labyItems/Models/Abilities/Effects/AbilityEffectInstance.cs" Link="Source/AbilityEffectInstance.cs" />
     <Compile Include="../../labyItems/Models/Abilities/Effects/AbilityEffectEvaluationResult.cs" Link="Source/AbilityEffectEvaluationResult.cs" />
     <Compile Include="../../labyItems/Models/Characters/AbilityDefinition.cs" Link="Source/AbilityDefinition.cs" />
+    <Compile Include="../../labyItems/Models/Characters/AbilityDefinitionConverter.cs" Link="Source/AbilityDefinitionConverter.cs" />
+    <Compile Include="../../labyItems/Models/Characters/AbilityCountProgression.cs" Link="Source/AbilityCountProgression.cs" />
+    <Compile Include="../../labyItems/Models/Characters/AbilityCustomisation.cs" Link="Source/AbilityCustomisation.cs" />
+    <Compile Include="../../labyItems/Models/Characters/AbilitySystemEffect.cs" Link="Source/AbilitySystemEffect.cs" />
+    <Compile Include="../../labyItems/Models/Characters/GuildGrantModify.cs" Link="Source/GuildGrantModify.cs" />
+    <Compile Include="../../labyItems/Models/Characters/GuildGrantOverrides.cs" Link="Source/GuildGrantOverrides.cs" />
+    <Compile Include="../../labyItems/Models/Rules/*.cs" Link="Source/Rules/%(Filename)%(Extension)" />
+    <Compile Include="../../labyItems/Services/RuleReferenceIndex.cs" Link="Source/RuleReferenceIndex.cs" />
+    <Compile Include="../../labyItems/Services/RuleReferenceResolver.cs" Link="Source/RuleReferenceResolver.cs" />
+    <Compile Include="../../labyItems/Services/RuleCatalogueService.cs" Link="Source/RuleCatalogueService.cs" />
     <Compile Include="../../labyItems/Models/Characters/Alignment.cs" Link="Source/Alignment.cs" />
+    <Compile Include="../../labyItems/Models/Enums/Outlawhood.cs" Link="Source/Outlawhood.cs" />
     <Compile Include="../../labyItems/Models/Characters/CharacterDraft.cs" Link="Source/CharacterDraft.cs" />
     <Compile Include="../../labyItems/Models/Characters/CharacterSpend.cs" Link="Source/CharacterSpend.cs" />
     <Compile Include="../../labyItems/Models/Characters/CharacterSpendEntry.cs" Link="Source/CharacterSpendEntry.cs" />
@@ -163,7 +191,6 @@
     <Compile Include="../../labyItems/Models/ViewModels/CharacterSpendRowVm.cs" Link="Source/CharacterSpendRowVm.cs" />
     <Compile Include="../../labyItems/Models/Characters/GuildOverrideRules.cs" Link="Source/GuildOverrideRules.cs" />
     <Compile Include="../../labyItems/Models/Characters/MagicListDrafts.cs" Link="Source/MagicListDrafts.cs" />
-    <Compile Include="../../labyItems/Models/Rules/RuleTree.cs" Link="Source/RuleTree.cs" />
     <Compile Include="../../labyItems/Models/Enums/WeaponType.cs" Link="Source/WeaponType.cs" />
     <Compile Include="../../labyItems/Models/Enums/Alignments.cs" Link="Source/Alignments.cs" />
     <Compile Include="../../labyItems/Models/Enums/SpiritualSpheres.cs" Link="Source/SpiritualSpheres.cs" />

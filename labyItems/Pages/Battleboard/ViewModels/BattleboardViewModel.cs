@@ -123,7 +123,6 @@ public sealed class BattleboardViewModel : ObservableObject
             .ToList();
         AtWillAbilities = atWill;
         HasAtWillAbilities = AtWillAbilities.Count > 0;
-        HasInnates = Innates.Count > 0;
 
         Tblp = Math.Max(0, lifeTotals.TotalTblp);
         Loc = Math.Max(0, lifeTotals.TotalLoc);
@@ -229,7 +228,7 @@ public sealed class BattleboardViewModel : ObservableObject
     public ObservableCollection<string> Guilds { get; }
 
     public ObservableCollection<InnateRowVm> Innates { get; }
-    public bool HasInnates { get; }
+    public bool HasInnates => Innates.Count > 0;
     public ObservableCollection<InnateRowVm> FilteredInnates { get; } = new();
     public bool HasFilteredInnates
     {
@@ -258,6 +257,9 @@ public sealed class BattleboardViewModel : ObservableObject
                 location.SetShowLifeMissing(value);
         }
     }
+
+    public ObservableCollection<ResolvedAbilityUsage> IntervalAbilities { get; } = new();
+    public bool HasIntervalAbilities => IntervalAbilities.Count > 0;
 
     public List<string> AtWillAbilities { get; }
     public bool HasAtWillAbilities { get; }
@@ -872,7 +874,7 @@ public sealed class BattleboardViewModel : ObservableObject
     private static List<string> BuildImmunities(CharacterDraft draft, IReadOnlyList<string>? resolvedImmunities)
     {
         var fromAbilities = (draft.Abilities ?? new List<AbilityDraft>())
-            .Where(IsImmunityAbility)
+            .Where(BattleboardAbilityEffectResolver.IsPermanentImmunity)
             .Select(FormatAbilityText)
             .Where(name => !string.IsNullOrWhiteSpace(name))
             .Select(EnsureImmunityPrefix)
@@ -901,11 +903,34 @@ public sealed class BattleboardViewModel : ObservableObject
     {
         try
         {
+            var session = LabyrintheSession.Shared;
+            var version = session.Version;
             var abilityEffectsTask = BattleboardAbilityEffectResolver.ResolveAsync(_draft);
             var advancementEffectsTask = BattleboardAdvancementEffectResolver.ResolveAsync(_draft.AdvancementAbilities);
             var itemEffectsTask = BattleboardItemEffectResolver.ResolveAsync(_draft, _assignedItems);
             var maxAcTask = MaxAcResolver.ResolveEffectiveForDraftAsync(_draft);
-            await Task.WhenAll(abilityEffectsTask, advancementEffectsTask, itemEffectsTask, maxAcTask);
+            var innateTask = BattleboardInnateCalculator.CalculateAsync(_draft, _assignedItems);
+            var intervalAbilitiesTask = MultiClassUsageService.ResolveAsync(_draft);
+            await Task.WhenAll(abilityEffectsTask, advancementEffectsTask, itemEffectsTask, maxAcTask, intervalAbilitiesTask, innateTask);
+            session.RequireVersion(version);
+
+            if (_draft.MultiRaceLevel > 0)
+            {
+                var usageByName = Innates.ToDictionary(row => row.Name, row => row.Used, StringComparer.OrdinalIgnoreCase);
+                Innates.Clear();
+                foreach (var ability in innateTask.Result)
+                {
+                    var row = new InnateRowVm(ability.Name, ability.Rank);
+                    row.SetUsed(usageByName.GetValueOrDefault(row.Name));
+                    Innates.Add(row);
+                }
+                ApplyInnateFilter();
+                Raise(nameof(HasInnates));
+            }
+
+            foreach (var usage in intervalAbilitiesTask.Result)
+                IntervalAbilities.Add(usage);
+            Raise(nameof(HasIntervalAbilities));
 
             var resolvedAbilityEffects = abilityEffectsTask.Result;
             var resolvedAdvancementEffects = advancementEffectsTask.Result;
@@ -1192,19 +1217,6 @@ public sealed class BattleboardViewModel : ObservableObject
             text = ability.ShortStringValue ?? string.Empty;
 
         return text;
-    }
-
-    private static bool IsImmunityAbility(AbilityDraft ability)
-    {
-        if (ability == null)
-            return false;
-
-        if (ability.AbilityType == AbilityType.Immunity)
-            return true;
-
-        var text = (ability.Name ?? ability.ShortStringValue ?? string.Empty).Trim();
-        return text.StartsWith("Immunity to ", StringComparison.OrdinalIgnoreCase)
-               || text.StartsWith("Total Immunity to ", StringComparison.OrdinalIgnoreCase);
     }
 
     private static string EnsureImmunityPrefix(string? text)

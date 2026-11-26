@@ -1,0 +1,594 @@
+{
+  "$schemaVersion": 1,
+  "miracleLists": {
+    "Church of Certizal, Shadow of the First Evil": {
+      "1": [
+        "Halt",
+        "Lesser Wings of Darkness"
+      ],
+      "2": [
+        "Cause Wound",
+        "Animate Zombie"
+      ],
+      "3": [
+        "Cause Serious Wounds",
+        "Curse",
+        "Protection from Spirits",
+        "Writhe"
+      ],
+      "4": [
+        "Cause Disease",
+        "Conceal Lie",
+        "Create Ghoul",
+        "Beguile Spirit",
+        "Control Ghoul"
+      ],
+      "5": [
+        "Voice of Power",
+        "Cause Grievous Wounds"
+      ],
+      "6": [
+        "Walk Through Walls",
+        "Spiritual Mastery"
+      ],
+      "7": [
+        "Suspend Life"
+      ]
+    },
+    "Church of the Empress Goddess": {
+      "1": [
+        "Halt",
+        "Dismiss Zombie"
+      ],
+      "2": [
+        "Halt Undead",
+        "Cure Serious Wounds"
+      ],
+      "3": [
+        "Bless",
+        "Spirit Shield",
+        "Protection from Spirits",
+        "Talk to Spirit",
+        "Dismiss Ghoul"
+      ],
+      "4": [
+        "Heal"
+      ],
+      "5": [
+        "Voice of Power",
+        "Spiritual Invisibility",
+        "Dismiss Wraith"
+      ],
+      "6": [
+        "Total Heal",
+        "Dismiss Vampire"
+      ],
+      "7": [
+        "Pure Force"
+      ]
+    },
+    "Church of Knowledge": {
+      "1": [
+        "Halt",
+        "Detect Spirit's Nature",
+        "Milly's Detect Spirits",
+        "Spirit of Seeing"
+      ],
+      "2": [
+        "Spirit of Seeing and Hearing"
+      ],
+      "3": [
+        "Detect Lie",
+        "Spirit Shield",
+        "Protection from Spirits",
+        "Talk to Spirit"
+      ],
+      "4": [
+        "Major Prayer",
+        "Rune of Power",
+        "Spirit Bolt",
+        "Communication"
+      ],
+      "5": [
+        "Identify Spirit",
+        "Spiritual Invisibility",
+        "Voice of Power",
+        "Remove Voice of Power"
+      ],
+      "6": [
+        "Control Wraith"
+      ],
+      "8": [
+        "Greater Communication"
+      ]
+    },
+    "Church of Iron & Empire": {
+      "1": [
+        "Soul's Hunger",
+        "Halt",
+        "Lesser Wings Of Darkness"
+      ],
+      "2": [
+        "Cause Wound",
+        "Animate Zombie",
+        "Halt Undead"
+      ],
+      "3": [
+        "Curse",
+        "Spirit Shield",
+        "Protection from Spirits",
+        "Talk to Spirit",
+        "Cause Serious Wounds",
+        "Animate skeleton"
+      ],
+      "4": [
+        "Cause Disease",
+        "Create Ghoul",
+        "Cause Fear",
+        "Control Ghoul"
+      ],
+      "5": [
+        "Cause Grievous Wounds"
+      ],
+      "6": [
+        "Summon Wraith",
+        "Cause Critical wounds"
+      ],
+      "7": [
+        "Suspend Life"
+      ]
+    },
+    "Church of the Lady of The Stars": {
+      "1": [
+        "Halt",
+        "Cure Wound",
+        "Detect Spirit's Nature",
+        "Power Meld",
+        "Spirit of Seeing"
+      ],
+      "2": [
+        "Cure Serious"
+      ],
+      "3": [
+        "Cure Disease",
+        "Talk to Spirit",
+        "Spirit Shield",
+        "Protection from Spirits",
+        "Bless",
+        "Dismiss Ghoul"
+      ],
+      "4": [
+        "Heal",
+        "Spirit Bolt"
+      ],
+      "5": [
+        "Dismiss Wraith",
+        "Voice of Power",
+        "Spiritual Invisibility"
+      ],
+      "6": [
+        "Total Heal",
+        "Dismiss Vampire"
+      ],
+      "8": [
+        "Restore Life"
+      ]
+    },
+    "Church of Mortai": {
+      "1": [
+        "Dismiss Zombie",
+        "Cure Wound"
+      ],
+      "2": [
+        "Dismiss Skeleton",
+        "Halt Undead",
+        "Cure Serious Wounds"
+      ],
+      "3": [
+        "Cure Disease",
+        "Talk to Spirit",
+        "Spirit Shield",
+        "Protection from Spirits",
+        "Bless",
+        "Dismiss Ghoul"
+      ],
+      "4": [
+        "Heal",
+        "Spirit Bolt",
+        "Dismiss Mummy"
+      ],
+      "5": [
+        "Dismiss Wraith",
+        "Spiritual Invisibility"
+      ],
+      "6": [
+        "Total Heal",
+        "Dismiss Vampire"
+      ],
+      "8": [
+        "Dismiss Level 7 Undead"
+      ]
+    },
+    "Church of Shaehan": {
+      "1": [
+        "Cure Wound",
+        "Detect Spirit's Nature",
+        "Halt"
+      ],
+      "2": [
+        "Cure Serious Wounds"
+      ],
+      "3": [
+        "Cure Disease",
+        "Talk to Spirit",
+        "Spirit Shield",
+        "Protection from Spirits",
+        "Bless",
+        "Dismiss Ghoul"
+      ],
+      "4": [
+        "Heal"
+      ],
+      "5": [
+        "Dismiss Wraith",
+        "Spiritual Invisibility",
+        "Remove Fear and Paralysis"
+      ],
+      "6": [
+        "Total Heal",
+        "Dismiss Vampire",
+        "Spiritual Freedom"
+      ],
+      "8": [
+        "Restore Life"
+      ]
+    },
+    "Church of Saint Michael": {
+      "1": [
+        "Cure Wound",
+        "Detect Spirit's Nature",
+        "Halt",
+        "Power Meld",
+        "Spirit of Seeing"
+      ],
+      "2": [
+        "Cure Serious Wounds"
+      ],
+      "3": [
+        "Cure Disease",
+        "Talk to Spirit",
+        "Spirit Shield",
+        "Protection from Spirits",
+        "Bless",
+        "Dismiss Ghoul"
+      ],
+      "4": [
+        "Heal",
+        "Spirit Bolt"
+      ],
+      "5": [
+        "Dismiss Wraith",
+        "Voice of Power",
+        "Spiritual Invisibility"
+      ],
+      "6": [
+        "Total Heal",
+        "Dismiss Vampire"
+      ],
+      "8": [
+        "Restore Life"
+      ]
+    },
+    "Church of the Soul Forger": {
+      "1": [
+        "Cure Wound",
+        "Detect Spirit's Nature"
+      ],
+      "2": [
+        "Cure Serious Wounds",
+        "Spirit of Seeing and Hearing"
+      ],
+      "3": [
+        "Cure Disease",
+        "Talk to Spirit",
+        "Spirit Shield",
+        "Protection from Spirits",
+        "Bless",
+        "Dismiss Ghoul",
+        "Healing Hand"
+      ],
+      "4": [
+        "Heal",
+        "Spirit Bolt",
+        "Passive Heal",
+        "Communication"
+      ],
+      "5": [
+        "Spiritual Invisibility"
+      ],
+      "6": [
+        "Total Heal",
+        "Dismiss Vampire"
+      ],
+      "8": [
+        "Restore Life"
+      ]
+    },
+    "The Rings of Talthar": {
+      "1": [
+        "Cure Wound",
+        "Halt"
+      ],
+      "2": [
+        "Cure Serious Wounds"
+      ],
+      "3": [
+        "Cure Disease",
+        "Talk to Spirit",
+        "Spirit Shield",
+        "Protection from Spirits",
+        "Bless"
+      ],
+      "4": [
+        "Heal",
+        "Spirit Bolt"
+      ],
+      "5": [
+        "Spiritual Invisibility",
+        "Voice of Power",
+        "Remove Voice of Power"
+      ],
+      "6": [
+        "Total Heal",
+        "Dismiss Vampire",
+        "Regeneration"
+      ],
+      "8": [
+        "Restore Life"
+      ]
+    },
+    "Church of the Tryst": {
+      "1": [
+        "Halt",
+        "Power Meld"
+      ],
+      "2": [
+        "Cause Wound",
+        "Spirit of Seeing and Hearing"
+      ],
+      "3": [
+        "Curse",
+        "Talk to Spirit",
+        "Spirit Shield",
+        "Cause Serious Wounds",
+        "Protection From Spirits"
+      ],
+      "4": [
+        "Spirit Bolt",
+        "Spirit Shift",
+        "Cause Disease",
+        "Create Ghoul"
+      ],
+      "5": [
+        "Spiritual Invisibility",
+        "Cause Grievous Wounds"
+      ],
+      "6": [
+        "Control Wraith",
+        "Serin's Bound Spirit of Undeath",
+        "Walk Through Walls"
+      ],
+      "7": [
+        "Suspend Life"
+      ]
+    },
+    "Church of Condesecration": {
+      "1": [
+        "Halt",
+        "Spirit of Seeing"
+      ],
+      "2": [
+        "Cause Wound"
+      ],
+      "3": [
+        "Cause Serious Wounds",
+        "Talk to Spirit",
+        "Spirit Shield",
+        "Protection From Spirits",
+        "Curse"
+      ],
+      "4": [
+        "Spirit Shift",
+        "Cause Disease",
+        "Control Ghoul"
+      ],
+      "5": [
+        "Spiritual Invisibility",
+        "Cause Grievous Wounds",
+        "Voice of Power"
+      ],
+      "6": [
+        "Control Wraith"
+      ],
+      "7": [
+        "Suspend Life"
+      ],
+      "8": [
+        "Touch of Death"
+      ]
+    },
+    "Church of the Destroyer": {
+      "1": [
+        "Halt",
+        "Lesser Wings of Darkness",
+        "Soul's Hunger",
+        "Milly's Detect Spirits"
+      ],
+      "2": [
+        "Cause Wound",
+        "Spirit of Seeing and Hearing"
+      ],
+      "3": [
+        "Spirit Shield",
+        "Cause Serious Wounds",
+        "Protection From Spirits",
+        "Writhe",
+        "Force of Will"
+      ],
+      "4": [
+        "Spirit Bolt",
+        "Cause Disease"
+      ],
+      "5": [
+        "Voice of Power",
+        "Spiritual Invisibility",
+        "Cause Grievous Wounds"
+      ],
+      "6": [
+        "Spiritual Mastery"
+      ],
+      "7": [
+        "Suspend Life"
+      ],
+      "8": [
+        "Touch of Death"
+      ]
+    },
+    "The Rosarian Faith": {
+      "1": [
+        "Halt",
+        "Cure Wound",
+        "Detect Spirit's Nature",
+        "Spirit of Seeing"
+      ],
+      "2": [
+        "Spirit of Seeing and Hearing"
+      ],
+      "3": [
+        "Cure Disease",
+        "Talk to Spirit",
+        "Spirit Shield",
+        "Protection from Spirits",
+        "Detect Lie"
+      ],
+      "4": [
+        "Communication",
+        "Spirit Bolt",
+        "Control Ghoul"
+      ],
+      "5": [
+        "Minor Ward of Power",
+        "Spiritual Invisibility"
+      ],
+      "6": [
+        "Control Wraith",
+        "Total Heal"
+      ],
+      "8": [
+        "Greater Communication"
+      ]
+    },
+    "Church of Tsu-Ling": {
+      "1": [
+        "Cure Wound",
+        "Summon Spiritual Candles",
+        "Halt"
+      ],
+      "2": [
+        "Cure Serious Wounds"
+      ],
+      "3": [
+        "Cure Disease",
+        "Talk to Spirit",
+        "Spirit Shield",
+        "Protection from Spirits",
+        "Healing Hand",
+        "Bless"
+      ],
+      "4": [
+        "Heal"
+      ],
+      "5": [
+        "Remove Voice of Power",
+        "Remove Fear and Paralysis",
+        "Spiritual Invisibility"
+      ],
+      "6": [
+        "Total Heal",
+        "Spiritual Freedom",
+        "Stronghold of Goodness"
+      ],
+      "8": [
+        "Restore Life"
+      ]
+    },
+    "Owil'Rha'Tha": {
+      "1": [
+        "Halt",
+        "Taint Spirit"
+      ],
+      "2": [
+        "Cause Wound"
+      ],
+      "3": [
+        "Curse",
+        "Talk to Spirit",
+        "Protection from Spirits",
+        "Cause Serious Wounds"
+      ],
+      "4": [
+        "Create Ghoul",
+        "Communication",
+        "Cause Disease"
+      ],
+      "5": [
+        "Spiritual Invisibility",
+        "Cause Grievous Wounds"
+      ],
+      "6": [
+        "Control Wraith"
+      ],
+      "7": [
+        "Animate Corpse",
+        "Suspend Life"
+      ],
+      "8": [
+        "Touch of Death"
+      ]
+    },
+    "Church of the Eternal Vampire": {
+      "1": [
+        "Detect Spirit's Nature",
+        "Power Meld"
+      ],
+      "2": [
+        "Animate Zombie",
+        "Temp Curse"
+      ],
+      "3": [
+        "Animate Skeleton",
+        "Protection from Spirits",
+        "Spirit Shield"
+      ],
+      "4": [
+        "Create Ghoul",
+        "Spirit Bolt"
+      ],
+      "5": [
+        "Create Mummy",
+        "Voice of Power",
+        "Cause Grievous Wounds"
+      ],
+      "6": [
+        "Summon Wraith",
+        "Spiritual Mastery"
+      ],
+      "7": [
+        "Suspend Life"
+      ],
+      "8": [
+        "Summon Vampire"
+      ]
+    }
+  }
+}

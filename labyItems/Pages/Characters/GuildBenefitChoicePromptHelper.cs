@@ -22,9 +22,11 @@ public static class GuildBenefitChoicePromptHelper
         }
 
         var orderedRows = OrderRows(rows);
-        var pickerPage = new GuildBenefitSelectionPage(orderedRows, guildName);
+        var pickerPage = new GuildBenefitSelectionPage(orderedRows, guildName,
+            () => guildsVm.BuildChoiceRowsForLoadedGuild(guildName));
         await hostPage.Navigation.PushModalAsync(new NavigationPage(pickerPage));
-        await pickerPage.Result;
+        if (!await pickerPage.Result)
+            return false;
 
         if (refreshAfterSelection != null)
             await refreshAfterSelection();
@@ -70,9 +72,11 @@ public static class GuildBenefitChoicePromptHelper
             var rows = rowsForGuild.Count > 0
                 ? OrderRows(rowsForGuild)
                 : OrderRows(guildGroup.ToList());
-            var pickerPage = new GuildBenefitSelectionPage(rows, guildGroup.Key);
+            var pickerPage = new GuildBenefitSelectionPage(rows, guildGroup.Key,
+                () => guildsVm.BuildChoiceRowsForLoadedGuild(guildGroup.Key));
             await hostPage.Navigation.PushModalAsync(new NavigationPage(pickerPage));
-            await pickerPage.Result;
+            if (!await pickerPage.Result)
+                return false;
         }
 
         if (refreshAfterSelection != null)

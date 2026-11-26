@@ -1,3 +1,4 @@
+using labyItems.Models.Guilds;
 using labyItems.Helpers;
 using System.ComponentModel;
 using labyItems.Controls;
@@ -440,11 +441,11 @@ public partial class GuildDetailCardView : ContentView, INotifyPropertyChanged
             if (abilityName.Length == 0 && abilityKey.Length == 0)
                 return;
 
-            // Guild-only benefits carry their details on the grant and need not exist
-            // in the purchasable ability or specialisation catalogues.
-            var ability = await DetailCardLookupService.ResolveAbilityAsync(abilityKey)
-                ?? await DetailCardLookupService.ResolveAbilityAsync(abilityName)
-                ?? await EvolutionService.FindAbilityAsync(abilityName);
+            var ability = abilityDef != null && !string.IsNullOrWhiteSpace(abilityDef.Effect)
+                ? DetailCardLookupService.ToAbilityResult(abilityDef, abilityKey, abilityName)
+                : await DetailCardLookupService.ResolveAbilityAsync(abilityKey)
+                    ?? await DetailCardLookupService.ResolveAbilityAsync(abilityName)
+                    ?? await EvolutionService.FindAbilityAsync(abilityName);
             if (ability == null && abilityDef != null)
                 ability = DetailCardLookupService.ToAbilityResult(abilityDef, abilityKey, abilityName);
 

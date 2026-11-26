@@ -69,6 +69,7 @@ public static class SpecialisationDefinitionRepository
         "MappedStrategyIds"
     };
 
+    private static readonly SemaphoreSlim LoadLock = new(1, 1);
     private static SpecialisationIndex? _cache;
 
     public static void InvalidateCache()
@@ -76,24 +77,32 @@ public static class SpecialisationDefinitionRepository
         _cache = null;
         labyItems.Services.AbilityDetailsLookupService.InvalidateCache();
         labyItems.Services.AbilityDefinitionLookupService.InvalidateCache();
+        RuleCatalogueService.InvalidateCache();
     }
 
     public static async Task<SpecialisationIndex> GetIndexAsync()
     {
-        var accountCacheVersion = labyItems.Services.LabyrintheSession.Shared.Version;
-        if (_cache != null)
-            return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
+        var session = LabyrintheSession.Shared;
+        var accountCacheVersion = session.Version;
+        if (_cache is { } existing)
+            return existing;
 
-        var fragmented = await TryBuildFragmentedIndexAsync();
-        if (fragmented != null)
+        await LoadLock.WaitAsync().ConfigureAwait(false);
+        try
         {
-            labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = fragmented);
-            return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
-        }
+            session.RequireVersion(accountCacheVersion);
+            if (_cache is { } cached)
+                return cached;
 
-        var accountCacheLoad1 = await BuildLegacyIndexAsync();
-            labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = accountCacheLoad1);
-        return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
+            var index = await TryBuildFragmentedIndexAsync().ConfigureAwait(false)
+                ?? await BuildLegacyIndexAsync().ConfigureAwait(false);
+            session.Publish(accountCacheVersion, () => _cache = index);
+            return index;
+        }
+        finally
+        {
+            LoadLock.Release();
+        }
     }
 
     private static async Task<SpecialisationIndex> BuildLegacyIndexAsync()
@@ -1372,6 +1381,15 @@ public static class SpecialisationDefinitionRepository
         }
     }
 
+    internal static AbilityDefinition ResolveAbilityGrant(
+        AbilityDefinition grant, IReadOnlyDictionary<string, AbilityDefinition> definitions)
+    {
+        if (string.IsNullOrWhiteSpace(grant.AbilityRef) || !definitions.TryGetValue(grant.AbilityRef, out var baseline))
+            return grant;
+
+        return MergeAbilityOverride(baseline, grant);
+    }
+
     private static AbilityDefinition MergeAbilityOverride(AbilityDefinition baseline, AbilityDefinition overrides)
     {
         if (overrides == null)
@@ -1394,6 +1412,8 @@ public static class SpecialisationDefinitionRepository
             Type = string.IsNullOrWhiteSpace(overrides.Type) ? baseline.Type : overrides.Type,
             Effect = string.IsNullOrWhiteSpace(overrides.Effect) ? baseline.Effect : overrides.Effect,
             Lore = string.IsNullOrWhiteSpace(overrides.Lore) ? baseline.Lore : overrides.Lore,
+            Family = overrides.Family ?? baseline.Family,
+            RuleReferences = overrides.RuleReferences ?? baseline.RuleReferences,
             BattleboardNameOverride = string.IsNullOrWhiteSpace(overrides.BattleboardNameOverride)
                 ? baseline.BattleboardNameOverride
                 : overrides.BattleboardNameOverride,
@@ -1451,6 +1471,8 @@ public static class SpecialisationDefinitionRepository
             Type = source.Type,
             Effect = source.Effect,
             Lore = source.Lore,
+            Family = source.Family,
+            RuleReferences = source.RuleReferences,
             BattleboardNameOverride = source.BattleboardNameOverride,
             UpdateKey = source.UpdateKey,
             Source = source.Source,

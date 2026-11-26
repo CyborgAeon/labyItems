@@ -84,6 +84,27 @@ public partial class GuildPickerSearchView : ContentView
         }
     }
 
+    private async void OnBenefitChoicesClicked(object? sender, EventArgs e)
+    {
+        if (sender is not Button { CommandParameter: string guildName })
+            return;
+
+        Element? host = this;
+        while (host != null && host is not Page)
+            host = host.Parent;
+        if (host is not Page page)
+            return;
+
+        try
+        {
+            await GuildBenefitChoicePromptHelper.EditChoicesForGuildAsync(page, _guildsVm, guildName);
+        }
+        catch (Exception ex)
+        {
+            RuntimeLog.Write("GUILD_PICKER_CHOICES_FAILED", "Failed to open guild benefit choices.", ex);
+        }
+    }
+
     private async void OnInfoTapped(object? sender, TappedEventArgs e)
     {
         if (e.Parameter is not GlobalSearchResultVm result)

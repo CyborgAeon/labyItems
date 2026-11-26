@@ -2,6 +2,7 @@
 <ContentPage x:Class="labyItems.Pages.LoginPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
     xmlns:helpers="clr-namespace:labyItems.Helpers"
     Shell.NavBarIsVisible="False" NavigationPage.HasNavigationBar="False"
     BackgroundColor="White">
@@ -35,7 +36,7 @@
             <Border BackgroundColor="#FAFAFC" Stroke="#CCCCCF" StrokeShape="RoundRectangle 7" Padding="16,5">
                 <Grid ColumnDefinitions="24,*" ColumnSpacing="12" MinimumHeightRequest="44">
                     <Label Text="{x:Static helpers:FontAwesomeGlyphs.Envelope}" Style="{StaticResource FieldIcon}" />
-                    <Entry x:Name="UsernameEntry" Grid.Column="1" BackgroundColor="Transparent" TextColor="#111111"
+                    <controls:LoginEntry x:Name="UsernameEntry" Grid.Column="1" BackgroundColor="Transparent" TextColor="#111111"
                            FontFamily="LibreCaslonTextRegular" FontSize="15" PlaceholderColor="#999999"
                            Placeholder="Enter your email address" Keyboard="Email" ReturnType="Next"
                            Completed="OnUsernameCompleted" ClearButtonVisibility="WhileEditing" />
@@ -45,7 +46,7 @@
             <Border BackgroundColor="#FAFAFC" Stroke="#CCCCCF" StrokeShape="RoundRectangle 7" Padding="16,5">
                 <Grid ColumnDefinitions="24,*,40" ColumnSpacing="12" MinimumHeightRequest="44">
                     <Label Text="{x:Static helpers:FontAwesomeGlyphs.Lock}" Style="{StaticResource FieldIcon}" />
-                    <Entry x:Name="PasswordEntry" Grid.Column="1" BackgroundColor="Transparent" TextColor="#111111"
+                    <controls:LoginEntry x:Name="PasswordEntry" Grid.Column="1" BackgroundColor="Transparent" TextColor="#111111"
                            FontFamily="LibreCaslonTextRegular" FontSize="15" PlaceholderColor="#999999"
                            Placeholder="Enter your password" IsPassword="True" ReturnType="Go" Completed="OnLoginClicked" />
                     <Button x:Name="PasswordVisibilityButton" Grid.Column="2" Text="{x:Static helpers:FontAwesomeGlyphs.Eye}"
@@ -57,7 +58,7 @@
                     BackgroundColor="Transparent" TextColor="#800000" HorizontalOptions="End" Padding="0" Margin="0,4,0,16" />
             <Button x:Name="LoginButton" Text="Sign in" Clicked="OnLoginClicked" BackgroundColor="#800000"
                     TextColor="White" FontFamily="LibreCaslonTextBold" FontSize="20" HeightRequest="54" />
-            <Label Text="On this shared device, enter your account password each time you sign in. Your account data stays stored separately."
+            <Label Text="Enter your account password each time you sign in. After your first online sign-in, the same credentials also work offline. Your account data stays stored separately."
                    FontSize="13" TextColor="{StaticResource MutedTextColor}" Margin="0,16,0,0" />
         </VerticalStackLayout>
     </ScrollView>

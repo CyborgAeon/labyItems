@@ -13,19 +13,32 @@ public static class MultiClassService
         Converters = { new JsonStringEnumConverter() }
     };
 
+    private static readonly SemaphoreSlim LoadLock = new(1, 1);
     private static MultiClassCatalog? _cache;
 
     public static async Task<MultiClassCatalog> GetCatalogAsync()
     {
-        if (_cache != null)
-            return _cache;
+        var session = LabyrintheSession.Shared;
+        var version = session.Version;
+        if (_cache is { } existing)
+            return existing;
 
-        var catalog = await LoadAdvancedCatalogAsync();
-        await MergeStandardClassDefinitionsAsync(catalog);
+        await LoadLock.WaitAsync().ConfigureAwait(false);
+        try
+        {
+            session.RequireVersion(version);
+            if (_cache is { } cached)
+                return cached;
 
-        _cache = catalog;
-
-        return _cache;
+            var catalog = await LoadAdvancedCatalogAsync().ConfigureAwait(false);
+            await MergeStandardClassDefinitionsAsync(catalog).ConfigureAwait(false);
+            session.Publish(version, () => _cache = catalog);
+            return catalog;
+        }
+        finally
+        {
+            LoadLock.Release();
+        }
     }
 
     public static void InvalidateCache()
@@ -36,11 +49,17 @@ public static class MultiClassService
         try
         {
             var json = await ServiceHelper.ReadPackageTextAsync("people/multi-classes.json");
-            return JsonSerializer.Deserialize<MultiClassCatalog>(json, JsonOptions)
-                   ?? new MultiClassCatalog();
+            var catalog = JsonSerializer.Deserialize<MultiClassCatalog>(json, JsonOptions)
+                ?? new MultiClassCatalog();
+            if (catalog.SchemaVersion == 2)
+                await MultiPathCatalogueAbilityResolver.BindAsync(catalog.MultiClasses.Values
+                    .SelectMany(definition => definition.Levels.Values)
+                    .SelectMany(level => level)).ConfigureAwait(false);
+            return catalog;
         }
-        catch
+        catch (Exception ex)
         {
+            System.Diagnostics.Debug.WriteLine($"[MultiClassService] Catalogue load failed: {ex.Message}");
             return new MultiClassCatalog();
         }
     }
@@ -491,6 +510,9 @@ public sealed class StandardMultiClassCostCatalog
 
 public sealed class MultiClassCatalog
 {
+    [JsonPropertyName("$schemaVersion")]
+    public int SchemaVersion { get; set; } = 1;
+
     [JsonPropertyName("metadata")]
     public JsonElement Metadata { get; set; }
 
@@ -513,19 +535,6 @@ public sealed class MultiClassDefinition :
 
     [JsonPropertyName("requiresBracketPure")]
     public string? RequiresBracketPure { get; set; }
-}
-
-public sealed class MultiClassLevelAbility : IMultiPathLevelAbility
-{
-    public string Name { get; set; } = string.Empty;
-    public string AbilityRef { get; set; } = string.Empty;
-    public string Type { get; set; } = string.Empty;
-    public string Effect { get; set; } = string.Empty;
-    public int? Count { get; set; }
-    public AbilityCountProgression? Progression { get; set; }
-    public List<string>? AsPerAbilityRefs { get; set; }
-    public List<string>? PreReqs { get; set; }
-    public List<string>? ChoiceSetRefs { get; set; }
 }
 
 public sealed class MultiClassAvailabilityOption : IMultiPathAvailabilityOption

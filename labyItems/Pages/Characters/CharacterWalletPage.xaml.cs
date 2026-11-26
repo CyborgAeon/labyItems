@@ -10,7 +10,6 @@ using labyItems.Models;
 using labyItems.Models.Characters;
 using labyItems.Pages;
 using labyItems.Pages.Battleboard;
-using labyItems.Pages.Characters.ViewModels;
 using labyItems.Services;
 using Microsoft.Maui.Graphics;
 
@@ -254,11 +253,8 @@ public partial class CharacterWalletPage : ContentPage
                 break;
 
             case CharacterWalletActionVm.BattleboardKey:
-                {
-                    var draft = LiteDbService.ToDraft(character) ?? new CharacterDraft();
-                    await Navigation.PushAsync(new BattleboardPage(draft));
-                    break;
-                }
+                await SavedBattleboardPreparation.OpenAsync(this, character);
+                break;
 
             case CharacterWalletActionVm.ExportBattleboardKey:
                 await ExportBattleboardAsync(character);
@@ -280,22 +276,9 @@ public partial class CharacterWalletPage : ContentPage
 
     private async Task ExportBattleboardAsync(Character character)
     {
-        var draft = LiteDbService.ToDraft(character) ?? new CharacterDraft();
-        var vm = new WizardVm(
-            draft,
-            runBuilderStartupPipeline: false,
-            runInitialSync: false);
-        await vm.RefreshReviewAsync();
-
-        var choicesComplete = await GuildBenefitChoicePromptHelper.EnsureChoicesCompletedAsync(
-            this,
-            vm.GuildsVm,
-            refreshAfterSelection: () => vm.RefreshReviewAsync(),
-            actionLabel: "exporting the battleboard");
-        if (!choicesComplete)
-            return;
-
-        await vm.DownloadBattleboardAsExcelAsync();
+        var vm = await SavedBattleboardPreparation.PrepareAsync(this, character, "exporting the battleboard");
+        if (vm != null)
+            await vm.DownloadBattleboardAsExcelAsync();
     }
 
     private async Task ToggleRowActionsAsync(CharacterWalletRowVm row, VisualElement expandedActions)

@@ -1,5 +1,5 @@
 {
-  "$schemaVersion": 1,
+  "$schemaVersion": 2,
   "metadata": {
     "Source": "Races.pdf pages 80-103",
     "MultiRaceRules": [
@@ -48,56 +48,47 @@
       "Levels": {
         "1": [
           {
-            "Name": "Aligned Elf Type Abilities",
             "AbilityRef": "ability.mr.aligned-elf.l1",
-            "Type": "Static",
-            "Effect": "Gain all racial abilities by level as the new chosen elf type at multi-race level."
+            "Effect": "Gain all racial abilities by level as the new chosen elf type at multi-race level.",
+            "RacialInnateLevel": 0,
+            "ChoiceSetRefs": [
+              "choice.elfcolourabilities.mapped"
+            ]
           },
           {
-            "Name": "Dual Makeup Requirement",
-            "AbilityRef": "ability.mr.aligned-elf.l1.2",
-            "Type": "Static",
-            "Effect": "Must wear makeup of both elf types with the new colour predominant."
+            "AbilityRef": "ability.mr.aligned-elf.l1.2"
           }
         ],
         "2": [
           {
-            "Name": "Aligned Elf Type Abilities",
             "AbilityRef": "ability.mr.aligned-elf.l2",
-            "Type": "Static",
             "Effect": "As level 1: gain abilities by level as the new chosen elf type at this multi-race level."
           }
         ],
         "3": [
           {
-            "Name": "Aligned Elf Type Abilities",
             "AbilityRef": "ability.mr.aligned-elf.l3",
-            "Type": "Static",
             "Effect": "As level 1: gain abilities by level as the new chosen elf type at this multi-race level."
           }
         ],
         "4": [
           {
-            "Name": "Aligned Elf Type Abilities",
             "AbilityRef": "ability.mr.aligned-elf.l4",
-            "Type": "Static",
             "Effect": "As level 1: gain abilities by level as the new chosen elf type at this multi-race level."
           }
         ],
         "5": [
           {
-            "Name": "Aligned Elf Type Abilities",
             "AbilityRef": "ability.mr.aligned-elf.l5",
-            "Type": "Static",
             "Effect": "As level 1: gain abilities by level as the new chosen elf type at this multi-race level."
           }
         ],
         "6": [
           {
-            "Name": "Aligned Elf Type Abilities",
             "AbilityRef": "ability.mr.aligned-elf.l6",
-            "Type": "Static",
-            "Effect": "As above, and calculate innates as if 8th level for the chosen elf type."
+            "Effect": "As above, and calculate innates as if 8th level for the chosen elf type.",
+            "RacialInnateLevel": 8,
+            "ChoiceSetRefs": ["choice.elfcolourabilities.mapped"]
           }
         ]
       },
@@ -136,7 +127,9 @@
         "Post-6th: may buy x2 and x3 Elf innates for both elf types at the same cost when both are owned.",
         "May not choose opposite elf type; must match new type alignment restrictions."
       ],
-      "IconGlyph": ""
+      "IconGlyph": "",
+      "RacialProgressionRef": "choice.elfcolourabilities.mapped",
+      "InnateLevelOverride": 8
     },
     "Angel of Mercy": {
       "DisplayName": "Angel of Mercy",
@@ -144,24 +137,15 @@
       "Levels": {
         "1": [
           {
-            "Name": "Angelic Nature",
-            "AbilityRef": "ability.mr.angel-of-mercy.l1",
-            "Type": "Static",
-            "Effect": "Now fully immune to all Flesh and Blood effects (including potions and pain). Counts fully as Angelkind."
+            "AbilityRef": "ability.mr.angel-of-mercy.l1"
           },
           {
-            "Name": "Angelic Markings",
-            "AbilityRef": "ability.mr.angel-of-mercy.l1.2",
-            "Type": "Static",
-            "Effect": "Skin is marked with lines of goodly power, commonly white and gold."
+            "AbilityRef": "ability.mr.angel-of-mercy.l1.2"
           }
         ],
         "2": [
           {
-            "Name": "Walk on Light (Spiritual)",
             "AbilityRef": "ability.mr.angel-of-mercy.l2",
-            "Type": "Innate",
-            "Effect": "May Walk on Light(s) spiritually, otherwise as per wizard spell.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -170,10 +154,7 @@
         ],
         "3": [
           {
-            "Name": "Spiritual Light (10ft)",
             "AbilityRef": "ability.mr.angel-of-mercy.l3",
-            "Type": "Innate",
-            "Effect": "May shed Spiritual Light in a 10ft radius for five minutes.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -182,10 +163,7 @@
         ],
         "4": [
           {
-            "Name": "Shield of the Angels",
             "AbilityRef": "ability.mr.angel-of-mercy.l4",
-            "Type": "Innate",
-            "Effect": "As Spirit Shield but only versus evil spiritual damage, and stops the first 36 points of such damage.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -194,10 +172,7 @@
         ],
         "5": [
           {
-            "Name": "Walk Through Walls",
             "AbilityRef": "ability.mr.angel-of-mercy.l5",
-            "Type": "Innate",
-            "Effect": "May Walk through Walls for five minutes, as per miracle.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -206,10 +181,7 @@
         ],
         "6": [
           {
-            "Name": "Touch Remove Fear",
-            "AbilityRef": "ability.mr.angel-of-mercy.l6",
-            "Type": "AtWill",
-            "Effect": "Touch removes Fear from non-Evil targets with a spirit for 3 TBLP, at will."
+            "AbilityRef": "ability.mr.angel-of-mercy.l6"
           }
         ]
       },
@@ -262,24 +234,15 @@
       "Levels": {
         "1": [
           {
-            "Name": "Angelic Nature",
-            "AbilityRef": "ability.mr.angel-of-war.l1",
-            "Type": "Static",
-            "Effect": "Now fully immune to all Flesh and Blood effects (including potions and pain). Counts as Angelkind."
+            "AbilityRef": "ability.mr.angel-of-war.l1"
           },
           {
-            "Name": "Angelic Markings",
-            "AbilityRef": "ability.mr.angel-of-war.l1.2",
-            "Type": "Static",
-            "Effect": "Skin is marked with lines of goodly power, commonly white and gold."
+            "AbilityRef": "ability.mr.angel-of-war.l1.2"
           }
         ],
         "2": [
           {
-            "Name": "Fear Evil",
             "AbilityRef": "ability.mr.angel-of-war.l2",
-            "Type": "Innate",
-            "Effect": "Fear all Evil of 6th level resistance (18 hits) and below for five minutes; affects undead.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -288,10 +251,7 @@
         ],
         "3": [
           {
-            "Name": "Spiritual Light (10ft)",
             "AbilityRef": "ability.mr.angel-of-war.l3",
-            "Type": "Innate",
-            "Effect": "May shed Spiritual Light in a 10ft radius for five minutes.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -300,19 +260,13 @@
         ],
         "4": [
           {
-            "Name": "Hand of Purity",
             "AbilityRef": "ability.mr.angel-of-war.l4",
-            "Type": "Innate",
-            "Effect": "Hand of Purity as per tables ability.",
             "Count": 1
           }
         ],
         "5": [
           {
-            "Name": "Walk Through Walls",
             "AbilityRef": "ability.mr.angel-of-war.l5",
-            "Type": "Innate",
-            "Effect": "May Walk through Walls for five minutes, as per miracle.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -321,10 +275,7 @@
         ],
         "6": [
           {
-            "Name": "Summon Angelic Weapon",
             "AbilityRef": "ability.mr.angel-of-war.l6",
-            "Type": "Innate",
-            "Effect": "May summon a purely spiritual weapon that only the user may wield, +0/+2 vs Evil, cannot harm Good aligned, lasts 15 minutes.",
             "Count": 1
           }
         ]
@@ -428,18 +379,12 @@
       "Levels": {
         "1": [
           {
-            "Name": "Partial Flesh and Blood Resistance",
-            "AbilityRef": "ability.mr.angel-touched.l1",
-            "Type": "Static",
-            "Effect": "Now suffers half effect from all Flesh and Blood effects (including potions, poisons, and pain)."
+            "AbilityRef": "ability.mr.angel-touched.l1"
           }
         ],
         "2": [
           {
-            "Name": "Select Minor Power",
             "AbilityRef": "ability.mr.angel-touched.l2",
-            "Type": "Static",
-            "Effect": "Choose one Angel Touched Minor power.",
             "ChoiceSetRefs": [
               "choice.multi-race.angel-touched.minor"
             ]
@@ -447,18 +392,12 @@
         ],
         "3": [
           {
-            "Name": "Immunity to Ageing",
-            "AbilityRef": "ability.mr.angel-touched.l3",
-            "Type": "Static",
-            "Effect": "Gains immunity to ageing."
+            "AbilityRef": "ability.mr.angel-touched.l3"
           }
         ],
         "4": [
           {
-            "Name": "Select Medium Power",
             "AbilityRef": "ability.mr.angel-touched.l4",
-            "Type": "Static",
-            "Effect": "Choose one Angel Touched Medium power.",
             "ChoiceSetRefs": [
               "choice.multi-race.angel-touched.medium"
             ]
@@ -466,19 +405,13 @@
         ],
         "5": [
           {
-            "Name": "Divine Insight",
             "AbilityRef": "ability.mr.angel-touched.l5",
-            "Type": "Innate",
-            "Effect": "Acts as a Mantic Major Prayer usable only to find ways to help others or defeat evil.",
             "Count": 1
           }
         ],
         "6": [
           {
-            "Name": "Select Major Power",
             "AbilityRef": "ability.mr.angel-touched.l6",
-            "Type": "Static",
-            "Effect": "Choose one Angel Touched Major power.",
             "ChoiceSetRefs": [
               "choice.multi-race.angel-touched.major"
             ]
@@ -521,50 +454,29 @@
       "Levels": {
         "1": [
           {
-            "Name": "Tree-like Makeup",
-            "AbilityRef": "ability.mr.child-of-the-pines.l1",
-            "Type": "Static",
-            "Effect": "Must wear appropriate brown/green tree-like makeup."
+            "AbilityRef": "ability.mr.child-of-the-pines.l1"
           },
           {
-            "Name": "Treeborn Flesh and Blood Immunity",
-            "AbilityRef": "ability.mr.child-of-the-pines.l1.2",
-            "Type": "Static",
-            "Effect": "Immune to Flesh and Blood effects including potions and poisons, except Earthpower Flesh and Blood effects still apply where appropriate."
+            "AbilityRef": "ability.mr.child-of-the-pines.l1.2"
           },
           {
-            "Name": "No Red Mana Benefit",
-            "AbilityRef": "ability.mr.child-of-the-pines.l1.3",
-            "Type": "Static",
-            "Effect": "May never use or benefit from red mana."
+            "AbilityRef": "ability.mr.child-of-the-pines.l1.3"
           }
         ],
         "2": [
           {
-            "Name": "Permanent Barkskin +1 PAC",
-            "AbilityRef": "ability.mr.child-of-the-pines.l2",
-            "Type": "Static",
-            "Effect": "Permanent Barkskin grants +1 PAC (stacking with other Barkskins)."
+            "AbilityRef": "ability.mr.child-of-the-pines.l2"
           },
           {
-            "Name": "Fertile Soil Healing",
-            "AbilityRef": "ability.mr.child-of-the-pines.l2.2",
-            "Type": "AtWill",
-            "Effect": "After 5 minutes in continuous contact with fertile soil, heal 1 TBLP and 1 to worst location."
+            "AbilityRef": "ability.mr.child-of-the-pines.l2.2"
           }
         ],
         "3": [
           {
-            "Name": "Double Fire Damage",
-            "AbilityRef": "ability.mr.child-of-the-pines.l3",
-            "Type": "Static",
-            "Effect": "Now takes double damage from fire after all other calculations; if immune to fire still takes half from normal fires."
+            "AbilityRef": "ability.mr.child-of-the-pines.l3"
           },
           {
-            "Name": "Meld with Trees",
             "AbilityRef": "ability.mr.child-of-the-pines.l3.2",
-            "Type": "Innate",
-            "Effect": "Meld with Trees as per Meld with Stone; if tree is destroyed, exit at 6/1 life.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -573,22 +485,13 @@
         ],
         "4": [
           {
-            "Name": "Permanent Barkskin +2 PAC",
-            "AbilityRef": "ability.mr.child-of-the-pines.l4",
-            "Type": "Static",
-            "Effect": "Permanent Barkskin now grants +2 PAC total."
+            "AbilityRef": "ability.mr.child-of-the-pines.l4"
           },
           {
-            "Name": "Double Axe Damage",
-            "AbilityRef": "ability.mr.child-of-the-pines.l4.2",
-            "Type": "Static",
-            "Effect": "Now takes double damage from axe-blows after all other calculations."
+            "AbilityRef": "ability.mr.child-of-the-pines.l4.2"
           },
           {
-            "Name": "Healing Sap",
             "AbilityRef": "ability.mr.child-of-the-pines.l4.3",
-            "Type": "Innate",
-            "Effect": "Draw sap by self-cutting 3 TBLP +1 loc: flesh-and-blood drinker heals 6 TBLP/2 loc; Child of Pines or Wood Elf balm heals 6 TBLP/3 to one location.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 1
@@ -597,10 +500,7 @@
         ],
         "5": [
           {
-            "Name": "Forest-Shift",
             "AbilityRef": "ability.mr.child-of-the-pines.l5",
-            "Type": "Innate",
-            "Effect": "Forest-Shift as druidic evocation with no verbal required.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -609,10 +509,7 @@
         ],
         "6": [
           {
-            "Name": "Woody Consistency",
-            "AbilityRef": "ability.mr.child-of-the-pines.l6",
-            "Type": "Static",
-            "Effect": "Now takes one-third less damage from blunt weapon blows due to woody consistency."
+            "AbilityRef": "ability.mr.child-of-the-pines.l6"
           }
         ]
       },
@@ -701,17 +598,12 @@
         "1": [
           {
             "Name": "1/2 effect Flesh and Blood",
-            "AbilityRef": "ability.mr.demon-bound.l1",
-            "Type": "Static",
-            "Effect": "Now suffers half effect from all Flesh and Blood effects (including potions, poisons, and pain)."
+            "AbilityRef": "ability.mr.demon-bound.l1"
           }
         ],
         "2": [
           {
-            "Name": "Select Minor Power",
             "AbilityRef": "ability.mr.demon-bound.l2",
-            "Type": "Static",
-            "Effect": "Choose one Demon Bound Minor power.",
             "ChoiceSetRefs": [
               "choice.multi-race.demon-bound.minor"
             ]
@@ -719,18 +611,12 @@
         ],
         "3": [
           {
-            "Name": "Immunity to Ageing",
-            "AbilityRef": "ability.mr.demon-bound.l3",
-            "Type": "Static",
-            "Effect": "Gains immunity to ageing."
+            "AbilityRef": "ability.mr.demon-bound.l3"
           }
         ],
         "4": [
           {
-            "Name": "Select Medium Power",
             "AbilityRef": "ability.mr.demon-bound.l4",
-            "Type": "Static",
-            "Effect": "Choose one Demon Bound Medium power.",
             "ChoiceSetRefs": [
               "choice.multi-race.demon-bound.medium"
             ]
@@ -738,19 +624,13 @@
         ],
         "5": [
           {
-            "Name": "Feed the Soul",
             "AbilityRef": "ability.mr.demon-bound.l5",
-            "Type": "Innate",
-            "Effect": "Over a recently dead body with a spirit: acts as Slayer and cures the user 12/12 via evil spiritual means.",
             "Count": 1
           }
         ],
         "6": [
           {
-            "Name": "Select Major Power",
             "AbilityRef": "ability.mr.demon-bound.l6",
-            "Type": "Static",
-            "Effect": "Choose one Demon Bound Major power.",
             "ChoiceSetRefs": [
               "choice.multi-race.demon-bound.major"
             ]
@@ -794,32 +674,20 @@
       "Levels": {
         "1": [
           {
-            "Name": "Elder Fey Presence",
-            "AbilityRef": "ability.mr.elder-fey.l1",
-            "Type": "Static",
-            "Effect": "Must wear non-standard impressive makeup/costume appropriate to powers gained."
+            "AbilityRef": "ability.mr.elder-fey.l1"
           },
           {
-            "Name": "+1 DAC",
-            "AbilityRef": "ability.mr.elder-fey.l1.2",
-            "Type": "Static",
-            "Effect": "+1 DAC."
+            "AbilityRef": "ability.mr.elder-fey.l1.2"
           }
         ],
         "2": [
           {
-            "Name": "Half-Spirit Nature",
-            "AbilityRef": "ability.mr.elder-fey.l2",
-            "Type": "Static",
-            "Effect": "Character now has half a spirit as per Half-Elf; elves are no longer harmed by Dispels and leave a body on death while retaining non-flesh-and-blood nature."
+            "AbilityRef": "ability.mr.elder-fey.l2"
           }
         ],
         "3": [
           {
-            "Name": "Select Minor Talent",
             "AbilityRef": "ability.mr.elder-fey.l3",
-            "Type": "Static",
-            "Effect": "Choose one Elder Fey Minor talent.",
             "ChoiceSetRefs": [
               "choice.multi-race.elder-fey.minor"
             ]
@@ -827,26 +695,17 @@
         ],
         "4": [
           {
-            "Name": "Immunity to Ageing",
-            "AbilityRef": "ability.mr.elder-fey.l4",
-            "Type": "Static",
-            "Effect": "Now immune to ageing effects."
+            "AbilityRef": "ability.mr.elder-fey.l4"
           }
         ],
         "5": [
           {
-            "Name": "+2 DAC Total",
-            "AbilityRef": "ability.mr.elder-fey.l5",
-            "Type": "Static",
-            "Effect": "Now has +2 DAC total."
+            "AbilityRef": "ability.mr.elder-fey.l5"
           }
         ],
         "6": [
           {
-            "Name": "Select Major Talent",
             "AbilityRef": "ability.mr.elder-fey.l6",
-            "Type": "Static",
-            "Effect": "Choose one Elder Fey Major talent.",
             "ChoiceSetRefs": [
               "choice.multi-race.elder-fey.major"
             ]
@@ -1016,50 +875,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "Elemental Flesh and Blood Immunity",
-            "AbilityRef": "ability.mr.elements-bound.l1",
-            "Type": "Static",
-            "Effect": "Gains Immunity to Flesh and Blood effects as an Elf (Elves gain full immunity)."
+            "AbilityRef": "ability.mr.elements-bound.l1"
           },
           {
-            "Name": "Select Elemental Colour",
             "AbilityRef": "ability.mr.elements-bound.l1.2",
-            "Type": "Static",
-            "Effect": "Choose an elemental colour (not grey) that is not opposite any owned colour.",
             "ChoiceSetRefs": [
               "choice.multi-race.elements-bound.colour"
             ]
           },
           {
-            "Name": "Elemental Markings",
-            "AbilityRef": "ability.mr.elements-bound.l1.3",
-            "Type": "Static",
-            "Effect": "Now has faint mystical lines of power of the chosen colour."
+            "AbilityRef": "ability.mr.elements-bound.l1.3"
           }
         ],
         "2": [
           {
-            "Name": "Select Minor Talent",
             "AbilityRef": "ability.mr.elements-bound.l2",
-            "Type": "Static",
-            "Effect": "Choose one Elements Bound Minor talent.",
             "ChoiceSetRefs": [
               "choice.multi-race.elements-bound.minor"
             ]
           },
           {
-            "Name": "Elemental Resistance (Own Colour)",
-            "AbilityRef": "ability.mr.elements-bound.l2.2",
-            "Type": "Static",
-            "Effect": "Gains Elemental Resistance (as Power Master) versus own colour."
+            "AbilityRef": "ability.mr.elements-bound.l2.2"
           }
         ],
         "3": [
           {
-            "Name": "Elemental Sight",
             "AbilityRef": "ability.mr.elements-bound.l3",
-            "Type": "Innate",
-            "Effect": "Elemental Sight (as per Wizard’s Grimoire advanced spell).",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -1068,10 +909,7 @@
         ],
         "4": [
           {
-            "Name": "Select Medium Talent",
             "AbilityRef": "ability.mr.elements-bound.l4",
-            "Type": "Static",
-            "Effect": "Choose one Elements Bound Medium talent.",
             "ChoiceSetRefs": [
               "choice.multi-race.elements-bound.medium"
             ]
@@ -1079,10 +917,7 @@
         ],
         "5": [
           {
-            "Name": "Destroy Elemental (Touch)",
             "AbilityRef": "ability.mr.elements-bound.l5",
-            "Type": "Innate",
-            "Effect": "Destroy Elemental by touch, affecting up to Elemental Champions.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -1091,10 +926,7 @@
         ],
         "6": [
           {
-            "Name": "Select Major Talent",
             "AbilityRef": "ability.mr.elements-bound.l6",
-            "Type": "Static",
-            "Effect": "Choose one Elements Bound Major talent.",
             "ChoiceSetRefs": [
               "choice.multi-race.elements-bound.major"
             ]
@@ -1167,54 +999,33 @@
       "Levels": {
         "1": [
           {
-            "Name": "Flaming Makeup",
-            "AbilityRef": "ability.mr.fire-daimon.l1",
-            "Type": "Static",
-            "Effect": "Must wear red/black flaming makeup at all times."
+            "AbilityRef": "ability.mr.fire-daimon.l1"
           },
           {
-            "Name": "Ignite by Touch",
-            "AbilityRef": "ability.mr.fire-daimon.l1.2",
-            "Type": "AtWill",
-            "Effect": "May Ignite by touch at will as per red cantrip."
+            "AbilityRef": "ability.mr.fire-daimon.l1.2"
           },
           {
-            "Name": "Fire Nature",
-            "AbilityRef": "ability.mr.fire-daimon.l1.3",
-            "Type": "Static",
-            "Effect": "Now gains half effect from supernatural fire and immunity to natural fire. Counts fully as Daemonkind."
+            "AbilityRef": "ability.mr.fire-daimon.l1.3"
           }
         ],
         "2": [
           {
-            "Name": "Mantic Shock",
             "AbilityRef": "ability.mr.fire-daimon.l2",
-            "Type": "Innate",
-            "Effect": "Inflicts both magical and evil spirit damage.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
             }
           },
           {
-            "Name": "Complete Immunity to Fire",
-            "AbilityRef": "ability.mr.fire-daimon.l2.2",
-            "Type": "Static",
-            "Effect": "Now gains complete immunity to fire of all forms."
+            "AbilityRef": "ability.mr.fire-daimon.l2.2"
           },
           {
-            "Name": "Fire Immunity Prerequisite",
-            "AbilityRef": "ability.mr.fire-daimon.l2.3",
-            "Type": "Static",
-            "Effect": "Must have bought tables ability Immunity to Natural Fire before buying this level; this is upgraded to Complete Immunity to Fire."
+            "AbilityRef": "ability.mr.fire-daimon.l2.3"
           }
         ],
         "3": [
           {
-            "Name": "Mantic Fire Blast",
             "AbilityRef": "ability.mr.fire-daimon.l3",
-            "Type": "Innate",
-            "Effect": "Inflicts both magical and evil spirit damage.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -1223,26 +1034,17 @@
         ],
         "4": [
           {
-            "Name": "Aura of Melt",
             "AbilityRef": "ability.mr.fire-daimon.l4",
-            "Type": "Innate",
-            "Effect": "Invoke evil fires around the body so non-supernatural weapons striking are burnt/melted; lasts 5 minutes.",
             "Count": 1
           }
         ],
         "5": [
           {
-            "Name": "Mantic Fire Bolt",
             "AbilityRef": "ability.mr.fire-daimon.l5",
-            "Type": "Innate",
-            "Effect": "Inflicts both magical and evil spirit damage.",
             "Count": 1
           },
           {
-            "Name": "Mantic Sword of Power",
             "AbilityRef": "ability.mr.fire-daimon.l5.2",
-            "Type": "Innate",
-            "Effect": "Mantic Sword of Power.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -1251,10 +1053,7 @@
         ],
         "6": [
           {
-            "Name": "Mantic Disruption",
             "AbilityRef": "ability.mr.fire-daimon.l6",
-            "Type": "Innate",
-            "Effect": "Inflicts both magical and evil spirit damage.",
             "Count": 1
           }
         ]
@@ -1322,74 +1121,45 @@
       "Levels": {
         "1": [
           {
-            "Name": "Frost Giant Form",
-            "AbilityRef": "ability.mr.frost-giant.l1",
-            "Type": "Static",
-            "Effect": "Must incorporate white/frost motifs in makeup and roleplay as a large Northman."
+            "AbilityRef": "ability.mr.frost-giant.l1"
           },
           {
-            "Name": "Life Level Offset",
-            "AbilityRef": "ability.mr.frost-giant.l1.2",
-            "Type": "Static",
-            "Effect": "Base life is calculated as if one level higher for all purposes."
+            "AbilityRef": "ability.mr.frost-giant.l1.2"
           }
         ],
         "2": [
           {
             "Name": "See through Darkness",
-            "AbilityRef": "ability.mr.frost-giant.l2",
-            "Type": "Static",
-            "Effect": "Can see through all forms of supernatural darkness at all times."
+            "AbilityRef": "ability.mr.frost-giant.l2"
           },
           {
-            "Name": "Double Resistance Levels",
-            "AbilityRef": "ability.mr.frost-giant.l2.2",
-            "Type": "Static",
-            "Effect": "Resistance level to level-based magical spells is doubled."
+            "AbilityRef": "ability.mr.frost-giant.l2.2"
           }
         ],
         "3": [
           {
-            "Name": "Forged Armour Requirement",
-            "AbilityRef": "ability.mr.frost-giant.l3",
-            "Type": "Static",
-            "Effect": "May only wear armour forged by a character with the appropriate skill; costs double normal amount."
+            "AbilityRef": "ability.mr.frost-giant.l3"
           },
           {
-            "Name": "Locational Life from Permanent TBLP",
-            "AbilityRef": "ability.mr.frost-giant.l3.2",
-            "Type": "Static",
-            "Effect": "Locational life is half permanent TBLP allowance; if a location is severed, the Frost Giant dies."
+            "AbilityRef": "ability.mr.frost-giant.l3.2"
           }
         ],
         "4": [
           {
-            "Name": "Half Pure Magic Damage",
-            "AbilityRef": "ability.mr.frost-giant.l4",
-            "Type": "Static",
-            "Effect": "Suffers only half damage from purely magical damaging blows or effects."
+            "AbilityRef": "ability.mr.frost-giant.l4"
           }
         ],
         "5": [
           {
-            "Name": "Immunity to Cold Upgrade",
-            "AbilityRef": "ability.mr.frost-giant.l5",
-            "Type": "Static",
-            "Effect": "Gains Immunity to Cold as per post-8th tables; if already owned then gains complete Immunity to Cold."
+            "AbilityRef": "ability.mr.frost-giant.l5"
           },
           {
-            "Name": "+1 Stacking Strength",
-            "AbilityRef": "ability.mr.frost-giant.l5.2",
-            "Type": "Static",
-            "Effect": "+1 stacking Strength (max +3)."
+            "AbilityRef": "ability.mr.frost-giant.l5.2"
           }
         ],
         "6": [
           {
-            "Name": "Half Effect Magic",
-            "AbilityRef": "ability.mr.frost-giant.l6",
-            "Type": "Static",
-            "Effect": "Now takes half-effect magic in all ways, as per a Dwarf."
+            "AbilityRef": "ability.mr.frost-giant.l6"
           }
         ]
       },
@@ -1437,50 +1207,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "Full Drowe Makeup",
-            "AbilityRef": "ability.mr.full-drowe.l1",
-            "Type": "Static",
-            "Effect": "Now suffers full makeup requirements appropriate to Drowe."
+            "AbilityRef": "ability.mr.full-drowe.l1"
           }
         ],
         "2": [
           {
-            "Name": "Drowe Innates and Immunities",
-            "AbilityRef": "ability.mr.full-drowe.l2",
-            "Type": "Static",
-            "Effect": "Gains innates and immunities specific to Drowe equal to multi-race level."
+            "AbilityRef": "ability.mr.full-drowe.l2"
           }
         ],
         "3": [
           {
-            "Name": "Drowe Innates and Immunities",
-            "AbilityRef": "ability.mr.full-drowe.l3",
-            "Type": "Static",
-            "Effect": "As level 2."
+            "AbilityRef": "ability.mr.full-drowe.l3"
           }
         ],
         "4": [
           {
-            "Name": "Drowe Innates and Immunities",
-            "AbilityRef": "ability.mr.full-drowe.l4",
-            "Type": "Static",
-            "Effect": "As level 2."
+            "AbilityRef": "ability.mr.full-drowe.l4"
           }
         ],
         "5": [
           {
-            "Name": "Drowe Innates and Immunities",
-            "AbilityRef": "ability.mr.full-drowe.l5",
-            "Type": "Static",
-            "Effect": "As level 2."
+            "AbilityRef": "ability.mr.full-drowe.l5"
           }
         ],
         "6": [
           {
-            "Name": "Become Full Drowe",
-            "AbilityRef": "ability.mr.full-drowe.l6",
-            "Type": "Static",
-            "Effect": "Loses spirit and spiritual abilities; treated as a Drowe for abilities/restrictions while retaining human base life as before. Is now injured by Dispels."
+            "AbilityRef": "ability.mr.full-drowe.l6"
           }
         ]
       },
@@ -1534,50 +1286,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "Full Elf Makeup",
-            "AbilityRef": "ability.mr.full-elf.l1",
-            "Type": "Static",
-            "Effect": "Now suffers full makeup requirements appropriate to the type of Elf."
+            "AbilityRef": "ability.mr.full-elf.l1"
           }
         ],
         "2": [
           {
-            "Name": "Elf Innates and Immunities",
-            "AbilityRef": "ability.mr.full-elf.l2",
-            "Type": "Static",
-            "Effect": "Gains innates and immunities specific to elf type equal to multi-race level."
+            "AbilityRef": "ability.mr.full-elf.l2"
           }
         ],
         "3": [
           {
-            "Name": "Elf Innates and Immunities",
-            "AbilityRef": "ability.mr.full-elf.l3",
-            "Type": "Static",
-            "Effect": "As level 2."
+            "AbilityRef": "ability.mr.full-elf.l3"
           }
         ],
         "4": [
           {
-            "Name": "Elf Innates and Immunities",
-            "AbilityRef": "ability.mr.full-elf.l4",
-            "Type": "Static",
-            "Effect": "As level 2."
+            "AbilityRef": "ability.mr.full-elf.l4"
           }
         ],
         "5": [
           {
-            "Name": "Elf Innates and Immunities",
-            "AbilityRef": "ability.mr.full-elf.l5",
-            "Type": "Static",
-            "Effect": "As level 2."
+            "AbilityRef": "ability.mr.full-elf.l5"
           }
         ],
         "6": [
           {
-            "Name": "Become Full Elf",
-            "AbilityRef": "ability.mr.full-elf.l6",
-            "Type": "Static",
-            "Effect": "Loses spirit and spiritual abilities; now treated as Elf for abilities/restrictions while retaining human base TBLP/loc. Is now injured by Dispels."
+            "AbilityRef": "ability.mr.full-elf.l6"
           }
         ]
       },
@@ -1625,52 +1359,34 @@
       "Levels": {
         "1": [
           {
-            "Name": "Select Construct Type",
             "AbilityRef": "ability.mr.golem.l1",
-            "Type": "Static",
-            "Effect": "Choose one construct type (Iron, Stone, Ice, Bronze).",
             "ChoiceSetRefs": [
               "choice.multi-race.golem.construct-type"
             ]
           },
           {
-            "Name": "Construct Form",
-            "AbilityRef": "ability.mr.golem.l1.2",
-            "Type": "Static",
-            "Effect": "Immune to all Flesh and Blood effects (including potions, poisons, and pain). Must wear construct-appropriate makeup."
+            "AbilityRef": "ability.mr.golem.l1.2"
           },
           {
-            "Name": "Golem Restrictions",
-            "AbilityRef": "ability.mr.golem.l1.3",
-            "Type": "Static",
-            "Effect": "May not exceed DAC 6 and may not use Sniff or Locational Sniff."
+            "AbilityRef": "ability.mr.golem.l1.3"
           }
         ],
         "2": [
           {
-            "Name": "Iron Minor Power",
             "AbilityRef": "ability.mr.golem.l2",
-            "Type": "Static",
-            "Effect": "May bond a metal weapon so it cannot be removed and is immune to destruction; 30s concentration to bind/unbind.",
             "PreReqs": [
               "ability.mr.golem.type.iron"
             ]
           },
           {
-            "Name": "Stone Minor Power",
             "AbilityRef": "ability.mr.golem.l2.2",
-            "Type": "Innate",
-            "Effect": "Statue x1/day: become invulnerable and inactive for up to 15 minutes.",
             "Count": 1,
             "PreReqs": [
               "ability.mr.golem.type.stone"
             ]
           },
           {
-            "Name": "Ice Minor Power",
             "AbilityRef": "ability.mr.golem.l2.3",
-            "Type": "Innate",
-            "Effect": "Refract Light x1/2 levels: negate one light-based attack.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -1680,60 +1396,39 @@
             ]
           },
           {
-            "Name": "Bronze Minor Power",
             "AbilityRef": "ability.mr.golem.l2.4",
-            "Type": "Static",
-            "Effect": "+0/3 locational life per 2 levels (to +0/9 at 6th).",
             "PreReqs": [
               "ability.mr.golem.type.bronze"
             ]
           },
           {
-            "Name": "+1 PAC",
-            "AbilityRef": "ability.mr.golem.l2.5",
-            "Type": "Static",
-            "Effect": "+1 PAC innate due to dense form."
+            "AbilityRef": "ability.mr.golem.l2.5"
           },
           {
-            "Name": "Slow Heavy Movement",
-            "AbilityRef": "ability.mr.golem.l2.6",
-            "Type": "Static",
-            "Effect": "May not travel above 3/4 speed; roleplay as lumbering/heavy."
+            "AbilityRef": "ability.mr.golem.l2.6"
           }
         ],
         "3": [
           {
-            "Name": "Iron Medium Power",
             "AbilityRef": "ability.mr.golem.l3",
-            "Type": "Static",
-            "Effect": "+1 stacking Strength (max +3).",
             "PreReqs": [
               "ability.mr.golem.type.iron"
             ]
           },
           {
-            "Name": "Stone Medium Power",
             "AbilityRef": "ability.mr.golem.l3.2",
-            "Type": "Static",
-            "Effect": "Now takes one-quarter less effect from sharp weapons (not purely supernatural weapons).",
             "PreReqs": [
               "ability.mr.golem.type.stone"
             ]
           },
           {
-            "Name": "Ice Medium Power",
             "AbilityRef": "ability.mr.golem.l3.3",
-            "Type": "Static",
-            "Effect": "Complete Immunity to Cold as Winter Elf.",
             "PreReqs": [
               "ability.mr.golem.type.ice"
             ]
           },
           {
-            "Name": "Bronze Medium Power",
             "AbilityRef": "ability.mr.golem.l3.4",
-            "Type": "Static",
-            "Effect": "Now takes one-quarter less effect from all solely physical damage.",
             "PreReqs": [
               "ability.mr.golem.type.bronze"
             ]
@@ -1741,18 +1436,12 @@
         ],
         "4": [
           {
-            "Name": "+2 PAC Total",
-            "AbilityRef": "ability.mr.golem.l4",
-            "Type": "Static",
-            "Effect": "+2 PAC total."
+            "AbilityRef": "ability.mr.golem.l4"
           }
         ],
         "5": [
           {
-            "Name": "Iron Major Power",
             "AbilityRef": "ability.mr.golem.l5",
-            "Type": "Innate",
-            "Effect": "66% Berserk Rage x1/3 levels when in presence of externally cast magic; caster is primary target.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -1762,57 +1451,37 @@
             ]
           },
           {
-            "Name": "Stone Major Power",
             "AbilityRef": "ability.mr.golem.l5.2",
-            "Type": "AtWill",
             "Effect": "May inflict Knockback by weapon blow at will; costs 6 TBLP per blow if 2nd grade of Strength or greater, otherwise 9 TBLP.",
             "PreReqs": [
               "ability.mr.golem.type.stone"
             ]
           },
           {
-            "Name": "Ice Major Power",
             "AbilityRef": "ability.mr.golem.l5.3",
-            "Type": "AtWill",
-            "Effect": "May inflict Snowball-equivalent touch damage (12/12 magical cold) at will for 6 TBLP per touch.",
             "PreReqs": [
               "ability.mr.golem.type.ice"
             ]
           },
           {
-            "Name": "Bronze Major Power",
             "AbilityRef": "ability.mr.golem.l5.4",
-            "Type": "Static",
-            "Effect": "Immunity to Bruising and may round damage fractions down rather than up.",
             "PreReqs": [
               "ability.mr.golem.type.bronze"
             ]
           },
           {
-            "Name": "Immunity to Ageing",
-            "AbilityRef": "ability.mr.golem.l5.5",
-            "Type": "Static",
-            "Effect": "Now completely immune to ageing."
+            "AbilityRef": "ability.mr.golem.l5.5"
           }
         ],
         "6": [
           {
-            "Name": "+3 PAC Total",
-            "AbilityRef": "ability.mr.golem.l6",
-            "Type": "Static",
-            "Effect": "+3 PAC total."
+            "AbilityRef": "ability.mr.golem.l6"
           },
           {
-            "Name": "Extreme Mass",
-            "AbilityRef": "ability.mr.golem.l6.2",
-            "Type": "Static",
-            "Effect": "Now requires 5 grades of strength to move physically when dead, unconscious, or helpless."
+            "AbilityRef": "ability.mr.golem.l6.2"
           },
           {
-            "Name": "No Physical Jump",
-            "AbilityRef": "ability.mr.golem.l6.3",
-            "Type": "Static",
-            "Effect": "May not use physical Jump abilities."
+            "AbilityRef": "ability.mr.golem.l6.3"
           }
         ]
       },
@@ -1859,49 +1528,31 @@
       "Levels": {
         "1": [
           {
-            "Name": "Food-Bound Loyalty",
-            "AbilityRef": "ability.mr.great-ogre.l1",
-            "Type": "Static",
-            "Effect": "Perceives those who provide food as friends unless they attack the Ogre or tribe members."
+            "AbilityRef": "ability.mr.great-ogre.l1"
           }
         ],
         "2": [
           {
-            "Name": "+1 PAC Total",
-            "AbilityRef": "ability.mr.great-ogre.l2",
-            "Type": "Static",
-            "Effect": "+1 PAC total."
+            "AbilityRef": "ability.mr.great-ogre.l2"
           }
         ],
         "3": [
           {
-            "Name": "Immunity to Domination",
-            "AbilityRef": "ability.mr.great-ogre.l3",
-            "Type": "Static",
-            "Effect": "Gains immunity to all domination effects."
+            "AbilityRef": "ability.mr.great-ogre.l3"
           }
         ],
         "4": [
           {
-            "Name": "+2 PAC Total",
-            "AbilityRef": "ability.mr.great-ogre.l4",
-            "Type": "Static",
-            "Effect": "+2 PAC total."
+            "AbilityRef": "ability.mr.great-ogre.l4"
           }
         ],
-        "5": [        ],
+        "5": [],
         "6": [
           {
-            "Name": "+3 PAC Total",
-            "AbilityRef": "ability.mr.great-ogre.l6",
-            "Type": "Static",
-            "Effect": "+3 PAC total."
+            "AbilityRef": "ability.mr.great-ogre.l6"
           },
           {
-            "Name": "+1 Strength",
-            "AbilityRef": "ability.mr.great-ogre.l6.2",
-            "Type": "Static",
-            "Effect": "+1 Strength, stacking to max +3."
+            "AbilityRef": "ability.mr.great-ogre.l6.2"
           }
         ]
       },
@@ -1985,68 +1636,41 @@
       "Levels": {
         "1": [
           {
-            "Name": "Half-Spirit Ascension",
-            "AbilityRef": "ability.mr.high-elf.l1",
-            "Type": "Static",
-            "Effect": "Now has a half-spirit as Half-Elf, is no longer injured by Dispels, and remains immune to Flesh and Blood effects as applicable to elves."
+            "AbilityRef": "ability.mr.high-elf.l1"
           },
           {
-            "Name": "Half-Elf Immunity Upgrade",
-            "AbilityRef": "ability.mr.high-elf.l1.2",
-            "Type": "Static",
-            "Effect": "Half Elves taking this option become immune to Flesh and Blood effects to elf extent."
+            "AbilityRef": "ability.mr.high-elf.l1.2"
           }
         ],
         "2": [
           {
-            "Name": "+1 DAC",
-            "AbilityRef": "ability.mr.high-elf.l2",
-            "Type": "Static",
-            "Effect": "+1 DAC."
+            "AbilityRef": "ability.mr.high-elf.l2"
           }
         ],
         "3": [
           {
-            "Name": "Rebirth at 8th",
-            "AbilityRef": "ability.mr.high-elf.l3",
-            "Type": "Static",
-            "Effect": "Gains Rebirth at 8th level (must already have bought Rebirth)."
+            "AbilityRef": "ability.mr.high-elf.l3"
           }
         ],
         "4": [
           {
-            "Name": "+2 DAC Total",
-            "AbilityRef": "ability.mr.high-elf.l4",
-            "Type": "Static",
-            "Effect": "+2 DAC total."
+            "AbilityRef": "ability.mr.high-elf.l4"
           }
         ],
         "5": [
           {
-            "Name": "Rebirth with One-Third Points",
-            "AbilityRef": "ability.mr.high-elf.l5",
-            "Type": "Static",
-            "Effect": "May Rebirth at 8th keeping one-third original points; must purchase High Elf first when rebirthing."
+            "AbilityRef": "ability.mr.high-elf.l5"
           }
         ],
         "6": [
           {
-            "Name": "Human Life for Full Elves",
-            "AbilityRef": "ability.mr.high-elf.l6",
-            "Type": "Static",
-            "Effect": "Characters who were full elves now have human life of same base class."
+            "AbilityRef": "ability.mr.high-elf.l6"
           },
           {
-            "Name": "Half-Elf Buy-as Upgrade",
-            "AbilityRef": "ability.mr.high-elf.l6.2",
-            "Type": "Static",
-            "Effect": "Those who were Half Elves may now buy as full elf of their type."
+            "AbilityRef": "ability.mr.high-elf.l6.2"
           },
           {
-            "Name": "Mantic Elven Innates",
-            "AbilityRef": "ability.mr.high-elf.l6.3",
-            "Type": "Static",
-            "Effect": "All elven handbook innates become mantic (e.g. affirms grant SAC additionally)."
+            "AbilityRef": "ability.mr.high-elf.l6.3"
           }
         ]
       },
@@ -2594,56 +2218,35 @@
       "Levels": {
         "1": [
           {
-            "Name": "Half-Orc Life Scale",
-            "AbilityRef": "ability.mr.hobgoblin.l1",
-            "Type": "Static",
-            "Effect": "Base life from this race equals that of a Half-Orc of equal multi-race level; if resulting base class life exceeds 48 this does increase base life for capping calculations."
+            "AbilityRef": "ability.mr.hobgoblin.l1"
           }
         ],
         "2": [
           {
-            "Name": "Human Armour Permissions",
-            "AbilityRef": "ability.mr.hobgoblin.l2",
-            "Type": "Static",
-            "Effect": "May wear any armour permitted for a Human of same class (no change for Shaman/Witch Doctor)."
+            "AbilityRef": "ability.mr.hobgoblin.l2"
           }
         ],
         "3": [
           {
-            "Name": "+1 PAC and Weapon Access",
-            "AbilityRef": "ability.mr.hobgoblin.l3",
-            "Type": "Static",
-            "Effect": "+1 PAC, gains B skill, loses Goblin weapon restrictions; if E-skill acquired it may be used with any usable weapon."
+            "AbilityRef": "ability.mr.hobgoblin.l3"
           }
         ],
         "4": [
           {
-            "Name": "Backstab Conversion",
-            "AbilityRef": "ability.mr.hobgoblin.l4",
-            "Type": "Static",
-            "Effect": "Loses Goblin racial Backstab skill and now inflicts +6 base damage on blows where Backstab would normally be usable."
+            "AbilityRef": "ability.mr.hobgoblin.l4"
           }
         ],
         "5": [
           {
-            "Name": "+2 PAC Total",
-            "AbilityRef": "ability.mr.hobgoblin.l5",
-            "Type": "Static",
-            "Effect": "+2 PAC total."
+            "AbilityRef": "ability.mr.hobgoblin.l5"
           },
           {
-            "Name": "Insensitive Skin",
-            "AbilityRef": "ability.mr.hobgoblin.l5.2",
-            "Type": "Static",
-            "Effect": "Now has Insensitive Skin as tables ability."
+            "AbilityRef": "ability.mr.hobgoblin.l5.2"
           }
         ],
         "6": [
           {
-            "Name": "Taunt",
             "AbilityRef": "ability.mr.hobgoblin.l6",
-            "Type": "Innate",
-            "Effect": "After 30s verbal taunt and while continuing to taunt, takes only 1 point per grade from target blows (Rockskin style) up to 5 minutes.",
             "Count": 1
           }
         ]
@@ -2810,23 +2413,15 @@
         "1": [
           {
             "Name": "1/6th off physical damage per level",
-            "AbilityRef": "ability.mr.immortal.l1",
-            "Type": "Static",
-            "Effect": "Suffers one-sixth less damage from physical attacks per level of this race (at 6th is immune to physical damage)."
+            "AbilityRef": "ability.mr.immortal.l1"
           },
           {
-            "Name": "Flesh and Blood Immunity",
-            "AbilityRef": "ability.mr.immortal.l1.2",
-            "Type": "Static",
-            "Effect": "Immunity to Flesh and Blood effects (including potions, poisons, and pain)."
+            "AbilityRef": "ability.mr.immortal.l1.2"
           }
         ],
         "2": [
           {
-            "Name": "Immortal Defence",
             "AbilityRef": "ability.mr.immortal.l2",
-            "Type": "Innate",
-            "Effect": "Gains one-quarter off all damage with a physical component for five minutes.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -2835,24 +2430,15 @@
         ],
         "3": [
           {
-            "Name": "Immunity to Ageing",
-            "AbilityRef": "ability.mr.immortal.l3",
-            "Type": "Static",
-            "Effect": "Gains immunity to ageing."
+            "AbilityRef": "ability.mr.immortal.l3"
           },
           {
-            "Name": "Half Beneficial Physical Effect",
-            "AbilityRef": "ability.mr.immortal.l3.2",
-            "Type": "Static",
-            "Effect": "Now only receives half effect from beneficial physical effects."
+            "AbilityRef": "ability.mr.immortal.l3.2"
           }
         ],
         "4": [
           {
-            "Name": "Empowered Defence",
             "AbilityRef": "ability.mr.immortal.l4",
-            "Type": "Innate",
-            "Effect": "Upgrades an Immortal Defence so it grants one-third off damage.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -2861,19 +2447,13 @@
         ],
         "5": [
           {
-            "Name": "Form of the Immortal",
             "AbilityRef": "ability.mr.immortal.l5",
-            "Type": "Innate",
-            "Effect": "Grants complete immunity to physical effects for 5 minutes.",
             "Count": 1
           }
         ],
         "6": [
           {
-            "Name": "Immortal Armour",
             "AbilityRef": "ability.mr.immortal.l6",
-            "Type": "Innate",
-            "Effect": "Upgrades an Empowered Defence to a Rockskin-style reduction vs all damage with a physical component.",
             "Count": 1
           }
         ]
@@ -2913,35 +2493,22 @@
         "1": [
           {
             "Name": "1/6th off non-Physical/non-Neuronic per level",
-            "AbilityRef": "ability.mr.mind-over-reality.l1",
-            "Type": "Static",
-            "Effect": "Gains one-sixth off all damage except Physical and Neuronic per level."
+            "AbilityRef": "ability.mr.mind-over-reality.l1"
           },
           {
-            "Name": "Neuronic Bracket Lock",
-            "AbilityRef": "ability.mr.mind-over-reality.l1.2",
-            "Type": "Static",
-            "Effect": "May never leave or buy-as outside the neuronic bracket."
+            "AbilityRef": "ability.mr.mind-over-reality.l1.2"
           },
           {
             "Name": "No Mind-Bar/Neuronic",
-            "AbilityRef": "ability.mr.mind-over-reality.l1.3",
-            "Type": "Static",
-            "Effect": "May never Mind-Bar or become immune to neuronics."
+            "AbilityRef": "ability.mr.mind-over-reality.l1.3"
           },
           {
-            "Name": "Neural Foci Requirement (2 per level)",
-            "AbilityRef": "ability.mr.mind-over-reality.l1.4",
-            "Type": "Static",
-            "Effect": "Must have at least 2 permanent neural foci per level of this race."
+            "AbilityRef": "ability.mr.mind-over-reality.l1.4"
           }
         ],
         "2": [
           {
-            "Name": "Reality Controlled",
             "AbilityRef": "ability.mr.mind-over-reality.l2",
-            "Type": "Innate",
-            "Effect": "Gain complete immunity to Magic or Spirit for 5 minutes.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -2951,29 +2518,18 @@
         "3": [
           {
             "Name": "Killed/Severed only by physical & neuro",
-            "AbilityRef": "ability.mr.mind-over-reality.l3",
-            "Type": "Static",
-            "Effect": "Can only be killed or have a location severed by Physical or Neuronic means."
+            "AbilityRef": "ability.mr.mind-over-reality.l3"
           },
           {
-            "Name": "Neural Foci Requirement (3 per level)",
-            "AbilityRef": "ability.mr.mind-over-reality.l3.2",
-            "Type": "Static",
-            "Effect": "Now requires at least 3 permanent neural foci per level of this race."
+            "AbilityRef": "ability.mr.mind-over-reality.l3.2"
           },
           {
-            "Name": "Beneficial Effect Immunity",
-            "AbilityRef": "ability.mr.mind-over-reality.l3.3",
-            "Type": "Static",
-            "Effect": "Gains immunity to beneficial effects that are not Neuronic or Physical in nature."
+            "AbilityRef": "ability.mr.mind-over-reality.l3.3"
           }
         ],
         "4": [
           {
-            "Name": "Disperse Mind",
             "AbilityRef": "ability.mr.mind-over-reality.l4",
-            "Type": "Innate",
-            "Effect": "Acts as gaseous form except the user is only harmed by neuronics rather than miracles.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -2982,26 +2538,17 @@
         ],
         "5": [
           {
-            "Name": "Forced Reality",
             "AbilityRef": "ability.mr.mind-over-reality.l5",
-            "Type": "Innate",
-            "Effect": "First time needed each day gains a stacking Live to Minus 6 that is neuronic-only.",
             "Count": 1
           }
         ],
         "6": [
           {
-            "Name": "Alter Reality",
             "AbilityRef": "ability.mr.mind-over-reality.l6",
-            "Type": "Innate",
-            "Effect": "Counts as Purity of Mind vs one just-suffered effect (declare within 2 seconds); costs a level to use.",
             "Count": 1
           },
           {
-            "Name": "Neural Foci Requirement (4 per level)",
-            "AbilityRef": "ability.mr.mind-over-reality.l6.2",
-            "Type": "Static",
-            "Effect": "Must now have 4 permanent neural foci per level of this race."
+            "AbilityRef": "ability.mr.mind-over-reality.l6.2"
           }
         ]
       },
@@ -3040,36 +2587,21 @@
       "Levels": {
         "1": [
           {
-            "Name": "Greater Cunning",
-            "AbilityRef": "ability.mr.ogre-magi.l1",
-            "Type": "Static",
-            "Effect": "General intelligence rises to roughly Half-Orc warrior level."
+            "AbilityRef": "ability.mr.ogre-magi.l1"
           },
           {
-            "Name": "Recognise Mana and Verbal Adaptation",
-            "AbilityRef": "ability.mr.ogre-magi.l1.2",
-            "Type": "AtWill",
-            "Effect": "Gains Recognise Mana at will and may adapt spell verbals like a shaman/witch-doctor as appropriate."
+            "AbilityRef": "ability.mr.ogre-magi.l1.2"
           },
           {
-            "Name": "Blue Woad Markings",
-            "AbilityRef": "ability.mr.ogre-magi.l1.3",
-            "Type": "Static",
-            "Effect": "Must incorporate blue woad-like markings in makeup."
+            "AbilityRef": "ability.mr.ogre-magi.l1.3"
           }
         ],
         "2": [
           {
-            "Name": "Puff of Air",
-            "AbilityRef": "ability.mr.ogre-magi.l2",
-            "Type": "AtWill",
-            "Effect": "Puff of Air at will for 1 TBLP per use."
+            "AbilityRef": "ability.mr.ogre-magi.l2"
           },
           {
-            "Name": "Detect Magic",
             "AbilityRef": "ability.mr.ogre-magi.l2.2",
-            "Type": "Innate",
-            "Effect": "Detect Magic innate.",
             "Progression": {
               "Amount": 2,
               "PerLevels": 1
@@ -3078,10 +2610,7 @@
         ],
         "3": [
           {
-            "Name": "Shatter(r)",
             "AbilityRef": "ability.mr.ogre-magi.l3",
-            "Type": "Innate",
-            "Effect": "Shatter(r) innate.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 1
@@ -3090,10 +2619,7 @@
         ],
         "4": [
           {
-            "Name": "Storm Blast",
             "AbilityRef": "ability.mr.ogre-magi.l4",
-            "Type": "Innate",
-            "Effect": "Storm Blast innate.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 1
@@ -3102,10 +2628,7 @@
         ],
         "5": [
           {
-            "Name": "Walk on Air(s)",
             "AbilityRef": "ability.mr.ogre-magi.l5",
-            "Type": "Innate",
-            "Effect": "Walk on Air(s) innate.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -3114,20 +2637,14 @@
         ],
         "6": [
           {
-            "Name": "Lightning Bolt",
             "AbilityRef": "ability.mr.ogre-magi.l6",
-            "Type": "Innate",
-            "Effect": "Lightning Bolt innate.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
             }
           },
           {
-            "Name": "Immunity to Electrical Attacks",
-            "AbilityRef": "ability.mr.ogre-magi.l6.2",
-            "Type": "Static",
-            "Effect": "Now completely immune to all electrical attacks."
+            "AbilityRef": "ability.mr.ogre-magi.l6.2"
           }
         ]
       },
@@ -3175,33 +2692,21 @@
       "Levels": {
         "1": [
           {
-            "Name": "Select Primal Tree",
             "AbilityRef": "ability.mr.primal-soul.l1",
-            "Type": "Static",
-            "Effect": "Choose Primal Bound, Predator, or Prey as the character’s primal tree.",
             "ChoiceSetRefs": [
               "choice.multi-race.primal-soul.tree"
             ]
           },
           {
-            "Name": "Primal Markings",
-            "AbilityRef": "ability.mr.primal-soul.l1.2",
-            "Type": "Static",
-            "Effect": "For any choice other than Primal Bound, makeup/costume must be reminiscent of the chosen creature type."
+            "AbilityRef": "ability.mr.primal-soul.l1.2"
           },
           {
-            "Name": "+1 DAC",
-            "AbilityRef": "ability.mr.primal-soul.l1.3",
-            "Type": "Static",
-            "Effect": "+1 Dexterity AC."
+            "AbilityRef": "ability.mr.primal-soul.l1.3"
           }
         ],
         "2": [
           {
-            "Name": "Primal Bound Minor Talent",
             "AbilityRef": "ability.mr.primal-soul.l2",
-            "Type": "Static",
-            "Effect": "Choose one Minor talent from Primal Bound.",
             "PreReqs": [
               "ability.mr.primal-soul.tree.primal-bound"
             ],
@@ -3210,10 +2715,7 @@
             ]
           },
           {
-            "Name": "Predator Minor Talent",
             "AbilityRef": "ability.mr.primal-soul.l2.2",
-            "Type": "Static",
-            "Effect": "Choose one Minor talent from Predator.",
             "PreReqs": [
               "ability.mr.primal-soul.tree.predator"
             ],
@@ -3222,10 +2724,7 @@
             ]
           },
           {
-            "Name": "Prey Minor Talent",
             "AbilityRef": "ability.mr.primal-soul.l2.3",
-            "Type": "Static",
-            "Effect": "Choose one Minor talent from Prey.",
             "PreReqs": [
               "ability.mr.primal-soul.tree.prey"
             ],
@@ -3236,18 +2735,12 @@
         ],
         "3": [
           {
-            "Name": "+2 DAC Total",
-            "AbilityRef": "ability.mr.primal-soul.l3",
-            "Type": "Static",
-            "Effect": "+2 Dexterity AC total."
+            "AbilityRef": "ability.mr.primal-soul.l3"
           }
         ],
         "4": [
           {
-            "Name": "Primal Bound Medium Talent",
             "AbilityRef": "ability.mr.primal-soul.l4",
-            "Type": "Static",
-            "Effect": "Choose one Medium talent from Primal Bound.",
             "PreReqs": [
               "ability.mr.primal-soul.tree.primal-bound"
             ],
@@ -3256,10 +2749,7 @@
             ]
           },
           {
-            "Name": "Predator Medium Talent",
             "AbilityRef": "ability.mr.primal-soul.l4.2",
-            "Type": "Static",
-            "Effect": "Choose one Medium talent from Predator.",
             "PreReqs": [
               "ability.mr.primal-soul.tree.predator"
             ],
@@ -3268,10 +2758,7 @@
             ]
           },
           {
-            "Name": "Prey Medium Talent",
             "AbilityRef": "ability.mr.primal-soul.l4.3",
-            "Type": "Static",
-            "Effect": "Choose one Medium talent from Prey.",
             "PreReqs": [
               "ability.mr.primal-soul.tree.prey"
             ],
@@ -3282,18 +2769,12 @@
         ],
         "5": [
           {
-            "Name": "Discern Own Kind",
-            "AbilityRef": "ability.mr.primal-soul.l5",
-            "Type": "AtWill",
-            "Effect": "At will by sight, physically discern creatures of the exact chosen race (yes/no with ref-discretion detail)."
+            "AbilityRef": "ability.mr.primal-soul.l5"
           }
         ],
         "6": [
           {
-            "Name": "Primal Bound Major Talent",
             "AbilityRef": "ability.mr.primal-soul.l6",
-            "Type": "Static",
-            "Effect": "Choose one Major talent from Primal Bound.",
             "PreReqs": [
               "ability.mr.primal-soul.tree.primal-bound"
             ],
@@ -3302,10 +2783,7 @@
             ]
           },
           {
-            "Name": "Predator Major Talent",
             "AbilityRef": "ability.mr.primal-soul.l6.2",
-            "Type": "Static",
-            "Effect": "Choose one Major talent from Predator.",
             "PreReqs": [
               "ability.mr.primal-soul.tree.predator"
             ],
@@ -3314,10 +2792,7 @@
             ]
           },
           {
-            "Name": "Prey Major Talent",
             "AbilityRef": "ability.mr.primal-soul.l6.3",
-            "Type": "Static",
-            "Effect": "Choose one Major talent from Prey.",
             "PreReqs": [
               "ability.mr.primal-soul.tree.prey"
             ],
@@ -3374,86 +2849,50 @@
       "Levels": {
         "1": [
           {
-            "Name": "Flesh and Blood Immunity",
-            "AbilityRef": "ability.mr.rock-troll.l1",
-            "Type": "Static",
-            "Effect": "Now immune to Flesh and Blood effects including ingestion (no potion effects)."
+            "AbilityRef": "ability.mr.rock-troll.l1"
           },
           {
-            "Name": "Rocky Makeup",
-            "AbilityRef": "ability.mr.rock-troll.l1.2",
-            "Type": "Static",
-            "Effect": "Must incorporate stone and rocky complexion into makeup."
+            "AbilityRef": "ability.mr.rock-troll.l1.2"
           }
         ],
         "2": [
           {
-            "Name": "+1 PAC Total",
-            "AbilityRef": "ability.mr.rock-troll.l2",
-            "Type": "Static",
-            "Effect": "+1 PAC total."
+            "AbilityRef": "ability.mr.rock-troll.l2"
           },
           {
-            "Name": "Live to Minus Scaling",
-            "AbilityRef": "ability.mr.rock-troll.l2.2",
-            "Type": "Static",
-            "Effect": "Gains additional Live to Minus 3 per level of this multi-race, stacking with all other published live-to-minus."
+            "AbilityRef": "ability.mr.rock-troll.l2.2"
           },
           {
-            "Name": "Regeneration Base Boost",
-            "AbilityRef": "ability.mr.rock-troll.l2.3",
-            "Type": "Static",
-            "Effect": "Regeneration now heals base 1 TBLP and 1 to every injured location per 5 minutes."
+            "AbilityRef": "ability.mr.rock-troll.l2.3"
           }
         ],
         "3": [
           {
-            "Name": "+2 PAC Total",
-            "AbilityRef": "ability.mr.rock-troll.l3",
-            "Type": "Static",
-            "Effect": "+2 PAC total."
+            "AbilityRef": "ability.mr.rock-troll.l3"
           }
         ],
         "4": [
           {
-            "Name": "+3 PAC Total",
-            "AbilityRef": "ability.mr.rock-troll.l4",
-            "Type": "Static",
-            "Effect": "+3 PAC total."
+            "AbilityRef": "ability.mr.rock-troll.l4"
           },
           {
-            "Name": "Regeneration Rate Increase",
-            "AbilityRef": "ability.mr.rock-troll.l4.2",
-            "Type": "Static",
-            "Effect": "Regeneration now heals base 2 TBLP and 2 to each injured location per 5 minutes (a +1x rate increase)."
+            "AbilityRef": "ability.mr.rock-troll.l4.2"
           }
         ],
         "5": [
           {
-            "Name": "+4 PAC Total",
-            "AbilityRef": "ability.mr.rock-troll.l5",
-            "Type": "Static",
-            "Effect": "+4 PAC total."
+            "AbilityRef": "ability.mr.rock-troll.l5"
           },
           {
-            "Name": "Rockskin vs Stone Weapons",
-            "AbilityRef": "ability.mr.rock-troll.l5.2",
-            "Type": "Static",
-            "Effect": "Stone weapons inflict damage as if user were under Rockskin at all times; innate PAC may always apply to physical-component weapon blows."
+            "AbilityRef": "ability.mr.rock-troll.l5.2"
           }
         ],
         "6": [
           {
-            "Name": "+5 PAC Total",
-            "AbilityRef": "ability.mr.rock-troll.l6",
-            "Type": "Static",
-            "Effect": "+5 PAC total."
+            "AbilityRef": "ability.mr.rock-troll.l6"
           },
           {
-            "Name": "Regeneration Class Enhancements",
-            "AbilityRef": "ability.mr.rock-troll.l6.2",
-            "Type": "Static",
-            "Effect": "Warriors may heal permanent damage by natural regen except fire/spirit; shamans may heal spirit damage by regen; witches may heal fire damage by regen."
+            "AbilityRef": "ability.mr.rock-troll.l6.2"
           }
         ]
       },
@@ -3507,70 +2946,43 @@
       "Levels": {
         "1": [
           {
-            "Name": "Flesh and Blood Immunity",
-            "AbilityRef": "ability.mr.servant-of-the-spirits.l1",
-            "Type": "Static",
-            "Effect": "Now immune to all Flesh and Blood effects (including potions and pain)."
+            "AbilityRef": "ability.mr.servant-of-the-spirits.l1"
           },
           {
-            "Name": "Neutral Supernatural Creature",
-            "AbilityRef": "ability.mr.servant-of-the-spirits.l1.2",
-            "Type": "Static",
-            "Effect": "Counts as a Supernatural Neutral Creature From Another Plane."
+            "AbilityRef": "ability.mr.servant-of-the-spirits.l1.2"
           },
           {
-            "Name": "Runic Markings",
-            "AbilityRef": "ability.mr.servant-of-the-spirits.l1.3",
-            "Type": "Static",
-            "Effect": "Requires silvery/grey swirls and/or runic markings over exposed skin."
+            "AbilityRef": "ability.mr.servant-of-the-spirits.l1.3"
           }
         ],
         "2": [
           {
-            "Name": "Touch Psi-Scan",
-            "AbilityRef": "ability.mr.servant-of-the-spirits.l2",
-            "Type": "AtWill",
-            "Effect": "Touch reads surface thoughts as spiritual Psi-Scan at will for 1 TBLP."
+            "AbilityRef": "ability.mr.servant-of-the-spirits.l2"
           },
           {
-            "Name": "Detect Spirits Nature",
-            "AbilityRef": "ability.mr.servant-of-the-spirits.l2.2",
-            "Type": "AtWill",
-            "Effect": "Detect Spirits Nature at will using full verbals as normal."
+            "AbilityRef": "ability.mr.servant-of-the-spirits.l2.2"
           }
         ],
         "3": [
           {
-            "Name": "Detect Lie",
-            "AbilityRef": "ability.mr.servant-of-the-spirits.l3",
-            "Type": "AtWill",
-            "Effect": "Detect Lie at will for 3 TBLP using full handbook verbals."
+            "AbilityRef": "ability.mr.servant-of-the-spirits.l3"
           }
         ],
         "4": [
           {
-            "Name": "Insight of the Spirits",
             "AbilityRef": "ability.mr.servant-of-the-spirits.l4",
-            "Type": "Innate",
-            "Effect": "After 30s concentration, gain ability to cast one published neutral miracle for the rest of dungeon (must be normally learnable).",
             "Count": 1
           }
         ],
         "5": [
           {
-            "Name": "Commune with the Gods",
             "AbilityRef": "ability.mr.servant-of-the-spirits.l5",
-            "Type": "Innate",
-            "Effect": "Commune with the Gods.",
             "Count": 1
           }
         ],
         "6": [
           {
-            "Name": "Permanent Active Spirit Sight",
-            "AbilityRef": "ability.mr.servant-of-the-spirits.l6",
-            "Type": "Static",
-            "Effect": "Gains permanent fully active Spirit Sight, revealing spirit size and alignment."
+            "AbilityRef": "ability.mr.servant-of-the-spirits.l6"
           }
         ]
       },
@@ -3623,48 +3035,30 @@
       "Levels": {
         "1": [
           {
-            "Name": "Dark Makeup Requirement",
-            "AbilityRef": "ability.mr.shadow-daimon.l1",
-            "Type": "Static",
-            "Effect": "Must wear dark/black makeup covering at least half exposed skin."
+            "AbilityRef": "ability.mr.shadow-daimon.l1"
           },
           {
-            "Name": "Extinguish (10ft)",
-            "AbilityRef": "ability.mr.shadow-daimon.l1.2",
-            "Type": "AtWill",
-            "Effect": "May Extinguish lights within 10ft at will with full cantrip verbal."
+            "AbilityRef": "ability.mr.shadow-daimon.l1.2"
           },
           {
-            "Name": "Permanent Mantic Ally Darkness",
-            "AbilityRef": "ability.mr.shadow-daimon.l1.3",
-            "Type": "Static",
-            "Effect": "Permanent mantic Ally Darkness (without granting ability to see through darkness). Counts as Daemonkind."
+            "AbilityRef": "ability.mr.shadow-daimon.l1.3"
           }
         ],
         "2": [
           {
-            "Name": "Shadowmeld",
             "AbilityRef": "ability.mr.shadow-daimon.l2",
-            "Type": "Innate",
-            "Effect": "Shadowmeld as per Chameleon(s) when not within 5ft of light source and not in direct daylight/supernatural light.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 1
             }
           },
           {
-            "Name": "Supernatural Darkness Sight Prerequisite",
-            "AbilityRef": "ability.mr.shadow-daimon.l2.2",
-            "Type": "Static",
-            "Effect": "Must purchase “See Through Supernatural Darkness at all times” before this level."
+            "AbilityRef": "ability.mr.shadow-daimon.l2.2"
           }
         ],
         "3": [
           {
-            "Name": "Mantic Darkness(s)",
             "AbilityRef": "ability.mr.shadow-daimon.l3",
-            "Type": "Innate",
-            "Effect": "Mantic Darkness(s).",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -3673,10 +3067,7 @@
         ],
         "4": [
           {
-            "Name": "Mantic Shadowblade",
             "AbilityRef": "ability.mr.shadow-daimon.l4",
-            "Type": "Innate",
-            "Effect": "Mantic Shadowblade x1/3 levels; mantic damage as specified by wielder eligibility.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -3685,10 +3076,7 @@
         ],
         "5": [
           {
-            "Name": "Cloak of Darkness",
             "AbilityRef": "ability.mr.shadow-daimon.l5",
-            "Type": "Innate",
-            "Effect": "As Invisibility but cannot be used under Shadowmeld-light restrictions; ends within 5ft of any light source.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -3697,10 +3085,7 @@
         ],
         "6": [
           {
-            "Name": "Shadowshift",
             "AbilityRef": "ability.mr.shadow-daimon.l6",
-            "Type": "Innate",
-            "Effect": "Shadowshift as Wizard’s Grimoire spell.",
             "Count": 1
           }
         ]
@@ -3768,69 +3153,42 @@
       "Levels": {
         "1": [
           {
-            "Name": "Mobile Ally Darkness",
-            "AbilityRef": "ability.mr.snaga-hai.l1",
-            "Type": "Static",
-            "Effect": "Always counts as benefiting from black Ally Darkness; Darkness(r) targeted on user moves with them."
+            "AbilityRef": "ability.mr.snaga-hai.l1"
           },
           {
-            "Name": "Supernatural Darkness Sight",
-            "AbilityRef": "ability.mr.snaga-hai.l1.2",
-            "Type": "Static",
-            "Effect": "May now see through all forms of supernatural darkness."
+            "AbilityRef": "ability.mr.snaga-hai.l1.2"
           },
           {
-            "Name": "Shadow Woad Makeup",
-            "AbilityRef": "ability.mr.snaga-hai.l1.3",
-            "Type": "Static",
-            "Effect": "Must incorporate black shadow/woad into makeup."
+            "AbilityRef": "ability.mr.snaga-hai.l1.3"
           }
         ],
         "2": [
           {
-            "Name": "+2 DAC in Darkness",
-            "AbilityRef": "ability.mr.snaga-hai.l2",
-            "Type": "Static",
-            "Effect": "+2 DAC total while in darkness."
+            "AbilityRef": "ability.mr.snaga-hai.l2"
           }
         ],
         "3": [
           {
-            "Name": "Unassisted Climb",
-            "AbilityRef": "ability.mr.snaga-hai.l3",
-            "Type": "Static",
-            "Effect": "Assisted climbs require only two points of contact, can continue while climbing and at full climbing speed."
+            "AbilityRef": "ability.mr.snaga-hai.l3"
           },
           {
-            "Name": "+1 Stacking Backstab",
-            "AbilityRef": "ability.mr.snaga-hai.l3.2",
-            "Type": "Static",
-            "Effect": "+1 stacking Backstab skill (stacks only with published Backstab)."
+            "AbilityRef": "ability.mr.snaga-hai.l3.2"
           }
         ],
         "4": [
           {
-            "Name": "+3 DAC in Darkness",
-            "AbilityRef": "ability.mr.snaga-hai.l4",
-            "Type": "Static",
-            "Effect": "+3 DAC total while in darkness."
+            "AbilityRef": "ability.mr.snaga-hai.l4"
           }
         ],
         "5": [
           {
-            "Name": "Bladelick",
             "AbilityRef": "ability.mr.snaga-hai.l5",
-            "Type": "Innate",
-            "Effect": "After licking a physical edged weapon, next blow within 5 minutes inflicts physical Disease as Cause Disease.",
             "Count": 1
           }
         ],
         "6": [
           {
-            "Name": "Sense Motion",
-            "AbilityRef": "ability.mr.snaga-hai.l6",
-            "Type": "Static",
-            "Effect": "Now has Sense Motion except in direct daylight or magical light; requires Perception and Supernatural Perception to use."
+            "AbilityRef": "ability.mr.snaga-hai.l6"
           }
         ]
       },
@@ -3914,73 +3272,45 @@
         "1": [
           {
             "Name": "1/6th off Non-Spirit damage per level",
-            "AbilityRef": "ability.mr.spiritual-vessel.l1",
-            "Type": "Static",
-            "Effect": "One-sixth off all damage except Spirit per level."
+            "AbilityRef": "ability.mr.spiritual-vessel.l1"
           },
           {
-            "Name": "Flesh and Blood Immunity",
-            "AbilityRef": "ability.mr.spiritual-vessel.l1.2",
-            "Type": "Static",
-            "Effect": "Immunity to Flesh and Blood effects (including potions and poison)."
+            "AbilityRef": "ability.mr.spiritual-vessel.l1.2"
           },
           {
-            "Name": "Priest Bracket Lock",
-            "AbilityRef": "ability.mr.spiritual-vessel.l1.3",
-            "Type": "Static",
-            "Effect": "May never leave the priest bracket."
+            "AbilityRef": "ability.mr.spiritual-vessel.l1.3"
           }
         ],
         "2": [
           {
-            "Name": "Immunity to Ageing",
-            "AbilityRef": "ability.mr.spiritual-vessel.l2",
-            "Type": "Static",
-            "Effect": "Gains immunity to ageing."
+            "AbilityRef": "ability.mr.spiritual-vessel.l2"
           }
         ],
         "3": [
           {
             "Name": "Killed/Severed only by Spirit",
-            "AbilityRef": "ability.mr.spiritual-vessel.l3",
-            "Type": "Static",
-            "Effect": "Can only be killed or have a location severed by spiritual means."
+            "AbilityRef": "ability.mr.spiritual-vessel.l3"
           },
           {
-            "Name": "Beneficial Non-Spiritual Immunity",
-            "AbilityRef": "ability.mr.spiritual-vessel.l3.2",
-            "Type": "Static",
-            "Effect": "Gains immunity to beneficial effects that are not spiritual."
+            "AbilityRef": "ability.mr.spiritual-vessel.l3.2"
           },
           {
-            "Name": "No Spiritual Invisibility Immunity",
-            "AbilityRef": "ability.mr.spiritual-vessel.l3.3",
-            "Type": "Static",
-            "Effect": "May no longer cast Spiritual Invisibility or otherwise become immune to Spirit."
+            "AbilityRef": "ability.mr.spiritual-vessel.l3.3"
           }
         ],
         "4": [
           {
-            "Name": "Non-Damaging Non-Spiritual Immunity",
-            "AbilityRef": "ability.mr.spiritual-vessel.l4",
-            "Type": "Static",
-            "Effect": "Immune to non-damaging effects that are not spiritual in nature."
+            "AbilityRef": "ability.mr.spiritual-vessel.l4"
           }
         ],
         "5": [
           {
-            "Name": "Unconscious/Location Stop Restriction",
-            "AbilityRef": "ability.mr.spiritual-vessel.l5",
-            "Type": "Static",
-            "Effect": "Can only be knocked unconscious or have locations stop through spiritual means."
+            "AbilityRef": "ability.mr.spiritual-vessel.l5"
           }
         ],
         "6": [
           {
-            "Name": "Immune to All but Spirit",
-            "AbilityRef": "ability.mr.spiritual-vessel.l6",
-            "Type": "Static",
-            "Effect": "Now completely immune to all except spirits."
+            "AbilityRef": "ability.mr.spiritual-vessel.l6"
           }
         ]
       },
@@ -4061,30 +3391,19 @@
       "Levels": {
         "1": [
           {
-            "Name": "Immunity to Pain",
-            "AbilityRef": "ability.mr.titan.l1",
-            "Type": "Static",
-            "Effect": "Immunity to pain in all forms."
+            "AbilityRef": "ability.mr.titan.l1"
           },
           {
             "Name": "+1 Strength",
-            "AbilityRef": "ability.mr.titan.l1.2",
-            "Type": "Static",
-            "Effect": "+1 stacking Strength (max +3)."
+            "AbilityRef": "ability.mr.titan.l1.2"
           }
         ],
         "2": [
           {
-            "Name": "+3/1 Base Life",
-            "AbilityRef": "ability.mr.titan.l2",
-            "Type": "Static",
-            "Effect": "+3/1 base life."
+            "AbilityRef": "ability.mr.titan.l2"
           },
           {
-            "Name": "Form of the Titan",
             "AbilityRef": "ability.mr.titan.l2.2",
-            "Type": "Innate",
-            "Effect": "Grants +36/12 temporary life for 5 minutes; does not stack with supernatural temp life but does with physical temp life.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -4093,53 +3412,32 @@
         ],
         "3": [
           {
-            "Name": "1/6 off Weapon Blows",
-            "AbilityRef": "ability.mr.titan.l3",
-            "Type": "Static",
-            "Effect": "One-sixth off weapon blows; stacks with Battle-Master interactions as listed."
+            "AbilityRef": "ability.mr.titan.l3"
           }
         ],
         "4": [
           {
-            "Name": "+6/2 Base Life Total",
-            "AbilityRef": "ability.mr.titan.l4",
-            "Type": "Static",
-            "Effect": "+6/2 base life total (from +3/1)."
+            "AbilityRef": "ability.mr.titan.l4"
           },
           {
-            "Name": "Titan’s Strength",
             "AbilityRef": "ability.mr.titan.l4.2",
-            "Type": "Innate",
-            "Effect": "May remain conscious in live to minus while in combat for 5 minutes (if live-to-minus is owned).",
             "Count": 1
           }
         ],
         "5": [
           {
-            "Name": "Immunity to Supernatural Ageing",
-            "AbilityRef": "ability.mr.titan.l5",
-            "Type": "Static",
-            "Effect": "Gains immunity to supernatural ageing effects."
+            "AbilityRef": "ability.mr.titan.l5"
           },
           {
-            "Name": "1/4 off Weapon Blows",
-            "AbilityRef": "ability.mr.titan.l5.2",
-            "Type": "Static",
-            "Effect": "Now one-quarter off weapon blows (from one-sixth), with Greater Blade Fury and Eye for an Opponent interactions as listed."
+            "AbilityRef": "ability.mr.titan.l5.2"
           }
         ],
         "6": [
           {
-            "Name": "+9/3 Base Life Total",
-            "AbilityRef": "ability.mr.titan.l6",
-            "Type": "Static",
-            "Effect": "+9/3 base life total (from +6/2)."
+            "AbilityRef": "ability.mr.titan.l6"
           },
           {
-            "Name": "Titan’s Endurance",
             "AbilityRef": "ability.mr.titan.l6.2",
-            "Type": "Innate",
-            "Effect": "Locations continue to function until severed while in combat; lasts 5 minutes.",
             "Count": 1
           }
         ]
@@ -4274,125 +3572,71 @@
       "Levels": {
         "1": [
           {
-            "Name": "Select Undead Type",
             "AbilityRef": "ability.mr.undead.l1",
-            "Type": "Static",
-            "Effect": "Select undead type: Ghoul, Mummy, Wight, Wraith, or Vampire.",
             "ChoiceSetRefs": [
               "choice.multi-race.undead.type"
             ]
           },
           {
-            "Name": "L1 Lesser Type Unknown",
-            "AbilityRef": "ability.mr.undead.l1.2",
-            "Type": "Static",
-            "Effect": "Discerns as level 1 Type Unknown undead (dismiss name Lesser XXX)."
+            "AbilityRef": "ability.mr.undead.l1.2"
           },
           {
-            "Name": "Undead Immunity Package (L1)",
-            "AbilityRef": "ability.mr.undead.l1.3",
-            "Type": "Static",
-            "Effect": "Immune to Repel/Attract Life, Restore/Animate Life, and Discern Nature of Wounds."
+            "AbilityRef": "ability.mr.undead.l1.3"
           }
         ],
         "2": [
           {
-            "Name": "L2 Minor Type",
-            "AbilityRef": "ability.mr.undead.l2",
-            "Type": "Static",
-            "Effect": "Now level 2 Minor XXX undead."
+            "AbilityRef": "ability.mr.undead.l2"
           },
           {
-            "Name": "Undead Immunity Package (L2)",
-            "AbilityRef": "ability.mr.undead.l2.2",
-            "Type": "Static",
-            "Effect": "Immune to Ebony Pain, Words of Pain, all forms of Disease, and Adrenal Surge."
+            "AbilityRef": "ability.mr.undead.l2.2"
           },
           {
-            "Name": "Tree Purchase Access (Tier 1)",
-            "AbilityRef": "ability.mr.undead.l2.3",
-            "Type": "Static",
-            "Effect": "May buy 1st innate from chosen undead tree and the appropriate curing ability."
+            "AbilityRef": "ability.mr.undead.l2.3"
           }
         ],
         "3": [
           {
-            "Name": "L3 Minor Type",
-            "AbilityRef": "ability.mr.undead.l3",
-            "Type": "Static",
-            "Effect": "Now level 3 Minor XXX undead."
+            "AbilityRef": "ability.mr.undead.l3"
           },
           {
-            "Name": "Undead Immunity Package (L3)",
-            "AbilityRef": "ability.mr.undead.l3.2",
-            "Type": "Static",
-            "Effect": "Immune to Stunning Blow, Vicious Strike, Ageing, and Flesh and Blood effects."
+            "AbilityRef": "ability.mr.undead.l3.2"
           },
           {
-            "Name": "Tree Purchase Access (Tier 2)",
-            "AbilityRef": "ability.mr.undead.l3.3",
-            "Type": "Static",
-            "Effect": "May buy 2nd innate from chosen undead tree."
+            "AbilityRef": "ability.mr.undead.l3.3"
           }
         ],
         "4": [
           {
-            "Name": "L4 Type",
-            "AbilityRef": "ability.mr.undead.l4",
-            "Type": "Static",
-            "Effect": "Now level 4 XXX undead."
+            "AbilityRef": "ability.mr.undead.l4"
           },
           {
-            "Name": "Undead Immunity Package (L4)",
-            "AbilityRef": "ability.mr.undead.l4.2",
-            "Type": "Static",
-            "Effect": "Immune to Repel/Attract Edible and Empathic Healing."
+            "AbilityRef": "ability.mr.undead.l4.2"
           },
           {
-            "Name": "Tree Purchase Access (Tier 3)",
-            "AbilityRef": "ability.mr.undead.l4.3",
-            "Type": "Static",
-            "Effect": "May buy 3rd innate from chosen undead tree."
+            "AbilityRef": "ability.mr.undead.l4.3"
           }
         ],
         "5": [
           {
-            "Name": "L5 Type",
-            "AbilityRef": "ability.mr.undead.l5",
-            "Type": "Static",
-            "Effect": "Now level 5 XXX undead."
+            "AbilityRef": "ability.mr.undead.l5"
           },
           {
-            "Name": "Undead Immunity Package (L5)",
-            "AbilityRef": "ability.mr.undead.l5.2",
-            "Type": "Static",
-            "Effect": "Immune to Neuronics and physical Sleep."
+            "AbilityRef": "ability.mr.undead.l5.2"
           },
           {
-            "Name": "Tree Purchase Access (Tier 4)",
-            "AbilityRef": "ability.mr.undead.l5.3",
-            "Type": "Static",
-            "Effect": "May buy 4th innate from chosen undead tree if available."
+            "AbilityRef": "ability.mr.undead.l5.3"
           }
         ],
         "6": [
           {
-            "Name": "L6 Greater Type",
-            "AbilityRef": "ability.mr.undead.l6",
-            "Type": "Static",
-            "Effect": "Now level 6 Greater XXX undead."
+            "AbilityRef": "ability.mr.undead.l6"
           },
           {
-            "Name": "Undead Immunity Package (L6)",
-            "AbilityRef": "ability.mr.undead.l6.2",
-            "Type": "Static",
-            "Effect": "Immune to all miracles not listed as affecting undead."
+            "AbilityRef": "ability.mr.undead.l6.2"
           },
           {
-            "Name": "Post-6th Undead Purchases",
-            "AbilityRef": "ability.mr.undead.l6.3",
-            "Type": "Static",
-            "Effect": "May buy: Dismiss level 7, Immunity to Dismiss miracles, and Immunity to Undead Destruction effects as listed."
+            "AbilityRef": "ability.mr.undead.l6.3"
           }
         ]
       },
@@ -4488,98 +3732,56 @@
       "Levels": {
         "1": [
           {
-            "Name": "Base Life 33/11",
-            "AbilityRef": "ability.mr.uruk-hai.l1",
-            "Type": "Static",
-            "Effect": "Base life becomes 33/11."
+            "AbilityRef": "ability.mr.uruk-hai.l1"
           },
           {
-            "Name": "Supernatural Darkness Sight",
-            "AbilityRef": "ability.mr.uruk-hai.l1.2",
-            "Type": "Static",
-            "Effect": "May now see through all forms of supernatural darkness at all times."
+            "AbilityRef": "ability.mr.uruk-hai.l1.2"
           }
         ],
         "2": [
           {
-            "Name": "Base Life 40/13",
-            "AbilityRef": "ability.mr.uruk-hai.l2",
-            "Type": "Static",
-            "Effect": "Base life becomes 40/13."
+            "AbilityRef": "ability.mr.uruk-hai.l2"
           },
           {
-            "Name": "+1 PAC",
-            "AbilityRef": "ability.mr.uruk-hai.l2.2",
-            "Type": "Static",
-            "Effect": "+1 PAC."
+            "AbilityRef": "ability.mr.uruk-hai.l2.2"
           },
           {
-            "Name": "Slow-Burn Detrimental Progression",
-            "AbilityRef": "ability.mr.uruk-hai.l2.3",
-            "Type": "Static",
-            "Effect": "Detrimental duration-based penalties (e.g. Disease, Words of Pain) take twice as long to affect."
+            "AbilityRef": "ability.mr.uruk-hai.l2.3"
           }
         ],
         "3": [
           {
-            "Name": "Base Life 47/16",
-            "AbilityRef": "ability.mr.uruk-hai.l3",
-            "Type": "Static",
-            "Effect": "Base life becomes 47/16."
+            "AbilityRef": "ability.mr.uruk-hai.l3"
           },
           {
-            "Name": "No Light DAC Penalty",
-            "AbilityRef": "ability.mr.uruk-hai.l3.2",
-            "Type": "Static",
-            "Effect": "No longer suffers DAC penalties in light."
+            "AbilityRef": "ability.mr.uruk-hai.l3.2"
           }
         ],
         "4": [
           {
-            "Name": "Base Life 54/18",
-            "AbilityRef": "ability.mr.uruk-hai.l4",
-            "Type": "Static",
-            "Effect": "Base life becomes 54/18."
+            "AbilityRef": "ability.mr.uruk-hai.l4"
           },
           {
-            "Name": "+2 PAC Total",
-            "AbilityRef": "ability.mr.uruk-hai.l4.2",
-            "Type": "Static",
-            "Effect": "+2 PAC total."
+            "AbilityRef": "ability.mr.uruk-hai.l4.2"
           }
         ],
         "5": [
           {
-            "Name": "Base Life 61/20",
-            "AbilityRef": "ability.mr.uruk-hai.l5",
-            "Type": "Static",
-            "Effect": "Base life becomes 61/20."
+            "AbilityRef": "ability.mr.uruk-hai.l5"
           },
           {
-            "Name": "Strength Floor +1",
-            "AbilityRef": "ability.mr.uruk-hai.l5.2",
-            "Type": "Static",
-            "Effect": "May never be reduced below +1 strength (requires at least +1 strength to benefit)."
+            "AbilityRef": "ability.mr.uruk-hai.l5.2"
           }
         ],
         "6": [
           {
-            "Name": "Base Life 68/23",
-            "AbilityRef": "ability.mr.uruk-hai.l6",
-            "Type": "Static",
-            "Effect": "Base life becomes 68/23."
+            "AbilityRef": "ability.mr.uruk-hai.l6"
           },
           {
-            "Name": "+3 PAC Total",
-            "AbilityRef": "ability.mr.uruk-hai.l6.2",
-            "Type": "Static",
-            "Effect": "+3 PAC total."
+            "AbilityRef": "ability.mr.uruk-hai.l6.2"
           },
           {
-            "Name": "Black Fury",
             "AbilityRef": "ability.mr.uruk-hai.l6.3",
-            "Type": "Innate",
-            "Effect": "50% Berserk Rage that also grants immunity to listed stopping effects for 5 minutes.",
             "Count": 1
           }
         ]
@@ -4738,18 +3940,12 @@
       "Levels": {
         "1": [
           {
-            "Name": "Untainted Raising",
-            "AbilityRef": "ability.mr.vessel-of-the-dead.l1",
-            "Type": "Static",
-            "Effect": "If raised as undead, user is not tainted and retains own personality."
+            "AbilityRef": "ability.mr.vessel-of-the-dead.l1"
           }
         ],
         "2": [
           {
-            "Name": "Twist the Form",
             "AbilityRef": "ability.mr.vessel-of-the-dead.l2",
-            "Type": "Innate",
-            "Effect": "May be target of published raise-undead miracle on self to become that undead for 15 minutes or until slain/dismissed, with listed consequences.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -4758,10 +3954,7 @@
         ],
         "3": [
           {
-            "Name": "Death’s Form",
             "AbilityRef": "ability.mr.vessel-of-the-dead.l3",
-            "Type": "Innate",
-            "Effect": "Acts as Incarna Mortis on self only; does not suffer normal kick-out.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -4770,26 +3963,17 @@
         ],
         "4": [
           {
-            "Name": "Vessel Armour and Strength Transfer",
-            "AbilityRef": "ability.mr.vessel-of-the-dead.l4",
-            "Type": "Static",
-            "Effect": "Undead raised into the vessel may benefit from vessel physical armour and strength grades."
+            "AbilityRef": "ability.mr.vessel-of-the-dead.l4"
           }
         ],
         "5": [
           {
-            "Name": "Reactive Death’s Form",
-            "AbilityRef": "ability.mr.vessel-of-the-dead.l5",
-            "Type": "Static",
-            "Effect": "Death’s Form may now be used in response to an attack (within 2 seconds), applying only to that single attack."
+            "AbilityRef": "ability.mr.vessel-of-the-dead.l5"
           }
         ],
         "6": [
           {
-            "Name": "Animate as Zombie While Alive",
-            "AbilityRef": "ability.mr.vessel-of-the-dead.l6",
-            "Type": "Static",
-            "Effect": "Can now be animated as a zombie (as Twist the Form) while alive once per hour."
+            "AbilityRef": "ability.mr.vessel-of-the-dead.l6"
           }
         ]
       },
@@ -4828,67 +4012,46 @@
         "1": [
           {
             "Name": "1/6th off Non-Magic damage per level",
-            "AbilityRef": "ability.mr.vessel-of-the-dragons.l1",
-            "Type": "Static",
-            "Effect": "One-sixth off all damage except Magic per level."
+            "AbilityRef": "ability.mr.vessel-of-the-dragons.l1"
           },
           {
             "Name": "Immunity to Flesh and Blood",
-            "AbilityRef": "ability.mr.vessel-of-the-dragons.l1.2",
-            "Type": "Static",
-            "Effect": "Immunity to Flesh and Blood effects (including potions, poison, and pain)."
+            "AbilityRef": "ability.mr.vessel-of-the-dragons.l1.2"
           }
         ],
         "2": [
           {
-            "Name": "Immunity to Ageing",
-            "AbilityRef": "ability.mr.vessel-of-the-dragons.l2",
-            "Type": "Static",
-            "Effect": "Gains immunity to ageing."
+            "AbilityRef": "ability.mr.vessel-of-the-dragons.l2"
           }
         ],
         "3": [
           {
             "Name": "Killed/Severed only by Magic",
-            "AbilityRef": "ability.mr.vessel-of-the-dragons.l3",
-            "Type": "Static",
-            "Effect": "Can only be killed or have a location severed by magical means."
+            "AbilityRef": "ability.mr.vessel-of-the-dragons.l3"
           },
           {
-            "Name": "Dispel Vulnerability Rule",
-            "AbilityRef": "ability.mr.vessel-of-the-dragons.l3.2",
-            "Type": "Static",
-            "Effect": "Is now harmed by Dispels as an Elf; may no longer cast Mana Shield or otherwise become immune to magic (doing so causes death)."
+            "AbilityRef": "ability.mr.vessel-of-the-dragons.l3.2"
           },
           {
-            "Name": "Beneficial Non-Magical Immunity",
-            "AbilityRef": "ability.mr.vessel-of-the-dragons.l3.3",
-            "Type": "Static",
-            "Effect": "Gains immunity to beneficial effects that are not magical in nature."
+            "AbilityRef": "ability.mr.vessel-of-the-dragons.l3.3"
           }
         ],
         "4": [
           {
             "Name": "Immunity to Non-Damaging Non-Magical effects",
-            "AbilityRef": "ability.mr.vessel-of-the-dragons.l4",
-            "Type": "Static",
-            "Effect": "Immune to non-damaging effects that are not magical in nature."
+            "AbilityRef": "ability.mr.vessel-of-the-dragons.l4"
           }
         ],
         "5": [
           {
             "Name": "Magic only for unconsciousness/broken locs",
-            "AbilityRef": "ability.mr.vessel-of-the-dragons.l5",
-            "Type": "Static",
-            "Effect": "Can only be knocked unconscious or have locations stop through magical means."
+            "AbilityRef": "ability.mr.vessel-of-the-dragons.l5"
           }
         ],
         "6": [
           {
             "Name": "Immune to Non-Magic",
-            "AbilityRef": "ability.mr.vessel-of-the-dragons.l6",
-            "Type": "Static",
-            "Effect": "Now completely immune to all except Magic."
+            "AbilityRef": "ability.mr.vessel-of-the-dragons.l6"
           }
         ]
       },
@@ -5074,32 +4237,20 @@
       "Levels": {
         "1": [
           {
-            "Name": "Tribal Conversion",
-            "AbilityRef": "ability.mr.winter-barbarian.l1",
-            "Type": "Static",
-            "Effect": "Counts in all ways as Tribal from this point and may join only a Winter Barbarian tribe."
+            "AbilityRef": "ability.mr.winter-barbarian.l1"
           },
           {
-            "Name": "Human Life Scale by Class",
-            "AbilityRef": "ability.mr.winter-barbarian.l1.2",
-            "Type": "Static",
-            "Effect": "Life now as Human of same base class by level."
+            "AbilityRef": "ability.mr.winter-barbarian.l1.2"
           }
         ],
         "2": [
           {
-            "Name": "Cold Survival",
-            "AbilityRef": "ability.mr.winter-barbarian.l2",
-            "Type": "Static",
-            "Effect": "Gains Survival as Ranger in cold environments only."
+            "AbilityRef": "ability.mr.winter-barbarian.l2"
           }
         ],
         "3": [
           {
-            "Name": "Slip Innate",
             "AbilityRef": "ability.mr.winter-barbarian.l3",
-            "Type": "Innate",
-            "Effect": "Gains one innate Slip.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -5108,10 +4259,7 @@
         ],
         "4": [
           {
-            "Name": "Wall of Ice Innate",
             "AbilityRef": "ability.mr.winter-barbarian.l4",
-            "Type": "Innate",
-            "Effect": "Gains one innate Wall of Ice.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -5120,18 +4268,12 @@
         ],
         "5": [
           {
-            "Name": "Cold Perception",
-            "AbilityRef": "ability.mr.winter-barbarian.l5",
-            "Type": "Static",
-            "Effect": "Gains Perception skill as Ranger in ice/snow surroundings only."
+            "AbilityRef": "ability.mr.winter-barbarian.l5"
           }
         ],
         "6": [
           {
-            "Name": "Freeze (Touch) Innate",
             "AbilityRef": "ability.mr.winter-barbarian.l6",
-            "Type": "Innate",
-            "Effect": "Gains innate Freeze(t) x1/day as touch-range non-level-based Freeze glyph.",
             "Count": 1
           }
         ]

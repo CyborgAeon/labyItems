@@ -849,8 +849,6 @@ public sealed class WizardVm : INotifyPropertyChanged
         }).ConfigureAwait(false);
 
         cancellationToken.ThrowIfCancellationRequested();
-        await CharacterBuilderVm.SyncDraftLifeAsync().ConfigureAwait(false);
-        cancellationToken.ThrowIfCancellationRequested();
         await CharacterBuilderVm.RefreshDraftAbilitiesAsync(cancellationToken).ConfigureAwait(false);
         cancellationToken.ThrowIfCancellationRequested();
         await EnsureAbilityCostIndexAsync().ConfigureAwait(false);

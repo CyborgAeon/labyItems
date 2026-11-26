@@ -25,6 +25,9 @@ public static class MauiProgram
 	public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
+#if ANDROID
+        builder.ConfigureMauiHandlers(handlers => handlers.AddHandler<labyItems.Controls.LoginEntry, labyItems.Platforms.Android.LoginEntryHandler>());
+#endif
         CalendarEventStore.Shared.Cache = new FileCalendarEventCache(Path.Combine(FileSystem.AppDataDirectory, "calendar-cache"));
         LabyrintheSession.Shared.AccountProfiles = new AccountProfileCache(
             () => SecureStorage.Default.GetAsync("labyrinthe.account-profile.v1"),

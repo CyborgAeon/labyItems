@@ -1,3 +1,4 @@
+using labyItems.Models.Guilds;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -13,6 +14,7 @@ using labyItems.Models.DTOs;
 using labyItems.Pages.Characters.ViewModels;
 using labyItems.Services;
 using labyItems.Helpers;
+using labyItems.Services.Guilds;
 using Microsoft.Maui.ApplicationModel;
 using ServiceCharacterClassRecord = labyItems.Services.CharacterClassRecord;
 
@@ -122,8 +124,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             await EnsureReferenceCardsLoadedAsync();
 
             await CaptureHumanLifeForSelectedClassAsync();
-            await UpdateDraftLifeAsync();
-
             await SpecialisationVm.ReloadAsync();
 
             await RefreshDraftAbilitiesAsync();
@@ -165,7 +165,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     public async Task ReleaseScreenCacheAsync()
     {
-        _selectionPipelineCts?.Cancel();
+        CancelSelectionPipeline();
         SpecialisationVm.CancelReloads();
         _referenceCardsLoaded = false;
         _allowedRaceKeysForSelectedClass = null;
@@ -551,7 +551,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             await Task.Yield();
             cancellationToken.ThrowIfCancellationRequested();
 
-            await CaptureHumanLifeForSelectedClassAsync();
+            await CaptureHumanLifeForSelectedClassAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
 
             await RefreshAllowedRacesForSelectedClassAsync();
@@ -568,14 +568,10 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 RefilterClasses();
             }
 
-            await UpdateDraftLifeAsync();
-            cancellationToken.ThrowIfCancellationRequested();
-
             await SpecialisationVm.ReloadAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
 
             await RefreshDraftAbilitiesAsync(cancellationToken);
-            _notifyWizardGatingChanged();
         });
     }
 
@@ -640,9 +636,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             await ApplyRaceToClassesAsync(_draft.Race);
             cancellationToken.ThrowIfCancellationRequested();
 
-            await UpdateDraftLifeAsync();
-            cancellationToken.ThrowIfCancellationRequested();
-
             if (!classStillValid)
                 RefilterRaces();
             cancellationToken.ThrowIfCancellationRequested();
@@ -651,26 +644,23 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             cancellationToken.ThrowIfCancellationRequested();
 
             await RefreshDraftAbilitiesAsync(cancellationToken);
-            _notifyWizardGatingChanged();
         });
     }
 
     private void RunSelectionPipeline(Func<CancellationToken, Task> pipeline)
     {
         SpecialisationVm.CancelReloads();
-        _selectionPipelineCts?.Cancel();
-        _selectionPipelineCts?.Dispose();
-
         var cts = new CancellationTokenSource();
-        _selectionPipelineCts = cts;
+        var token = cts.Token;
+        CancelAndDispose(Interlocked.Exchange(ref _selectionPipelineCts, cts));
 
         UiDispatchHelper.RunFireAndForget(async () =>
         {
             try
             {
-                await pipeline(cts.Token).ConfigureAwait(false);
+                await pipeline(token).ConfigureAwait(false);
             }
-            catch (OperationCanceledException) when (cts.IsCancellationRequested)
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
             {
             }
             catch (Exception ex)
@@ -679,12 +669,22 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             }
             finally
             {
-                if (ReferenceEquals(_selectionPipelineCts, cts))
-                    _selectionPipelineCts = null;
-
-                cts.Dispose();
+                if (ReferenceEquals(Interlocked.CompareExchange(ref _selectionPipelineCts, null, cts), cts))
+                    cts.Dispose();
             }
         }, "CHARACTER_BUILDER_SELECTION_PIPELINE");
+    }
+
+    private void CancelSelectionPipeline()
+        => CancelAndDispose(Interlocked.Exchange(ref _selectionPipelineCts, null));
+
+    private static void CancelAndDispose(CancellationTokenSource? source)
+    {
+        if (source == null)
+            return;
+
+        using (source)
+            source.Cancel();
     }
 
     private void ResetDependentDraftSelections()
@@ -698,6 +698,9 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         _draft.SpecialisationSelections.Clear();
         _draft.Guilds.Clear();
         _draft.GuildBenefitSelections.Clear();
+        _draft.GuildGrantSelections.Clear();
+        _draft.AdventureGuildGrantSelections.Clear();
+        _draft.CompletedGuildAdventureMigrations.Clear();
         _draft.GuildOverrideRules = new GuildOverrideRules();
         _draft.Alignment = null;
         _draft.Abilities.Clear();
@@ -917,7 +920,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         });
     }
 
-    private async Task CaptureHumanLifeForSelectedClassAsync()
+    private async Task CaptureHumanLifeForSelectedClassAsync(CancellationToken cancellationToken = default)
     {
         var className = (_draft.Class ?? string.Empty).Trim();
         if (className.Length == 0)
@@ -926,9 +929,14 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             return;
         }
 
-        _humanLifeForSelectedClass = await GetLifePointAsync("Human", className)
-                                     ?? await GetLifePointAsync(string.Empty, className);
-        if (_humanLifeForSelectedClass is LifeScalePoint humanLife)
+        var lifePoint = await GetLifePointAsync("Human", className)
+                        ?? await GetLifePointAsync(string.Empty, className);
+        cancellationToken.ThrowIfCancellationRequested();
+        if (!string.Equals(className, _draft.Class?.Trim(), StringComparison.OrdinalIgnoreCase))
+            return;
+
+        _humanLifeForSelectedClass = lifePoint;
+        if (lifePoint is LifeScalePoint humanLife)
         {
             _draft.TBLP = humanLife.Body;
             _draft.Loc = humanLife.Loc;
@@ -960,7 +968,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         return ResolveRaceKeyForLifeScale(_draft);
     }
 
-    private async Task UpdateDraftLifeAsync()
+    private async Task UpdateDraftLifeAsync(CancellationToken cancellationToken)
     {
         var className = (_draft.Class ?? string.Empty).Trim();
         if (className.Length == 0)
@@ -973,7 +981,9 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         await EnsureHumanLifeCachedAsync();
 
         var raceKey = GetEffectiveLifeScaleRaceKey();
+        cancellationToken.ThrowIfCancellationRequested();
         var lifePoint = await GetLifePointAsync(raceKey, className);
+        cancellationToken.ThrowIfCancellationRequested();
 
         if (lifePoint is null)
         {
@@ -1003,9 +1013,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         return Math.Clamp(idx, 0, life.Count - 1);
     }
 
-    public Task SyncDraftLifeAsync()
-        => UpdateDraftLifeAsync();
-
     public async Task RefreshDraftAbilitiesAsync(CancellationToken cancellationToken = default)
     {
         var lockTaken = false;
@@ -1025,9 +1032,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 cancellationToken.ThrowIfCancellationRequested();
                 var (classAbilities, classRecord, classGuildRules) = await BuildClassAbilitiesAsync().ConfigureAwait(false);
                 cancellationToken.ThrowIfCancellationRequested();
-                var (specAbilities, specGuildRules) = await SpecialisationVm.BuildSelectedAbilityDraftsWithRulesAsync().ConfigureAwait(false);
-                var specAlignmentRules = await SpecialisationVm.BuildSelectedAlignmentRulesAsync().ConfigureAwait(false);
-                var guildAbilities = await BuildGuildAbilitiesAsync().ConfigureAwait(false);
+                var (specAbilities, specGuildRules, specAlignmentRules) = await SpecialisationVm.BuildSelectedResolutionAsync().ConfigureAwait(false);
+                var guildAbilities = await BuildGuildAbilitiesAsync(classRecord, raceAbilities, classAbilities, specAbilities).ConfigureAwait(false);
                 cancellationToken.ThrowIfCancellationRequested();
 
                 abilities.AddRange(raceAbilities);
@@ -1037,7 +1043,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
                 abilities = ConsolidateAbilities(abilities);
 
-                await UpdateDraftLifeAsync().ConfigureAwait(false);
+                await UpdateDraftLifeAsync(cancellationToken).ConfigureAwait(false);
                 cancellationToken.ThrowIfCancellationRequested();
                 ApplyLifeBonuses(abilities);
 
@@ -1066,10 +1072,14 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 await UpdateAvailableAlignmentsAsync(specAlignmentRules).ConfigureAwait(false);
             }, cancellationToken).ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
-            await SpecialisationVm.RefreshPrereqOptionsAsync().ConfigureAwait(false);
+            await SpecialisationVm.RefreshPrereqOptionsAsync(cancellationToken).ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
 
-            MainThread.BeginInvokeOnMainThread(_notifyWizardGatingChanged);
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                if (!cancellationToken.IsCancellationRequested)
+                    _notifyWizardGatingChanged();
+            });
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
@@ -1104,8 +1114,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         ApplyAbilityUpdates(baseAbilities, updates);
 
         var ordered = new List<AbilityDraft>();
-        var innateLookup = new Dictionary<string, AbilityDraft>(StringComparer.OrdinalIgnoreCase);
-        var armourMaxBySource = BuildArmourMaxBySource(baseAbilities);
+        var addedLegacyNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var armourMaxBySource = BuildArmourMaxBySource(baseAbilities, out var armourByAbility);
         var lifeAbilities = new List<AbilityDraft>();
 
         foreach (var ability in baseAbilities)
@@ -1113,8 +1123,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             var name = (ability.Name ?? string.Empty).Trim();
             if (name.Length == 0) continue;
 
-            var isArmour = IsArmourAbility(ability, out var armourValues);
-            if (isArmour && !IsMaxArmourForSource(ability, armourValues, armourMaxBySource))
+            var isArmour = armourByAbility.TryGetValue(ability, out var armourValues);
+            if (armourValues != null && !IsMaxArmourForSource(ability, armourValues, armourMaxBySource))
                 continue;
 
             if (ability.AbilityType == AbilityType.Life)
@@ -1123,30 +1133,12 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 continue;
             }
 
-            if (ability.AbilityType == AbilityType.Innate)
+            if (ability.GrantInstanceId == null)
             {
-                if (innateLookup.TryGetValue(name, out var existing))
-                {
-                    existing.Count = (existing.Count ?? 0) + (ability.Count ?? 0);
-                    if (ability.LevelGained.HasValue && (!existing.LevelGained.HasValue || ability.LevelGained.Value < existing.LevelGained.Value))
-                        existing.LevelGained = ability.LevelGained;
-
-                    if (string.IsNullOrWhiteSpace(existing.Effect) && !string.IsNullOrWhiteSpace(ability.Effect))
-                        existing.Effect = ability.Effect;
-
-                    CollectionHelper.AddDistinct(existing.PreReqs, ability.PreReqs);
-                    CollectionHelper.AddDistinct(existing.GuildOverrides, ability.GuildOverrides);
-
+                var firstEntry = addedLegacyNames.Add(name);
+                if (!firstEntry && !isArmour && ability.AbilityType != AbilityType.Innate)
                     continue;
-                }
-
-                innateLookup[name] = ability;
-                ordered.Add(ability);
-                continue;
             }
-
-            if (!isArmour && ordered.Any(a => string.Equals(a.Name, name, StringComparison.OrdinalIgnoreCase)))
-                continue;
 
             ordered.Add(ability);
         }
@@ -1201,7 +1193,9 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             var source = kvp.Key;
             var amount = kvp.Value;
             var baseDraft = bestDraftBySource.TryGetValue(source, out var draft) ? draft : null;
-            list.Add(BuildLifeDraft(amount, source, baseDraft?.LevelGained));
+            list.Add(baseDraft?.GrantInstanceId != null
+                ? baseDraft
+                : BuildLifeDraft(amount, source, baseDraft?.LevelGained));
         }
 
         if (tablesTblp > 0 || tablesLoc > 0)
@@ -1327,7 +1321,12 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             if (!lookup.TryGetValue(key, out var list))
                 continue;
 
-            ApplyAbilityUpdates(list, update);
+            var guildUpdate = update.Source?.StartsWith("Guild:", StringComparison.OrdinalIgnoreCase) == true;
+            var targets = guildUpdate
+                ? list.Where(ability => string.Equals(ability.Source, update.Source, StringComparison.OrdinalIgnoreCase)).ToList()
+                : list.Where(ability => ability.GrantInstanceId == null).ToList();
+            if (targets.Count > 0)
+                ApplyAbilityUpdates(targets, update);
         }
     }
 
@@ -1407,8 +1406,11 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         }
     }
 
-    private static Dictionary<(string Source, string Stat), int> BuildArmourMaxBySource(IEnumerable<AbilityDraft> abilities)
+    private static Dictionary<(string Source, string Stat), int> BuildArmourMaxBySource(
+        IEnumerable<AbilityDraft> abilities,
+        out Dictionary<AbilityDraft, Dictionary<string, int>> armourByAbility)
     {
+        armourByAbility = new Dictionary<AbilityDraft, Dictionary<string, int>>();
         var map = new Dictionary<(string, string), int>();
 
         foreach (var ability in abilities ?? Enumerable.Empty<AbilityDraft>())
@@ -1416,14 +1418,13 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             if (ability == null)
                 continue;
 
-            var source = (ability.Source ?? string.Empty).Trim();
-            if (source.Length == 0)
-                continue;
-
             if (!IsArmourAbility(ability, out var values))
                 continue;
 
-            UpdateArmourMaxForAbility(map, source, values);
+            armourByAbility[ability] = values;
+            var source = (ability.Source ?? string.Empty).Trim();
+            if (source.Length != 0)
+                UpdateArmourMaxForAbility(map, source, values);
         }
 
         return map;
@@ -1469,7 +1470,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     private static bool IsArmourAbility(AbilityDraft ability, out Dictionary<string, int> armourValues)
     {
         armourValues = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-        if (ability == null)
+        if (ability == null || ability.HasConditionalArmour || ability.IsActivatedGrant)
             return false;
 
         if (TryAddArmourValueFromType(ability, armourValues))
@@ -1549,7 +1550,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     private static int ComputeInnateRank(AbilityDraft ability)
     {
-        return AbilityDraftBuilder.ResolveInnateRank(ability, achievedLevel: 8);
+        return AbilityDraftBuilder.ResolveInnateRank(ability);
     }
 
     private static InnateAbilityDraft? BuildInnateDraft(AbilityDraft ability)
@@ -1710,7 +1711,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         return (list, record, guildRules);
     }
 
-    private async Task<List<AbilityDraft>> BuildGuildAbilitiesAsync()
+    private async Task<List<AbilityDraft>> BuildGuildAbilitiesAsync(
+        ServiceCharacterClassRecord? classRecord, params IReadOnlyList<AbilityDraft>[] abilitySources)
     {
         var list = new List<AbilityDraft>();
 
@@ -1718,9 +1720,42 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             return list;
 
         var all = await _creationDataService.GetGuildsAsync();
+        var people = await _creationDataService.GetPeopleAsync();
+        _creationDataService.TryGetByName(people, Draft.Race ?? string.Empty, out var raceRecord);
+
+        IEnumerable<string>? ResolveGrantContext(string field) => field.Trim().ToLowerInvariant() switch
+        {
+            "bracket" or "brackets" => classRecord?.Brackets,
+            "peopletype" or "peopletypes" => raceRecord?.PeopleType,
+            "ability" or "abilities" => abilitySources.SelectMany(abilities => abilities)
+                .SelectMany(ability => new[] { ability.AbilityKey ?? string.Empty, ability.Name }),
+            _ => null
+        };
+
         foreach (var guild in Draft.Guilds.Distinct(StringComparer.OrdinalIgnoreCase))
         {
-            if (!_creationDataService.TryGetByName(all, guild, out var rec) || rec?.Benefits?.Basic == null)
+            if (!_creationDataService.TryGetByName(all, guild, out var rec) || rec == null)
+                continue;
+
+            var resolution = GuildCharacterBenefitResolver.ResolveGrants(rec, Draft, guild, ResolveGrantContext);
+
+            GuildCharacterBenefitResolver.ApplyVerifiedMigrations(Draft, guild, resolution);
+
+            foreach (var grant in resolution.Grants)
+            {
+                var ability = GuildCharacterBenefitResolver.MaterializeGrant(rec, grant);
+                if (string.IsNullOrWhiteSpace(ability.Name))
+                    continue;
+
+                var parsed = AbilityDraftBuilder.ParseAbility(ability, null);
+                var source = GuildCharacterBenefitResolver.GetGrantSource(guild, grant);
+                foreach (var draft in parsed)
+                    draft.Source = source;
+                list.AddRange(parsed);
+            }
+
+            if (rec.RawBenefits.Basic.Concat(rec.RawBenefits.Intermediate).Concat(rec.RawBenefits.Advanced)
+                .All(entry => entry.Node != null))
                 continue;
 
             var guildType = (rec.Type ?? string.Empty).Trim();
@@ -1746,6 +1781,9 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         var optionIndex = 0;
         foreach (var entry in benefits ?? Enumerable.Empty<GuildBenefitEntry>())
         {
+            if (entry?.Node != null)
+                continue;
+
             if (entry?.Ability != null)
             {
                 var benefit = entry.Ability;

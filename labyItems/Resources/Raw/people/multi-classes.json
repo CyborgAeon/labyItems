@@ -1,5 +1,5 @@
 {
-  "$schemaVersion": 1,
+  "$schemaVersion": 2,
   "metadata": {
     "Source": "Classes.pdf pages 24-78",
     "AdvancedClassStartAtFirstLevelAllowed": false,
@@ -92,17 +92,12 @@
       "Levels": {
         "1": [
           {
-            "Name": "DAC +4",
-            "AbilityRef": "ability.mc.acrobat.l1",
-            "Type": "Static",
-            "Effect": "+4 DAC only vs. blows struck while Leaping, Back Flipping or Hand Springing, which may exceed the Acrobat's normal max AC (not above 12). No abilities in this class may be used when wearing armour heavier than studded leather"
+            "AbilityRef": "ability.mc.acrobat.l1"
           }
         ],
         "2": [
           {
-            "Name": "Salmon Leap",
             "AbilityRef": "ability.salmon-leap",
-            "Type": "Innate",
             "Effect": "Salmon Leap x1/2 levels as tables",
             "Progression": {
               "Amount": 1,
@@ -112,10 +107,7 @@
         ],
         "3": [
           {
-            "Name": "Back Flip",
             "AbilityRef": "ability.mc.acrobat.l3",
-            "Type": "Innate",
-            "Effect": "As tables.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -124,18 +116,12 @@
         ],
         "4": [
           {
-            "Name": "DAC +1",
-            "AbilityRef": "ability.mc.acrobat.l4",
-            "Type": "Static",
-            "Effect": "+1 DAC"
+            "AbilityRef": "ability.mc.acrobat.l4"
           }
         ],
         "5": [
           {
-            "Name": "Hand Spring",
             "AbilityRef": "ability.mc.acrobat.l5",
-            "Type": "Innate",
-            "Effect": "This allows the acrobat to spring ten feet in any direction, as per a Leap, at the end of any other Jump or Back Flip (not after a Hand Spring). Must have one hand free when this is used",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -147,10 +133,7 @@
         ],
         "6": [
           {
-            "Name": "Leap Strike",
             "AbilityRef": "ability.mc.acrobat.l6",
-            "Type": "Innate",
-            "Effect": "May strike a blow x1/2 levels  during a Leap or Back Flip (not during a Hand Spring). This blow has a maximum of 24pt Quad. Only one blow may be struck during a single Leap using this ability. Lightning Reactions grants immunity to this blow",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -470,26 +453,17 @@
       "Levels": {
         "1": [
           {
-            "Name": "May drink an additional two 6pt cure potions per day for each level of",
-            "AbilityRef": "ability.mc.adept.l1",
-            "Type": "Static",
-            "Effect": "This multi-class bought. Is no longer limited to a maximum drinkable per hour"
+            "AbilityRef": "ability.mc.adept.l1"
           }
         ],
         "2": [
           {
-            "Name": "NAC +1",
-            "AbilityRef": "ability.mc.adept.l2",
-            "Type": "Static",
-            "Effect": "+1 NAC (Neuronic Armour Class) - this reduces incoming neuronic damage by 1pt to the head and 1pt tblp for each point of NAC possessed before any other reductions"
+            "AbilityRef": "ability.mc.adept.l2"
           }
         ],
         "3": [
           {
-            "Name": "May now use neuronics 30 seconds after suffering an Emotion effect (as",
             "AbilityRef": "ability.mc.adept.l3",
-            "Type": "Static",
-            "Effect": "Per Oraculum Insight, rather than five minutes*",
             "AsPerAbilityRefs": [
               "ability.oraculum-insight"
             ]
@@ -497,32 +471,20 @@
         ],
         "4": [
           {
-            "Name": "NAC +2 (Total)",
-            "AbilityRef": "ability.mc.adept.l4",
-            "Type": "Static",
-            "Effect": "+2 NAC (total)"
+            "AbilityRef": "ability.mc.adept.l4"
           }
         ],
         "5": [
           {
-            "Name": "Now always rounds incoming neuronic damage down to the nearest whole",
-            "AbilityRef": "ability.mc.adept.l5",
-            "Type": "Static",
-            "Effect": "Point below, where applicable"
+            "AbilityRef": "ability.mc.adept.l5"
           }
         ],
         "6": [
           {
-            "Name": "NAC +3 (Total)",
-            "AbilityRef": "ability.mc.adept.l6.1",
-            "Type": "Static",
-            "Effect": "+3 NAC (total)."
+            "AbilityRef": "ability.mc.adept.l6.1"
           },
           {
-            "Name": "Neural Foci Casting Reduction",
             "AbilityRef": "ability.mc.adept.l6.2",
-            "Type": "Static",
-            "Effect": "May use Neural Foci to reduce casting damage from own neuronics to 1/6 original cost (rounded up), from 1/3. Psi-Drowe, Silver Folk neuronic classes and Awakeners who buy this class do not receive the level 3 ability, instead gaining 'half-damage from incoming neuronics' as per other neuronic classes.",
             "AsPerAbilityRefs": [
               "ability.half-damage-from-incoming-neuronics"
             ]
@@ -715,51 +677,35 @@
       "Levels": {
         "1": [
           {
-            "Name": "Well Equipped",
             "AbilityRef": "ability.well-equipped",
-            "Type": "Static",
             "Effect": "Gains Well Equipped with 2 power of standard scrolls per level of this class. These can be magical or spiritual. All objects in this class must have appropriate phys reps"
           }
         ],
         "2": [
           {
-            "Name": "Well Equipped",
             "AbilityRef": "ability.well-equipped",
-            "Type": "Static",
             "Effect": "Well Equipped with two 6 point healing potions per level of this class"
           }
         ],
         "3": [
           {
-            "Name": "Contacts",
-            "AbilityRef": "ability.mc.adventurer.l3",
-            "Type": "Static",
-            "Effect": "Starts the dungeon with 6 ISP of standard items. These may clearly not benefit from once ever uses or similar reductions, and are personalised to the owner"
+            "AbilityRef": "ability.mc.adventurer.l3"
           }
         ],
         "4": [
           {
-            "Name": "Seen it all before",
             "AbilityRef": "ability.mc.adventurer.l4",
-            "Type": "Innate",
-            "Effect": "Acts as a knowledge based major prayer about a ward/creature/similar that mercenaries may have chatted about in the tavern",
             "Count": 1
           }
         ],
         "5": [
           {
-            "Name": "Word of Warning",
-            "AbilityRef": "ability.mc.adventurer.l5",
-            "Type": "Static",
-            "Effect": "A pre-dungeon lucky idea about what equipment would be useful to have"
+            "AbilityRef": "ability.mc.adventurer.l5"
           }
         ],
         "6": [
           {
-            "Name": "Improved Contacts",
-            "AbilityRef": "ability.mc.adventurer.l6",
-            "Type": "Static",
-            "Effect": "Starts the dungeon with 12 ISP of standard items. These may clearly not benefit from once ever uses or similar reductions, and are personalised to the owner."
+            "AbilityRef": "ability.mc.adventurer.l6"
           }
         ]
       },
@@ -794,50 +740,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "May choose one glyph of grey or own colour of up to 3rd level (following",
-            "AbilityRef": "ability.mc.alchemist.l1",
-            "Type": "Craft",
-            "Effect": "Restrictions set out below) and make one potion of this glyph per level of skill in Make General Potions, per day, at a cost of 150 Grulls per dose"
+            "AbilityRef": "ability.mc.alchemist.l1"
           }
         ],
         "2": [
           {
-            "Name": "Additional Glyph Brewing",
-            "AbilityRef": "ability.mc.alchemist.l2",
-            "Type": "Craft",
-            "Effect": "May choose another glyph exactly as level 1 above to manufacture, with the same restrictions"
+            "AbilityRef": "ability.mc.alchemist.l2"
           }
         ],
         "3": [
           {
-            "Name": "Additional Specialist Glyph Brewing",
-            "AbilityRef": "ability.mc.alchemist.l3",
-            "Type": "Craft",
-            "Effect": "May choose another glyph exactly as level 1 above to manufacture, with the same restrictions, except that this glyph may additionally be a specialist glyph known by the alchemist, if desired"
+            "AbilityRef": "ability.mc.alchemist.l3"
           }
         ],
         "4": [
           {
-            "Name": "May choose one glyph of grey or own colour of up to 4th level and make",
-            "AbilityRef": "ability.mc.alchemist.l4",
-            "Type": "Craft",
-            "Effect": "One potion of this glyph for each two levels of skill as above, per day, at a cost of 200 Grulls per dose"
+            "AbilityRef": "ability.mc.alchemist.l4"
           }
         ],
         "5": [
           {
-            "Name": "May choose one glyph of grey or own colour of up to 6th level and make",
-            "AbilityRef": "ability.mc.alchemist.l5",
-            "Type": "Craft",
-            "Effect": "One potion of this glyph for each two levels of skill as above, per day, at a cost of 300 Grulls per dose"
+            "AbilityRef": "ability.mc.alchemist.l5"
           }
         ],
         "6": [
           {
-            "Name": "May choose one glyph of grey or own colour of up to 8th level and make",
-            "AbilityRef": "ability.mc.alchemist.l6",
-            "Type": "Craft",
-            "Effect": "One potion of this glyph for each three levels of skill as above, per day, at a cost of 400 Grulls per day. Glyphs chosen as above must be recorded on the character card at the time of choice, and may not be changed. Potions may only be made of 'self' range glyphs, summonations, or touch-range glyphs, in which case they are considered salves in the manner of blade venom and must be applied to the target directly. The potions created by this class as above are all considered to be adventure-temporary only, and no cards are ever issued, unless 'Permanence' below is bought"
+            "AbilityRef": "ability.mc.alchemist.l6"
           }
         ]
       },
@@ -902,23 +830,15 @@
       "Levels": {
         "1": [
           {
-            "Name": "Arch-Druid Earthpower Pool",
-            "AbilityRef": "ability.mc.arch-druid.l1.1",
-            "Type": "LevelOfPower:Earthpower",
-            "Effect": "+6 EP, non-cumulative with other EP from multi-classes, or 8 EP of innates."
+            "AbilityRef": "ability.mc.arch-druid.l1.1"
           },
           {
-            "Name": "Recognise Arch-Druid",
-            "AbilityRef": "ability.mc.arch-druid.l1.2",
-            "Type": "AtWill",
-            "Effect": "Recognise Arch-Druid at will, line-of-sight range."
+            "AbilityRef": "ability.mc.arch-druid.l1.2"
           }
         ],
         "2": [
           {
-            "Name": "Command (Non-Arch) Druid",
             "AbilityRef": "ability.mc.arch-druid.l2",
-            "Type": "Innate",
             "Effect": "As per an earthpower, non-level based Voice of Power of up to 3 words in length. This Command cannot be suicidal in nature, and must take into account the respect all Druids have for each other",
             "Count": 1,
             "AsPerAbilityRefs": [
@@ -928,34 +848,22 @@
         ],
         "3": [
           {
-            "Name": "+18 Earthpower total, or 24 EP of innates",
-            "AbilityRef": "ability.mc.arch-druid.l3",
-            "Type": "LevelOfPower:Earthpower",
-            "Effect": "+18 Earthpower total, or 24 EP of innates."
+            "AbilityRef": "ability.mc.arch-druid.l3"
           }
         ],
         "4": [
           {
-            "Name": "Total Neutrality to Animals and Plants",
-            "AbilityRef": "ability.mc.arch-druid.l4",
-            "Type": "Static",
-            "Effect": "Total Neutrality to normal and giant animals and plants - loses all multi-class benefits if ever broken"
+            "AbilityRef": "ability.mc.arch-druid.l4"
           }
         ],
         "5": [
           {
-            "Name": "+30 Earthpower total, or 40 EP of innates",
-            "AbilityRef": "ability.mc.arch-druid.l5",
-            "Type": "LevelOfPower:Earthpower",
-            "Effect": "+30 Earthpower total, or 40 EP of innates."
+            "AbilityRef": "ability.mc.arch-druid.l5"
           }
         ],
         "6": [
           {
-            "Name": "Chosen of the Horned Man/Mother Nature (Half Cost)",
-            "AbilityRef": "ability.mc.arch-druid.l6",
-            "Type": "Static",
-            "Effect": "May buy Chosen of the Horned Man and Chosen of Mother Nature at half-cost"
+            "AbilityRef": "ability.mc.arch-druid.l6"
           }
         ]
       },
@@ -1085,62 +993,38 @@
       "Levels": {
         "1": [
           {
-            "Name": "+6 mana, or 8 mana of innates",
-            "AbilityRef": "ability.mc.arch-mage.l1",
-            "Type": "LevelOfPower:Mana",
-            "Effect": "+6 mana, or 8 mana of innates"
+            "AbilityRef": "ability.mc.arch-mage.l1"
           }
         ],
         "2": [
           {
-            "Name": "+12 mana, or 16 mana of innates",
-            "AbilityRef": "ability.mc.arch-mage.l2",
-            "Type": "LevelOfPower:Mana",
-            "Effect": "+12 mana, or 16 mana of innates"
+            "AbilityRef": "ability.mc.arch-mage.l2"
           }
         ],
         "3": [
           {
-            "Name": "+18 mana, or 24 mana of innates",
-            "AbilityRef": "ability.mc.arch-mage.l3.1",
-            "Type": "LevelOfPower:Mana",
-            "Effect": "+18 mana, or 24 mana of innates"
+            "AbilityRef": "ability.mc.arch-mage.l3.1"
           },
           {
-            "Name": "Spell Casting Level +1",
-            "AbilityRef": "ability.mc.arch-mage.l3.2",
-            "Type": "Static",
-            "Effect": "+1 level for casting spells."
+            "AbilityRef": "ability.mc.arch-mage.l3.2"
           }
         ],
         "4": [
           {
-            "Name": "+24 mana, or 32 mana of innates",
-            "AbilityRef": "ability.mc.arch-mage.l4",
-            "Type": "LevelOfPower:Mana",
-            "Effect": "+24 mana, or 32 mana of innates"
+            "AbilityRef": "ability.mc.arch-mage.l4"
           }
         ],
         "5": [
           {
-            "Name": "+30 mana, or 40 mana of innates",
-            "AbilityRef": "ability.mc.arch-mage.l5",
-            "Type": "LevelOfPower:Mana",
-            "Effect": "+30 mana, or 40 mana of innates"
+            "AbilityRef": "ability.mc.arch-mage.l5"
           }
         ],
         "6": [
           {
-            "Name": "+36 mana, or 48 mana of innates",
-            "AbilityRef": "ability.mc.arch-mage.l6.1",
-            "Type": "LevelOfPower:Mana",
-            "Effect": "+36 mana, or 48 mana of innates"
+            "AbilityRef": "ability.mc.arch-mage.l6.1"
           },
           {
-            "Name": "Spell Casting Level +2 (Total)",
-            "AbilityRef": "ability.mc.arch-mage.l6.2",
-            "Type": "Static",
-            "Effect": "+2 levels for casting spells (total)."
+            "AbilityRef": "ability.mc.arch-mage.l6.2"
           }
         ]
       },
@@ -1282,26 +1166,17 @@
       "Levels": {
         "1": [
           {
-            "Name": "Armour Mastery vs Pure Weapons",
-            "AbilityRef": "ability.mc.armour-master.l1",
-            "Type": "Static",
-            "Effect": "Armour Mastery may now be applied vs. the relevant Pure Weapons (if the armour would normally apply to them) e.g. Armour Mastery vs. Sharp can apply vs. a Pure Sword. Abilities in this class only apply if a character is wearing Medium or Heavy Armour. Must have Smithing skill"
+            "AbilityRef": "ability.mc.armour-master.l1"
           }
         ],
         "2": [
           {
-            "Name": "Armour Mastery +1 (Sharp/Blunt)",
-            "AbilityRef": "ability.mc.armour-master.l2",
-            "Type": "Static",
-            "Effect": "Gains + 1 point of Armour Mastery vs. Sharp and Blunt, stacking with published Armour Masteries"
+            "AbilityRef": "ability.mc.armour-master.l2"
           }
         ],
         "3": [
           {
-            "Name": "Taking the Hit",
             "AbilityRef": "ability.mc.armour-master.l3",
-            "Type": "Static",
-            "Effect": "As the Warrior Ability",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -1310,27 +1185,18 @@
         ],
         "4": [
           {
-            "Name": "Armour Mastery +2 (Total) (Sharp/Blunt)",
-            "AbilityRef": "ability.mc.armour-master.l4",
-            "Type": "Static",
-            "Effect": "+ 2 Points (total) of Armour Mastery vs. Sharp and Blunt, stacking with published Armour Masteries"
+            "AbilityRef": "ability.mc.armour-master.l4"
           }
         ],
         "5": [
           {
-            "Name": "Armoured Defence",
             "AbilityRef": "ability.mc.armour-master.l5",
-            "Type": "Innate",
-            "Effect": "Grants a five minute Rockskin style reduction to any weapon blow that the user's armour applies vs",
             "Count": 1
           }
         ],
         "6": [
           {
-            "Name": "Armour Mastery +3 (Total) (Sharp/Blunt)",
-            "AbilityRef": "ability.mc.armour-master.l6",
-            "Type": "Static",
-            "Effect": "Now gains +3 (total) points of Armour Mastery vs. Sharp and Blunt, stacking with published Armour Masteries"
+            "AbilityRef": "ability.mc.armour-master.l6"
           }
         ]
       },
@@ -1375,41 +1241,39 @@
         "1": [],
         "2": [
           {
-            "Name": "Daring Deed",
             "AbilityRef": "ability.daring-deed",
-            "Type": "Static",
-            "Effect": "May now use Daring Deed 1/10 minutes"
+            "Effect": "May now use Daring Deed 1/10 minutes",
+            "Usage": {
+              "Uses": 1,
+              "Minutes": 10
+            }
           }
         ],
         "3": [
           {
-            "Name": "Daring Deed",
             "AbilityRef": "ability.daring-deed",
-            "Type": "Static",
             "Effect": "Daring Deed may now be used in response to an attack costing 6 extra life and applying against this attack only. Must be declared within 2 seconds of the attack, and may not be used for Salmon Leap"
           }
         ],
         "4": [
           {
-            "Name": "Daring Deed",
             "AbilityRef": "ability.daring-deed",
-            "Type": "Static",
             "Effect": "When using Daring Deed to gain a Salmon Leap gains Trap Wary with that Salmon Leap for +6TBLP"
           }
         ],
         "5": [
           {
-            "Name": "Daring Deed",
             "AbilityRef": "ability.daring-deed",
-            "Type": "Static",
-            "Effect": "May now use Daring Deed twice per 10 minutes; however the second use costs 6 TBLP extra"
+            "Effect": "May now use Daring Deed twice per 10 minutes; however the second use costs 6 TBLP extra",
+            "Usage": {
+              "Uses": 2,
+              "Minutes": 10
+            }
           }
         ],
         "6": [
           {
-            "Name": "Daring Deed",
             "AbilityRef": "ability.daring-deed",
-            "Type": "Static",
             "Effect": "Daring Deed may now be used for Force Majeure vs. one opponent"
           }
         ]
@@ -1472,41 +1336,31 @@
         "1": [],
         "2": [
           {
-            "Name": "Flick of the Wrist",
             "AbilityRef": "ability.flick-of-the-wrist",
-            "Type": "Static",
             "Effect": "May now use Flick of the Wrist 1/10 minutes"
           }
         ],
         "3": [
           {
-            "Name": "Flick of the Wrist",
             "AbilityRef": "ability.flick-of-the-wrist",
-            "Type": "Static",
             "Effect": "Stunning Blow from Flick of the Wrist is no longer level based"
           }
         ],
         "4": [
           {
-            "Name": "Flick of the Wrist",
             "AbilityRef": "ability.flick-of-the-wrist",
-            "Type": "Static",
             "Effect": "May now use Flick of the Wrist to inflict a non-level based flesh and blood Silence lasting 10 seconds"
           }
         ],
         "5": [
           {
-            "Name": "Flick of the Wrist",
             "AbilityRef": "ability.flick-of-the-wrist",
-            "Type": "Static",
             "Effect": "May now use Flick of the Wrist twice per 10 minutes; however the second use costs 6 TBLP extra"
           }
         ],
         "6": [
           {
-            "Name": "Flick of the Wrist",
             "AbilityRef": "ability.flick-of-the-wrist",
-            "Type": "Static",
             "Effect": "May now use Flick of the Wrist to inflict Shattering Blow for 6 extra life"
           }
         ]
@@ -1568,50 +1422,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "+ 1% chance per level for crafting Neuronic items",
-            "AbilityRef": "ability.mc.artisan-of-the-mind.l1",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.artisan-of-the-mind.l1"
           }
         ],
         "2": [
           {
-            "Name": "½ level loss from crafting Neuronic items",
-            "AbilityRef": "ability.mc.artisan-of-the-mind.l2",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.artisan-of-the-mind.l2"
           }
         ],
         "3": [
           {
-            "Name": "The cost of each roll is reduced by 10%",
-            "AbilityRef": "ability.mc.artisan-of-the-mind.l3",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.artisan-of-the-mind.l3"
           }
         ],
         "4": [
           {
-            "Name": "Place of Power",
-            "AbilityRef": "ability.mc.artisan-of-the-mind.l4",
-            "Type": "Craft",
-            "Effect": "The artisan has their own place of power. Reducing the number of successful rolls needed by 1 (to a minimum of 1). Does not stack with the CC benefit Place of Power"
+            "AbilityRef": "ability.mc.artisan-of-the-mind.l4"
           }
         ],
         "5": [
           {
-            "Name": "The cost of each roll is now reduced by 20% total",
-            "AbilityRef": "ability.mc.artisan-of-the-mind.l5",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.artisan-of-the-mind.l5"
           }
         ],
         "6": [
           {
-            "Name": "Reciprocates Binding no longer has a 5% penalty if making the item for self",
-            "AbilityRef": "ability.mc.artisan-of-the-mind.l6",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.artisan-of-the-mind.l6"
           }
         ]
       },
@@ -1654,24 +1490,15 @@
       "Levels": {
         "1": [
           {
-            "Name": "B-Class Two-Hand Requirement",
-            "AbilityRef": "ability.mc.battlemaster-b.l1.1",
-            "Type": "Static",
-            "Effect": "No abilities are gained except when a 'B'-class weapon is being used in two hands."
+            "AbilityRef": "ability.mc.battlemaster-b.l1.1"
           },
           {
-            "Name": "Warrior's Eye",
-            "AbilityRef": "ability.mc.battlemaster-b.l1.2",
-            "Type": "AtWill",
-            "Effect": "At will, after 10 seconds of study within 20', may judge a target's physical hits only."
+            "AbilityRef": "ability.mc.battlemaster-b.l1.2"
           }
         ],
         "2": [
           {
-            "Name": "Blade-Fury",
             "AbilityRef": "ability.mc.battlemaster-b.l2",
-            "Type": "Innate",
-            "Effect": "Grants a 6pt damage reduction against all weapon blows for five minutes",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -1680,16 +1507,10 @@
         ],
         "3": [
           {
-            "Name": "B-Class Base Damage +3",
-            "AbilityRef": "ability.mc.battlemaster-b.l3.1",
-            "Type": "Static",
-            "Effect": "Base damage with weapon is increased by 3 points, to 12 points if a bastard weapon, otherwise to 15 points. Normal max damage is exceeded by this increase and it works in combination with other published temporary increases."
+            "AbilityRef": "ability.mc.battlemaster-b.l3.1"
           },
           {
-            "Name": "Heroic Combat",
             "AbilityRef": "ability.mc.battlemaster-b.l3.2",
-            "Type": "Innate",
-            "Effect": "Heroic Combat.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -1698,28 +1519,19 @@
         ],
         "4": [
           {
-            "Name": "Disarm",
             "AbilityRef": "ability.mc.battlemaster-b.l4.1",
-            "Type": "Innate",
-            "Effect": "Disarm.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
             }
           },
           {
-            "Name": "Disarm Mastery +1",
-            "AbilityRef": "ability.mc.battlemaster-b.l4.2",
-            "Type": "Static",
-            "Effect": "+1 mastery for the purpose of Disarms only."
+            "AbilityRef": "ability.mc.battlemaster-b.l4.2"
           }
         ],
         "5": [
           {
-            "Name": "Opponent Study",
             "AbilityRef": "ability.mc.battlemaster-b.l5",
-            "Type": "Innate",
-            "Effect": "Enhances a Blade-Fury to a 9pt reduction versus one opponent only after 30 seconds of calm observation",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -1728,10 +1540,7 @@
         ],
         "6": [
           {
-            "Name": "Base damage with weapon is increased a further 3 pts to 15pts if a",
-            "AbilityRef": "ability.mc.battlemaster-b.l6",
-            "Type": "Static",
-            "Effect": "Bastard weapon or 18 pts if a full B class weapon"
+            "AbilityRef": "ability.mc.battlemaster-b.l6"
           }
         ]
       },
@@ -1944,24 +1753,15 @@
       "Levels": {
         "1": [
           {
-            "Name": "E-Class Dual-Wield Requirement",
-            "AbilityRef": "ability.mc.battlemaster-e.l1.1",
-            "Type": "Static",
-            "Effect": "No abilities are gained except when 'O'-class weapons are being used in each hand."
+            "AbilityRef": "ability.mc.battlemaster-e.l1.1"
           },
           {
-            "Name": "Warrior's Eye",
-            "AbilityRef": "ability.mc.battlemaster-e.l1.2",
-            "Type": "AtWill",
-            "Effect": "At will, after 10 seconds of study within 20', may judge a target's physical hits only."
+            "AbilityRef": "ability.mc.battlemaster-e.l1.2"
           }
         ],
         "2": [
           {
-            "Name": "Blade-Fury",
             "AbilityRef": "ability.mc.battlemaster-e.l2",
-            "Type": "Innate",
-            "Effect": "Grants a 6pt damage reduction against all weapon blows for five minutes",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -1970,28 +1770,19 @@
         ],
         "3": [
           {
-            "Name": "Disarm",
             "AbilityRef": "ability.mc.battlemaster-e.l3.1",
-            "Type": "Innate",
-            "Effect": "Disarm.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
             }
           },
           {
-            "Name": "Disarm Mastery +1",
-            "AbilityRef": "ability.mc.battlemaster-e.l3.2",
-            "Type": "Static",
-            "Effect": "+1 mastery for the purpose of Disarms only."
+            "AbilityRef": "ability.mc.battlemaster-e.l3.2"
           }
         ],
         "4": [
           {
-            "Name": "Weapon-Break",
             "AbilityRef": "ability.mc.battlemaster-e.l4",
-            "Type": "Innate",
-            "Effect": "As per Shatter [t] but delivered through a weapon blow and only affects weapons, armour or shields",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -2003,10 +1794,7 @@
         ],
         "5": [
           {
-            "Name": "Opponent Study",
             "AbilityRef": "ability.mc.battlemaster-e.l5",
-            "Type": "Innate",
-            "Effect": "Enhances a Blade-Fury to a 9pt reduction versus one opponent only after 30 seconds of calm observation",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -2015,16 +1803,10 @@
         ],
         "6": [
           {
-            "Name": "Enhanced Distancing with E",
-            "AbilityRef": "ability.mc.battlemaster-e.l6.1",
-            "Type": "Static",
-            "Effect": "May now utilise Enhanced Distancing skill when using weapons as described at 1st level. Enhanced Distancing must still be purchased as normal."
+            "AbilityRef": "ability.mc.battlemaster-e.l6.1"
           },
           {
-            "Name": "Grand Weapon Break",
             "AbilityRef": "ability.mc.battlemaster-e.l6.2",
-            "Type": "Innate",
-            "Effect": "May enhance one innate Weapon Break such that it works as per a Grand Breaking Blow [Grand Tanashiwara] but only against weapons, shields or armour.",
             "Count": 1,
             "AsPerAbilityRefs": [
               "ability.grand-tanashiwara"
@@ -2305,24 +2087,15 @@
       "Levels": {
         "1": [
           {
-            "Name": "O-Class Weapon Requirement",
-            "AbilityRef": "ability.mc.battlemaster-o.l1.1",
-            "Type": "Static",
-            "Effect": "No abilities are gained except when a single 'O' class weapon is being used, with or without a shield."
+            "AbilityRef": "ability.mc.battlemaster-o.l1.1"
           },
           {
-            "Name": "Warrior's Eye",
-            "AbilityRef": "ability.mc.battlemaster-o.l1.2",
-            "Type": "AtWill",
-            "Effect": "At will, after 10 seconds of study within 20', may judge a target's physical hits only."
+            "AbilityRef": "ability.mc.battlemaster-o.l1.2"
           }
         ],
         "2": [
           {
-            "Name": "Blade-Fury",
             "AbilityRef": "ability.mc.battlemaster-o.l2",
-            "Type": "Innate",
-            "Effect": "Grants a 6pt damage reduction against all weapon blows for five minutes",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -2331,10 +2104,7 @@
         ],
         "3": [
           {
-            "Name": "Opponent Study",
             "AbilityRef": "ability.mc.battlemaster-o.l3",
-            "Type": "Innate",
-            "Effect": "Enhances a Blade-Fury to a 9pt reduction versus one opponent only after 30 seconds of calm observation",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -2343,36 +2113,24 @@
         ],
         "4": [
           {
-            "Name": "Disarm",
             "AbilityRef": "ability.mc.battlemaster-o.l4.1",
-            "Type": "Innate",
-            "Effect": "Disarm.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
             }
           },
           {
-            "Name": "Disarm Mastery +1",
-            "AbilityRef": "ability.mc.battlemaster-o.l4.2",
-            "Type": "Static",
-            "Effect": "+1 mastery for the purpose of Disarms only."
+            "AbilityRef": "ability.mc.battlemaster-o.l4.2"
           }
         ],
         "5": [
           {
-            "Name": "Enhanced Distancing Combat",
-            "AbilityRef": "ability.mc.battlemaster-o.l5",
-            "Type": "Static",
-            "Effect": "From Enhanced Distancing Combat, may use Enhanced Distancing (and later Defensive Combat) with an 'O' class weapon of at least 30\", or if Enhanced Weapon Mastery Shield is possessed is no longer restricted to DAC 6"
+            "AbilityRef": "ability.mc.battlemaster-o.l5"
           }
         ],
         "6": [
           {
-            "Name": "Max",
-            "AbilityRef": "ability.mc.battlemaster-o.l6",
-            "Type": "Static",
-            "Effect": "Damage is now Quin with one weapon in one hand, as above"
+            "AbilityRef": "ability.mc.battlemaster-o.l6"
           }
         ]
       },
@@ -2625,7 +2383,6 @@
       "Levels": {
         "1": [
           {
-            "Name": "Berserk Rage",
             "AbilityRef": "ability.mc.berserker.l1",
             "Type": "AtWill",
             "Effect": "Berserk rage has the following effects.\n• Reduce all incoming damage (supernatural or otherwise) by 50%\n• Double your resistance levels (ie 7 -> 14, 8 -> 16).\n• In this frenzy the Berserker is unable to differentiate friend from foe, and will attack any who look hostile.\n• Berserkers cannot use any non-weapon blow active skill whilst Berserking.\n• Berserkers have no choice about the use of this ability and must engage whenever they are faced with any hostile situation",
@@ -2637,19 +2394,14 @@
         "2": [],
         "3": [
           {
-            "Name": "Berserking Strength +1 (Max 2)",
-            "AbilityRef": "ability.mc.berserker.l3",
-            "Type": "Static",
-            "Effect": "+1 grade of strength whilst Berserking"
+            "AbilityRef": "ability.mc.berserker.l3"
           }
         ],
         "4": [],
         "5": [],
         "6": [
           {
-            "Name": "Berserker Specialist",
             "AbilityRef": "ability.mc.berserker.l6",
-            "Type": "Static",
             "Effect": "Stamina / Unarmed Combat / Enhanced Berserker Spirit",
             "ChoiceSetRefs": [
               "choice.multi-class.berserker.specialist.l6"
@@ -3102,37 +2854,24 @@
       "Levels": {
         "1": [
           {
-            "Name": "Discern Criminal at will, takes 3 seconds inspection, 20' range",
-            "AbilityRef": "ability.mc.bounty-hunter.l1",
-            "Type": "AtWill",
-            "Effect": "Discerns degree of outlawhood (e.g. racially outlawed, 'wolfshead'). This is a physical discern"
+            "AbilityRef": "ability.mc.bounty-hunter.l1"
           }
         ],
         "2": [
           {
-            "Name": "Tracking skill as Ranger",
-            "AbilityRef": "ability.mc.bounty-hunter.l2",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.bounty-hunter.l2"
           }
         ],
         "3": [
           {
-            "Name": "Sniff Skill",
-            "AbilityRef": "ability.mc.bounty-hunter.l3.1",
-            "Type": "Static",
-            "Effect": "Gains Sniff skill and can always identify the smell of a racially outlawed race."
+            "AbilityRef": "ability.mc.bounty-hunter.l3.1"
           },
           {
-            "Name": "Double Reward vs Non-Racial Outlaws",
-            "AbilityRef": "ability.mc.bounty-hunter.l3.2",
-            "Type": "Static",
-            "Effect": "Now paid double the normal reward for non-racial Outlaws."
+            "AbilityRef": "ability.mc.bounty-hunter.l3.2"
           }
         ],
         "4": [
           {
-            "Name": "Acute Hearing",
             "AbilityRef": "ability.acute-hearing",
             "Type": "Static",
             "Effect": "Gains Acute Hearing skill"
@@ -3140,18 +2879,12 @@
         ],
         "5": [
           {
-            "Name": "+1 cumulative Mastery in one weapon of choice",
-            "AbilityRef": "ability.mc.bounty-hunter.l5",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.bounty-hunter.l5"
           }
         ],
         "6": [
           {
-            "Name": "Enhanced Tracking skill whereby individual tracks can be",
-            "AbilityRef": "ability.mc.bounty-hunter.l6",
-            "Type": "Static",
-            "Effect": "Distinguished from others of same race - takes 'Zombie speed' inspection of area"
+            "AbilityRef": "ability.mc.bounty-hunter.l6"
           }
         ]
       },
@@ -3404,56 +3137,35 @@
       "Levels": {
         "1": [
           {
-            "Name": "DAC +1",
-            "AbilityRef": "ability.mc.chi-warrior.l1.1",
-            "Type": "Static",
-            "Effect": "+1 DAC."
+            "AbilityRef": "ability.mc.chi-warrior.l1.1"
           },
           {
-            "Name": "Chi-Warrior Item Restriction",
-            "AbilityRef": "ability.mc.chi-warrior.l1.2",
-            "Type": "Static",
-            "Effect": "May not use items (as Monk) except spirit-only items manufactured by self or another priest of the same church. Guild items for their church may still be used."
+            "AbilityRef": "ability.mc.chi-warrior.l1.2"
           }
         ],
         "2": [
           {
-            "Name": "DAC +2 (Total)",
-            "AbilityRef": "ability.mc.chi-warrior.l2",
-            "Type": "Static",
-            "Effect": "+2 DAC (total)"
+            "AbilityRef": "ability.mc.chi-warrior.l2"
           }
         ],
         "3": [
           {
-            "Name": "B Skill as Monk (still may not use physical weapons however)",
-            "AbilityRef": "ability.mc.chi-warrior.l3",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.chi-warrior.l3"
           }
         ],
         "4": [
           {
-            "Name": "DAC +3 (Total)",
-            "AbilityRef": "ability.mc.chi-warrior.l4",
-            "Type": "Static",
-            "Effect": "+3 DAC (total)"
+            "AbilityRef": "ability.mc.chi-warrior.l4"
           }
         ],
         "5": [
           {
-            "Name": "DAC +4 (Total)",
-            "AbilityRef": "ability.mc.chi-warrior.l5",
-            "Type": "Static",
-            "Effect": "+4 DAC (total)"
+            "AbilityRef": "ability.mc.chi-warrior.l5"
           }
         ],
         "6": [
           {
-            "Name": "Forearm Parry",
-            "AbilityRef": "ability.mc.chi-warrior.l6",
-            "Type": "Static",
-            "Effect": "Skill"
+            "AbilityRef": "ability.mc.chi-warrior.l6"
           }
         ]
       },
@@ -3606,15 +3318,12 @@
       "Levels": {
         "1": [
           {
-            "Name": "Auric Colour",
             "AbilityRef": "ability.auric-colour",
-            "Type": "AtWill",
             "Effect": "Auric Colour at will (may skip Auric Colour on the active neuronics table). If not already in the neuronic bracket gains potion restrictions as a neuronic class based on levels in this class"
           }
         ],
         "2": [
           {
-            "Name": "Clairvoyance",
             "AbilityRef": "ability.clairvoyance",
             "Type": "Static",
             "Effect": "Clairvoyance x1/level"
@@ -3622,17 +3331,12 @@
         ],
         "3": [
           {
-            "Name": "Psi-Scan x1/level",
-            "AbilityRef": "ability.mc.clairvoyant.l3",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.clairvoyant.l3"
           }
         ],
         "4": [
           {
-            "Name": "Precognition",
             "AbilityRef": "ability.precognition",
-            "Type": "Innate",
             "Effect": "Minor Precognition x1/2 levels",
             "Progression": {
               "Amount": 1,
@@ -3642,10 +3346,7 @@
         ],
         "5": [
           {
-            "Name": "Probe",
             "AbilityRef": "ability.mc.clairvoyant.l5",
-            "Type": "Innate",
-            "Effect": "As tables.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -3654,9 +3355,7 @@
         ],
         "6": [
           {
-            "Name": "Major Precognition",
             "AbilityRef": "ability.major-precognition",
-            "Type": "Innate",
             "Effect": "Major Precognition x1/6 levels",
             "Progression": {
               "Amount": 1,
@@ -3746,36 +3445,24 @@
       "Levels": {
         "1": [
           {
-            "Name": "O Skill as Warrior",
-            "AbilityRef": "ability.mc.defender-of-nature.l1",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.defender-of-nature.l1"
           }
         ],
         "2": [],
         "3": [
           {
-            "Name": "E Skill as Warrior",
-            "AbilityRef": "ability.mc.defender-of-nature.l3",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.defender-of-nature.l3"
           }
         ],
         "4": [
           {
-            "Name": "B Skill as Warrior",
-            "AbilityRef": "ability.mc.defender-of-nature.l4",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.defender-of-nature.l4"
           }
         ],
         "5": [],
         "6": [
           {
-            "Name": "Warrior Specialist Skill (as Handbook)",
-            "AbilityRef": "ability.mc.defender-of-nature.l6",
-            "Type": "Static",
-            "Effect": "The above life scale is for Humans - other races use their own Warrior life scales"
+            "AbilityRef": "ability.mc.defender-of-nature.l6"
           }
         ]
       },
@@ -3899,36 +3586,24 @@
       "Levels": {
         "1": [
           {
-            "Name": "O Skill as Warrior",
-            "AbilityRef": "ability.mc.defender-of-the-faith.l1",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.defender-of-the-faith.l1"
           }
         ],
         "2": [],
         "3": [
           {
-            "Name": "E Skill as Warrior",
-            "AbilityRef": "ability.mc.defender-of-the-faith.l3",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.defender-of-the-faith.l3"
           }
         ],
         "4": [
           {
-            "Name": "B Skill as Warrior",
-            "AbilityRef": "ability.mc.defender-of-the-faith.l4",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.defender-of-the-faith.l4"
           }
         ],
         "5": [],
         "6": [
           {
-            "Name": "Warrior Specialist Skill (as Handbook)",
-            "AbilityRef": "ability.mc.defender-of-the-faith.l6",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.defender-of-the-faith.l6"
           }
         ]
       },
@@ -4136,30 +3811,18 @@
       "Levels": {
         "1": [
           {
-            "Name": "Demon-Slayer Oath",
-            "AbilityRef": "ability.mc.demon-slayer.l1.1",
-            "Type": "Static",
-            "Effect": "Now gains only half points for the adventure if a Demonkind which could be harmed by the Demon-Slayer is left alive on adventure (this restriction doesn't apply if the Demonkind fled out of reach)."
+            "AbilityRef": "ability.mc.demon-slayer.l1.1"
           },
           {
-            "Name": "Anti-Demon Damage Bonus",
-            "AbilityRef": "ability.mc.demon-slayer.l1.2",
-            "Type": "Static",
-            "Effect": "Gains +1 base damage increase with any weapons used when combating an enemy known to be Demonkind, due to greater inspiration."
+            "AbilityRef": "ability.mc.demon-slayer.l1.2"
           },
           {
-            "Name": "Discern Demonkind",
-            "AbilityRef": "ability.mc.demon-slayer.l1.3",
-            "Type": "AtWill",
-            "Effect": "Discern Demonkind at will, as tables."
+            "AbilityRef": "ability.mc.demon-slayer.l1.3"
           }
         ],
         "2": [
           {
-            "Name": "Slayer's Blow",
             "AbilityRef": "ability.mc.demon-slayer.l2",
-            "Type": "Innate",
-            "Effect": "May strike a single blow (or empower a single damaging spell/ miracle) such that it will harm any Demonkind which was capable of harming the Demon-Slayer, unless the Demonkind can only be harmed by a specific/unique weapon or technique - for example, the blow would inflict ranged, light-based damage, but would not inflict 'Laserbolt', nor count as 'The Runed Great Axe of King Sharmyn'",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -4168,10 +3831,7 @@
         ],
         "3": [
           {
-            "Name": "Righteous Fury",
             "AbilityRef": "ability.mc.demon-slayer.l3",
-            "Type": "Innate",
-            "Effect": "May enter a 33% rage against Demonkind only, in which may continue to use any offensive abilities possessed against the Demonkind",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -4180,10 +3840,7 @@
         ],
         "4": [
           {
-            "Name": "Banishment",
             "AbilityRef": "ability.mc.demon-slayer.l4",
-            "Type": "Innate",
-            "Effect": "Banishes one Demonkind to its original plane of existence, which it then cannot leave for 24 hours. Caster takes 8 TBLP per resistance level of the Demonkind, but if this damage kills him he is not dead perm - (the Demonkind is also not slain, and may apply Immunity to Involuntary Mystical Transportation or Immunity to Hand of Purity to be immune to the effect entirely). If the demon is not banished then the innate is used but no life is taken",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -4192,19 +3849,13 @@
         ],
         "5": [
           {
-            "Name": "Shield of Purity",
             "AbilityRef": "ability.mc.demon-slayer.l5",
-            "Type": "Innate",
-            "Effect": "All 'demonic' damage, whether it comes from demon-bound weapons, or spells or miracles cast with demonic power, is reduced by ¼, lasts 5 minutes or the length of combat with a specific Demonkind (whichever is longer)",
             "Count": 1
           }
         ],
         "6": [
           {
-            "Name": "Summon Weapon of Retribution",
             "AbilityRef": "ability.mc.demon-slayer.l6",
-            "Type": "Innate",
-            "Effect": "Summons a weapon of choice into the caster's hands which will inflict 'holy' (good spirit/white mana) damage versus one chosen Demonkind only; this weapon may be either pure or physical, as decided when summoned. It cannot harm creatures other than the chosen Demonkind, but against them has +1 maximum damage, and may only be wielded by the summoner",
             "Count": 1
           }
         ]
@@ -4318,50 +3969,34 @@
       "Levels": {
         "1": [
           {
-            "Name": "If not claiming a different guild then the Devout Believer may benefit",
-            "AbilityRef": "ability.mc.devout-believer.l1",
-            "Type": "Static",
-            "Effect": "From church guild items if any are present"
+            "AbilityRef": "ability.mc.devout-believer.l1"
           }
         ],
         "2": [
           {
-            "Name": "Recognise Spirit",
             "AbilityRef": "ability.recognise-spirit",
-            "Type": "AtWill",
             "Effect": "Gains Recognise Spirit at will, as Priest"
           }
         ],
         "3": [
           {
-            "Name": "Discern Own Priest Guild-member at will",
-            "AbilityRef": "ability.mc.devout-believer.l3",
-            "Type": "AtWill",
-            "Effect": "This is a spiritual discern, 20' range, and 'Own Guild' refers to the priest guild in which Lay Believer has been bought previously"
+            "AbilityRef": "ability.mc.devout-believer.l3"
           }
         ],
         "4": [
           {
-            "Name": "Are now full members of the Church, including being able to claim guild",
-            "AbilityRef": "ability.mc.devout-believer.l4",
-            "Type": "Static",
-            "Effect": "Benefits (Providing the character could normally claim guild benefits)"
+            "AbilityRef": "ability.mc.devout-believer.l4"
           }
         ],
         "5": [
           {
-            "Name": "Discern Nature of Wounds",
             "AbilityRef": "ability.discern-nature-of-wounds",
-            "Type": "AtWill",
             "Effect": "Gains Discern Nature of Wounds at will, as Priest"
           }
         ],
         "6": [
           {
-            "Name": "Utilise Spirit Item of own alignment (Good/Neutral/Evil) ability",
             "AbilityRef": "ability.mc.devout-believer.l6",
-            "Type": "Static",
-            "Effect": "Otherwise as per Spirit Warrior of same alignment",
             "AsPerAbilityRefs": [
               "ability.spirit-warrior"
             ]
@@ -4554,56 +4189,35 @@
       "Levels": {
         "1": [
           {
-            "Name": "+4 Earthpower, or 5 EP worth of innates",
-            "AbilityRef": "ability.mc.devout-druid.l1",
-            "Type": "LevelOfPower:Earthpower",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.devout-druid.l1"
           }
         ],
         "2": [
           {
-            "Name": "+4 (8 total) Earthpower, or 10 (total) EP worth of innates",
-            "AbilityRef": "ability.mc.devout-druid.l2",
-            "Type": "LevelOfPower:Earthpower",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.devout-druid.l2"
           }
         ],
         "3": [
           {
-            "Name": "+4 (12 total) Earthpower, or 16 (total) EP worth of innates",
-            "AbilityRef": "ability.mc.devout-druid.l3",
-            "Type": "LevelOfPower:Earthpower",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.devout-druid.l3"
           }
         ],
         "4": [
           {
-            "Name": "+4 (16 total) Earthpower, or 21 (total) EP worth of innates",
-            "AbilityRef": "ability.mc.devout-druid.l4",
-            "Type": "LevelOfPower:Earthpower",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.devout-druid.l4"
           }
         ],
         "5": [
           {
-            "Name": "+4 (20 total) Earthpower, or 26 (total) EP worth of innates",
-            "AbilityRef": "ability.mc.devout-druid.l5",
-            "Type": "LevelOfPower:Earthpower",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.devout-druid.l5"
           }
         ],
         "6": [
           {
-            "Name": "Earthpower +4 (24 Total) or Innates +32 EP",
-            "AbilityRef": "ability.mc.devout-druid.l6.1",
-            "Type": "LevelOfPower:Earthpower",
-            "Effect": "+4 (24 total) Earthpower, or 32 EP worth of innates."
+            "AbilityRef": "ability.mc.devout-druid.l6.1"
           },
           {
-            "Name": "Meditation Rate +1",
-            "AbilityRef": "ability.mc.devout-druid.l6.2",
-            "Type": "Static",
-            "Effect": "Gains +1 x Meditation rate, fully stacking with any others but to a max of 5 ever."
+            "AbilityRef": "ability.mc.devout-druid.l6.2"
           }
         ]
       },
@@ -4688,10 +4302,7 @@
       "Levels": {
         "1": [
           {
-            "Name": "+3 spirits or +4 spiritual innates",
             "AbilityRef": "ability.mc.devout-priest.l1",
-            "Type": "LevelOfPower:Spirit",
-            "Effect": "+3 spirits (these spirits do not stack with those granted by any other multi-class), or 4 spirits worth of innates.",
             "Progression": {
               "Amount": 3,
               "PerLevels": 1
@@ -4704,10 +4315,7 @@
         "5": [],
         "6": [
           {
-            "Name": "+1 med-rate",
-            "AbilityRef": "ability.mc.devout-priest.l6",
-            "Type": "Static",
-            "Effect": "+1 stacking grade of meditation"
+            "AbilityRef": "ability.mc.devout-priest.l6"
           }
         ]
       },
@@ -4987,68 +4595,41 @@
       "Levels": {
         "1": [
           {
-            "Name": "Dispel/Negation Casting Level +1",
-            "AbilityRef": "ability.mc.disenchanter.l1",
-            "Type": "Static",
-            "Effect": "Gains +1 casting level for purposes of Dispels and Negation only. If not a 1st-Colour Grey Wizard, gains 2nd-Colour Grey, in all ways as tables (may not purchase Elemental Apprentice series, the character's base 5 specialist slots are replace by 3 specialist glyphs of each elemental colour bar opposite, etc.)"
+            "AbilityRef": "ability.mc.disenchanter.l1"
           }
         ],
         "2": [
           {
-            "Name": "Dispel 11-15 Glyphs",
-            "AbilityRef": "ability.mc.disenchanter.l2.1",
-            "Type": "Static",
-            "Effect": "Dispel 11-15 glyphs."
+            "AbilityRef": "ability.mc.disenchanter.l2.1"
           },
           {
-            "Name": "MAC +1",
-            "AbilityRef": "ability.mc.disenchanter.l2.2",
-            "Type": "Static",
-            "Effect": "+1 MAC."
+            "AbilityRef": "ability.mc.disenchanter.l2.2"
           }
         ],
         "3": [
           {
-            "Name": "Release Power Cantrip",
-            "AbilityRef": "ability.mc.disenchanter.l3.1",
-            "Type": "Static",
-            "Effect": "0 mana Grey cantrip Release Power (verbal 'Mana I release thee', range 1\") which releases any currently active spell previously cast by the Disenchanter."
+            "AbilityRef": "ability.mc.disenchanter.l3.1"
           },
           {
-            "Name": "Dispel Casting Level +2 (Total)",
-            "AbilityRef": "ability.mc.disenchanter.l3.2",
-            "Type": "Static",
-            "Effect": "+2 casting levels for Dispels (total)."
+            "AbilityRef": "ability.mc.disenchanter.l3.2"
           }
         ],
         "4": [
           {
-            "Name": "Dispel 16-20 glyphs",
-            "AbilityRef": "ability.mc.disenchanter.l4",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.disenchanter.l4"
           }
         ],
         "5": [
           {
-            "Name": "MAC +2 (Total)",
-            "AbilityRef": "ability.mc.disenchanter.l5.1",
-            "Type": "Static",
-            "Effect": "+2 MAC (total)."
+            "AbilityRef": "ability.mc.disenchanter.l5.1"
           },
           {
-            "Name": "Dispel Casting Level +3 (Total)",
-            "AbilityRef": "ability.mc.disenchanter.l5.2",
-            "Type": "Static",
-            "Effect": "+3 casting levels for Dispels (total)."
+            "AbilityRef": "ability.mc.disenchanter.l5.2"
           }
         ],
         "6": [
           {
-            "Name": "Deny Power Glyph",
-            "AbilityRef": "ability.mc.disenchanter.l6",
-            "Type": "Static",
-            "Effect": "6 mana Grey spell, verbal 'I deny thee power', range 20', which negates one non-'self' spell \"as it is cast\" (within 2 seconds of incantation of verbal), entirely preventing the spell's functioning. E.g. would negate a Fireblade, Plate(o), or Catalepsy, but not a Rockskin as it has range self only. Deny Power itself cannot be negated by Deny Power"
+            "AbilityRef": "ability.mc.disenchanter.l6"
           }
         ]
       },
@@ -5156,16 +4737,10 @@
       "Levels": {
         "1": [
           {
-            "Name": "Additional Standard Cantrip per Level",
-            "AbilityRef": "ability.mc.elemental-student.l1.1",
-            "Type": "Static",
-            "Effect": "Gains the ability to cast an additional standard cantrip for each level in this class; these cantrips do not use specialist glyph slots."
+            "AbilityRef": "ability.mc.elemental-student.l1.1"
           },
           {
-            "Name": "Elemental Knowledge",
             "AbilityRef": "ability.mc.elemental-student.l1.2",
-            "Type": "AtWill",
-            "Effect": "Enhancement of Recognise Mana: after 10 seconds study, determines the colours of mana present and whether they fall into Defensive, Animance, Offensive, Miscellaneous, or Summoning categories.",
             "AsPerAbilityRefs": [
               "ability.recognise-mana"
             ]
@@ -5173,48 +4748,30 @@
         ],
         "2": [
           {
-            "Name": "+2 specialist glyph slots",
-            "AbilityRef": "ability.mc.elemental-student.l2",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.elemental-student.l2"
           }
         ],
         "3": [
           {
-            "Name": "May fill one specialist glyph slot with any standard glyph of choice",
-            "AbilityRef": "ability.mc.elemental-student.l3",
-            "Type": "Static",
-            "Effect": "Considered to have been \"picked up\" somewhere along the way"
+            "AbilityRef": "ability.mc.elemental-student.l3"
           }
         ],
         "4": [
           {
-            "Name": "+2 (4 total) specialist glyph slots",
-            "AbilityRef": "ability.mc.elemental-student.l4",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.elemental-student.l4"
           }
         ],
         "5": [
           {
-            "Name": "May fill one specialist glyph slot with any published glyph of choice of",
-            "AbilityRef": "ability.mc.elemental-student.l5",
-            "Type": "Static",
-            "Effect": "Up to 6th level only, of the same elemental colour as chosen in the level 3 ability only"
+            "AbilityRef": "ability.mc.elemental-student.l5"
           }
         ],
         "6": [
           {
-            "Name": "Specialist Glyph Slots +2 (6 Total)",
-            "AbilityRef": "ability.mc.elemental-student.l6.1",
-            "Type": "Static",
-            "Effect": "+2 (6 total) specialist glyph slots."
+            "AbilityRef": "ability.mc.elemental-student.l6.1"
           },
           {
-            "Name": "Prepared Detect Magic Casting",
             "AbilityRef": "ability.mc.elemental-student.l6.2",
-            "Type": "Static",
-            "Effect": "No longer takes life casting Detect Magic if 10 seconds are spent in preparation first.",
             "AsPerAbilityRefs": [
               "ability.detect-magic"
             ]
@@ -5272,42 +4829,27 @@
       "Levels": {
         "1": [
           {
-            "Name": "The user gains an additional 3 mana points per level of this multiclass",
-            "AbilityRef": "ability.mc.focal-mage.l1",
-            "Type": "LevelOfPower:Mana",
-            "Effect": "For casting spells when using the Primary Magical Focus to grant additional casting levels, or 4 mana worth of innates per level. This mana does not stack with mana from other multi-classes or multi-races, such as Arch-Mage"
+            "AbilityRef": "ability.mc.focal-mage.l1"
           }
         ],
         "2": [
           {
-            "Name": "Magical Focus",
-            "AbilityRef": "ability.mc.focal-mage.l2",
-            "Type": "Static",
-            "Effect": "If the Primary Magical Focus is lost and not recovered by the end of the adventure a new Primary Magical Focus is gained before the next adventure"
+            "AbilityRef": "ability.mc.focal-mage.l2"
           }
         ],
         "3": [
           {
-            "Name": "Magical Focus",
-            "AbilityRef": "ability.mc.focal-mage.l3",
-            "Type": "Static",
-            "Effect": "The Primary Magical Focus now grants an additional casting level which is cumulative with those normally granted when held in one or both hands when casting a spell. The magical focus and the casting levels granted by this class may now be used during the research of new spells"
+            "AbilityRef": "ability.mc.focal-mage.l3"
           }
         ],
         "4": [
           {
-            "Name": "Magical Focus",
-            "AbilityRef": "ability.mc.focal-mage.l4",
-            "Type": "Static",
-            "Effect": "If the Primary Magical Focus is a safe combat weapon style phys rep (e.g. a Staff which would pass a weapon check) then it may be used to block weapon blows without disbenefit, even if the character could not normally use weapons - this does mean that a High Wizard can parry with the focus. If the Primary Magical Focus is not a safe phys rep for such, then a Secondary Magical Focus is acquired. This can either be a staff or rod as described above and used to block blows OR if used at the same time as the Primary Focus during the casting of spells grants no damage casting spells which cost mana points and would normally cost only 1 TBLP in casting damage. This choice must be made when the level is bought and written on the character card as level 4-Block if the parrying option is taken, or 4-Damage if the immunity to casting damage option is taken"
+            "AbilityRef": "ability.mc.focal-mage.l4"
           }
         ],
         "5": [
           {
-            "Name": "The Primary Focus can be called to hand (shifts as per an elemental",
             "AbilityRef": "ability.mc.focal-mage.l5",
-            "Type": "Static",
-            "Effect": "The focal mage could normally summon by casting a summon elemental spell they possess. This could require a suitable amount of the appropriate element at the arrival point, but not where the Primary Focus currently is) with the expenditure of 3 TBLP of casting damage and 10 seconds undisturbed concentration. If the wizard could not summon an elemental this ability is not gained",
             "AsPerAbilityRefs": [
               "ability.summon-elemental-equivalent"
             ]
@@ -5315,10 +4857,7 @@
         ],
         "6": [
           {
-            "Name": "Magical Focus",
-            "AbilityRef": "ability.mc.focal-mage.l6",
-            "Type": "Static",
-            "Effect": "The Primary Magical Focus now grants another additional casting level which is cumulative with those normally granted when held in one or both hands when casting a spell. This may be used during the research of new spells. This brings the number of casting levels granted by the Magical Focus up to +4 total"
+            "AbilityRef": "ability.mc.focal-mage.l6"
           }
         ]
       },
@@ -5382,18 +4921,12 @@
       "Levels": {
         "1": [
           {
-            "Name": "While Raging can distinguish between friend and foe",
-            "AbilityRef": "ability.mc.fury-within.l1",
-            "Type": "Static",
-            "Effect": "As such only has to attack those that are directly hostile to the character"
+            "AbilityRef": "ability.mc.fury-within.l1"
           }
         ],
         "2": [
           {
-            "Name": "While Raging gains +6/2 temp life",
-            "AbilityRef": "ability.mc.fury-within.l2",
-            "Type": "Static",
-            "Effect": "Does not stack with supernatural temp life, but does with other physical temp life (e.g. Life from Adrenal Surge). This life is only gained for the first Rage of each 5 minute period"
+            "AbilityRef": "ability.mc.fury-within.l2"
           }
         ],
         "3": [
@@ -5409,10 +4942,7 @@
         ],
         "4": [
           {
-            "Name": "When using a 50% or greater rage gains + 1 Max Damage as per Adrenal",
             "AbilityRef": "ability.mc.fury-within.l4",
-            "Type": "Static",
-            "Effect": "Surge, so not stacking with it",
             "AsPerAbilityRefs": [
               "ability.adrenal-surge"
             ]
@@ -5420,18 +4950,12 @@
         ],
         "5": [
           {
-            "Name": "Now gains +12/4 temp life (from +6/2)",
-            "AbilityRef": "ability.mc.fury-within.l5",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.fury-within.l5"
           }
         ],
         "6": [
           {
-            "Name": "May now stack two Rages together",
-            "AbilityRef": "ability.mc.fury-within.l6",
-            "Type": "AtWill",
-            "Effect": "If using two 25% Rages gains a 33% Rage, if using a 50% Rage and a 25% gains a 66% Rage, and finally if using two 50% Rages then gains a 75% Rage. At least one of these Rages must be an innate Rage (e.g. cannot stack 2 at will, or permanent rages)"
+            "AbilityRef": "ability.mc.fury-within.l6"
           }
         ]
       },
@@ -5475,20 +4999,14 @@
       "Levels": {
         "1": [
           {
-            "Name": "May only ever use weapons made from wood, bone or stone and Unarmed",
-            "AbilityRef": "ability.mc.guardian-of-nature.l1",
-            "Type": "Static",
-            "Effect": "Combat"
+            "AbilityRef": "ability.mc.guardian-of-nature.l1"
           }
         ],
         "2": [],
         "3": [],
         "4": [
           {
-            "Name": "Draw Earthpower",
             "AbilityRef": "ability.mc.guardian-of-nature.l4",
-            "Type": "Innate",
-            "Effect": "As per the Alfar ability",
             "Count": 1,
             "AsPerAbilityRefs": [
               "ability.draw-on-earthpower"
@@ -5498,10 +5016,7 @@
         "5": [],
         "6": [
           {
-            "Name": "Warrior Specialist of Choice",
-            "AbilityRef": "ability.mc.guardian-of-nature.l6",
-            "Type": "Static",
-            "Effect": "*The above life scale is for Humans - other races use their own Warrior life scales"
+            "AbilityRef": "ability.mc.guardian-of-nature.l6"
           }
         ]
       },
@@ -5706,34 +5221,22 @@
         "2": [],
         "3": [
           {
-            "Name": "Now takes no damage from casting combat related spells that would",
-            "AbilityRef": "ability.mc.high-warlock.l3",
-            "Type": "Static",
-            "Effect": "Otherwise cost only 1 TBLP to cast"
+            "AbilityRef": "ability.mc.high-warlock.l3"
           }
         ],
         "4": [
           {
-            "Name": "DAC +1",
-            "AbilityRef": "ability.mc.high-warlock.l4",
-            "Type": "Static",
-            "Effect": "+1 DAC"
+            "AbilityRef": "ability.mc.high-warlock.l4"
           }
         ],
         "5": [
           {
-            "Name": "Combat Spell Casting Level +1",
-            "AbilityRef": "ability.mc.high-warlock.l5",
-            "Type": "Static",
-            "Effect": "+1 level of casting for combat related spells only"
+            "AbilityRef": "ability.mc.high-warlock.l5"
           }
         ],
         "6": [
           {
-            "Name": "At will for 3 mana and appropriate casting damage may enhance own primary weapon",
-            "AbilityRef": "ability.mc.high-warlock.l6",
-            "Type": "AtWill",
-            "Effect": "(not pair of weapons) to inflict magical damage of own colour (choose either if 2nd- Coloured) for 5 minutes when wielded by the Warlock only"
+            "AbilityRef": "ability.mc.high-warlock.l6"
           }
         ]
       },
@@ -5874,18 +5377,12 @@
       "Levels": {
         "1": [
           {
-            "Name": "Determination",
-            "AbilityRef": "ability.mc.juggernaut.l1",
-            "Type": "Static",
-            "Effect": "Must have Determination. Gains 6 casting stamina per level for determination damage"
+            "AbilityRef": "ability.mc.juggernaut.l1"
           }
         ],
         "2": [
           {
-            "Name": "Focussed Determination",
             "AbilityRef": "ability.mc.juggernaut.l2",
-            "Type": "Static",
-            "Effect": "Once determination has been applied to an effect, gains immunity to that effect for 10 seconds and no longer suffers determination damage from it. Must be declared within 2 seconds of the initial attack",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -5894,10 +5391,7 @@
         ],
         "3": [
           {
-            "Name": "Unstoppable",
             "AbilityRef": "ability.mc.juggernaut.l3",
-            "Type": "Static",
-            "Effect": "May apply determination as per the spell Mobility for 5 minutes. Any effect that would require a mobility (rather than normal determination) costs 12 TBLP per use",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -5909,26 +5403,17 @@
         ],
         "4": [
           {
-            "Name": "Determination",
-            "AbilityRef": "ability.mc.juggernaut.l4",
-            "Type": "Static",
-            "Effect": "Can now apply determination vs. Domination effects costing 18TBLP per use"
+            "AbilityRef": "ability.mc.juggernaut.l4"
           }
         ],
         "5": [
           {
-            "Name": "Determination",
-            "AbilityRef": "ability.mc.juggernaut.l5",
-            "Type": "Static",
-            "Effect": "Damage can no longer kill, instead the effect that would cause death is instead taken at full effect"
+            "AbilityRef": "ability.mc.juggernaut.l5"
           }
         ],
         "6": [
           {
-            "Name": "Focussed Determination",
-            "AbilityRef": "ability.mc.juggernaut.l6",
-            "Type": "Static",
-            "Effect": "Now lasts 30 seconds"
+            "AbilityRef": "ability.mc.juggernaut.l6"
           }
         ]
       },
@@ -5979,18 +5464,12 @@
       "Levels": {
         "1": [
           {
-            "Name": "At all times, when undead with an extended creation point, e.g",
-            "AbilityRef": "ability.mc.life-s-avenger.l1",
-            "Type": "Static",
-            "Effect": "From an Undead Master, approaches within 5' of an Avenger, that undead's creation point is returned permanently to its normal base range. Protection from Evil Spirits miracles cast by the Priest one level higher against undead"
+            "AbilityRef": "ability.mc.life-s-avenger.l1"
           }
         ],
         "2": [
           {
-            "Name": "Life's Cry",
             "AbilityRef": "ability.mc.life-s-avenger.l2",
-            "Type": "Innate",
-            "Effect": "May call the name of their god to grant immunity to any Undead touch effects for the next 5 minutes. This may be used within 2secs of suffering effect, as War Cry",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -5999,18 +5478,12 @@
         ],
         "3": [
           {
-            "Name": "Hand of Purification",
-            "AbilityRef": "ability.mc.life-s-avenger.l3",
-            "Type": "Static",
-            "Effect": "/Purity now costs only 8 TBLP per undead dismiss level to use, from 10"
+            "AbilityRef": "ability.mc.life-s-avenger.l3"
           }
         ],
         "4": [
           {
-            "Name": "Life's Rage",
             "AbilityRef": "ability.mc.life-s-avenger.l4",
-            "Type": "Innate",
-            "Effect": "Only usable against undead, applies versus all damage from undead and reduces the damage taken from using Hand of Purity, may still cast miracles on self or undead, otherwise as Cold Rage on tables",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -6019,32 +5492,20 @@
         ],
         "5": [
           {
-            "Name": "Attract Undead",
             "AbilityRef": "ability.mc.life-s-avenger.l5.1",
-            "Type": "Innate",
-            "Effect": "Attract Undead.",
             "Count": 1
           },
           {
-            "Name": "Repel Undead",
             "AbilityRef": "ability.mc.life-s-avenger.l5.2",
-            "Type": "Innate",
-            "Effect": "Repel Undead.",
             "Count": 1
           }
         ],
         "6": [
           {
-            "Name": "Undead Domination Immunity",
-            "AbilityRef": "ability.mc.life-s-avenger.l6.1",
-            "Type": "Static",
-            "Effect": "Total immunity to all forms of Domination from an Undead source."
+            "AbilityRef": "ability.mc.life-s-avenger.l6.1"
           },
           {
-            "Name": "Hand of Purity Death Protection",
-            "AbilityRef": "ability.mc.life-s-avenger.l6.2",
-            "Type": "Static",
-            "Effect": "No longer permanently dies if killed by life suffered from Hand of Purity/Purification."
+            "AbilityRef": "ability.mc.life-s-avenger.l6.2"
           }
         ]
       },
@@ -6297,50 +5758,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "+ 1% chance per level for crafting Magical Items (Not teaching",
-            "AbilityRef": "ability.mc.magical-artisan.l1",
-            "Type": "Craft",
-            "Effect": "Scrolls)"
+            "AbilityRef": "ability.mc.magical-artisan.l1"
           }
         ],
         "2": [
           {
-            "Name": "½ level loss from crafting Magical items",
-            "AbilityRef": "ability.mc.magical-artisan.l2",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.magical-artisan.l2"
           }
         ],
         "3": [
           {
-            "Name": "The cost of each roll is reduced by 10%",
-            "AbilityRef": "ability.mc.magical-artisan.l3",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.magical-artisan.l3"
           }
         ],
         "4": [
           {
-            "Name": "Place of Power",
-            "AbilityRef": "ability.mc.magical-artisan.l4",
-            "Type": "Craft",
-            "Effect": "The artisan has their own place of power. Reducing the number of successful rolls needed by 1 (to a minimum of 1). Does not stack with the CC benefit Place of Power"
+            "AbilityRef": "ability.mc.magical-artisan.l4"
           }
         ],
         "5": [
           {
-            "Name": "The cost of each roll is now reduced by 20% total",
-            "AbilityRef": "ability.mc.magical-artisan.l5",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.magical-artisan.l5"
           }
         ],
         "6": [
           {
-            "Name": "Reciprocates Binding no longer has a 5% penalty if making the item for self",
-            "AbilityRef": "ability.mc.magical-artisan.l6",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.magical-artisan.l6"
           }
         ]
       },
@@ -6404,50 +5847,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "+ 1% chance per level for writing teaching scrolls",
-            "AbilityRef": "ability.mc.magical-calligrapher.l1",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.magical-calligrapher.l1"
           }
         ],
         "2": [
           {
-            "Name": "½ level loss from writing teaching scrolls",
-            "AbilityRef": "ability.mc.magical-calligrapher.l2",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.magical-calligrapher.l2"
           }
         ],
         "3": [
           {
-            "Name": "The cost of each roll is reduced by 10%",
-            "AbilityRef": "ability.mc.magical-calligrapher.l3",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.magical-calligrapher.l3"
           }
         ],
         "4": [
           {
-            "Name": "an additional \"Slot\" for using teaching scrolls per 2 levels of",
-            "AbilityRef": "ability.mc.magical-calligrapher.l4",
-            "Type": "Craft",
-            "Effect": "This class"
+            "AbilityRef": "ability.mc.magical-calligrapher.l4"
           }
         ],
         "5": [
           {
-            "Name": "The cost of each roll is now reduced by 20% total",
-            "AbilityRef": "ability.mc.magical-calligrapher.l5",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.magical-calligrapher.l5"
           }
         ],
         "6": [
           {
-            "Name": "+ 5% to making a teaching scroll if the spell has been learnt with points",
-            "AbilityRef": "ability.mc.magical-calligrapher.l6",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.magical-calligrapher.l6"
           }
         ]
       },
@@ -6511,50 +5936,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "This mana can only be used to cast standard spells",
-            "AbilityRef": "ability.mc.mana-vortex.l1",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.mana-vortex.l1"
           }
         ],
         "2": [
           {
-            "Name": "Mana from this pool regenerates at 1pt/60 minutes",
-            "AbilityRef": "ability.mc.mana-vortex.l2",
-            "Type": "Static",
-            "Effect": "This is not cumulative with any other power regen or meditation"
+            "AbilityRef": "ability.mc.mana-vortex.l2"
           }
         ],
         "3": [
           {
-            "Name": "Power Drawn",
-            "AbilityRef": "ability.mc.mana-vortex.l3",
-            "Type": "Static",
-            "Effect": "½ levels - With 2 minutes uninterrupted concentration may transfer up to 6 power from this class to the wizards normal mana pool"
+            "AbilityRef": "ability.mc.mana-vortex.l3"
           }
         ],
         "4": [
           {
-            "Name": "Mana now regenerates at 1/30 minutes",
-            "AbilityRef": "ability.mc.mana-vortex.l4",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.mana-vortex.l4"
           }
         ],
         "5": [
           {
-            "Name": "Mana now regenerates at 1/15 minutes",
-            "AbilityRef": "ability.mc.mana-vortex.l5",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.mana-vortex.l5"
           }
         ],
         "6": [
           {
-            "Name": "Mana now regenerates at a rate of 1/5 minutes",
-            "AbilityRef": "ability.mc.mana-vortex.l6",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.mana-vortex.l6"
           }
         ]
       },
@@ -6630,56 +6037,35 @@
       "Levels": {
         "1": [
           {
-            "Name": "Mantic Mana Fraction (1/6)",
-            "AbilityRef": "ability.mc.mancer.l1.1",
-            "Type": "Static",
-            "Effect": "Now has 1/6 of total mana for use on mantic spells."
+            "AbilityRef": "ability.mc.mancer.l1.1"
           },
           {
-            "Name": "Mantic Cantrip Casting",
-            "AbilityRef": "ability.mc.mancer.l1.2",
-            "Type": "Static",
-            "Effect": "May cast own colour cantrip mantically for 2 TBLP (may still cast spells non-mantically if desired)."
+            "AbilityRef": "ability.mc.mancer.l1.2"
           }
         ],
         "2": [
           {
-            "Name": "Mantic Mana 1/3",
-            "AbilityRef": "ability.mc.mancer.l2",
-            "Type": "Static",
-            "Effect": "1/3 of total mana now mantic"
+            "AbilityRef": "ability.mc.mancer.l2"
           }
         ],
         "3": [
           {
-            "Name": "1/2 total mana now mantic",
-            "AbilityRef": "ability.mc.mancer.l3",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.mancer.l3"
           }
         ],
         "4": [
           {
-            "Name": "2/3 total mana now mantic",
-            "AbilityRef": "ability.mc.mancer.l4",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.mancer.l4"
           }
         ],
         "5": [
           {
-            "Name": "5/6 total mana now mantic",
-            "AbilityRef": "ability.mc.mancer.l5",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.mancer.l5"
           }
         ],
         "6": [
           {
-            "Name": "All wizard's mana is now mantic",
-            "AbilityRef": "ability.mc.mancer.l6",
-            "Type": "Static",
-            "Effect": "May cast all standard spells of own colour mantically"
+            "AbilityRef": "ability.mc.mancer.l6"
           }
         ]
       },
@@ -6789,50 +6175,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "one standard pathfinder skill",
-            "AbilityRef": "ability.mc.master-scout.l1",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.master-scout.l1"
           }
         ],
         "2": [
           {
-            "Name": "one standard pathfinder skill",
-            "AbilityRef": "ability.mc.master-scout.l2",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.master-scout.l2"
           }
         ],
         "3": [
           {
-            "Name": "+1 level of skill in one standard pathfinder skill already",
-            "AbilityRef": "ability.mc.master-scout.l3",
-            "Type": "Static",
-            "Effect": "Possessed (max skill level 12)"
+            "AbilityRef": "ability.mc.master-scout.l3"
           }
         ],
         "4": [
           {
-            "Name": "one standard pathfinder skill",
-            "AbilityRef": "ability.mc.master-scout.l4",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.master-scout.l4"
           }
         ],
         "5": [
           {
-            "Name": "one standard pathfinder skill",
-            "AbilityRef": "ability.mc.master-scout.l5",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.master-scout.l5"
           }
         ],
         "6": [
           {
-            "Name": "one specialist pathfinder skill",
-            "AbilityRef": "ability.mc.master-scout.l6",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.master-scout.l6"
           }
         ]
       },
@@ -6875,50 +6243,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "One weapon-type of choice (written on card when 1st level bought) is now",
-            "AbilityRef": "ability.mc.master-at-arms.l1",
-            "Type": "Static",
-            "Effect": "Immune to Shatter/Disintegrate/Warp/Rust/Melt and similar spells, including Auras of Defence, and Vanish, while wielded by the Master at Arms. Referred to as 'weapon of choice' for the rest of this class"
+            "AbilityRef": "ability.mc.master-at-arms.l1"
           }
         ],
         "2": [
           {
-            "Name": "Disarm Mastery +1",
-            "AbilityRef": "ability.mc.master-at-arms.l2",
-            "Type": "Static",
-            "Effect": "Counts as having +1 additional mastery for purposes of Disarms only"
+            "AbilityRef": "ability.mc.master-at-arms.l2"
           }
         ],
         "3": [
           {
-            "Name": "Weapon of choice now inflicts magical damage at all times while wielded",
-            "AbilityRef": "ability.mc.master-at-arms.l3",
-            "Type": "Static",
-            "Effect": "By the Master at Arms. Weapon itself is not magical however"
+            "AbilityRef": "ability.mc.master-at-arms.l3"
           }
         ],
         "4": [
           {
-            "Name": "Base damage inflicted by weapon of choice is increased by 3 points",
-            "AbilityRef": "ability.mc.master-at-arms.l4",
-            "Type": "Static",
-            "Effect": "These increases do stack with those in BattleMaster"
+            "AbilityRef": "ability.mc.master-at-arms.l4"
           }
         ],
         "5": [
           {
-            "Name": "Disarm Mastery +1 (Total)",
-            "AbilityRef": "ability.mc.master-at-arms.l5",
-            "Type": "Static",
-            "Effect": "+1 additional mastery (+2 total) for purposes of Disarms only"
+            "AbilityRef": "ability.mc.master-at-arms.l5"
           }
         ],
         "6": [
           {
-            "Name": "Base damage inflicted by weapon of choice is increased by a further 3",
-            "AbilityRef": "ability.mc.master-at-arms.l6",
-            "Type": "Static",
-            "Effect": "Points (6 points total) and now inflicts magical or spiritual damage by choice at all times while wielded by the Master at Arms (not combined mantic damage however). The weapon itself is not spiritual or magical however. This grants the ability to utilise spiritual item for the purposes of using this class, but nothing else. The weapon may be used to parry purely magical or spiritual weapons"
+            "AbilityRef": "ability.mc.master-at-arms.l6"
           }
         ]
       },
@@ -7028,57 +6378,37 @@
       "Levels": {
         "1": [
           {
-            "Name": "3 spirits (or 4 spirits of innates) per level for use on miracles",
-            "AbilityRef": "ability.mc.master-of-the-dead.l1",
-            "Type": "LevelOfPower:Spirit",
-            "Effect": "On the Control Undead tree"
+            "AbilityRef": "ability.mc.master-of-the-dead.l1"
           }
         ],
         "2": [
           {
-            "Name": "No Damage Casting Control Undead miracles",
-            "AbilityRef": "ability.mc.master-of-the-dead.l2",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.master-of-the-dead.l2"
           }
         ],
         "3": [
           {
-            "Name": "1 Spirit off Control Undead miracles",
-            "AbilityRef": "ability.mc.master-of-the-dead.l3",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.master-of-the-dead.l3"
           }
         ],
         "4": [
           {
-            "Name": "Control Undead Level 9",
-            "AbilityRef": "ability.mc.master-of-the-dead.l4.1",
-            "Type": "Static",
-            "Effect": "Counts as 9th level for purposes of controlling undead."
+            "AbilityRef": "ability.mc.master-of-the-dead.l4.1"
           },
           {
-            "Name": "I am the Master",
             "AbilityRef": "ability.mc.master-of-the-dead.l4.2",
-            "Type": "Innate",
-            "Effect": "One control miracle is cast as if an infinite level priest.",
             "Count": 1
           }
         ],
         "5": [
           {
-            "Name": "Now gains 2 spirits off Control Undead miracles if the only order given",
-            "AbilityRef": "ability.mc.master-of-the-dead.l5",
-            "Type": "Static",
-            "Effect": "Is to return to the netherworld"
+            "AbilityRef": "ability.mc.master-of-the-dead.l5"
           }
         ],
         "6": [
           {
             "Name": "cast Reveal Undead Name for 4TBLP",
-            "AbilityRef": "ability.mc.master-of-the-dead.l6",
-            "Type": "Static",
-            "Effect": "Must have the ability Remember Unknown Undead Name and Reveal Undead Name on their Miracle list to use this level, may now cast Reveal Undead Name for 0 spirits but costing 4 TBLP"
+            "AbilityRef": "ability.mc.master-of-the-dead.l6"
           }
         ]
       },
@@ -7122,50 +6452,33 @@
         "1": [
           {
             "Name": "+3 Casting Stamina per level of this class",
-            "AbilityRef": "ability.mc.mystical-reserves.l1",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.mystical-reserves.l1"
           }
         ],
         "2": [
           {
-            "Name": "Casting Stamina now recovers slowly, healing at a rate of 1 per hour",
-            "AbilityRef": "ability.mc.mystical-reserves.l2",
-            "Type": "Static",
-            "Effect": "Not stacking with other forms of regeneration"
+            "AbilityRef": "ability.mc.mystical-reserves.l2"
           }
         ],
         "3": [
           {
-            "Name": "Casting Stamina now recovers at a rate of 1 per 30 minutes",
-            "AbilityRef": "ability.mc.mystical-reserves.l3",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.mystical-reserves.l3"
           }
         ],
         "4": [
           {
-            "Name": "Desperate Survival",
             "AbilityRef": "ability.mc.mystical-reserves.l4",
-            "Type": "Innate",
-            "Effect": "Can OOC chose to use own Casting Stamina as additional Live to Minus. Any Casting Stamina used in this way is lost for the rest of the day. The additional Live to Minus lasts until the character is healed out of it or 5 minutes at most",
             "Count": 1
           }
         ],
         "5": [
           {
-            "Name": "Casting Stamina now recovers at a rate of 1 per 15 minutes",
-            "AbilityRef": "ability.mc.mystical-reserves.l5",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.mystical-reserves.l5"
           }
         ],
         "6": [
           {
-            "Name": "Casting Stamina now recovers at a rate of 1 per 5 minutes",
-            "AbilityRef": "ability.mc.mystical-reserves.l6",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.mystical-reserves.l6"
           }
         ]
       },
@@ -7278,50 +6591,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "+ 1% chance per level for crafting Earthpower Items",
-            "AbilityRef": "ability.mc.natural-artisan.l1",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.natural-artisan.l1"
           }
         ],
         "2": [
           {
-            "Name": "½ level loss from crafting Earthpower items",
-            "AbilityRef": "ability.mc.natural-artisan.l2",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.natural-artisan.l2"
           }
         ],
         "3": [
           {
-            "Name": "The cost of each roll is reduced by 10%",
-            "AbilityRef": "ability.mc.natural-artisan.l3",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.natural-artisan.l3"
           }
         ],
         "4": [
           {
-            "Name": "Place of Power",
-            "AbilityRef": "ability.mc.natural-artisan.l4",
-            "Type": "Craft",
-            "Effect": "The artisan has their own place of power. Reducing the number of successful rolls needed by 1 (to a minimum of 1). Does not stack with the CC benefit Place of Power"
+            "AbilityRef": "ability.mc.natural-artisan.l4"
           }
         ],
         "5": [
           {
-            "Name": "The cost of each roll is now reduced by 20% total",
-            "AbilityRef": "ability.mc.natural-artisan.l5",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.natural-artisan.l5"
           }
         ],
         "6": [
           {
-            "Name": "Reciprocates Binding no longer has a 5% penalty if making the item for self",
-            "AbilityRef": "ability.mc.natural-artisan.l6",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.natural-artisan.l6"
           }
         ]
       },
@@ -7385,50 +6680,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "This can only be used to cast evocations on the Druid's base list",
-            "AbilityRef": "ability.mc.one-with-nature.l1",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.one-with-nature.l1"
           }
         ],
         "2": [
           {
-            "Name": "Earthpower from this pool regenerates at 1pt/60 minutes",
-            "AbilityRef": "ability.mc.one-with-nature.l2",
-            "Type": "Static",
-            "Effect": "This is not cumulative with any other power regen or meditation"
+            "AbilityRef": "ability.mc.one-with-nature.l2"
           }
         ],
         "3": [
           {
-            "Name": "Power Drawn",
-            "AbilityRef": "ability.mc.one-with-nature.l3",
-            "Type": "Static",
-            "Effect": "½ levels - With 2 minutes uninterrupted concentration may transfer up to 6 power from this class to the druid's own normal Earthpower"
+            "AbilityRef": "ability.mc.one-with-nature.l3"
           }
         ],
         "4": [
           {
-            "Name": "Earthpower now regenerates at 1/30 minutes",
-            "AbilityRef": "ability.mc.one-with-nature.l4",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.one-with-nature.l4"
           }
         ],
         "5": [
           {
-            "Name": "Earthpower now regenerates at 1/15 minutes",
-            "AbilityRef": "ability.mc.one-with-nature.l5",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.one-with-nature.l5"
           }
         ],
         "6": [
           {
-            "Name": "Earthpower now regenerates at a rate of 1/5 minutes",
-            "AbilityRef": "ability.mc.one-with-nature.l6",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.one-with-nature.l6"
           }
         ]
       },
@@ -7525,7 +6802,6 @@
       "Levels": {
         "1": [
           {
-            "Name": "Neuronic Penetration",
             "AbilityRef": "ability.neuronic-penetration",
             "Type": "Static",
             "Effect": "Neuronic Penetration x2/level. If not already in the neuronic bracket gains potion restrictions as a neuronic class based on levels in this class"
@@ -7533,9 +6809,7 @@
         ],
         "2": [
           {
-            "Name": "Neuronic Flash",
             "AbilityRef": "ability.neuronic-flash",
-            "Type": "Innate",
             "Effect": "Neuronic Flash x1/2 levels",
             "Progression": {
               "Amount": 1,
@@ -7545,7 +6819,6 @@
         ],
         "3": [
           {
-            "Name": "Telekinesis",
             "AbilityRef": "ability.telekinesis",
             "Type": "Innate",
             "Effect": "Telekinesis x1/2 levels",
@@ -7557,9 +6830,7 @@
         ],
         "4": [
           {
-            "Name": "Neuronic Flare",
             "AbilityRef": "ability.neuronic-flare",
-            "Type": "Innate",
             "Effect": "Neuronic Flare x1/3 levels",
             "Progression": {
               "Amount": 1,
@@ -7569,9 +6840,7 @@
         ],
         "5": [
           {
-            "Name": "Neuronic Blast",
             "AbilityRef": "ability.neuronic-blast",
-            "Type": "Innate",
             "Effect": "Neuronic Blast x1/3 levels",
             "Progression": {
               "Amount": 1,
@@ -7581,9 +6850,7 @@
         ],
         "6": [
           {
-            "Name": "Neuronic Whip",
             "AbilityRef": "ability.neuronic-whip",
-            "Type": "Innate",
             "Effect": "Neuronic Whip x1/3 levels",
             "Progression": {
               "Amount": 1,
@@ -7652,50 +6919,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "No life granted by this multiclass is cumulative with Extra Levels of",
-            "AbilityRef": "ability.mc.power-house.l1",
-            "Type": "Static",
-            "Effect": "Life from the tables or otherwise, however acquired. In the case of Ogres, Trolls and Ggrutuck only, they gain 6/3 per level rather than 5/2. +5/2 life (6/3 for Ogres, Trolls and Ggrutuck)"
+            "AbilityRef": "ability.mc.power-house.l1"
           }
         ],
         "2": [
           {
-            "Name": "Life +10/4 (Total)",
-            "AbilityRef": "ability.mc.power-house.l2",
-            "Type": "Static",
-            "Effect": "+10/4 life in total (12/6 total for Ogres, Trolls and Ggrutuck)"
+            "AbilityRef": "ability.mc.power-house.l2"
           }
         ],
         "3": [
           {
-            "Name": "Life +15/6 (Total)",
-            "AbilityRef": "ability.mc.power-house.l3",
-            "Type": "Static",
-            "Effect": "+15/6 life in total (18/9 total for Ogres, Trolls and Ggrutuck)"
+            "AbilityRef": "ability.mc.power-house.l3"
           }
         ],
         "4": [
           {
-            "Name": "Life +20/8 (Total)",
-            "AbilityRef": "ability.mc.power-house.l4",
-            "Type": "Static",
-            "Effect": "+20/8 life in total (24/12 total for Ogres, Trolls and Ggrutuck)"
+            "AbilityRef": "ability.mc.power-house.l4"
           }
         ],
         "5": [
           {
-            "Name": "Life +25/10 (Total)",
-            "AbilityRef": "ability.mc.power-house.l5",
-            "Type": "Static",
-            "Effect": "+25/10 life in total (30/15 total for Ogres, Trolls and Ggrutuck)"
+            "AbilityRef": "ability.mc.power-house.l5"
           }
         ],
         "6": [
           {
-            "Name": "Life +30/12 (Total)",
-            "AbilityRef": "ability.mc.power-house.l6",
-            "Type": "Static",
-            "Effect": "+30/12 life in total (36/18 total for Ogres, Trolls and Ggrutuck)"
+            "AbilityRef": "ability.mc.power-house.l6"
           }
         ]
       },
@@ -8013,62 +7262,38 @@
       "Levels": {
         "1": [
           {
-            "Name": "Monk Item Restriction",
-            "AbilityRef": "ability.mc.power-monger.l1.1",
-            "Type": "Static",
-            "Effect": "May never use any 'item' (as Monk) except those manufactured by self."
+            "AbilityRef": "ability.mc.power-monger.l1.1"
           },
           {
-            "Name": "DAC +1",
-            "AbilityRef": "ability.mc.power-monger.l1.2",
-            "Type": "Static",
-            "Effect": "+1 DAC."
+            "AbilityRef": "ability.mc.power-monger.l1.2"
           }
         ],
         "2": [
           {
-            "Name": "E Skill with Daggers",
-            "AbilityRef": "ability.mc.power-monger.l2",
-            "Type": "Static",
-            "Effect": "Only"
+            "AbilityRef": "ability.mc.power-monger.l2"
           }
         ],
         "3": [
           {
-            "Name": "DAC +2 (Total)",
-            "AbilityRef": "ability.mc.power-monger.l3",
-            "Type": "Static",
-            "Effect": "+2 DAC (total)"
+            "AbilityRef": "ability.mc.power-monger.l3"
           }
         ],
         "4": [
           {
-            "Name": "+1 cumulative mastery in 'O' class daggers",
-            "AbilityRef": "ability.mc.power-monger.l4",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.power-monger.l4"
           }
         ],
         "5": [
           {
-            "Name": "Quickdraw with O-Class Daggers",
-            "AbilityRef": "ability.mc.power-monger.l5.1",
-            "Type": "Static",
-            "Effect": "Quickdraw skill with 'O' class daggers only."
+            "AbilityRef": "ability.mc.power-monger.l5.1"
           },
           {
-            "Name": "DAC +3 (Total)",
-            "AbilityRef": "ability.mc.power-monger.l5.2",
-            "Type": "Static",
-            "Effect": "+3 DAC (total)."
+            "AbilityRef": "ability.mc.power-monger.l5.2"
           }
         ],
         "6": [
           {
-            "Name": "Forearm Parry",
-            "AbilityRef": "ability.mc.power-monger.l6",
-            "Type": "Static",
-            "Effect": "Skill"
+            "AbilityRef": "ability.mc.power-monger.l6"
           }
         ]
       },
@@ -8111,26 +7336,17 @@
       "Levels": {
         "1": [
           {
-            "Name": "May now cast the Enhance Rune of Power miracle with full verbal and",
-            "AbilityRef": "ability.mc.priest-of-the-runes.l1",
-            "Type": "Static",
-            "Effect": "Gesture but for 0 spirits, in this case costing 3 tblp, must first have the miracle on their list"
+            "AbilityRef": "ability.mc.priest-of-the-runes.l1"
           }
         ],
         "2": [
           {
-            "Name": "Rune of Power may now be used to cause any 'other-affecting' miracle of",
-            "AbilityRef": "ability.mc.priest-of-the-runes.l2",
-            "Type": "Static",
-            "Effect": "4th level or below on the priest's list, instead of its normal effect - e.g. a goodly Priest could cause the Rune to trigger a Bless, or an Evil one a Cause Disease. All non-damaging offensive effects are still level-based as normal for Rune of Power. Runes cast in this way last at most 24 hours. If used in this way the en-runed miracle ceases to be a standard miracle"
+            "AbilityRef": "ability.mc.priest-of-the-runes.l2"
           }
         ],
         "3": [
           {
-            "Name": "Throwing the Runes",
             "AbilityRef": "ability.mc.priest-of-the-runes.l3",
-            "Type": "Innate",
-            "Effect": "May throw the runes. This requires an excellent phys rep of rune- inscribed stones. The priest may specify a question for which they seek guidance, or simply ask their allied spirits for advice. The runes will reveal a message in reply in a similar manner to a single Communication II question. The spirits will never lie, but the ref may choose to be cryptic or not, as desired - it is possible at the ref's discretion to foretell the future with these replies",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -8139,26 +7355,17 @@
         ],
         "4": [
           {
-            "Name": "Enruned Weapon",
-            "AbilityRef": "ability.mc.priest-of-the-runes.l4",
-            "Type": "Static",
-            "Effect": "May now inscribe a Rune of Power upon the shaft of a physical weapon. The next blow struck with that weapon will trigger the appropriate effect upon the target. The user of the weapon need not be able to use spiritual items, but if they are of the opposite alignment to the power bound into the weapon they also suffer the effect if disbeneficial. This ability cannot be used with Enhance Rune of Power, nor with Greater Rune of Power below. Enruned Weapons must be wielded as a weapon and be an actual weapon phys-rep, so are not usable by pure priests"
+            "AbilityRef": "ability.mc.priest-of-the-runes.l4"
           }
         ],
         "5": [
           {
-            "Name": "Rune of Warding",
-            "AbilityRef": "ability.mc.priest-of-the-runes.l5",
-            "Type": "Static",
-            "Effect": "May now inscribe a Rune of Warding upon any piece of armour, or shield, or a weapon. On shields and weapons the inscription imbues the object with a warding spirit which allows the user to block purely spiritual blows (but not inflict spiritual damage themselves). On a piece of armour the rune will mean that the armour applies against purely spiritual weapon blows - additionally if the wearer can use neutral spiritual items additionally SAC up to ½ the PAC value (round down) of the armour. A separate rune is required for each armour location covered. Each such Rune of Warding costs the inscriber 1 spirit and associated casting damage and lasts 24 hours"
+            "AbilityRef": "ability.mc.priest-of-the-runes.l5"
           }
         ],
         "6": [
           {
-            "Name": "Runes of Transgression",
-            "AbilityRef": "ability.mc.priest-of-the-runes.l6",
-            "Type": "Static",
-            "Effect": "May now inscribe Runes of Transgression in the air itself - in this case they last only 15 minutes. These runes are visible, glowing even in the darkness. May now inscribe Greater Runes of Power - these cost 8 spirits and may bind any 'other-affecting' miracle on the priest's list of 6th level or below. They are non-level based"
+            "AbilityRef": "ability.mc.priest-of-the-runes.l6"
           }
         ]
       },
@@ -8264,50 +7471,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "4 spirits worth of miracle innates, chosen at the beginning of the day when battleboarding",
-            "AbilityRef": "ability.mc.priestly-believer.l1",
-            "Type": "Static",
-            "Effect": "These must be miracles on the character's miracle list, and are cast in the normal way"
+            "AbilityRef": "ability.mc.priestly-believer.l1"
           }
         ],
         "2": [
           {
-            "Name": "Innates +8 Spirits",
-            "AbilityRef": "ability.mc.priestly-believer.l2",
-            "Type": "Static",
-            "Effect": "Now has 8 spirits worth of innates as above"
+            "AbilityRef": "ability.mc.priestly-believer.l2"
           }
         ],
         "3": [
           {
-            "Name": "Innates +12 Spirits",
-            "AbilityRef": "ability.mc.priestly-believer.l3",
-            "Type": "Static",
-            "Effect": "Now has 12 spirits worth of innates as above"
+            "AbilityRef": "ability.mc.priestly-believer.l3"
           }
         ],
         "4": [
           {
-            "Name": "Innates +16 Spirits",
-            "AbilityRef": "ability.mc.priestly-believer.l4",
-            "Type": "Static",
-            "Effect": "Now has 16 spirits worth of innates as above"
+            "AbilityRef": "ability.mc.priestly-believer.l4"
           }
         ],
         "5": [
           {
-            "Name": "Innates +20 Spirits",
-            "AbilityRef": "ability.mc.priestly-believer.l5",
-            "Type": "Static",
-            "Effect": "Now has 20 spirits worth of innates as above"
+            "AbilityRef": "ability.mc.priestly-believer.l5"
           }
         ],
         "6": [
           {
-            "Name": "Innates +24 Spirits",
-            "AbilityRef": "ability.mc.priestly-believer.l6",
-            "Type": "Static",
-            "Effect": "Now has 24 spirits worth of innates as above"
+            "AbilityRef": "ability.mc.priestly-believer.l6"
           }
         ]
       },
@@ -8371,18 +7560,12 @@
       "Levels": {
         "1": [
           {
-            "Name": "Neuronic Dart x2/level",
-            "AbilityRef": "ability.mc.psycher.l1",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.psycher.l1"
           }
         ],
         "2": [
           {
-            "Name": "Sensory Deprivation",
             "AbilityRef": "ability.mc.psycher.l2",
-            "Type": "Innate",
-            "Effect": "As tables.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -8391,10 +7574,7 @@
         ],
         "3": [
           {
-            "Name": "Neuronic Fumble",
             "AbilityRef": "ability.mc.psycher.l3",
-            "Type": "Innate",
-            "Effect": "As tables.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -8403,9 +7583,7 @@
         ],
         "4": [
           {
-            "Name": "Neuronic Blast",
             "AbilityRef": "ability.neuronic-blast",
-            "Type": "Innate",
             "Effect": "Neuronic Blast x1/2 levels.",
             "Progression": {
               "Amount": 1,
@@ -8415,10 +7593,7 @@
         ],
         "5": [
           {
-            "Name": "Neuronic Bolt",
             "AbilityRef": "ability.mc.psycher.l5",
-            "Type": "Innate",
-            "Effect": "As tables.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -8427,10 +7602,14 @@
         ],
         "6": [
           {
-            "Name": "Neuronic Penetration",
             "AbilityRef": "ability.neuronic-penetration",
             "Type": "AtWill",
-            "Effect": "Neuronic Penetration may now be used at will, at most twice per minute using this ability (may still use innates as normal). For this ability to be used, character must also have at least 24 innate Neuronic Penetrations"
+            "Effect": "Neuronic Penetration may now be used at will, at most twice per minute using this ability (may still use innates as normal). For this ability to be used, character must also have at least 24 innate Neuronic Penetrations",
+            "Usage": {
+              "Uses": 2,
+              "Minutes": 1,
+              "RequiredInnates": 24
+            }
           }
         ]
       },
@@ -8515,39 +7694,25 @@
       "Levels": {
         "1": [
           {
-            "Name": "Read Spirit Runes skill (does not grant the ability to utilise",
-            "AbilityRef": "ability.mc.scholar.l1",
-            "Type": "Static",
-            "Effect": "Spirit scrolls)"
+            "AbilityRef": "ability.mc.scholar.l1"
           }
         ],
         "2": [
           {
-            "Name": "Read Mana Glyphs skill (does not grant the ability to utilise Mana",
-            "AbilityRef": "ability.mc.scholar.l2",
-            "Type": "Static",
-            "Effect": "Scrolls)"
+            "AbilityRef": "ability.mc.scholar.l2"
           }
         ],
         "3": [
           {
-            "Name": "Identify Rune at Will",
-            "AbilityRef": "ability.mc.scholar.l3.1",
-            "Type": "AtWill",
-            "Effect": "Identify Rune at will; after 5 seconds study reveals the nature and effect of any Rune of Power or similar rune, including level of effect."
+            "AbilityRef": "ability.mc.scholar.l3.1"
           },
           {
-            "Name": "Ritual Power-User Count",
-            "AbilityRef": "ability.mc.scholar.l3.2",
-            "Type": "Static",
-            "Effect": "Now counts as a power user for helping in rituals, etc."
+            "AbilityRef": "ability.mc.scholar.l3.2"
           }
         ],
         "4": [
           {
-            "Name": "Read Languages",
             "AbilityRef": "ability.read-languages",
-            "Type": "Static",
             "Effect": "Gains Read Languages skill, as per Scout skill. This does not allow the use of Mana or Spirit scrolls, unless the character is in the Scout bracket already, in which case they gain the skill and advance in level as appropriate to this multi-class (e.g. 3rd level casting once 6th level is reached)",
             "AsPerAbilityRefs": [
               "ability.read-languages"
@@ -8556,10 +7721,7 @@
         ],
         "5": [
           {
-            "Name": "Knowledge of the Arcane",
             "AbilityRef": "ability.mc.scholar.l5",
-            "Type": "Innate",
-            "Effect": "May receive an answer from the referee to a question regarding the details of a ritual, supernatural marking or event, or similar appropriately supernatural occurrences. This is knowledge remembered as a result of past studies, and sensible assumptions made, in the manner of a Lucky Idea. The answer can be up to 7 useful words in length, and is entirely at the ref's discretion",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -8568,10 +7730,7 @@
         ],
         "6": [
           {
-            "Name": "Recognise Power (Pathed)",
             "AbilityRef": "ability.mc.scholar.l6.1",
-            "Type": "AtWill",
-            "Effect": "Recognise Power at will, as per Pathed characters (combined Recognise Mana and Recognise Spirit). These are supernatural abilities and require the Scholar to be able to interact with the powerbase, as the Scholar senses the unnatural.",
             "AsPerAbilityRefs": [
               "ability.pathed-recognise-power",
               "ability.recognise-mana",
@@ -8579,10 +7738,7 @@
             ]
           },
           {
-            "Name": "Linguist",
-            "AbilityRef": "ability.mc.scholar.l6.2",
-            "Type": "Static",
-            "Effect": "Familiar with the construction of languages. After at least five minutes exposure to an unknown language, the user may communicate in that language in Pidgin speech using hand-gestures and one-syllable words at zombie speed; the user also understands speech at this speed. Faster speech remains unintelligible."
+            "AbilityRef": "ability.mc.scholar.l6.2"
           }
         ]
       },
@@ -9192,50 +8348,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "+1% chance per level for crafting Physical Items",
-            "AbilityRef": "ability.mc.smith.l1",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.smith.l1"
           }
         ],
         "2": [
           {
-            "Name": "½ level loss from crafting Physical items",
-            "AbilityRef": "ability.mc.smith.l2",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.smith.l2"
           }
         ],
         "3": [
           {
-            "Name": "The cost of each roll is reduced by 10%",
-            "AbilityRef": "ability.mc.smith.l3",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.smith.l3"
           }
         ],
         "4": [
           {
-            "Name": "Apprentice",
-            "AbilityRef": "ability.mc.smith.l4",
-            "Type": "Craft",
-            "Effect": "Provides an additional 5% when making physical items. Does not stack with the CC benefit extra pair of hands"
+            "AbilityRef": "ability.mc.smith.l4"
           }
         ],
         "5": [
           {
-            "Name": "The cost of each roll is now reduced by 20% total",
-            "AbilityRef": "ability.mc.smith.l5",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.smith.l5"
           }
         ],
         "6": [
           {
-            "Name": "Apprentice Bonus +10% (Total)",
-            "AbilityRef": "ability.mc.smith.l6",
-            "Type": "Craft",
-            "Effect": "Level 4 Apprentice now grants an additional 10% chance total"
+            "AbilityRef": "ability.mc.smith.l6"
           }
         ]
       },
@@ -9278,50 +8416,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "+ 1% chance per level for crafting Spiritual Items (Not teaching",
-            "AbilityRef": "ability.mc.spiritual-artisan.l1",
-            "Type": "Craft",
-            "Effect": "Scriptures)"
+            "AbilityRef": "ability.mc.spiritual-artisan.l1"
           }
         ],
         "2": [
           {
-            "Name": "½ level loss from crafting Spiritual items",
-            "AbilityRef": "ability.mc.spiritual-artisan.l2",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-artisan.l2"
           }
         ],
         "3": [
           {
-            "Name": "The cost of each roll is reduced by 10%",
-            "AbilityRef": "ability.mc.spiritual-artisan.l3",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-artisan.l3"
           }
         ],
         "4": [
           {
-            "Name": "Place of Power",
-            "AbilityRef": "ability.mc.spiritual-artisan.l4",
-            "Type": "Craft",
-            "Effect": "The artisan has their own place of power. Reducing the number of successful rolls needed by 1 (to a minimum of 1). Does not stack with the CC benefit Place of Power"
+            "AbilityRef": "ability.mc.spiritual-artisan.l4"
           }
         ],
         "5": [
           {
-            "Name": "The cost of each roll is now reduced by 20% total",
-            "AbilityRef": "ability.mc.spiritual-artisan.l5",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-artisan.l5"
           }
         ],
         "6": [
           {
-            "Name": "Reciprocates Binding no longer has a 5% penalty if making the item for self",
-            "AbilityRef": "ability.mc.spiritual-artisan.l6",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-artisan.l6"
           }
         ]
       },
@@ -9364,50 +8484,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "+ 1% chance per level for wiring Scriptures of the Faith",
-            "AbilityRef": "ability.mc.spiritual-calligrapher.l1",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-calligrapher.l1"
           }
         ],
         "2": [
           {
-            "Name": "½ level loss from writing scriptures of the faith",
-            "AbilityRef": "ability.mc.spiritual-calligrapher.l2",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-calligrapher.l2"
           }
         ],
         "3": [
           {
-            "Name": "The cost of each roll is reduced by 10%",
-            "AbilityRef": "ability.mc.spiritual-calligrapher.l3",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-calligrapher.l3"
           }
         ],
         "4": [
           {
-            "Name": "an additional \"Slot\" for using scriptures of the faith per 2",
-            "AbilityRef": "ability.mc.spiritual-calligrapher.l4",
-            "Type": "Craft",
-            "Effect": "Levels of this class"
+            "AbilityRef": "ability.mc.spiritual-calligrapher.l4"
           }
         ],
         "5": [
           {
-            "Name": "The cost of each roll is now reduced by 20% total",
-            "AbilityRef": "ability.mc.spiritual-calligrapher.l5",
-            "Type": "Craft",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-calligrapher.l5"
           }
         ],
         "6": [
           {
-            "Name": "+ 5% to making a scripture of the faith if the miracle has been",
-            "AbilityRef": "ability.mc.spiritual-calligrapher.l6",
-            "Type": "Craft",
-            "Effect": "Learnt with points"
+            "AbilityRef": "ability.mc.spiritual-calligrapher.l6"
           }
         ]
       },
@@ -9451,26 +8553,17 @@
         "1": [],
         "2": [
           {
-            "Name": "Expertise Bless",
-            "AbilityRef": "ability.mc.spiritual-celebrant.l2",
-            "Type": "Static",
-            "Effect": "If casts Bless for 3 spirits (not reduced, nor from scrolls or innates) it can act as a Paladinic Bless rather than its normal effect, as such the duration is reduced to 5 minutes"
+            "AbilityRef": "ability.mc.spiritual-celebrant.l2"
           }
         ],
         "3": [
           {
-            "Name": "-1 Spirit cost casting handbook Benediction tree miracles, non",
-            "AbilityRef": "ability.mc.spiritual-celebrant.l3",
-            "Type": "Static",
-            "Effect": "Cumulative with any other reduction in spirit cost. Minimum 1 spirit. This reduction may be used by spirit warriors/wayfinders when assigning innates using spirits in this class or similar"
+            "AbilityRef": "ability.mc.spiritual-celebrant.l3"
           }
         ],
         "4": [
           {
-            "Name": "Blessed Touch",
             "AbilityRef": "ability.mc.spiritual-celebrant.l4",
-            "Type": "Static",
-            "Effect": "If spends 30secs in touch contact with a living goodly spirit and then casts a Bless for 3 spirits (not reduced, nor from scrolls or innates) rather than its normal effect it will negate one on-going evil active miracle that is normally released on the caster's death. For example would apply to remove a Suspend Life or Cause Disease. In the case of non-standard miracles it operates at the ref's discretion",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -9479,24 +8572,15 @@
         ],
         "5": [
           {
-            "Name": "No Damage Casting Benediction Tree and Sphere miracles",
-            "AbilityRef": "ability.mc.spiritual-celebrant.l5",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-celebrant.l5"
           }
         ],
         "6": [
           {
-            "Name": "Hospitaller Bless Access",
-            "AbilityRef": "ability.mc.spiritual-celebrant.l6.1",
-            "Type": "Static",
-            "Effect": "Counts as a Hospitaller when casting Blesses, so may cast Permanent Blesses as detailed in Words from Above."
+            "AbilityRef": "ability.mc.spiritual-celebrant.l6.1"
           },
           {
-            "Name": "Benediction Sphere Cost Reduction Extension",
-            "AbilityRef": "ability.mc.spiritual-celebrant.l6.2",
-            "Type": "Static",
-            "Effect": "Level 3 spirit reduction now equally applies to any Benediction Sphere miracle, to a minimum of 1 spirit, non-cumulative with any other reduction in spirit cost."
+            "AbilityRef": "ability.mc.spiritual-celebrant.l6.2"
           }
         ]
       },
@@ -9761,26 +8845,17 @@
         "1": [],
         "2": [
           {
-            "Name": "Expertise Communication",
-            "AbilityRef": "ability.mc.spiritual-diviner.l2",
-            "Type": "Static",
-            "Effect": "The duration in which the questions from Communication and Greater Communication have to be asked is now increased to 15 minutes"
+            "AbilityRef": "ability.mc.spiritual-diviner.l2"
           }
         ],
         "3": [
           {
-            "Name": "-1 Spirit cost casting handbook Communication Tree miracles, non",
-            "AbilityRef": "ability.mc.spiritual-diviner.l3",
-            "Type": "Static",
-            "Effect": "Cumulative with any other reduction in spirit cost. Minimum 1 spirit. This reduction may be used by spirit warriors or wayfinders when assigning innates using spirits in this class or similar"
+            "AbilityRef": "ability.mc.spiritual-diviner.l3"
           }
         ],
         "4": [
           {
-            "Name": "Wisdom",
             "AbilityRef": "ability.mc.spiritual-diviner.l4",
-            "Type": "Static",
-            "Effect": "Answers gained from a single Communication miracle can be one word rather than Yes/No. This will not function with Questioning Spirits",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -9789,24 +8864,15 @@
         ],
         "5": [
           {
-            "Name": "No Damage Casting Communication Tree and Sphere miracles",
-            "AbilityRef": "ability.mc.spiritual-diviner.l5",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-diviner.l5"
           }
         ],
         "6": [
           {
-            "Name": "Communication Duration 60 Minutes",
-            "AbilityRef": "ability.mc.spiritual-diviner.l6.1",
-            "Type": "Static",
-            "Effect": "From level 2 ability, duration is now increased to 60 minutes."
+            "AbilityRef": "ability.mc.spiritual-diviner.l6.1"
           },
           {
-            "Name": "Communication Sphere Cost Reduction Extension",
-            "AbilityRef": "ability.mc.spiritual-diviner.l6.2",
-            "Type": "Static",
-            "Effect": "Level 3 spirit reduction now equally applies to any Communication Tree or Sphere miracle, to a minimum of 1 spirit, non-cumulative with any other reduction in spirit cost."
+            "AbilityRef": "ability.mc.spiritual-diviner.l6.2"
           }
         ]
       },
@@ -10029,26 +9095,17 @@
         "1": [],
         "2": [
           {
-            "Name": "Expertise Cursing",
-            "AbilityRef": "ability.mc.spiritual-dominator.l2",
-            "Type": "Static",
-            "Effect": "May stack the effects of one Damn [Temp Curse] with the effects of one Curse, applies to both the malign and benign castings"
+            "AbilityRef": "ability.mc.spiritual-dominator.l2"
           }
         ],
         "3": [
           {
-            "Name": "-1 Spirit cost casting handbook Dominion Tree miracles, non cumulative",
-            "AbilityRef": "ability.mc.spiritual-dominator.l3",
-            "Type": "Static",
-            "Effect": "With any other reduction in spirit cost. Minimum 1 spirit. This reduction may be used by spirit warriors or wayfinders when assigning innates using spirits in this class or similar"
+            "AbilityRef": "ability.mc.spiritual-dominator.l3"
           }
         ],
         "4": [
           {
-            "Name": "Skilled Dominion",
             "AbilityRef": "ability.mc.spiritual-dominator.l4",
-            "Type": "Static",
-            "Effect": "One published level based Dominion Tree or Sphere miracle may be cast as if non-level based",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -10057,24 +9114,15 @@
         ],
         "5": [
           {
-            "Name": "No Damage Casting Dominion Tree and Sphere miracles",
-            "AbilityRef": "ability.mc.spiritual-dominator.l5",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-dominator.l5"
           }
         ],
         "6": [
           {
-            "Name": "Whispered Secrets",
-            "AbilityRef": "ability.mc.spiritual-dominator.l6.1",
-            "Type": "AtWill",
-            "Effect": "May Spiritually Message at will (for 3 TBLP/use) any target under the priest's Dominion Tree or Sphere miracles."
+            "AbilityRef": "ability.mc.spiritual-dominator.l6.1"
           },
           {
-            "Name": "Dominion Cost Reduction Extension",
-            "AbilityRef": "ability.mc.spiritual-dominator.l6.2",
-            "Type": "Static",
-            "Effect": "Level 3 spirit reduction now equally applies to any Dominion Tree or Sphere miracle, to a minimum of 1 spirit, non-cumulative with any other reduction in spirit cost."
+            "AbilityRef": "ability.mc.spiritual-dominator.l6.2"
           }
         ]
       },
@@ -10293,57 +9341,36 @@
       "Levels": {
         "1": [
           {
-            "Name": "3 spirits (or 4 spirits worth of innates) per level for use on",
-            "AbilityRef": "ability.mc.spiritual-exorcist.l1",
-            "Type": "LevelOfPower:Spirit",
-            "Effect": "Dismissal Tree/Sphere miracles"
+            "AbilityRef": "ability.mc.spiritual-exorcist.l1"
           }
         ],
         "2": [
           {
-            "Name": "1 spirit off casting Handbook Dismissal Sphere miracles",
-            "AbilityRef": "ability.mc.spiritual-exorcist.l2",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-exorcist.l2"
           }
         ],
         "3": [
           {
-            "Name": "Dismissal Reach Extension",
-            "AbilityRef": "ability.mc.spiritual-exorcist.l3.1",
-            "Type": "Static",
-            "Effect": "When Dismissing undead, no longer needs to close to within 9ft to complete the dismiss."
+            "AbilityRef": "ability.mc.spiritual-exorcist.l3.1"
           },
           {
-            "Name": "Word of Banishment",
             "AbilityRef": "ability.mc.spiritual-exorcist.l3.2",
-            "Type": "Innate",
-            "Effect": "May cast a handbook dismissal miracle so it affects all undead with the chosen name within 20ft. Costs triple spirits to cast and does not require them to be backed to a wall.",
             "Count": 1
           }
         ],
         "4": [
           {
-            "Name": "No Damage Casting Dismissal Sphere miracles",
-            "AbilityRef": "ability.mc.spiritual-exorcist.l4",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-exorcist.l4"
           }
         ],
         "5": [
           {
-            "Name": "Now gains 1 spirit off all Dismissal Sphere miracles",
-            "AbilityRef": "ability.mc.spiritual-exorcist.l5",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-exorcist.l5"
           }
         ],
         "6": [
           {
-            "Name": "All \"Dismiss\" miracles now have a range of 20ft",
-            "AbilityRef": "ability.mc.spiritual-exorcist.l6",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-exorcist.l6"
           }
         ]
       },
@@ -10387,35 +9414,23 @@
         "1": [],
         "2": [
           {
-            "Name": "Healing miracles now 'hang' on hands for 30 seconds, in a similar way to causing miracles",
-            "AbilityRef": "ability.mc.spiritual-healer.l2",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-healer.l2"
           }
         ],
         "3": [
           {
-            "Name": "The Protection from Spirits miracle necessary for Restore Life now costs",
-            "AbilityRef": "ability.mc.spiritual-healer.l3",
-            "Type": "Static",
-            "Effect": "No spirits - the Protection is only '0th' level however, and serves no other purpose"
+            "AbilityRef": "ability.mc.spiritual-healer.l3"
           }
         ],
         "4": [
           {
-            "Name": "No Damage Casting curing miracles",
-            "AbilityRef": "ability.mc.spiritual-healer.l4",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-healer.l4"
           }
         ],
         "5": [],
         "6": [
           {
-            "Name": "When casting a Restore Life the priest does not need to know/use the name of the person being restored to life",
-            "AbilityRef": "ability.mc.spiritual-healer.l6",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-healer.l6"
           }
         ]
       },
@@ -10797,34 +9812,22 @@
       "Levels": {
         "1": [
           {
-            "Name": "word",
-            "AbilityRef": "ability.mc.spiritual-maelstrom.l1",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-maelstrom.l1"
           }
         ],
         "2": [
           {
-            "Name": "Expertise Spirit Bolt",
-            "AbilityRef": "ability.mc.spiritual-maelstrom.l2",
-            "Type": "Static",
-            "Effect": "After the casting of a Spirit Bolt miracle may add a 2nd Spirit Bolt to the end with just the verbal 'Spirit Bolt', which is also reduced in cost by 1spirit"
+            "AbilityRef": "ability.mc.spiritual-maelstrom.l2"
           }
         ],
         "3": [
           {
-            "Name": "-1 Spirit cost casting handbook Force Tree miracles, non cumulative with any other reduction",
-            "AbilityRef": "ability.mc.spiritual-maelstrom.l3",
-            "Type": "Static",
-            "Effect": "In cost, bar Expertise Spirit Bolt gained from this class. Minimum 1 spirit. This reduction may be used by spirit warriors/wayfinders when assigning innates using spirits in this class or similar"
+            "AbilityRef": "ability.mc.spiritual-maelstrom.l3"
           }
         ],
         "4": [
           {
-            "Name": "Strong Words",
             "AbilityRef": "ability.mc.spiritual-maelstrom.l4",
-            "Type": "Static",
-            "Effect": "May cast a Voice of Power miracle with a 3 word command rather than",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -10833,24 +9836,15 @@
         ],
         "5": [
           {
-            "Name": "No damage casting Force Tree and Sphere miracles",
-            "AbilityRef": "ability.mc.spiritual-maelstrom.l5",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-maelstrom.l5"
           }
         ],
         "6": [
           {
-            "Name": "Expertise Spirit Bolt Chain Casting",
-            "AbilityRef": "ability.mc.spiritual-maelstrom.l6.1",
-            "Type": "Static",
-            "Effect": "Expertise Spirit Bolt at level 2 may now be continued as long as desired (and the caster has the power remaining). Casting is broken by a gap of more than 5 seconds or if the caster suffers any external damage."
+            "AbilityRef": "ability.mc.spiritual-maelstrom.l6.1"
           },
           {
-            "Name": "Force Sphere Cost Reduction Extension",
-            "AbilityRef": "ability.mc.spiritual-maelstrom.l6.2",
-            "Type": "Static",
-            "Effect": "Level 3 spirit reduction now equally applies to any Force Tree or Sphere miracle, to a minimum of 1 spirit, non-cumulative with any other reduction in spirit cost."
+            "AbilityRef": "ability.mc.spiritual-maelstrom.l6.2"
           }
         ]
       },
@@ -11075,50 +10069,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "Now has 1/6 of total spirits for use on mantic miracles",
-            "AbilityRef": "ability.mc.spiritual-mancer.l1",
-            "Type": "Static",
-            "Effect": "All of the priests discerns become mantic. Casting spirits mantically costs double tblp"
+            "AbilityRef": "ability.mc.spiritual-mancer.l1"
           }
         ],
         "2": [
           {
-            "Name": "Mantic Spirits 1/3",
-            "AbilityRef": "ability.mc.spiritual-mancer.l2",
-            "Type": "Static",
-            "Effect": "1/3 of total spirits now mantic"
+            "AbilityRef": "ability.mc.spiritual-mancer.l2"
           }
         ],
         "3": [
           {
-            "Name": "1/2 total spirits now mantic",
-            "AbilityRef": "ability.mc.spiritual-mancer.l3",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-mancer.l3"
           }
         ],
         "4": [
           {
-            "Name": "2/3 total spirits now mantic",
-            "AbilityRef": "ability.mc.spiritual-mancer.l4",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-mancer.l4"
           }
         ],
         "5": [
           {
-            "Name": "5/6 total spirits now mantic",
-            "AbilityRef": "ability.mc.spiritual-mancer.l5",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-mancer.l5"
           }
         ],
         "6": [
           {
-            "Name": "All Priests spirits may now be cast mantically",
-            "AbilityRef": "ability.mc.spiritual-mancer.l6",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-mancer.l6"
           }
         ]
       },
@@ -11161,50 +10137,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "3 spirits (or 4 spirits worth of innates) per level for use on",
-            "AbilityRef": "ability.mc.spiritual-summoner.l1",
-            "Type": "LevelOfPower:Spirit",
-            "Effect": "Necromancy tree/sphere miracles"
+            "AbilityRef": "ability.mc.spiritual-summoner.l1"
           }
         ],
         "2": [
           {
-            "Name": "1 spirit off handbook Necromancy miracles",
-            "AbilityRef": "ability.mc.spiritual-summoner.l2",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-summoner.l2"
           }
         ],
         "3": [
           {
-            "Name": "Undead raised/summoned by the Summoner are now controlled at his control",
-            "AbilityRef": "ability.mc.spiritual-summoner.l3",
-            "Type": "Static",
-            "Effect": "Level, rather than 1st"
+            "AbilityRef": "ability.mc.spiritual-summoner.l3"
           }
         ],
         "4": [
           {
-            "Name": "No Damage Casting Necromancy miracles",
-            "AbilityRef": "ability.mc.spiritual-summoner.l4",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-summoner.l4"
           }
         ],
         "5": [
           {
-            "Name": "Now gains 1 spirit off all Necromancy Sphere/Tree miracles",
-            "AbilityRef": "ability.mc.spiritual-summoner.l5",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-summoner.l5"
           }
         ],
         "6": [
           {
-            "Name": "Focussed Command",
             "AbilityRef": "ability.mc.spiritual-summoner.l6",
-            "Type": "Static",
-            "Effect": "The control on one published summoned/raised undead will now last until it is destroyed",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -11251,50 +10209,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "3 points of Casting Stamina per level of this multi-class",
-            "AbilityRef": "ability.mc.spiritual-thaumaturge.l1",
-            "Type": "Static",
-            "Effect": "Cumulative with Casting Stamina acquired elsewhere"
+            "AbilityRef": "ability.mc.spiritual-thaumaturge.l1"
           }
         ],
         "2": [
           {
-            "Name": "Always counts as an 8th level priest for the ability to cast miracles",
-            "AbilityRef": "ability.mc.spiritual-thaumaturge.l2",
-            "Type": "Static",
-            "Effect": "Even if they are lower (e.g. from casting a restore life)"
+            "AbilityRef": "ability.mc.spiritual-thaumaturge.l2"
           }
         ],
         "3": [
           {
-            "Name": "+1 grade meditation rate for Spirits (x1->x2->x3, etc.)",
-            "AbilityRef": "ability.mc.spiritual-thaumaturge.l3",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-thaumaturge.l3"
           }
         ],
         "4": [
           {
-            "Name": "Over casting on spirits no longer slays the Spiritual Thaumaturge",
-            "AbilityRef": "ability.mc.spiritual-thaumaturge.l4",
-            "Type": "Static",
-            "Effect": "Outright - instead his maximum tblp is reduced by 3 points for each point of spirits overspent, for the rest of the day only, and cannot in any way be healed or restored except by Supreme Sacrifice until that point. This reduction is not damage, but voluntarily accepted weakening. Reducing tblp to 0 or below still kills the character (even if live to minus is owned)"
+            "AbilityRef": "ability.mc.spiritual-thaumaturge.l4"
           }
         ],
         "5": [
           {
-            "Name": "+ 1 level of effect for miracles (stacks with other published increases)",
-            "AbilityRef": "ability.mc.spiritual-thaumaturge.l5",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-thaumaturge.l5"
           }
         ],
         "6": [
           {
-            "Name": "When buying new miracles (not innates) with points, now pays: 5 points",
-            "AbilityRef": "ability.mc.spiritual-thaumaturge.l6",
-            "Type": "Static",
-            "Effect": "Per spirit point for miracles of 10 spirits or less, or 50 + 3 points per spirit point above 10 for higher level miracles. This replaces the tables Buy New Miracle Ability - so acquiring the Commune with the Gods miracle would cost a priest 50 + 3x6 = 68 points, rather than 90"
+            "AbilityRef": "ability.mc.spiritual-thaumaturge.l6"
           }
         ]
       },
@@ -11350,26 +10290,17 @@
         "1": [],
         "2": [
           {
-            "Name": "Expertise",
-            "AbilityRef": "ability.mc.spiritual-warden.l2",
-            "Type": "Static",
-            "Effect": "Spirit Shield; Spirit Shield [3 spirit handbook miracle] when cast now lasts 60 minutes rather than 15 minutes"
+            "AbilityRef": "ability.mc.spiritual-warden.l2"
           }
         ],
         "3": [
           {
-            "Name": "-1 Spirit cost casting handbook Warding Tree miracles, non cumulative",
-            "AbilityRef": "ability.mc.spiritual-warden.l3",
-            "Type": "Static",
-            "Effect": "With any other reduction in spirit cost. Minimum 1 spirit. This reduction may be used by spirit warriors and wayfinders when assigning innates using spirits in this class or similar"
+            "AbilityRef": "ability.mc.spiritual-warden.l3"
           }
         ],
         "4": [
           {
-            "Name": "Last Line",
             "AbilityRef": "ability.mc.spiritual-warden.l4",
-            "Type": "Static",
-            "Effect": "A Spirit Shield miracle active on the user becomes the last line of defence for the next 15minutes rather than the first. This may be used within 2secs of suffering from an effect, c.f. War Cry",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -11378,24 +10309,15 @@
         ],
         "5": [
           {
-            "Name": "No damage casting Warding Tree and Sphere miracles",
-            "AbilityRef": "ability.mc.spiritual-warden.l5",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.spiritual-warden.l5"
           }
         ],
         "6": [
           {
-            "Name": "Persistent First Spirit Shield",
-            "AbilityRef": "ability.mc.spiritual-warden.l6.1",
-            "Type": "Static",
-            "Effect": "1st Spirit Shield of the day cast on self lasts until triggered, whereupon the duration starts as normal."
+            "AbilityRef": "ability.mc.spiritual-warden.l6.1"
           },
           {
-            "Name": "Warding Sphere Cost Reduction Extension",
-            "AbilityRef": "ability.mc.spiritual-warden.l6.2",
-            "Type": "Static",
-            "Effect": "Level 3 spirit reduction now equally applies to any Warding Tree or Sphere miracle, to a minimum of 1 spirit, non-cumulative with any other reduction in spirit cost."
+            "AbilityRef": "ability.mc.spiritual-warden.l6.2"
           }
         ]
       },
@@ -11617,52 +10539,34 @@
       "Levels": {
         "1": [
           {
-            "Name": "one additional Stealth innate per level of this class",
-            "AbilityRef": "ability.mc.stalker.l1",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.stalker.l1"
           }
         ],
         "2": [
           {
-            "Name": "No longer needs to use Stealth innates against a wall, may instead be",
-            "AbilityRef": "ability.mc.stalker.l2",
-            "Type": "Static",
-            "Effect": "Used against any surface"
+            "AbilityRef": "ability.mc.stalker.l2"
           }
         ],
         "3": [
           {
-            "Name": "Greater Stealth",
             "AbilityRef": "ability.mc.stalker.l3",
-            "Type": "Innate",
-            "Effect": "Allows the scout to move at slow zombie speed without breaking the effect of the Stealth innate; it is still broken if the scout breaks any other condition, such as talking or attacking.",
             "Count": 1
           }
         ],
         "4": [
           {
-            "Name": "Itchy Feet may perform up to three self only distinct actions whilst",
-            "AbilityRef": "ability.mc.stalker.l4",
-            "Type": "Static",
-            "Effect": "Within an innate Stealth without breaking it. 1 step would be an action, so would rotating 180 degrees, as would be drawing a sword. Such action should be performed at a max of Zombie speed"
+            "AbilityRef": "ability.mc.stalker.l4"
           }
         ],
         "5": [
           {
-            "Name": "Loiter",
             "AbilityRef": "ability.mc.stalker.l5",
-            "Type": "AtWill",
-            "Effect": "Enhances an innate Stealth so that it is non-durational. This may not be enhanced further by such abilities as Greater Stealth.",
             "Count": 1
           }
         ],
         "6": [
           {
-            "Name": "Hidden",
             "AbilityRef": "ability.mc.stalker.l6",
-            "Type": "Innate",
-            "Effect": "While under the effects of an innate Stealth, gains immunity to all supernatural sights as long as the character remains stationary. This innate must be used as the innate Stealth is used.",
             "Count": 1
           }
         ]
@@ -11790,39 +10694,24 @@
       "Levels": {
         "1": [
           {
-            "Name": "Stealth Mage Colour Choice",
-            "AbilityRef": "ability.mc.stealth-mage.l1.1",
-            "Type": "Static",
-            "Effect": "Must select a Wizard colour appropriate to character alignment, recorded on card when level 1 is bought. If Ivory is selected then Ivory code restrictions are gained."
+            "AbilityRef": "ability.mc.stealth-mage.l1.1"
           },
           {
-            "Name": "Detect Magic at Will",
             "AbilityRef": "ability.mc.stealth-mage.l1.2",
-            "Type": "AtWill",
-            "Effect": "May cast Detect Magic at will, as Wizard.",
             "AsPerAbilityRefs": [
               "ability.detect-magic"
             ]
           },
           {
-            "Name": "Colour Cantrip",
-            "AbilityRef": "ability.mc.stealth-mage.l1.3",
-            "Type": "Static",
-            "Effect": "Gains the cantrip of own selected colour, if applicable."
+            "AbilityRef": "ability.mc.stealth-mage.l1.3"
           },
           {
-            "Name": "Stealth Mage Casting Level Bonus",
-            "AbilityRef": "ability.mc.stealth-mage.l1.4",
-            "Type": "Static",
-            "Effect": "Casting level for reading mana scrolls is increased by half the multi-class level, rounded up; this is also the Stealth Mage casting level for innates from this class."
+            "AbilityRef": "ability.mc.stealth-mage.l1.4"
           }
         ],
         "2": [
           {
-            "Name": "Innate A",
             "AbilityRef": "ability.mc.stealth-mage.l2",
-            "Type": "Innate",
-            "Effect": "Gains innate 'A' as below x1/2 levels",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -11831,10 +10720,7 @@
         ],
         "3": [
           {
-            "Name": "Innate B",
             "AbilityRef": "ability.mc.stealth-mage.l3",
-            "Type": "Innate",
-            "Effect": "Gains innate 'B' as below x1/2 levels",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -11844,10 +10730,7 @@
         "4": [],
         "5": [
           {
-            "Name": "Innate C",
             "AbilityRef": "ability.mc.stealth-mage.l5",
-            "Type": "Innate",
-            "Effect": "Gains innate 'C' as below x1/3 levels",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -11856,10 +10739,7 @@
         ],
         "6": [
           {
-            "Name": "Innates",
-            "AbilityRef": "ability.mc.stealth-mage.l6",
-            "Type": "Static",
-            "Effect": "On purchasing the relevant level of Stealth Mage, the character must elect to learn one of a choice of possible innates, and this choice must be recorded on his card and signed by a Referee. This innate must be one of the colour selected by the Stealth Mage. The buyer must pick one innate in each column of their chosen colour. Colour Innate 'A' Innate 'B' Innate 'C' Grey Any 1st-3 rd Any 3rd-4 th Dispel 5-6, Silence (1 rune per innate) Black Disintegrate(r), Extinguish(r), Darkness(s), Walk on Darkness Darkness(r), Animate Scarecrow, Walk on Darkness Blackblade, Summon Shade '6', Catalepsy (1 rune per innate), Talk to Shades Blue Shatter(r), Mend(r),Jump(s) Stormblast, Walk on Air(s) Stormblast, Walk on Air(o), Telekinesis Blink, Talk to Sylphs, Sleep (1 rune per innate) Brown Warp(r), Reshape(t), Entangle, Bind, Walk on Earth(s), Magic Missile Walk on Earth(o), Plate(o), Passwall, Chameleon(o), Wall of Stone, Bind SuperMissile, Talk to Gnomes, Summon Gnome '6' Green Unlock(r), Rust(r), Passive Illusion, Unseen Servant, Walk on/thru Water(s) Passive Illusion, Programmed Illusion, Summon Undine '4', Walk on/thru Water(o) Semi-Active Illusion, Slow (1 rune per innate), Talk to Undines, Summon Undine '6' Red Ignite(r), Shock, Fireblast, Walk thru Fire(s) Fireblast, Melt, Fireblade Summon Salamander '6', Sword of Power, Talk to Salamanders White Farsee, Walk on Light(s), Light(s), Snowball Walk on Light(o), Wall of Ice, Light(r) Talk to Sprites, Sabre of Light & Truth, Summon Sprite '6', Freeze (1 rune / innate) Gold Shield (S), Shield (o) Shield (o), Lesser Forcewall Hearten (S), Strength (S), Strengthen (O) Silver Tell Power, Tell Colour, Tell Tracks, Inquiry Inquiry, Tell Form, Tell Wounds True Sight Bronze Limb Thrall (1 rune), Shudder Shudder Thrall (One rune) Ebony Pain, Confusion (One rune), Spell Shield, Spasm (1 rune) Ivory Might (S) Might (O), Traitors Shield Freedom of the Drake Jade Strength Within, Strengthen the Body Revive the Body, Empower Form, Eternal Life, Renew the Body. Onyx Nature of the Child as if cast with 3 mana (e.g. 1 DAC) Decay the form Frailty of Age"
+            "AbilityRef": "ability.mc.stealth-mage.l6"
           }
         ]
       },
@@ -12028,7 +10908,6 @@
       "Levels": {
         "1": [
           {
-            "Name": "Live to Minus",
             "AbilityRef": "ability.live-to-minus",
             "Type": "Static",
             "Effect": "Gains Live to Minus 3 tblp per level of this class. Stacks with published Live to Minus"
@@ -12036,15 +10915,11 @@
         ],
         "2": [
           {
-            "Name": "Hard to Kill",
-            "AbilityRef": "ability.mc.survivor.l2",
-            "Type": "Static",
-            "Effect": "1 st time it is needed each day the Survivor's Live to Minus is doubled"
+            "AbilityRef": "ability.mc.survivor.l2"
           }
         ],
         "3": [
           {
-            "Name": "Live to Minus",
             "AbilityRef": "ability.live-to-minus",
             "Type": "Static",
             "Effect": "All Live to Minus owned now applies to locations, increasing the amount of damage they need to be severed. This extra life does not count towards damage suffered from Loc to Zero/Sever type effects"
@@ -12052,18 +10927,12 @@
         ],
         "4": [
           {
-            "Name": "No longer suffers Bleeding Damage",
-            "AbilityRef": "ability.mc.survivor.l4",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.survivor.l4"
           }
         ],
         "5": [
           {
-            "Name": "Recuperate",
             "AbilityRef": "ability.mc.survivor.l5",
-            "Type": "Static",
-            "Effect": "While unconscious due to damage begins to regenerate 1/1 to the worst loc per 30 seconds until consciousness is regained. This stacks with other regen",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -12072,10 +10941,7 @@
         ],
         "6": [
           {
-            "Name": "One Last Effort",
             "AbilityRef": "ability.mc.survivor.l6",
-            "Type": "AtWill",
-            "Effect": "May be used while unconscious due to damage. Regains consciousness and all locations begin to work. This lasts up to 10 seconds. May not engage in combat during this time, and any damage causes it to end immediately",
             "Count": 1
           }
         ]
@@ -12122,7 +10988,6 @@
       "Levels": {
         "1": [
           {
-            "Name": "Telekinesis",
             "AbilityRef": "ability.telekinesis",
             "Type": "AtWill",
             "Effect": "Telekinesis at will"
@@ -12130,10 +10995,7 @@
         ],
         "2": [
           {
-            "Name": "Telekinetic Flash",
             "AbilityRef": "ability.mc.telekinetic.l2",
-            "Type": "Innate",
-            "Effect": "As tables.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -12142,10 +11004,7 @@
         ],
         "3": [
           {
-            "Name": "Detonate",
             "AbilityRef": "ability.mc.telekinetic.l3",
-            "Type": "Innate",
-            "Effect": "As tables.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 2
@@ -12154,7 +11013,6 @@
         ],
         "4": [
           {
-            "Name": "Telekinesis",
             "AbilityRef": "ability.telekinesis",
             "Type": "Innate",
             "Effect": "Greater Telekinesis x1/2 levels.",
@@ -12166,16 +11024,10 @@
         ],
         "5": [
           {
-            "Name": "Telekinesis Cost Reduction",
-            "AbilityRef": "ability.mc.telekinetic.l5.1",
-            "Type": "Static",
-            "Effect": "TBLP cost for Telekinesis is now 6 TBLP, from 9."
+            "AbilityRef": "ability.mc.telekinetic.l5.1"
           },
           {
-            "Name": "Telekinetic Crush",
             "AbilityRef": "ability.mc.telekinetic.l5.2",
-            "Type": "Innate",
-            "Effect": "Telekinetic Crush.",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -12184,7 +11036,6 @@
         ],
         "6": [
           {
-            "Name": "Neuronic Penetration",
             "AbilityRef": "ability.neuronic-penetration",
             "Type": "Static",
             "Effect": "May now use any of Neuronic Penetration, Neuronic Blast, or Neuronic Flare as a telekinetic power; this means that they affect the physical world only rather than the neuronic, so inflict physical damage. Innate PAC (only) may be applied to this damage - e.g. a Telekinetic Penetration inflicts 6 tblp, 6 loc to the head - innate PAC 4 means 2 loc head, 2 tblp is taken, while PAC 1 means that 5 loc head and 5 tblp is taken. Telekinetic XXXXX must be declared for the effect to function. Base casting damage for these telekinetics is doubled before applying Neural Foci and other abilities to the final casting life cost"
@@ -12377,50 +11228,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "3 points of Casting Stamina per level of this multi-class",
-            "AbilityRef": "ability.mc.thaumaturge.l1",
-            "Type": "Static",
-            "Effect": "Cumulative with Casting Stamina acquired elsewhere"
+            "AbilityRef": "ability.mc.thaumaturge.l1"
           }
         ],
         "2": [
           {
-            "Name": "+1 casting level for spells",
-            "AbilityRef": "ability.mc.thaumaturge.l2",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.thaumaturge.l2"
           }
         ],
         "3": [
           {
-            "Name": "+1 grade meditation rate for mana (x1->x2->x3, etc.)",
-            "AbilityRef": "ability.mc.thaumaturge.l3",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.thaumaturge.l3"
           }
         ],
         "4": [
           {
-            "Name": "Overcasting on mana no longer slays the Thaumaturge outright",
-            "AbilityRef": "ability.mc.thaumaturge.l4",
-            "Type": "Static",
-            "Effect": "Instead his maximum tblp is reduced by 3 points for each point of mana overspent, for the rest of the day only, and cannot in any way be healed or restored except by Supreme Sacrifice until that point. This reduction is not damage, but voluntarily accepted weakening. Reducing tblp to 0 or below still kills the character even if Live to Minus is owned"
+            "AbilityRef": "ability.mc.thaumaturge.l4"
           }
         ],
         "5": [
           {
-            "Name": "+2 casting levels (total) for casting spells",
-            "AbilityRef": "ability.mc.thaumaturge.l5",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.thaumaturge.l5"
           }
         ],
         "6": [
           {
-            "Name": "When buying new glyphs (not innates) with points, now pays: 5 points per",
-            "AbilityRef": "ability.mc.thaumaturge.l6",
-            "Type": "Static",
-            "Effect": "Mana point for spells of 10 mana or less, or 50 + 3 points per mana point above 10 for higher level spells. This replaces the tables Buy New Glyph Ability - so acquiring the Incineration glyph would cost a Red Thaumaturge 50 + 3x7 = 71 points, rather than 95"
+            "AbilityRef": "ability.mc.thaumaturge.l6"
           }
         ]
       },
@@ -12496,24 +11329,15 @@
       "Levels": {
         "1": [
           {
-            "Name": "Survival as Ranger",
-            "AbilityRef": "ability.mc.trailbreaker.l1",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.trailbreaker.l1"
           }
         ],
         "2": [
           {
-            "Name": "Bind Wounds",
-            "AbilityRef": "ability.mc.trailbreaker.l2.1",
-            "Type": "Static",
-            "Effect": "Gains Bind Wounds as Ranger."
+            "AbilityRef": "ability.mc.trailbreaker.l2.1"
           },
           {
-            "Name": "Tell Wounds",
             "AbilityRef": "ability.mc.trailbreaker.l2.2",
-            "Type": "Static",
-            "Effect": "Gains Tell Wounds as Scout skill.",
             "AsPerAbilityRefs": [
               "ability.tell-wounds"
             ]
@@ -12521,7 +11345,6 @@
         ],
         "3": [
           {
-            "Name": "Tell Direction",
             "AbilityRef": "ability.tell-direction",
             "Type": "Static",
             "Effect": "Gains Tell Direction as Druid"
@@ -12529,23 +11352,16 @@
         ],
         "4": [
           {
-            "Name": "Tracking as Ranger",
-            "AbilityRef": "ability.mc.trailbreaker.l4",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.trailbreaker.l4"
           }
         ],
         "5": [
           {
-            "Name": "1/3 tblp in Locational Curing, this stacks with tables ability",
-            "AbilityRef": "ability.mc.trailbreaker.l5",
-            "Type": "Static",
-            "Effect": "First Aid"
+            "AbilityRef": "ability.mc.trailbreaker.l5"
           }
         ],
         "6": [
           {
-            "Name": "Perception",
             "AbilityRef": "ability.perception",
             "Type": "Static",
             "Effect": "Gains Perception as Scout skill"
@@ -12612,9 +11428,7 @@
       "Levels": {
         "1": [
           {
-            "Name": "Ward pact",
             "AbilityRef": "ability.ward-pact-atwill",
-            "Type": "AtWill",
             "Effect": "Ward pact creatures of own race, or non-human side of race (e.g. Ogres may pact Ogres and Half Ogres), at will (as per Ancient Folk ability, level-based at 8th level)",
             "AsPerAbilityRefs": [
               "ability.ward-pact-atwill"
@@ -12625,7 +11439,6 @@
           {
             "Name": "cold rage",
             "AbilityRef": "ability.cold-rage",
-            "Type": "Innate",
             "Effect": "Cold Rage x1/2 levels",
             "Progression": {
               "Amount": 1,
@@ -12635,9 +11448,7 @@
         ],
         "3": [
           {
-            "Name": "May be Commanded",
             "AbilityRef": "ability.mc.tribal-warlord.l3",
-            "Type": "Innate",
             "Effect": "As per non-level based Voice of Power of up to 3 words, by each of own tribe's Druid, Shaman and Witchdoctor",
             "Count": 1,
             "AsPerAbilityRefs": [
@@ -12647,10 +11458,7 @@
         ],
         "4": [
           {
-            "Name": "May Command",
             "AbilityRef": "ability.mc.tribal-warlord.l4",
-            "Type": "Innate",
-            "Effect": "Any member of own tribe except Druid, Shaman, Witchdoctor, Chieftain or other Warlord, as above",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -12659,24 +11467,15 @@
         ],
         "5": [
           {
-            "Name": "Counts as Two Tribe-Members",
-            "AbilityRef": "ability.mc.tribal-warlord.l5.1",
-            "Type": "Static",
-            "Effect": "Counts as two tribe-members for purposes of Shaman and Witchdoctor calculating power-points."
+            "AbilityRef": "ability.mc.tribal-warlord.l5.1"
           },
           {
-            "Name": "+1 Resistance vs External Tribal Effects",
-            "AbilityRef": "ability.mc.tribal-warlord.l5.2",
-            "Type": "Static",
-            "Effect": "+1 level of resistance to all effects not originating from own Shaman, Witchdoctor, or Chieftain."
+            "AbilityRef": "ability.mc.tribal-warlord.l5.2"
           }
         ],
         "6": [
           {
-            "Name": "Warlord's Fury",
             "AbilityRef": "ability.mc.tribal-warlord.l6",
-            "Type": "Innate",
-            "Effect": "Grants 50% rage, +18/6 life and +1 strength stacking to a max. of +3, lasting 5 minutes",
             "Count": 1
           }
         ]
@@ -12721,56 +11520,35 @@
       "Levels": {
         "1": [
           {
-            "Name": "Undead Creation Point Selection",
-            "AbilityRef": "ability.mc.undead-master.l1.1",
-            "Type": "Static",
-            "Effect": "May choose to count as the creation point for Undead of Priest's own creation."
+            "AbilityRef": "ability.mc.undead-master.l1.1"
           },
           {
-            "Name": "Created Undead Hits Level Bonus",
-            "AbilityRef": "ability.mc.undead-master.l1.2",
-            "Type": "Static",
-            "Effect": "+1 level for purposes of calculating the hits of created undead for each level of this multi-class bought."
+            "AbilityRef": "ability.mc.undead-master.l1.2"
           }
         ],
         "2": [
           {
-            "Name": "May Animate Zombies or Skeletons (as appropriate to the corpse's state)",
-            "AbilityRef": "ability.mc.undead-master.l2",
-            "Type": "AtWill",
-            "Effect": "At will by touch, costing 3 tblp per touch for Zombie or 6 tblp for Skeleton"
+            "AbilityRef": "ability.mc.undead-master.l2"
           }
         ],
         "3": [
           {
-            "Name": "Control Undead I at Will",
-            "AbilityRef": "ability.mc.undead-master.l3",
-            "Type": "AtWill",
-            "Effect": "Control Level 1 Undead at will, full verbal and control name required, for 3 tblp per use"
+            "AbilityRef": "ability.mc.undead-master.l3"
           }
         ],
         "4": [
           {
-            "Name": "Counts as 9th level for purposes of controlling Undead",
-            "AbilityRef": "ability.mc.undead-master.l4",
-            "Type": "AtWill",
-            "Effect": "Control Level 2 Undead at will, as above, costing 6 tblp per use"
+            "AbilityRef": "ability.mc.undead-master.l4"
           }
         ],
         "5": [
           {
-            "Name": "Control Undead III at Will",
-            "AbilityRef": "ability.mc.undead-master.l5",
-            "Type": "AtWill",
-            "Effect": "Control Level 3 Undead at will, as above, for 12 tblp per use"
+            "AbilityRef": "ability.mc.undead-master.l5"
           }
         ],
         "6": [
           {
-            "Name": "The Protection from Good Spirits miracle required for undead summoning",
-            "AbilityRef": "ability.mc.undead-master.l6",
-            "Type": "Static",
-            "Effect": "Now costs no spirits - the Protection is only '0th' level however, and serves no other purpose"
+            "AbilityRef": "ability.mc.undead-master.l6"
           }
         ]
       },
@@ -13023,42 +11801,27 @@
       "Levels": {
         "1": [
           {
-            "Name": "Starts each adventure with one dose of any of Blindness, Dumbness",
-            "AbilityRef": "ability.mc.vwe-general.l1",
-            "Type": "Static",
-            "Effect": "Paralysis, Deafness or Sleep II potion antidotes (as handbook) per level of multiclass, which are adventure temp only (no cards issued) . Potions from this class may be distilled if the Distilling skill is owned"
+            "AbilityRef": "ability.mc.vwe-general.l1"
           }
         ],
         "2": [
           {
-            "Name": "Starts each adventure with one dose of any of Blindness, Dumbness",
-            "AbilityRef": "ability.mc.vwe-general.l2",
-            "Type": "Static",
-            "Effect": "Paralysis, Deafness or Sleep II potion (as handbook) per level of multiclass, as above"
+            "AbilityRef": "ability.mc.vwe-general.l2"
           }
         ],
         "3": [
           {
-            "Name": "Starts each adventure with two doses of any of Strength, Dexterity or",
-            "AbilityRef": "ability.mc.vwe-general.l3",
-            "Type": "Static",
-            "Effect": "Endurance potions per level of multiclass, as above"
+            "AbilityRef": "ability.mc.vwe-general.l3"
           }
         ],
         "4": [
           {
-            "Name": "Starts each adventure with one dose of any of Deadening Elixir, Hyper",
-            "AbilityRef": "ability.mc.vwe-general.l4",
-            "Type": "Static",
-            "Effect": "Action, or Super Endurance potions, detailed below, per level of multiclass, as above (additional doses may be bought at 20 points each, to a maximum of four of each type)"
+            "AbilityRef": "ability.mc.vwe-general.l4"
           }
         ],
         "5": [
           {
-            "Name": "Starts each adventure with one dose of Assisted Climb potion which is a",
             "AbilityRef": "ability.mc.vwe-general.l5",
-            "Type": "Static",
-            "Effect": "Salve functioning as per a single use of the tables ability Assisted Climb per level of multiclass, as above",
             "AsPerAbilityRefs": [
               "ability.assisted-climb"
             ]
@@ -13066,10 +11829,7 @@
         ],
         "6": [
           {
-            "Name": "Starts each adventure with one dose of Protection from Psionics potion",
-            "AbilityRef": "ability.mc.vwe-general.l6",
-            "Type": "Static",
-            "Effect": "Further details on potion types and their effects please check the Scout Handbook, At the Sharp End"
+            "AbilityRef": "ability.mc.vwe-general.l6"
           }
         ]
       },
@@ -13238,50 +11998,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "Starts each adventure with three doses of adventure temp 6pt cure",
-            "AbilityRef": "ability.mc.vwe-healing.l1",
-            "Type": "Static",
-            "Effect": "Potions per level of multi- class (no cards issued). Potions from this class may be distilled if the Distilling skill is owned"
+            "AbilityRef": "ability.mc.vwe-healing.l1"
           }
         ],
         "2": [
           {
-            "Name": "Starts adventure with two doses of 2pt locational cure potions (cure no",
-            "AbilityRef": "ability.mc.vwe-healing.l2",
-            "Type": "Static",
-            "Effect": "Tblp) per level of multiclass, as above"
+            "AbilityRef": "ability.mc.vwe-healing.l2"
           }
         ],
         "3": [
           {
-            "Name": "Starts adventure with three doses of 12pt tblp cure potions per level of",
-            "AbilityRef": "ability.mc.vwe-healing.l3",
-            "Type": "Static",
-            "Effect": "Multiclass, as above"
+            "AbilityRef": "ability.mc.vwe-healing.l3"
           }
         ],
         "4": [
           {
-            "Name": "Starts adventure with one dose of Resuscitation Balm per level of",
-            "AbilityRef": "ability.mc.vwe-healing.l4",
-            "Type": "Static",
-            "Effect": "Multiclass, as above"
+            "AbilityRef": "ability.mc.vwe-healing.l4"
           }
         ],
         "5": [
           {
-            "Name": "Starts adventure with one dose of 18pt tblp cure potion per level of",
-            "AbilityRef": "ability.mc.vwe-healing.l5",
-            "Type": "Static",
-            "Effect": "Multiclass, as above"
+            "AbilityRef": "ability.mc.vwe-healing.l5"
           }
         ],
         "6": [
           {
-            "Name": "Starts adventure with one dose of Anti Venom True which negates any and",
-            "AbilityRef": "ability.mc.vwe-healing.l6",
-            "Type": "Static",
-            "Effect": "All poisons in the system of the drinker before they have kicked-in, and also removes any ongoing poison effects such as Blindness, per two levels of multiclass, as above"
+            "AbilityRef": "ability.mc.vwe-healing.l6"
           }
         ]
       },
@@ -13450,50 +12192,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "Starts each adventure with two doses of Blade or Ingestive Venom '4' per",
-            "AbilityRef": "ability.mc.vwe-poison.l1",
-            "Type": "Static",
-            "Effect": "Level of multi-class, which are adventure temp (no cards issued) . Potions from this class may be distilled if the Distilling skill is owned"
+            "AbilityRef": "ability.mc.vwe-poison.l1"
           }
         ],
         "2": [
           {
-            "Name": "Starts each adventure with one dose of Nerve Venom or Wooden Horse per",
-            "AbilityRef": "ability.mc.vwe-poison.l2",
-            "Type": "Static",
-            "Effect": "Level of multi-class, as above"
+            "AbilityRef": "ability.mc.vwe-poison.l2"
           }
         ],
         "3": [
           {
-            "Name": "Starts each adventure with two doses of Blade or Ingestive Venom '6' per",
-            "AbilityRef": "ability.mc.vwe-poison.l3",
-            "Type": "Static",
-            "Effect": "Level"
+            "AbilityRef": "ability.mc.vwe-poison.l3"
           }
         ],
         "4": [
           {
-            "Name": "Starts each adventure with one dose of Coating Poison '6' per level (15",
-            "AbilityRef": "ability.mc.vwe-poison.l4",
-            "Type": "Static",
-            "Effect": "6)"
+            "AbilityRef": "ability.mc.vwe-poison.l4"
           }
         ],
         "5": [
           {
-            "Name": "Starts each adventure with one dose of Blade or Ingestive Venom '8' per",
-            "AbilityRef": "ability.mc.vwe-poison.l5",
-            "Type": "Static",
-            "Effect": "Level"
+            "AbilityRef": "ability.mc.vwe-poison.l5"
           }
         ],
         "6": [
           {
-            "Name": "Starts each adventure with one dose of Ingestive Death Poison, which",
-            "AbilityRef": "ability.mc.vwe-poison.l6",
-            "Type": "Static",
-            "Effect": "Slays the drinker 30 seconds after ingestion, as above"
+            "AbilityRef": "ability.mc.vwe-poison.l6"
           }
         ]
       },
@@ -13662,50 +12386,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "These can be used to cast handbook miracles on the priest's list",
-            "AbilityRef": "ability.mc.vessel-of-the-spirits.l1",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.vessel-of-the-spirits.l1"
           }
         ],
         "2": [
           {
-            "Name": "Spirits from this pool regenerate at 1pt/60 minutes",
-            "AbilityRef": "ability.mc.vessel-of-the-spirits.l2",
-            "Type": "Static",
-            "Effect": "This is not cumulative with any other power regen or meditation"
+            "AbilityRef": "ability.mc.vessel-of-the-spirits.l2"
           }
         ],
         "3": [
           {
-            "Name": "Power Drawn",
-            "AbilityRef": "ability.mc.vessel-of-the-spirits.l3",
-            "Type": "Static",
-            "Effect": "½ levels - With 2 minutes uninterrupted concentration may transfer up to 6 power from this class to the priests own normal spirits"
+            "AbilityRef": "ability.mc.vessel-of-the-spirits.l3"
           }
         ],
         "4": [
           {
-            "Name": "Spirits now regenerate at 1/30 minutes",
-            "AbilityRef": "ability.mc.vessel-of-the-spirits.l4",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.vessel-of-the-spirits.l4"
           }
         ],
         "5": [
           {
-            "Name": "Spirits now regenerate at 1/15 minutes",
-            "AbilityRef": "ability.mc.vessel-of-the-spirits.l5",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.vessel-of-the-spirits.l5"
           }
         ],
         "6": [
           {
-            "Name": "Spirits now regenerate at a rate of 1/5 minutes",
-            "AbilityRef": "ability.mc.vessel-of-the-spirits.l6",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.vessel-of-the-spirits.l6"
           }
         ]
       },
@@ -13760,29 +12466,18 @@
       "Levels": {
         "1": [
           {
-            "Name": "DAC +1",
-            "AbilityRef": "ability.mc.war-dancer.l1.1",
-            "Type": "Static",
-            "Effect": "+1 DAC."
+            "AbilityRef": "ability.mc.war-dancer.l1.1"
           },
           {
-            "Name": "War-Dancer Equipment Restrictions",
-            "AbilityRef": "ability.mc.war-dancer.l1.2",
-            "Type": "Static",
-            "Effect": "May no longer use physical armour. May only battleboard up to 3 items, all of which must be physical or magical and of the Elf's own colour. Alfar may use earthpower items if they are capable of doing so, instead of magical."
+            "AbilityRef": "ability.mc.war-dancer.l1.2"
           }
         ],
         "2": [
           {
-            "Name": "DAC +2 (Total)",
-            "AbilityRef": "ability.mc.war-dancer.l2.1",
-            "Type": "Static",
-            "Effect": "+2 DAC (total)."
+            "AbilityRef": "ability.mc.war-dancer.l2.1"
           },
           {
-            "Name": "Salmon Leap",
             "AbilityRef": "ability.salmon-leap",
-            "Type": "Innate",
             "Effect": "Salmon Leap.",
             "Progression": {
               "Amount": 1,
@@ -13792,10 +12487,7 @@
         ],
         "3": [
           {
-            "Name": "25% Calm Fury",
             "AbilityRef": "ability.mc.war-dancer.l3",
-            "Type": "Innate",
-            "Effect": "As Cold Rage, however War-Dancer need not berserk and may instead act as he will - Fury lasts 5 minutes or until War-Dancer leaves combat, whichever is less",
             "Progression": {
               "Amount": 1,
               "PerLevels": 3
@@ -13804,32 +12496,20 @@
         ],
         "4": [
           {
-            "Name": "DAC +3 (Total)",
-            "AbilityRef": "ability.mc.war-dancer.l4",
-            "Type": "Static",
-            "Effect": "+3 DAC (total)"
+            "AbilityRef": "ability.mc.war-dancer.l4"
           }
         ],
         "5": [
           {
-            "Name": "DAC +4 (Total)",
-            "AbilityRef": "ability.mc.war-dancer.l5.1",
-            "Type": "Static",
-            "Effect": "+4 DAC (total)."
+            "AbilityRef": "ability.mc.war-dancer.l5.1"
           },
           {
-            "Name": "Speed of Thought",
-            "AbilityRef": "ability.mc.war-dancer.l5.2",
-            "Type": "Static",
-            "Effect": "During another's Leap, may take 2 paces in addition to or instead of striking a blow; this can include turning round, etc."
+            "AbilityRef": "ability.mc.war-dancer.l5.2"
           }
         ],
         "6": [
           {
-            "Name": "Flurry of Blades",
             "AbilityRef": "ability.mc.war-dancer.l6",
-            "Type": "Innate",
-            "Effect": "When using at least 2 weapons, may fight in a confusing and unorthodox manner such that any non-War-Dancer cannot apply more than 1 mastery to blows struck against the War-Dancer, lasting 5 minutes. Not a visual attack",
             "Count": 1
           }
         ]
@@ -13999,68 +12679,41 @@
       "Levels": {
         "1": [
           {
-            "Name": "O Skill as Warrior",
-            "AbilityRef": "ability.mc.war-mage.l1",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.war-mage.l1"
           }
         ],
         "2": [
           {
-            "Name": "May now carry up to one bastard-sword's worth of non-magical metal",
-            "AbilityRef": "ability.mc.war-mage.l2",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.war-mage.l2"
           }
         ],
         "3": [
           {
-            "Name": "E Skill as Warrior",
-            "AbilityRef": "ability.mc.war-mage.l3.1",
-            "Type": "Static",
-            "Effect": "E Skill as Warrior."
+            "AbilityRef": "ability.mc.war-mage.l3.1"
           },
           {
-            "Name": "No-Damage Offensive Casting (1 TBLP)",
-            "AbilityRef": "ability.mc.war-mage.l3.2",
-            "Type": "Static",
-            "Effect": "Now takes no damage from casting offensive spells which would otherwise cost only 1 TBLP to cast."
+            "AbilityRef": "ability.mc.war-mage.l3.2"
           }
         ],
         "4": [
           {
-            "Name": "H Skill as Warrior",
-            "AbilityRef": "ability.mc.war-mage.l4.1",
-            "Type": "Static",
-            "Effect": "H Skill as Warrior."
+            "AbilityRef": "ability.mc.war-mage.l4.1"
           },
           {
-            "Name": "DAC +1",
-            "AbilityRef": "ability.mc.war-mage.l4.2",
-            "Type": "Static",
-            "Effect": "+1 DAC."
+            "AbilityRef": "ability.mc.war-mage.l4.2"
           }
         ],
         "5": [
           {
-            "Name": "B Skill as Warrior",
-            "AbilityRef": "ability.mc.war-mage.l5.1",
-            "Type": "Static",
-            "Effect": "B Skill as Warrior."
+            "AbilityRef": "ability.mc.war-mage.l5.1"
           },
           {
-            "Name": "Offensive Spell Casting Level +1",
-            "AbilityRef": "ability.mc.war-mage.l5.2",
-            "Type": "Static",
-            "Effect": "+1 level of casting for offensive spells only."
+            "AbilityRef": "ability.mc.war-mage.l5.2"
           }
         ],
         "6": [
           {
-            "Name": "Mana Rage",
             "AbilityRef": "ability.mc.war-mage.l6",
-            "Type": "Innate",
-            "Effect": "As Cold Rage but also applies vs. purely magical damage",
             "Count": 1
           }
         ]
@@ -14194,16 +12847,10 @@
       "Levels": {
         "1": [
           {
-            "Name": "Staff or Unarmed Only",
-            "AbilityRef": "ability.mc.weapons-priest.l1.1",
-            "Type": "Static",
-            "Effect": "May only ever use Staff or Unarmed as weapons."
+            "AbilityRef": "ability.mc.weapons-priest.l1.1"
           },
           {
-            "Name": "O and B Skill with Staff",
-            "AbilityRef": "ability.mc.weapons-priest.l1.2",
-            "Type": "Static",
-            "Effect": "Gains 'O' and 'B' Skill with Staff."
+            "AbilityRef": "ability.mc.weapons-priest.l1.2"
           }
         ],
         "2": [],
@@ -14212,10 +12859,7 @@
         "5": [],
         "6": [
           {
-            "Name": "+1 cumulative mastery in Staff",
-            "AbilityRef": "ability.mc.weapons-priest.l6",
-            "Type": "Static",
-            "Effect": "As tables."
+            "AbilityRef": "ability.mc.weapons-priest.l6"
           }
         ]
       },
@@ -14383,80 +13027,47 @@
       "Levels": {
         "1": [
           {
-            "Name": "+3 spirits, or 4 spirits of causing innates",
-            "AbilityRef": "ability.mc.wound-bringer.l1",
-            "Type": "LevelOfPower:Spirit",
-            "Effect": "+3 spirits for use on causing miracles only (these spirits do not stack with those granted by any other multi-class), or 4 spirits of causing innates."
+            "AbilityRef": "ability.mc.wound-bringer.l1"
           }
         ],
         "2": [
           {
-            "Name": "+6 spirits total, or 8 spirits of causing innates",
-            "AbilityRef": "ability.mc.wound-bringer.l2.1",
-            "Type": "LevelOfPower:Spirit",
-            "Effect": "+6 spirits total for use on causing miracles only (these spirits do not stack with those granted by any other multi-class), or 8 spirits of causing innates."
+            "AbilityRef": "ability.mc.wound-bringer.l2.1"
           },
           {
-            "Name": "Extended Hanging Causing Miracles",
-            "AbilityRef": "ability.mc.wound-bringer.l2.2",
-            "Type": "Static",
-            "Effect": "Causing miracles that would normally 'hang' on hands now hang for twice as long (usually 1 minute or until discharged)."
+            "AbilityRef": "ability.mc.wound-bringer.l2.2"
           }
         ],
         "3": [
           {
-            "Name": "+9 spirits total, or 12 spirits of causing innates",
-            "AbilityRef": "ability.mc.wound-bringer.l3.1",
-            "Type": "LevelOfPower:Spirit",
-            "Effect": "+9 spirits total for use on causing miracles only (these spirits do not stack with those granted by any other multi-class), or 12 spirits of causing innates."
+            "AbilityRef": "ability.mc.wound-bringer.l3.1"
           },
           {
-            "Name": "Touch of Death Protection Discount",
-            "AbilityRef": "ability.mc.wound-bringer.l3.2",
-            "Type": "Static",
-            "Effect": "The Protection from Spirits miracle necessary for Touch of Death now costs no spirits; the Protection is only '0th' level however, and serves no other purpose."
+            "AbilityRef": "ability.mc.wound-bringer.l3.2"
           }
         ],
         "4": [
           {
-            "Name": "+12 spirits total, or 16 spirits of causing innates",
-            "AbilityRef": "ability.mc.wound-bringer.l4.1",
-            "Type": "LevelOfPower:Spirit",
-            "Effect": "+12 spirits total for use on causing miracles only (these spirits do not stack with those granted by any other multi-class), or 16 spirits of causing innates."
+            "AbilityRef": "ability.mc.wound-bringer.l4.1"
           },
           {
-            "Name": "No Damage Casting (Causing)",
-            "AbilityRef": "ability.mc.wound-bringer.l4.2",
-            "Type": "Static",
-            "Effect": "No Damage Casting Causing miracles (tree and sphere)."
+            "AbilityRef": "ability.mc.wound-bringer.l4.2"
           }
         ],
         "5": [
           {
-            "Name": "+15 spirits total, or 20 spirits of causing innates",
-            "AbilityRef": "ability.mc.wound-bringer.l5.1",
-            "Type": "LevelOfPower:Spirit",
-            "Effect": "+15 spirits total for use on causing miracles only (these spirits do not stack with those granted by any other multi-class), or 20 spirits of causing innates."
+            "AbilityRef": "ability.mc.wound-bringer.l5.1"
           },
           {
-            "Name": "Quiet Causing Verbal Casting",
-            "AbilityRef": "ability.mc.wound-bringer.l5.2",
-            "Type": "Static",
-            "Effect": "No longer needs to shout the verbals to any causing miracle (e.g. TOD), as long as words are spoken clearly and audibly."
+            "AbilityRef": "ability.mc.wound-bringer.l5.2"
           }
         ],
         "6": [
           {
-            "Name": "+18 spirits total, or 24 spirits of causing innates",
-            "AbilityRef": "ability.mc.wound-bringer.l6.1",
-            "Type": "LevelOfPower:Spirit",
-            "Effect": "+18 spirits total for use on causing miracles only (these spirits do not stack with those granted by any other multi-class), or 24 spirits of causing innates."
+            "AbilityRef": "ability.mc.wound-bringer.l6.1"
           },
           {
-            "Name": "Multiple Hanging Causing Miracles",
-            "AbilityRef": "ability.mc.wound-bringer.l6.2",
-            "Type": "Static",
-            "Effect": "May cast multiple causing miracles to hang simultaneously, each hanging as normal until discharged with a separate and distinct touch. This may be used in combination with the ability from level 2 above."
+            "AbilityRef": "ability.mc.wound-bringer.l6.2"
           }
         ]
       },
@@ -14644,50 +13255,32 @@
       "Levels": {
         "1": [
           {
-            "Name": "Neuronic Reserves I",
-            "AbilityRef": "ability.mc.awoken-mind.l1",
-            "Type": "Static",
-            "Effect": "Cannot meditate/regain neuronics except through this class and Supreme Sacrifice. Gain Neuronic Reserves pool of 2 per level; regenerates 1/hour. May spend 30 seconds and 1 NR per 3 TBLP (base) to regain base-class neuronic innates."
+            "AbilityRef": "ability.mc.awoken-mind.l1"
           }
         ],
         "2": [
           {
-            "Name": "Neuronic Reserves II",
-            "AbilityRef": "ability.mc.awoken-mind.l2",
-            "Type": "Static",
-            "Effect": "Reserve pool regeneration improves to 1 per 30 minutes."
+            "AbilityRef": "ability.mc.awoken-mind.l2"
           }
         ],
         "3": [
           {
-            "Name": "Neuronic Reserves III",
-            "AbilityRef": "ability.mc.awoken-mind.l3",
-            "Type": "Static",
-            "Effect": "Reserve pool may now regain innates of any published neuronic owned. Regain time reduced to 15 seconds."
+            "AbilityRef": "ability.mc.awoken-mind.l3"
           }
         ],
         "4": [
           {
-            "Name": "Neuronic Reserves IV",
-            "AbilityRef": "ability.mc.awoken-mind.l4",
-            "Type": "Static",
-            "Effect": "Reserve pool regeneration improves to 1 per 15 minutes."
+            "AbilityRef": "ability.mc.awoken-mind.l4"
           }
         ],
         "5": [
           {
-            "Name": "Neuronic Reserves V",
-            "AbilityRef": "ability.mc.awoken-mind.l5",
-            "Type": "Static",
-            "Effect": "Reserve pool regeneration improves to 1 per 10 minutes. Regain time reduced to 10 seconds."
+            "AbilityRef": "ability.mc.awoken-mind.l5"
           }
         ],
         "6": [
           {
-            "Name": "Neuronic Reserves VI",
-            "AbilityRef": "ability.mc.awoken-mind.l6",
-            "Type": "Static",
-            "Effect": "Reserve pool regeneration improves to 1 per 5 minutes."
+            "AbilityRef": "ability.mc.awoken-mind.l6"
           }
         ]
       },

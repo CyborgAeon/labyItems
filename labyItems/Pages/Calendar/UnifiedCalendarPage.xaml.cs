@@ -49,6 +49,8 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        _eventStore.Refreshed -= OnStoreRefreshed;
+        _eventStore.Refreshed += OnStoreRefreshed;
         _statusLabel.Start();
         if (!LabyrintheSession.Shared.CanViewCalendar)
         {
@@ -79,9 +81,17 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
 
     protected override void OnDisappearing()
     {
+        _eventStore.Refreshed -= OnStoreRefreshed;
         _statusLabel.Stop();
         base.OnDisappearing();
     }
+
+    private void OnStoreRefreshed() => Dispatcher.Dispatch(() =>
+    {
+        if (_accountVersion != LabyrintheSession.Shared.Version || Window == null) return;
+        RefreshMonthContent(_eventStore.GetEventsForMonth(_visibleMonth));
+        _statusLabel.Update();
+    });
 
     private async Task NavigateBackAsync()
     {
@@ -239,7 +249,7 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
     {
         _isLoadingMonth = true;
         EventsLoadingIndicator.IsVisible = EventsLoadingIndicator.IsRunning = true;
-        try { return await _eventStore.LoadMonthAsync(_visibleMonth); }
+        try { return await _eventStore.ReadMonthAndRefreshAsync(_visibleMonth); }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException)
         {
             if (_accountVersion != LabyrintheSession.Shared.Version) return Array.Empty<CalendarEventRecord>();
@@ -451,7 +461,9 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
         {
             EventsHost.Children.Add(new Label
             {
-                Text = "No events match this filter.",
+                Text = _eventStore.GetMonthStatus(_visibleMonth) == null
+                    ? "No saved events are available for this month. Connect to load events."
+                    : "No events match this filter.",
                 FontAttributes = FontAttributes.Italic,
                 HorizontalTextAlignment = TextAlignment.Center
             });

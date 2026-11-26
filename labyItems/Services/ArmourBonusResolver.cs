@@ -18,7 +18,7 @@ public static class ArmourBonusResolver
 
         foreach (var ability in abilities ?? Enumerable.Empty<AbilityDraft>())
         {
-            if (ability == null)
+            if (ability == null || ability.HasConditionalArmour || ability.IsActivatedGrant)
                 continue;
 
             var sourceKey = BuildSourceKey(ability).ToUpperInvariant();

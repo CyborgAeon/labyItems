@@ -59,10 +59,11 @@ public sealed class BattleboardExportService : IBattleboardExportService
                              ?? BattleboardInnateCalculator.ResolveAssignedItems(draft))
             .ToList();
         var supplementalSpecialisationAbilities = await ResolveSelectedSpecialisationAbilitiesAsync(draft);
+        var intervalAbilities = await MultiClassUsageService.ResolveAsync(draft);
         var lifeTotals = BattleboardLifeCalculator.Calculate(draft, assignedItems);
         var itemArmour = BattleboardArmourCalculator.Calculate(draft, assignedItems);
         var resolvedInnates = MergeInnates(
-            BattleboardInnateCalculator.Calculate(draft, assignedItems),
+            await BattleboardInnateCalculator.CalculateAsync(draft, assignedItems),
             supplementalSpecialisationAbilities);
         var abilityEffects = await BattleboardAbilityEffectResolver.ResolveAsync(draft);
         var advancementEffects = await BattleboardAdvancementEffectResolver.ResolveAsync(draft.AdvancementAbilities);
@@ -227,7 +228,7 @@ public sealed class BattleboardExportService : IBattleboardExportService
         }
 
         var immunityAbilities = draft.Abilities
-            .Where(IsImmunityAbility)
+            .Where(BattleboardAbilityEffectResolver.IsPermanentImmunity)
             .Select(FormatAbilityText)
             .Where(v => !string.IsNullOrWhiteSpace(v))
             .Select(StripImmunityPrefix)
@@ -255,6 +256,8 @@ public sealed class BattleboardExportService : IBattleboardExportService
         var pacEntry = BuildInnatePacEntry(armourBonus.Pac);
         if (!string.IsNullOrWhiteSpace(pacEntry))
             staticAbilities.Add(pacEntry);
+        staticAbilities.AddRange(intervalAbilities.Select(usage =>
+            string.IsNullOrWhiteSpace(usage.PublishedEffect) ? usage.DisplayName : $"{usage.DisplayName} – {usage.PublishedEffect}"));
         WriteStaticAbilities(ws, staticAbilities, startRow: 4, endRow: 54);
 
         var innateConfig = GetInnatePlacement(templateName, isVivomancer);
@@ -354,7 +357,7 @@ public sealed class BattleboardExportService : IBattleboardExportService
             var name = !string.IsNullOrWhiteSpace(ability.BattleboardNameOverride)
                 ? ability.BattleboardNameOverride
                 : ability.Name;
-            var rank = Math.Max(1, AbilityDraftBuilder.ResolveInnateRank(ability, achievedLevel: 8));
+            var rank = AbilityDraftBuilder.ResolveInnateRank(ability);
             AddInnate(name, rank);
         }
 
@@ -498,19 +501,6 @@ public sealed class BattleboardExportService : IBattleboardExportService
         return IsPureArmourToken(ability.Name) || IsPureArmourToken(ability.Effect);
     }
 
-    private static bool IsImmunityAbility(AbilityDraft ability)
-    {
-        if (ability == null)
-            return false;
-
-        if (ability.AbilityType == AbilityType.Immunity)
-            return true;
-
-        var text = (ability.Name ?? ability.ShortStringValue ?? string.Empty).Trim();
-        return text.StartsWith("Immunity to ", StringComparison.OrdinalIgnoreCase)
-               || text.StartsWith("Total Immunity to ", StringComparison.OrdinalIgnoreCase);
-    }
-
     private static bool IsPureArmourToken(string? text)
     {
         if (string.IsNullOrWhiteSpace(text))
@@ -574,7 +564,9 @@ public sealed class BattleboardExportService : IBattleboardExportService
 
     private static bool TryComputeFrequencyRank(AbilityDraft ability, out int rank)
     {
-        return AbilityDraftBuilder.TryResolveFrequencySkillRank(ability, out rank, achievedLevel: 8);
+        var resolved = AbilityDraftBuilder.TryResolveFrequencySkillRank(ability, out var levels, out var frequency);
+        rank = AbilityQuantityResolver.GetFrequencyIncrements(levels, frequency);
+        return resolved;
     }
 
     private static string FormatAbilityText(AbilityDraft ability)

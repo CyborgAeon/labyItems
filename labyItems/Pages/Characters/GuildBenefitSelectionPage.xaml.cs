@@ -13,7 +13,9 @@ namespace labyItems.Pages.Characters;
 
 public partial class GuildBenefitSelectionPage : ContentPage
 {
-    private readonly TaskCompletionSource<bool> _doneTcs = new();
+    private readonly TaskCompletionSource<bool> _doneTcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private readonly Func<IReadOnlyList<GuildBenefitChoiceSummaryRow>>? _refreshRows;
+    private readonly string _guildName;
 
     public GuildBenefitSelectionPage(GuildBenefitChoiceSummaryRow row)
         : this(new[] { row }, row?.GuildName)
@@ -22,7 +24,8 @@ public partial class GuildBenefitSelectionPage : ContentPage
 
     public GuildBenefitSelectionPage(
         IReadOnlyList<GuildBenefitChoiceSummaryRow> rows,
-        string? guildName = null)
+        string? guildName = null,
+        Func<IReadOnlyList<GuildBenefitChoiceSummaryRow>>? refreshRows = null)
     {
         InitializeComponent();
 
@@ -32,36 +35,52 @@ public partial class GuildBenefitSelectionPage : ContentPage
         if (normalizedRows.Count == 0)
             throw new ArgumentException("At least one guild choice row is required.", nameof(rows));
 
-        var resolvedGuildName = (guildName ?? normalizedRows[0].GuildName ?? string.Empty).Trim();
-        BindingContext = new GuildBenefitSelectionPageVm(normalizedRows, resolvedGuildName);
+        _guildName = (guildName ?? normalizedRows[0].GuildName ?? string.Empty).Trim();
+        _refreshRows = refreshRows;
+        BindingContext = new GuildBenefitSelectionPageVm(normalizedRows, _guildName, RefreshChoices);
+    }
+
+    private void RefreshChoices()
+    {
+        var choices = _refreshRows?.Invoke();
+        if (choices is { Count: > 0 })
+            BindingContext = new GuildBenefitSelectionPageVm(choices, _guildName, RefreshChoices);
     }
 
     public Task<bool> Result => _doneTcs.Task;
 
     private async void OnDoneClicked(object sender, EventArgs e)
     {
+        await Navigation.PopModalAsync();
         _doneTcs.TrySetResult(true);
-        await Navigation.PopModalAsync().ConfigureAwait(false);
+    }
+
+    protected override bool OnBackButtonPressed()
+    {
+        _doneTcs.TrySetResult(false);
+        return base.OnBackButtonPressed();
     }
 
     private sealed class GuildBenefitSelectionPageVm
     {
         public GuildBenefitSelectionPageVm(
             IReadOnlyList<GuildBenefitChoiceSummaryRow> rows,
-            string guildName)
+            string guildName,
+            Action refreshChoices)
         {
             Header = guildName.Length == 0
                 ? "Set guild benefit choices"
                 : guildName;
 
-            Sections = BuildSections(rows);
+            Sections = BuildSections(rows, refreshChoices);
         }
 
         public string Header { get; }
         public IReadOnlyList<GuildBenefitTierSectionVm> Sections { get; }
 
         private static IReadOnlyList<GuildBenefitTierSectionVm> BuildSections(
-            IReadOnlyList<GuildBenefitChoiceSummaryRow> rows)
+            IReadOnlyList<GuildBenefitChoiceSummaryRow> rows,
+            Action refreshChoices)
         {
             var orderedRows = rows
                 .Where(row => row != null)
@@ -77,7 +96,7 @@ public partial class GuildBenefitSelectionPage : ContentPage
                     var tierTitle = ToTierTitle(group.Key);
                     var tierAvailableNow = group.All(row => row.IsTierAvailableNow);
                     var rowsForTier = group
-                        .Select(row => new GuildBenefitChoiceRowVm(row))
+                        .Select(row => new GuildBenefitChoiceRowVm(row, refreshChoices))
                         .ToList();
                     return new GuildBenefitTierSectionVm(
                         tierTitle: tierTitle,
@@ -164,9 +183,11 @@ public partial class GuildBenefitSelectionPage : ContentPage
     private sealed class GuildBenefitChoiceRowVm : INotifyPropertyChanged
     {
         private readonly GuildBenefitChoiceSummaryRow _row;
+        private readonly Action _refreshChoices;
 
-        public GuildBenefitChoiceRowVm(GuildBenefitChoiceSummaryRow row)
+        public GuildBenefitChoiceRowVm(GuildBenefitChoiceSummaryRow row, Action refreshChoices)
         {
+            _refreshChoices = refreshChoices;
             _row = row ?? throw new ArgumentNullException(nameof(row));
             RowTitle = BuildRowTitle(_row);
             Options = new ObservableCollection<GuildBenefitSelectionOptionVm>(
@@ -203,10 +224,14 @@ public partial class GuildBenefitSelectionPage : ContentPage
                 option.IsSelected = nextSelection.HasValue && option.Index == index;
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasSelection)));
+            _refreshChoices();
         }
 
         private static string BuildRowTitle(GuildBenefitChoiceSummaryRow row)
         {
+            if (row.IsStructured)
+                return row.DisplayText;
+
             if (row.OptionNumber.HasValue && row.OptionNumber.Value > 0)
                 return $"Choice {row.OptionNumber.Value}";
 

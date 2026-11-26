@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using labyItems.Models.Characters;
+using labyItems.Models.Guilds;
+using labyItems.Services.Guilds;
 using labyItems.Models.Rules;
 using labyItems.Services.Specialisations;
 
@@ -16,19 +15,10 @@ public static class GuildsService
     public static void InvalidateCache()
     {
         _cache = null;
-        _miracleSearchCache = null;
     }
 
-    private static readonly JsonSerializerOptions _jsonOptions = new()
-    {
-        PropertyNameCaseInsensitive = true,
-        Converters = { new JsonStringEnumConverter() }
-    };
-
     private static readonly SemaphoreSlim CacheLock = new(1, 1);
-    private static readonly SemaphoreSlim MiracleSearchCacheLock = new(1, 1);
     private static Dictionary<string, GuildRecord>? _cache;
-    private static Dictionary<string, GuildRecord>? _miracleSearchCache;
 
     public static async Task<Dictionary<string, GuildRecord>> GetAllAsync()
     {
@@ -42,13 +32,11 @@ public static class GuildsService
             if (_cache != null)
                 return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
 
-            var json = await ServiceHelper.ReadPackageTextAsync("people/guilds.json").ConfigureAwait(false);
-            var records = await Task.Run(() =>
-                    JsonSerializer.Deserialize<Dictionary<string, GuildRecord>>(json, _jsonOptions)
-                    ?? new Dictionary<string, GuildRecord>())
-                .ConfigureAwait(false);
+            var packaged = await GuildCatalogue.GetAllAsync().ConfigureAwait(false);
+            var records = packaged.ToDictionary(
+                entry => entry.Key, entry => entry.Value.CreateWorkingCopy(), StringComparer.OrdinalIgnoreCase);
 
-            await NormalizeGuildBenefitsAsync(records).ConfigureAwait(false);
+            await PrepareGuildProjectionsAsync(records).ConfigureAwait(false);
             labyItems.Services.LabyrintheSession.Shared.Publish(accountCacheVersion, () => _cache = records);
             return _cache ?? throw new InvalidOperationException("The account cache changed. Please retry.");
         }
@@ -58,32 +46,29 @@ public static class GuildsService
         }
     }
 
-    private static async Task NormalizeGuildBenefitsAsync(Dictionary<string, GuildRecord> records)
+    private static async Task PrepareGuildProjectionsAsync(Dictionary<string, GuildRecord> records)
     {
-        if (records == null || records.Count == 0)
-            return;
+        var index = await SpecialisationDefinitionRepository.GetIndexAsync().ConfigureAwait(false);
+        var abilityRefs = index?.AbilityReferences
+                          ?? new Dictionary<string, AbilityDefinition>(StringComparer.OrdinalIgnoreCase);
+        var choiceSets = index?.ChoiceSetTemplates
+                         ?? new Dictionary<string, SpecialisationChoiceSet>(StringComparer.OrdinalIgnoreCase);
 
-        try
+        foreach (var record in records.Values)
         {
-            var index = await SpecialisationDefinitionRepository.GetIndexAsync();
-            var abilityRefs = index?.AbilityReferences
-                              ?? new Dictionary<string, AbilityDefinition>(StringComparer.OrdinalIgnoreCase);
-            var choiceSetRefs = index?.ChoiceSetTemplates
-                               ?? new Dictionary<string, SpecialisationChoiceSet>(StringComparer.OrdinalIgnoreCase);
-
-            foreach (var record in records.Values)
+            record.AbilityReferences = abilityRefs;
+            record.ChoiceSetTemplates = choiceSets;
+            record.CityBenefits = NormalizeCityBenefits(record.CityBenefits);
+            record.SetBenefitProjection(raw =>
             {
-                record.Benefits ??= new GuildBenefits();
                 var grantsById = new Dictionary<string, AbilityDefinition>(StringComparer.OrdinalIgnoreCase);
-                record.Benefits.Basic = NormalizeBenefitTier(record.Benefits.Basic, abilityRefs, choiceSetRefs, grantsById);
-                record.Benefits.Intermediate = NormalizeBenefitTier(record.Benefits.Intermediate, abilityRefs, choiceSetRefs, grantsById);
-                record.Benefits.Advanced = NormalizeBenefitTier(record.Benefits.Advanced, abilityRefs, choiceSetRefs, grantsById);
-                record.CityBenefits = NormalizeCityBenefits(record.CityBenefits);
-            }
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"[GuildsService] Failed to normalize guild ability references: {ex.Message}");
+                return new GuildBenefits
+                {
+                    Basic = NormalizeBenefitTier(raw.Basic, abilityRefs, choiceSets, grantsById),
+                    Intermediate = NormalizeBenefitTier(raw.Intermediate, abilityRefs, choiceSets, grantsById),
+                    Advanced = NormalizeBenefitTier(raw.Advanced, abilityRefs, choiceSets, grantsById)
+                };
+            });
         }
     }
 
@@ -126,6 +111,36 @@ public static class GuildsService
             if (entry == null)
                 continue;
 
+            if (entry.Node?.Kind == "Choice")
+            {
+                var choice = new GuildBenefitEntry { Node = entry.Node };
+                foreach (var option in entry.Node.Options)
+                {
+                    var abilities = option.Grants.Select(grant => NormalizeAbility(grant.Ability, abilityRefs))
+                        .Where(ability => !string.IsNullOrWhiteSpace(ability.Name)).ToList();
+                    if (abilities.Count > 0)
+                        choice.Options.Add(new GuildBenefitOption { Abilities = abilities });
+                }
+                normalized.Add(choice);
+                continue;
+            }
+
+            if (entry.Node?.Kind == "MiracleListAdd")
+            {
+                normalized.Add(new GuildBenefitEntry
+                {
+                    Node = entry.Node,
+                    Ability = NormalizeAbility(entry.Node.Ability, abilityRefs)
+                });
+                continue;
+            }
+
+            if (entry.Node?.Kind != null && entry.Node.Kind != "Grant" && entry.Node.Mode != "Legacy")
+            {
+                normalized.Add(new GuildBenefitEntry { Node = entry.Node });
+                continue;
+            }
+
             if (entry.Ability != null)
             {
                 var ability = NormalizeBenefitAbility(entry.Ability, abilityRefs, grantsById);
@@ -138,7 +153,7 @@ public static class GuildsService
                     prompt.ChoiceSetRefs = null;
                     prompt.ChoiceSetRef = null;
                     if (!string.IsNullOrWhiteSpace(prompt.Name))
-                        normalized.Add(new GuildBenefitEntry { Ability = prompt });
+                        normalized.Add(new GuildBenefitEntry { Ability = prompt, Node = entry.Node });
 
                     var optionsEntry = BuildChoiceSetOptionEntry(ability.ChoiceSetRefs, abilityRefs, choiceSetRefs);
                     if (optionsEntry != null)
@@ -147,8 +162,8 @@ public static class GuildsService
                     continue;
                 }
 
-                if (!string.IsNullOrWhiteSpace(ability.Name))
-                    normalized.Add(new GuildBenefitEntry { Ability = ability });
+                if (entry.Node != null || !string.IsNullOrWhiteSpace(ability.Name))
+                    normalized.Add(new GuildBenefitEntry { Ability = ability, Node = entry.Node });
 
                 RegisterGrant(ability, grantsById);
 
@@ -293,7 +308,7 @@ public static class GuildsService
         return options.Count == 0 ? null : new GuildBenefitEntry { Options = options };
     }
 
-    private static AbilityDefinition NormalizeAbility(
+    internal static AbilityDefinition NormalizeAbility(
         AbilityDefinition? raw,
         IReadOnlyDictionary<string, AbilityDefinition> abilityRefs)
     {
@@ -361,6 +376,10 @@ public static class GuildsService
             target.Effect = source.Effect;
         if (!string.IsNullOrWhiteSpace(source.Lore))
             target.Lore = source.Lore;
+        if (!string.IsNullOrWhiteSpace(source.Family))
+            target.Family = source.Family;
+        if (source.RuleReferences is { Count: > 0 })
+            target.RuleReferences = (target.RuleReferences ?? []).Concat(source.RuleReferences).Distinct().ToArray();
         if (!string.IsNullOrWhiteSpace(source.Source))
             target.Source = source.Source;
         if (source.Count.HasValue)
@@ -406,7 +425,7 @@ public static class GuildsService
         }
     }
 
-    private static void ApplyGrantOverrides(AbilityDefinition ability, GuildGrantOverrides overrides)
+    internal static void ApplyGrantOverrides(AbilityDefinition ability, GuildGrantOverrides overrides)
     {
         if (!string.IsNullOrWhiteSpace(overrides.DisplayName))
             ability.Name = overrides.DisplayName;
@@ -414,10 +433,11 @@ public static class GuildsService
             ability.Effect = overrides.Effect;
         if (!string.IsNullOrWhiteSpace(overrides.Source))
             ability.Source = overrides.Source;
-        if (!string.IsNullOrWhiteSpace(overrides.GrantType))
+        var grantType = overrides.GrantType ?? overrides.Type;
+        if (!string.IsNullOrWhiteSpace(grantType))
         {
-            ability.GrantType = overrides.GrantType;
-            ability.Type = overrides.GrantType;
+            ability.GrantType = grantType;
+            ability.Type = grantType;
         }
         if (overrides.Count.HasValue)
             ability.Count = overrides.Count;
@@ -441,20 +461,10 @@ public static class GuildsService
                 return found;
         }
 
-        var normalizedName = NormalizeIdentityToken(raw.Name);
-        if (normalizedName.Length == 0)
-            return null;
-
-        foreach (var candidate in abilityRefs.Values)
-        {
-            if (candidate == null)
-                continue;
-
-            if (NormalizeIdentityToken(candidate.Name) == normalizedName)
-                return candidate;
-        }
-
-        return null;
+        return string.IsNullOrWhiteSpace(raw.AbilityRef)
+               && abilityRefs.TryGetValue(raw.Name ?? string.Empty, out var byAlias)
+            ? byAlias
+            : null;
     }
 
     private static AbilityDefinition CloneAbility(AbilityDefinition source)
@@ -476,6 +486,8 @@ public static class GuildsService
             Type = source.Type ?? string.Empty,
             Effect = source.Effect,
             Lore = source.Lore,
+            Family = source.Family,
+            RuleReferences = source.RuleReferences,
             Source = source.Source,
             Count = source.Count,
             Progression = CloneProgression(source.Progression),
@@ -499,6 +511,7 @@ public static class GuildsService
         return new GuildGrantOverrides
         {
             DisplayName = source.DisplayName,
+            Type = source.Type,
             Verbal = source.Verbal,
             Effect = source.Effect,
             Source = source.Source,
@@ -586,23 +599,9 @@ public static class GuildsService
 
     public static async Task<Dictionary<string, GuildRecord>> GetMiracleSearchAsync()
     {
-        if (_miracleSearchCache != null)
-            return _miracleSearchCache;
-
-        await MiracleSearchCacheLock.WaitAsync().ConfigureAwait(false);
-        try
-        {
-            if (_miracleSearchCache != null)
-                return _miracleSearchCache;
-
-            var json = await ServiceHelper.ReadPackageTextAsync("people/guilds.json").ConfigureAwait(false);
-            _miracleSearchCache = await Task.Run(() => ParseMiracleSearch(json)).ConfigureAwait(false);
-            return _miracleSearchCache;
-        }
-        finally
-        {
-            MiracleSearchCacheLock.Release();
-        }
+        var records = await GuildCatalogue.GetAllAsync().ConfigureAwait(false);
+        return records.ToDictionary(
+            record => record.Key, record => record.Value.CreateWorkingCopy(), StringComparer.OrdinalIgnoreCase);
     }
 
     public static async Task<IReadOnlyList<string>> GetTypesAsync()
@@ -686,61 +685,7 @@ public static class GuildsService
         };
     }
 
-    private static Dictionary<string, GuildRecord> ParseMiracleSearch(string json)
-    {
-        using var doc = JsonDocument.Parse(json);
-        var map = new Dictionary<string, GuildRecord>(StringComparer.OrdinalIgnoreCase);
-
-        if (doc.RootElement.ValueKind != JsonValueKind.Object)
-            return map;
-
-        foreach (var guildProperty in doc.RootElement.EnumerateObject())
-        {
-            if (guildProperty.Value.ValueKind != JsonValueKind.Object)
-                continue;
-
-            var guildObject = guildProperty.Value;
-            var record = new GuildRecord();
-
-            if (guildObject.TryGetProperty("Type", out var typeElement)
-                && typeElement.ValueKind == JsonValueKind.String)
-            {
-                record.Type = typeElement.GetString() ?? string.Empty;
-            }
-
-            if (guildObject.TryGetProperty("Logo", out var logoElement)
-                && logoElement.ValueKind == JsonValueKind.String)
-            {
-                record.Logo = logoElement.GetString() ?? string.Empty;
-            }
-
-            if (guildObject.TryGetProperty("MiracleList", out var miracleListElement))
-            {
-                record.MiracleList = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(
-                    miracleListElement.GetRawText(),
-                    _jsonOptions) ?? new Dictionary<string, List<string>>();
-            }
-
-            if (guildObject.TryGetProperty("DenominationalMiracle", out var denominationalElement))
-            {
-                record.DenominationalMiracle = JsonSerializer.Deserialize<GuildMiracleReference>(
-                    denominationalElement.GetRawText(),
-                    _jsonOptions);
-            }
-
-            if (guildObject.TryGetProperty("DenominationalMiracleNote", out var denominationalNoteElement)
-                && denominationalNoteElement.ValueKind == JsonValueKind.String)
-            {
-                record.DenominationalMiracleNote = denominationalNoteElement.GetString() ?? string.Empty;
-            }
-
-            map[guildProperty.Name] = record;
-        }
-
-        return map;
-    }
-
-    private static string NormalizeRuleField(string? value)
+    internal static string NormalizeRuleField(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return string.Empty;
@@ -787,272 +732,5 @@ public static class GuildsService
                 set.Add(parsed);
         }
         return set;
-    }
-}
-
-public sealed class GuildRecord
-{
-    [JsonPropertyName("30kGift")]
-    public bool Has30KGift { get; set; }
-    public string Type { get; set; } = "";
-    public string Logo { get; set; } = "";
-    public string PreRequisites { get; set; } = "";
-    public string Restrictions { get; set; } = "";
-    public string Ethos { get; set; } = "";
-    public string Background { get; set; } = "";
-
-    public GuildBenefits Benefits { get; set; } = new();
-    [JsonPropertyName("City Benefits")]
-    public List<GuildCityBenefit> CityBenefits { get; set; } = new();
-
-    [JsonPropertyName("alignmentRule")]
-    public AlignmentRule? AlignmentRule { get; set; }
-
-    public Dictionary<string, List<string>> MiracleList { get; set; } = new();
-    public GuildMiracleReference? DenominationalMiracle { get; set; }
-    public string DenominationalMiracleNote { get; set; } = string.Empty;
-
-    public GuildAvailability Availability { get; set; } = new();
-}
-
-[JsonConverter(typeof(GuildMiracleReferenceConverter))]
-public sealed class GuildMiracleReference
-{
-    [JsonPropertyName("$ref")]
-    public string Ref { get; set; } = string.Empty;
-}
-
-public sealed class GuildBenefits
-{
-    public List<GuildBenefitEntry> Basic { get; set; } = new();
-    public List<GuildBenefitEntry> Intermediate { get; set; } = new();
-    public List<GuildBenefitEntry> Advanced { get; set; } = new();
-}
-
-[JsonConverter(typeof(GuildCityBenefitConverter))]
-public sealed class GuildCityBenefit
-{
-    public string Name { get; set; } = string.Empty;
-    public List<string> Effects { get; set; } = new();
-}
-
-public static class GuildBenefitKeys
-{
-    public static string BuildSelectionKey(string guildName, string tier, int optionIndex)
-    {
-        var guild = (guildName ?? string.Empty).Trim();
-        var level = (tier ?? string.Empty).Trim();
-        return $"{guild}::{level}::{optionIndex}";
-    }
-}
-
-[JsonConverter(typeof(GuildBenefitEntryConverter))]
-public sealed class GuildBenefitEntry
-{
-    public AbilityDefinition? Ability { get; set; }
-    public List<GuildBenefitOption> Options { get; set; } = new();
-    public bool IsOptionGroup => Options.Count > 0;
-}
-
-public sealed class GuildBenefitOption
-{
-    public List<AbilityDefinition> Abilities { get; set; } = new();
-}
-
-public sealed class GuildBenefitEntryConverter : JsonConverter<GuildBenefitEntry>
-{
-    public override GuildBenefitEntry Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
-        using var doc = JsonDocument.ParseValue(ref reader);
-        return ParseEntry(doc.RootElement, options);
-    }
-
-    private static GuildBenefitEntry ParseEntry(JsonElement el, JsonSerializerOptions options)
-    {
-        switch (el.ValueKind)
-        {
-            case JsonValueKind.Array:
-                var entry = new GuildBenefitEntry();
-                foreach (var optionEl in el.EnumerateArray())
-                {
-                    var abilities = new List<AbilityDefinition>();
-                    AddAbilitiesFromElement(optionEl, abilities, options);
-                    if (abilities.Count > 0)
-                        entry.Options.Add(new GuildBenefitOption { Abilities = abilities });
-                }
-                return entry;
-            case JsonValueKind.Object:
-            case JsonValueKind.String:
-                var ability = ParseAbility(el, options);
-                return new GuildBenefitEntry { Ability = ability };
-            default:
-                return new GuildBenefitEntry();
-        }
-    }
-
-    private static void AddAbilitiesFromElement(JsonElement element, List<AbilityDefinition> abilities, JsonSerializerOptions options)
-    {
-        if (element.ValueKind == JsonValueKind.Array)
-        {
-            foreach (var child in element.EnumerateArray())
-                AddAbilitiesFromElement(child, abilities, options);
-            return;
-        }
-
-        var ability = ParseAbility(element, options);
-        if (ability != null && !string.IsNullOrWhiteSpace(ability.Name))
-            abilities.Add(ability);
-    }
-
-    private static AbilityDefinition? ParseAbility(JsonElement element, JsonSerializerOptions options)
-    {
-        if (element.ValueKind != JsonValueKind.Object && element.ValueKind != JsonValueKind.String)
-            return null;
-
-        try
-        {
-            return JsonSerializer.Deserialize<AbilityDefinition>(element.GetRawText(), options);
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    public override void Write(Utf8JsonWriter writer, GuildBenefitEntry value, JsonSerializerOptions options)
-    {
-        if (value?.Ability != null)
-        {
-            JsonSerializer.Serialize(writer, value.Ability, options);
-            return;
-        }
-
-        writer.WriteStartArray();
-        foreach (var option in value?.Options ?? new List<GuildBenefitOption>())
-        {
-            writer.WriteStartArray();
-            foreach (var ability in option.Abilities ?? new List<AbilityDefinition>())
-                JsonSerializer.Serialize(writer, ability, options);
-            writer.WriteEndArray();
-        }
-        writer.WriteEndArray();
-    }
-}
-
-public sealed class GuildAvailability
-{
-    public List<RuleClause> Rules { get; set; } = new();
-    public string? RequiredGuild { get; set; }
-}
-
-public sealed class GuildCityBenefitConverter : JsonConverter<GuildCityBenefit>
-{
-    public override GuildCityBenefit Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
-        if (reader.TokenType == JsonTokenType.String)
-        {
-            return new GuildCityBenefit
-            {
-                Name = reader.GetString() ?? string.Empty
-            };
-        }
-
-        if (reader.TokenType != JsonTokenType.StartObject)
-            throw new JsonException($"Unexpected token {reader.TokenType} when parsing city benefit.");
-
-        using var doc = JsonDocument.ParseValue(ref reader);
-        var root = doc.RootElement;
-
-        var benefit = new GuildCityBenefit();
-        if (TryGetPropertyInsensitive(root, "Name", out var nameEl)
-            && nameEl.ValueKind == JsonValueKind.String)
-        {
-            benefit.Name = nameEl.GetString() ?? string.Empty;
-        }
-
-        var effects = new List<string>();
-        if (TryGetPropertyInsensitive(root, "Effects", out var effectsEl))
-            AddEffects(effectsEl, effects);
-        else if (TryGetPropertyInsensitive(root, "Effect", out var effectEl))
-            AddEffects(effectEl, effects);
-
-        benefit.Effects = effects;
-        return benefit;
-    }
-
-    public override void Write(Utf8JsonWriter writer, GuildCityBenefit value, JsonSerializerOptions options)
-    {
-        writer.WriteStartObject();
-        writer.WriteString("Name", value?.Name ?? string.Empty);
-        writer.WritePropertyName("Effects");
-        writer.WriteStartArray();
-        foreach (var effect in value?.Effects ?? new List<string>())
-            writer.WriteStringValue(effect);
-        writer.WriteEndArray();
-        writer.WriteEndObject();
-    }
-
-    private static void AddEffects(JsonElement value, ICollection<string> target)
-    {
-        if (value.ValueKind == JsonValueKind.Array)
-        {
-            foreach (var item in value.EnumerateArray())
-                AddEffects(item, target);
-            return;
-        }
-
-        if (value.ValueKind != JsonValueKind.String)
-            return;
-
-        var text = (value.GetString() ?? string.Empty).Trim();
-        if (text.Length > 0)
-            target.Add(text);
-    }
-
-    private static bool TryGetPropertyInsensitive(JsonElement element, string propertyName, out JsonElement value)
-    {
-        foreach (var property in element.EnumerateObject())
-        {
-            if (string.Equals(property.Name, propertyName, StringComparison.OrdinalIgnoreCase))
-            {
-                value = property.Value;
-                return true;
-            }
-        }
-
-        value = default;
-        return false;
-    }
-}
-
-public sealed class GuildMiracleReferenceConverter : JsonConverter<GuildMiracleReference>
-{
-    public override GuildMiracleReference Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
-        if (reader.TokenType == JsonTokenType.String)
-            return new GuildMiracleReference { Ref = reader.GetString() ?? string.Empty };
-
-        if (reader.TokenType != JsonTokenType.StartObject)
-            throw new JsonException($"Unexpected token {reader.TokenType} when parsing guild miracle reference.");
-
-        using var doc = JsonDocument.ParseValue(ref reader);
-        var root = doc.RootElement;
-        var reference = new GuildMiracleReference();
-
-        if (root.TryGetProperty("$ref", out var refEl))
-            reference.Ref = refEl.GetString() ?? string.Empty;
-        else if (root.TryGetProperty("ref", out var compatRef))
-            reference.Ref = compatRef.GetString() ?? string.Empty;
-        else if (root.TryGetProperty("Name", out var nameEl))
-            reference.Ref = nameEl.GetString() ?? string.Empty;
-
-        return reference;
-    }
-
-    public override void Write(Utf8JsonWriter writer, GuildMiracleReference value, JsonSerializerOptions options)
-    {
-        writer.WriteStartObject();
-        writer.WriteString("$ref", value?.Ref ?? string.Empty);
-        writer.WriteEndObject();
     }
 }
